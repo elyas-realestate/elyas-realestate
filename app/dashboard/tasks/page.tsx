@@ -41,8 +41,7 @@ export default function Tasks() {
 
   async function toggleDone(task: any) {
     const newStatus = task.status === "مكتملة" ? "جديد" : "مكتملة";
-    const newPercent = newStatus === "مكتملة" ? 100 : 0;
-    await supabase.from("tasks").update({ status: newStatus, completion_percent: newPercent }).eq("id", task.id);
+    await supabase.from("tasks").update({ status: newStatus, completion_percent: newStatus === "مكتملة" ? 100 : 0 }).eq("id", task.id);
     loadTasks();
   }
 
@@ -54,37 +53,36 @@ export default function Tasks() {
   };
 
   const filtered = tasks.filter(t => {
-    const matchSearch = t.title?.includes(search);
+    const matchSearch = !search || t.title?.includes(search);
     const matchFilter = filter === "all" || (filter === "done" ? t.status === "مكتملة" : t.status !== "مكتملة");
     return matchSearch && matchFilter;
   });
 
-  if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">Loading...</div>;
+  if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">جاري التحميل...</div>;
 
   return (
     <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
       <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-gray-400 hover:text-white">back</Link>
-          <h1 className="text-xl font-bold">Tasks</h1>
+          <Link href="/dashboard" className="text-gray-400 hover:text-white">لوحة التحكم</Link>
+          <h1 className="text-xl font-bold">المهام</h1>
         </div>
         <button onClick={() => setShowAdd(!showAdd)} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition">
           <Plus size={18} />
-          Add
+          إضافة مهمة
         </button>
       </header>
-
       <main className="p-8">
         {showAdd && (
           <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8 grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-2">Title *</label>
+              <label className="block text-sm text-gray-400 mb-2">عنوان المهمة *</label>
               <input name="title" value={form.title} onChange={handleChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Type</label>
+              <label className="block text-sm text-gray-400 mb-2">نوع المهمة</label>
               <select name="task_type" value={form.task_type} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
-                <option value="">Select...</option>
+                <option value="">اختر...</option>
                 <option>مكالمة</option>
                 <option>اجتماع</option>
                 <option>معاينة</option>
@@ -94,9 +92,9 @@ export default function Tasks() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Priority</label>
+              <label className="block text-sm text-gray-400 mb-2">الأولوية</label>
               <select name="priority" value={form.priority} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
-                <option value="">Select...</option>
+                <option value="">اختر...</option>
                 <option>منخفض</option>
                 <option>متوسط</option>
                 <option>مرتفع</option>
@@ -104,36 +102,34 @@ export default function Tasks() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Due Date</label>
+              <label className="block text-sm text-gray-400 mb-2">تاريخ الاستحقاق</label>
               <input name="due_date" value={form.due_date} onChange={handleChange} type="date" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Notes</label>
+              <label className="block text-sm text-gray-400 mb-2">ملاحظات</label>
               <input name="notes" value={form.notes} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div className="col-span-2 flex gap-4">
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition">Save</button>
-              <button type="button" onClick={() => setShowAdd(false)} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition">Cancel</button>
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition">حفظ</button>
+              <button type="button" onClick={() => setShowAdd(false)} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition">إلغاء</button>
             </div>
           </form>
         )}
-
         <div className="flex gap-4 mb-6">
           <div className="relative flex-1 max-w-md">
             <Search size={18} className="absolute right-3 top-3 text-gray-400" />
-            <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-blue-500" />
+            <input type="text" placeholder="ابحث عن مهمة..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-blue-500" />
           </div>
           <div className="flex gap-2">
-            {["all", "pending", "done"].map(f => (
-              <button key={f} onClick={() => setFilter(f)} className={"px-4 py-2 rounded-lg text-sm transition " + (filter === f ? "bg-blue-600" : "bg-gray-900 border border-gray-800 hover:bg-gray-800")}>
-                {f === "all" ? "All" : f === "pending" ? "Pending" : "Done"}
+            {[["all","الكل"],["pending","قيد التنفيذ"],["done","مكتملة"]].map(([val, label]) => (
+              <button key={val} onClick={() => setFilter(val)} className={"px-4 py-2 rounded-lg text-sm transition " + (filter === val ? "bg-blue-600" : "bg-gray-900 border border-gray-800 hover:bg-gray-800")}>
+                {label}
               </button>
             ))}
           </div>
         </div>
-
         {filtered.length === 0 ? (
-          <p className="text-gray-400 text-center py-20">No tasks</p>
+          <p className="text-gray-400 text-center py-20">لا توجد مهام</p>
         ) : (
           <div className="space-y-3">
             {filtered.map(task => (

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut } from "lucide-react";
+import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,16 +23,9 @@ const menuItems = [
 export default function Dashboard() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
-  const [stats, setStats] = useState({
-    properties: 0,
-    clients: 0,
-    deals: 0,
-    tasks: 0,
-  });
+  const [stats, setStats] = useState({ properties: 0, clients: 0, deals: 0, tasks: 0 });
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  useEffect(() => { checkAuth(); }, []);
 
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -51,20 +44,10 @@ export default function Dashboard() {
       supabase.from("deals").select("id", { count: "exact", head: true }).neq("current_stage", "مكتملة"),
       supabase.from("tasks").select("id", { count: "exact", head: true }).neq("status", "مكتملة"),
     ]);
-    setStats({
-      properties: p.count || 0,
-      clients: c.count || 0,
-      deals: d.count || 0,
-      tasks: t.count || 0,
-    });
+    setStats({ properties: p.count || 0, clients: c.count || 0, deals: d.count || 0, tasks: t.count || 0 });
   }
 
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/login");
-  }
-
-  if (checking) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">...</div>;
+  if (checking) return <div className="flex items-center justify-center h-64">...</div>;
 
   const statCards = [
     { label: "العقارات", value: stats.properties, color: "bg-blue-600" },
@@ -74,49 +57,25 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
-      <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold">إلياس الدخيل — لوحة التحكم</h1>
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-gray-400 hover:text-white text-sm">الموقع الرئيسي</Link>
-          <button onClick={handleLogout} className="text-red-400 hover:text-red-300 text-sm flex items-center gap-1">
-            <LogOut size={16} />
-            خروج
-          </button>
-        </div>
-      </header>
-      <div className="flex">
-        <aside className="w-64 bg-gray-900 min-h-screen border-l border-gray-800 p-4">
-          <nav className="space-y-2">
-            {menuItems.map((item) => (
-              <Link key={item.href} href={item.href} className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition">
-                <item.icon size={20} />
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </nav>
-        </aside>
-        <main className="flex-1 p-8">
-          <h2 className="text-2xl font-bold mb-8">نظرة عامة</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {statCards.map((stat) => (
-              <div key={stat.label} className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-                <div className={"w-3 h-3 rounded-full " + stat.color + " mb-4"}></div>
-                <p className="text-3xl font-bold mb-1">{stat.value}</p>
-                <p className="text-gray-400 text-sm">{stat.label}</p>
-              </div>
-            ))}
+    <div>
+      <h2 className="text-2xl font-bold mb-8">نظرة عامة</h2>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        {statCards.map((stat) => (
+          <div key={stat.label} className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+            <div className={"w-3 h-3 rounded-full " + stat.color + " mb-4"}></div>
+            <p className="text-3xl font-bold mb-1">{stat.value}</p>
+            <p className="text-gray-400 text-sm">{stat.label}</p>
           </div>
-          <h3 className="text-lg font-semibold mb-4">وصول سريع</h3>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {menuItems.slice(0, 6).map((item) => (
-              <Link key={item.href} href={item.href} className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex items-center gap-4 hover:bg-gray-800 transition">
-                <item.icon size={24} className="text-blue-400" />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </main>
+        ))}
+      </div>
+      <h3 className="text-lg font-semibold mb-4">وصول سريع</h3>
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        {menuItems.slice(0, 6).map((item) => (
+          <Link key={item.href} href={item.href} className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex items-center gap-4 hover:bg-gray-800 transition">
+            <item.icon size={24} className="text-blue-400" />
+            <span className="font-medium">{item.label}</span>
+          </Link>
+        ))}
       </div>
     </div>
   );

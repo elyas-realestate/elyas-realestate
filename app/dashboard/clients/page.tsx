@@ -50,36 +50,35 @@ export default function Clients() {
     "وسيط عقاري": "bg-red-900/30 text-red-400",
   };
 
-  if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">Loading...</div>;
+  if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">جاري التحميل...</div>;
 
   return (
     <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
       <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-gray-400 hover:text-white">back</Link>
-          <h1 className="text-xl font-bold">Clients</h1>
+          <Link href="/dashboard" className="text-gray-400 hover:text-white">لوحة التحكم</Link>
+          <h1 className="text-xl font-bold">العملاء</h1>
         </div>
         <button onClick={() => setShowAdd(!showAdd)} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition">
           <Plus size={18} />
-          Add
+          إضافة عميل
         </button>
       </header>
-
       <main className="p-8">
         {showAdd && (
           <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8 grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Name *</label>
+              <label className="block text-sm text-gray-400 mb-2">الاسم الكامل *</label>
               <input name="full_name" value={form.full_name} onChange={handleChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Phone</label>
+              <label className="block text-sm text-gray-400 mb-2">رقم الجوال</label>
               <input name="phone" value={form.phone} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Category *</label>
+              <label className="block text-sm text-gray-400 mb-2">الفئة *</label>
               <select name="category" value={form.category} onChange={handleChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
-                <option value="">Select...</option>
+                <option value="">اختر...</option>
                 <option>مالك</option>
                 <option>مشتري</option>
                 <option>مستأجر</option>
@@ -88,27 +87,25 @@ export default function Clients() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">City</label>
+              <label className="block text-sm text-gray-400 mb-2">المدينة</label>
               <input name="city" value={form.city} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-2">Notes</label>
+              <label className="block text-sm text-gray-400 mb-2">ملاحظات</label>
               <textarea name="notes" value={form.notes} onChange={handleChange} rows={2} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
             </div>
             <div className="col-span-2 flex gap-4">
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition">Save</button>
-              <button type="button" onClick={() => setShowAdd(false)} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition">Cancel</button>
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition">حفظ</button>
+              <button type="button" onClick={() => setShowAdd(false)} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition">إلغاء</button>
             </div>
           </form>
         )}
-
         <div className="relative mb-6 max-w-md">
           <Search size={18} className="absolute right-3 top-3 text-gray-400" />
-          <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-blue-500" />
+          <input type="text" placeholder="ابحث باسم العميل أو الجوال..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-blue-500" />
         </div>
-
         {filtered.length === 0 ? (
-          <p className="text-gray-400 text-center py-20">No clients yet</p>
+          <p className="text-gray-400 text-center py-20">لا يوجد عملاء بعد</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(client => (
