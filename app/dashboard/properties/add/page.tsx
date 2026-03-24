@@ -27,6 +27,7 @@ export default function AddProperty() {
     rooms: "", bathrooms: "", floors: "", price: "",
     description: "", main_image: "", images_url: "", location_url: "",
     is_published: false,
+    contact_phone: "0500000000",
   });
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function AddProperty() {
       description: form.description, main_image: form.main_image,
       images_url: form.images_url, location_url: form.location_url,
       is_published: form.is_published,
+      contact_phone: form.contact_phone,
     }]);
     router.push("/dashboard/properties");
     setLoading(false);
@@ -150,6 +152,10 @@ export default function AddProperty() {
           <div>
             <label className="block text-sm text-gray-400 mb-2">رابط الصور</label>
             <input name="images_url" value={form.images_url} onChange={handleChange} className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">رقم التواصل *</label>
+            <input name="contact_phone" value={form.contact_phone} onChange={handleChange} required className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500" placeholder="05xxxxxxxx" />
           </div>
           <div className="flex items-center gap-3 bg-gray-900 border border-gray-800 rounded-lg px-4 py-3">
             <input type="checkbox" name="is_published" checked={form.is_published} onChange={handleChange} className="w-5 h-5 accent-blue-600" />
