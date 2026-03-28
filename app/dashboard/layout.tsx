@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
@@ -22,12 +23,27 @@ const menuItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  async function checkAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      router.push("/login");
+    } else {
+      setAuthorized(true);
+    }
+  }
 
   async function handleLogout() {
     await supabase.auth.signOut();
     router.push("/login");
   }
 
+  if (!authorized) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">جاري التحقق...</div>;
   return (
     <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
       <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between fixed top-0 left-0 right-0 z-10">
