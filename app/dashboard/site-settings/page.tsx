@@ -1,8 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-// ====== Site Settings Page for Dashboard ======
-const settingsPage = `"use client";
+"use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Save, Check, Globe, Phone, Share2, FileText, Palette, MessageSquare } from "lucide-react";
@@ -304,17 +300,3 @@ export default function SiteSettingsPage() {
     </div>
   );
 }
-`;
-
-// Check if site-settings directory exists, create if not
-const settingsDir = path.join(__dirname, 'app', 'dashboard', 'site-settings');
-if (!fs.existsSync(settingsDir)) {
-  fs.mkdirSync(settingsDir, { recursive: true });
-}
-
-fs.writeFileSync(path.join(settingsDir, 'page.tsx'), settingsPage, 'utf8');
-console.log('Done! Site settings page created at app/dashboard/site-settings/page.tsx');
-console.log('');
-console.log('Access it at: http://localhost:3000/dashboard/site-settings');
-console.log('');
-console.log('Next: Add link to sidebar menu');
