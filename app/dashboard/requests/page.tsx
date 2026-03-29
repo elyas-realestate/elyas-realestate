@@ -1,7 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-const requestsPage = `"use client";
+"use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { FileText, Plus, Search, Filter, Eye, Pencil, Trash2, X, Save, Check, Clock, AlertCircle, CheckCircle } from "lucide-react";
@@ -386,12 +383,3 @@ export default function RequestsPage() {
     </div>
   );
 }
-`;
-
-const requestsDir = path.join(__dirname, 'app', 'dashboard', 'requests');
-if (!fs.existsSync(requestsDir)) fs.mkdirSync(requestsDir, { recursive: true });
-fs.writeFileSync(path.join(requestsDir, 'page.tsx'), requestsPage, 'utf8');
-console.log('Done! Requests page created at app/dashboard/requests/page.tsx');
-console.log('');
-console.log('Restart: taskkill /f /im node.exe && npm run dev');
-console.log('Access: http://localhost:3000/dashboard/requests');
