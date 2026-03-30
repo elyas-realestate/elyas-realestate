@@ -1,7 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-const editorPage = `"use client";
+"use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Save, Check, RotateCcw, Palette, Type } from "lucide-react";
@@ -102,7 +99,7 @@ export default function VisualEditorPage() {
 
   return (
     <div dir="rtl">
-      <style>{\`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');\`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');`}</style>
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -255,36 +252,3 @@ export default function VisualEditorPage() {
     </div>
   );
 }
-`;
-
-// Create the visual editor page
-const editorDir = path.join(__dirname, 'app', 'dashboard', 'visual-editor');
-if (!fs.existsSync(editorDir)) fs.mkdirSync(editorDir, { recursive: true });
-fs.writeFileSync(path.join(editorDir, 'page.tsx'), editorPage, 'utf8');
-console.log('Done! Visual editor page created at app/dashboard/visual-editor/page.tsx');
-console.log('');
-
-// Add to sidebar
-const layoutPath = path.join(__dirname, 'app', 'dashboard', 'layout.tsx');
-let layout = fs.readFileSync(layoutPath, 'utf8');
-
-if (!layout.includes('visual-editor')) {
-  // Add Palette to imports
-  layout = layout.replace(
-    'import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard } from "lucide-react";',
-    'import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette } from "lucide-react";'
-  );
-
-  // Add menu item
-  layout = layout.replace(
-    '{ label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe },',
-    '{ label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe },\n  { label: "المحرر البصري", href: "/dashboard/visual-editor", icon: Palette },'
-  );
-
-  fs.writeFileSync(layoutPath, layout, 'utf8');
-  console.log('Added "المحرر البصري" to sidebar menu.');
-}
-
-console.log('');
-console.log('Restart: taskkill /f /im node.exe && npm run dev');
-console.log('Access: http://localhost:3000/dashboard/visual-editor');

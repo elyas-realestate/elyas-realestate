@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard } from "lucide-react";
+import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,6 +20,7 @@ const menuItems = [
   { label: "المحتوى", href: "/dashboard/content", icon: Megaphone },
   { label: "الإعدادات", href: "/dashboard/settings", icon: Settings },
   { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe },
+  { label: "المحرر البصري", href: "/dashboard/visual-editor", icon: Palette },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
