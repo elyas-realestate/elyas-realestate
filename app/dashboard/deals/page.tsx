@@ -56,8 +56,8 @@ export default function Deals() {
   }
 
   const stageColor: any = {
-    "استفسار": "bg-gray-800 text-gray-400",
-    "معاينة": "bg-blue-900/30 text-blue-400",
+    "استفسار": "bg-[#1C1C22] text-[#9A9AA0]",
+    "معاينة": "bg-[rgba(201,168,76,0.1)] text-[#C9A84C]",
     "تفاوض": "bg-yellow-900/30 text-yellow-400",
     "توقيع": "bg-purple-900/30 text-purple-400",
     "مكتملة": "bg-green-900/30 text-green-400",
@@ -69,27 +69,18 @@ export default function Deals() {
   if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">جاري التحميل...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
-      <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-gray-400 hover:text-white">لوحة التحكم</Link>
-          <h1 className="text-xl font-bold">الصفقات</h1>
-        </div>
-        <button onClick={() => setShowAdd(!showAdd)} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition">
-          <Plus size={18} />
-          إضافة صفقة
-        </button>
-      </header>
+    <div  dir="rtl">
+      
       <main className="p-8">
         {showAdd && (
-          <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8 grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 mb-8 grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-2">عنوان الصفقة *</label>
-              <input name="title" value={form.title} onChange={handleChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">عنوان الصفقة *</label>
+              <input name="title" value={form.title} onChange={handleChange} required className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">نوع الصفقة</label>
-              <select name="deal_type" value={form.deal_type} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm text-[#9A9AA0] mb-2">نوع الصفقة</label>
+              <select name="deal_type" value={form.deal_type} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]">
                 <option value="">اختر...</option>
                 <option>بيع</option>
                 <option>إيجار</option>
@@ -97,8 +88,8 @@ export default function Deals() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">المرحلة</label>
-              <select name="current_stage" value={form.current_stage} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm text-[#9A9AA0] mb-2">المرحلة</label>
+              <select name="current_stage" value={form.current_stage} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]">
                 <option value="">اختر...</option>
                 <option>استفسار</option>
                 <option>معاينة</option>
@@ -109,15 +100,15 @@ export default function Deals() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">العقار</label>
-              <select name="property_id" value={form.property_id} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm text-[#9A9AA0] mb-2">العقار</label>
+              <select name="property_id" value={form.property_id} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]">
                 <option value="">اختر...</option>
                 {properties.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">الأولوية</label>
-              <select name="priority" value={form.priority} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm text-[#9A9AA0] mb-2">الأولوية</label>
+              <select name="priority" value={form.priority} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]">
                 <option value="">اختر...</option>
                 <option>منخفض</option>
                 <option>متوسط</option>
@@ -126,55 +117,55 @@ export default function Deals() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">قيمة الصفقة (ريال)</label>
-              <input name="target_value" value={form.target_value} onChange={handleChange} type="number" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">قيمة الصفقة (ريال)</label>
+              <input name="target_value" value={form.target_value} onChange={handleChange} type="number" className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">العمولة المتوقعة (ريال)</label>
-              <input name="expected_commission" value={form.expected_commission} onChange={handleChange} type="number" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">العمولة المتوقعة (ريال)</label>
+              <input name="expected_commission" value={form.expected_commission} onChange={handleChange} type="number" className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">تاريخ الإغلاق المتوقع</label>
-              <input name="expected_close_date" value={form.expected_close_date} onChange={handleChange} type="date" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">تاريخ الإغلاق المتوقع</label>
+              <input name="expected_close_date" value={form.expected_close_date} onChange={handleChange} type="date" className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">الإجراء التالي</label>
-              <input name="next_action" value={form.next_action} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">الإجراء التالي</label>
+              <input name="next_action" value={form.next_action} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-2">ملخص</label>
-              <textarea name="summary" value={form.summary} onChange={handleChange} rows={2} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">ملخص</label>
+              <textarea name="summary" value={form.summary} onChange={handleChange} rows={2} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div className="col-span-2 flex gap-4">
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition">حفظ</button>
+              <button type="submit" className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-2 rounded-lg transition">حفظ</button>
               <button type="button" onClick={() => setShowAdd(false)} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition">إلغاء</button>
             </div>
           </form>
         )}
         <div className="relative mb-6 max-w-md">
-          <Search size={18} className="absolute right-3 top-3 text-gray-400" />
-          <input type="text" placeholder="ابحث عن صفقة..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-blue-500" />
+          <Search size={18} className="absolute right-3 top-3 text-[#9A9AA0]" />
+          <input type="text" placeholder="ابحث عن صفقة..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-[#C9A84C]" />
         </div>
         {filtered.length === 0 ? (
-          <p className="text-gray-400 text-center py-20">لا توجد صفقات بعد</p>
+          <p className="text-[#9A9AA0] text-center py-20">لا توجد صفقات بعد</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map(deal => (
-              <div key={deal.id} className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-blue-500 transition">
+              <div key={deal.id} className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-5 hover:border-[#C9A84C] transition">
                 <div className="flex items-center justify-between mb-3">
-                  <span className={"text-xs px-2 py-1 rounded " + (stageColor[deal.current_stage] || "bg-gray-800 text-gray-400")}>
+                  <span className={"text-xs px-2 py-1 rounded " + (stageColor[deal.current_stage] || "bg-[#1C1C22] text-[#9A9AA0]")}>
                     {deal.current_stage || "بدون مرحلة"}
                   </span>
-                  <span className="text-xs text-gray-500">{deal.code}</span>
+                  <span className="text-xs text-[#5A5A62]">{deal.code}</span>
                 </div>
                 <h3 className="font-bold text-lg mb-2">{deal.title}</h3>
                 <div className="flex items-center justify-between">
                   <span className="text-green-400 font-bold text-sm">
                     {deal.target_value ? deal.target_value.toLocaleString() + " ريال" : "-"}
                   </span>
-                  <span className="text-xs text-gray-500">{deal.priority}</span>
+                  <span className="text-xs text-[#5A5A62]">{deal.priority}</span>
                 </div>
-                {deal.next_action && <p className="text-gray-400 text-xs mt-2">{deal.next_action}</p>}
+                {deal.next_action && <p className="text-[#9A9AA0] text-xs mt-2">{deal.next_action}</p>}
               </div>
             ))}
           </div>

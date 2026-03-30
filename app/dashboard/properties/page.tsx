@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { Plus, Search, MapPin, Phone } from "lucide-react";
+import { Plus, Search, MapPin } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,127 +14,72 @@ export default function Properties() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
+  useEffect(() => { fetchProperties(); }, []);
 
   async function fetchProperties() {
-    const { data } = await supabase
-      .from("properties")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data } = await supabase.from("properties").select("*").order("created_at", { ascending: false });
     setProperties(data || []);
     setLoading(false);
   }
 
-  const filtered = properties.filter(
-    (p) =>
-      p.title?.includes(search) ||
-      p.district?.includes(search) ||
-      p.code?.includes(search)
+  const filtered = properties.filter(p =>
+    p.title?.includes(search) || p.district?.includes(search) || p.code?.includes(search)
   );
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
-      {/* الشريط العلوي */}
-      <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-gray-400 hover:text-white">
-            → لوحة التحكم
-          </Link>
-          <h1 className="text-xl font-bold">العقارات</h1>
-        </div>
-        <Link
-          href="/dashboard/properties/add"
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition"
-        >
+    <div dir="rtl">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-2xl font-bold">العقارات</h2>
+        <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition no-underline text-white" style={{ background:'linear-gradient(135deg, #C9A84C, #A68A3A)' }}>
           <Plus size={18} />
           إضافة عقار
         </Link>
-      </header>
+      </div>
 
-      <main className="p-8">
-        {/* البحث */}
-        <div className="relative mb-8 max-w-md">
-          <Search
-            size={18}
-            className="absolute right-3 top-3 text-gray-400"
-          />
-          <input
-            type="text"
-            placeholder="ابحث بالاسم أو الحي أو الرمز..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-          />
+      <div className="relative mb-8 max-w-md">
+        <Search size={18} className="absolute right-3 top-3.5" style={{ color:'#5A5A62' }} />
+        <input type="text" placeholder="ابحث بالاسم أو الحي أو الرمز..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-lg pr-10 pl-4 py-3 focus:outline-none text-sm" style={{ background:'#16161A', border:'1px solid rgba(201,168,76,0.12)', color:'#F5F5F5' }} />
+      </div>
+
+      {loading ? (
+        <p style={{ color:'#9A9AA0' }}>جاري التحميل...</p>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-lg mb-4" style={{ color:'#9A9AA0' }}>لا توجد عقارات بعد</p>
+          <Link href="/dashboard/properties/add" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg no-underline text-white font-bold transition" style={{ background:'linear-gradient(135deg, #C9A84C, #A68A3A)' }}>
+            <Plus size={18} /> أضف أول عقار
+          </Link>
         </div>
-
-        {/* القائمة */}
-        {loading ? (
-          <p className="text-gray-400">جاري التحميل...</p>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-gray-400 text-lg mb-4">لا توجد عقارات بعد</p>
-            <Link
-              href="/dashboard/properties/add"
-              className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg inline-flex items-center gap-2 transition"
-            >
-              <Plus size={18} />
-              أضف أول عقار
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map(property => (
+            <Link href={"/dashboard/properties/" + property.id} key={property.id} className="rounded-xl overflow-hidden no-underline transition" style={{ background:'#16161A', border:'1px solid rgba(201,168,76,0.12)', color:'#F5F5F5' }}>
+              <div className="h-48 flex items-center justify-center" style={{ background:'#1C1C22' }}>
+                {property.main_image ? (
+                  <img src={property.main_image} alt={property.title} className="w-full h-full object-cover" />
+                ) : (
+                  <p style={{ color:'#5A5A62' }}>لا توجد صورة</p>
+                )}
+              </div>
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs px-2 py-1 rounded" style={{ color:'#C9A84C', background:'rgba(201,168,76,0.1)' }}>{property.code}</span>
+                  <span className="text-xs" style={{ color:'#5A5A62' }}>{property.offer_type}</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                <div className="flex items-center gap-1 text-sm mb-3" style={{ color:'#9A9AA0' }}>
+                  <MapPin size={14} />
+                  <span>{property.district} — {property.city}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold" style={{ color:'#C9A84C' }}>{property.price?.toLocaleString()} ريال</span>
+                  <span className="text-xs" style={{ color:'#5A5A62' }}>{property.main_category} / {property.sub_category}</span>
+                </div>
+              </div>
             </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((property) => (
-              <Link
-                href={`/dashboard/properties/${property.id}`}
-                key={property.id}
-                className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-blue-500 transition"
-              >
-                {/* صورة */}
-                <div className="h-48 bg-gray-800 flex items-center justify-center">
-                  {property.main_image ? (
-                    <img
-                      src={property.main_image}
-                      alt={property.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <p className="text-gray-600">لا توجد صورة</p>
-                  )}
-                </div>
-
-                {/* المعلومات */}
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-blue-400 bg-blue-900/30 px-2 py-1 rounded">
-                      {property.code}
-                    </span>
-                    <span className="text-xs text-gray-400">
-                      {property.offer_type}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{property.title}</h3>
-                  <div className="flex items-center gap-1 text-gray-400 text-sm mb-3">
-                    <MapPin size={14} />
-                    <span>
-                      {property.district} — {property.city}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-400 font-bold">
-                      {property.price?.toLocaleString()} ريال
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {property.main_category} / {property.sub_category}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </main>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

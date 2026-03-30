@@ -46,7 +46,7 @@ export default function Tasks() {
   }
 
   const priorityColor: any = {
-    "منخفض": "text-gray-400",
+    "منخفض": "text-[#9A9AA0]",
     "متوسط": "text-yellow-400",
     "مرتفع": "text-orange-400",
     "عاجل": "text-red-400",
@@ -61,27 +61,18 @@ export default function Tasks() {
   if (loading) return <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">جاري التحميل...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white" dir="rtl">
-      <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-gray-400 hover:text-white">لوحة التحكم</Link>
-          <h1 className="text-xl font-bold">المهام</h1>
-        </div>
-        <button onClick={() => setShowAdd(!showAdd)} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center gap-2 transition">
-          <Plus size={18} />
-          إضافة مهمة
-        </button>
-      </header>
+    <div  dir="rtl">
+      
       <main className="p-8">
         {showAdd && (
-          <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8 grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 mb-8 grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-2">عنوان المهمة *</label>
-              <input name="title" value={form.title} onChange={handleChange} required className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">عنوان المهمة *</label>
+              <input name="title" value={form.title} onChange={handleChange} required className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">نوع المهمة</label>
-              <select name="task_type" value={form.task_type} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm text-[#9A9AA0] mb-2">نوع المهمة</label>
+              <select name="task_type" value={form.task_type} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]">
                 <option value="">اختر...</option>
                 <option>مكالمة</option>
                 <option>اجتماع</option>
@@ -92,8 +83,8 @@ export default function Tasks() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">الأولوية</label>
-              <select name="priority" value={form.priority} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+              <label className="block text-sm text-[#9A9AA0] mb-2">الأولوية</label>
+              <select name="priority" value={form.priority} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]">
                 <option value="">اختر...</option>
                 <option>منخفض</option>
                 <option>متوسط</option>
@@ -102,54 +93,54 @@ export default function Tasks() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">تاريخ الاستحقاق</label>
-              <input name="due_date" value={form.due_date} onChange={handleChange} type="date" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">تاريخ الاستحقاق</label>
+              <input name="due_date" value={form.due_date} onChange={handleChange} type="date" className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">ملاحظات</label>
-              <input name="notes" value={form.notes} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" />
+              <label className="block text-sm text-[#9A9AA0] mb-2">ملاحظات</label>
+              <input name="notes" value={form.notes} onChange={handleChange} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-2 focus:outline-none focus:border-[#C9A84C]" />
             </div>
             <div className="col-span-2 flex gap-4">
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition">حفظ</button>
+              <button type="submit" className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-2 rounded-lg transition">حفظ</button>
               <button type="button" onClick={() => setShowAdd(false)} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition">إلغاء</button>
             </div>
           </form>
         )}
         <div className="flex gap-4 mb-6">
           <div className="relative flex-1 max-w-md">
-            <Search size={18} className="absolute right-3 top-3 text-gray-400" />
-            <input type="text" placeholder="ابحث عن مهمة..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-gray-900 border border-gray-800 rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-blue-500" />
+            <Search size={18} className="absolute right-3 top-3 text-[#9A9AA0]" />
+            <input type="text" placeholder="ابحث عن مهمة..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-lg pr-10 pl-4 py-3 focus:outline-none focus:border-[#C9A84C]" />
           </div>
           <div className="flex gap-2">
             {[["all","الكل"],["pending","قيد التنفيذ"],["done","مكتملة"]].map(([val, label]) => (
-              <button key={val} onClick={() => setFilter(val)} className={"px-4 py-2 rounded-lg text-sm transition " + (filter === val ? "bg-blue-600" : "bg-gray-900 border border-gray-800 hover:bg-gray-800")}>
+              <button key={val} onClick={() => setFilter(val)} className={"px-4 py-2 rounded-lg text-sm transition " + (filter === val ? "bg-[#C9A84C]" : "bg-[#16161A] border border-[rgba(201,168,76,0.12)] hover:bg-[#1C1C22]")}>
                 {label}
               </button>
             ))}
           </div>
         </div>
         {filtered.length === 0 ? (
-          <p className="text-gray-400 text-center py-20">لا توجد مهام</p>
+          <p className="text-[#9A9AA0] text-center py-20">لا توجد مهام</p>
         ) : (
           <div className="space-y-3">
             {filtered.map(task => (
-              <div key={task.id} className={"bg-gray-900 border rounded-xl p-5 flex items-center gap-4 transition " + (task.status === "مكتملة" ? "border-gray-700 opacity-60" : "border-gray-800 hover:border-blue-500")}>
+              <div key={task.id} className={"bg-[#16161A] border rounded-xl p-5 flex items-center gap-4 transition " + (task.status === "مكتملة" ? "border-[rgba(201,168,76,0.15)] opacity-60" : "border-[rgba(201,168,76,0.12)] hover:border-[#C9A84C]")}>
                 <button onClick={() => toggleDone(task)} className="flex-shrink-0">
                   {task.status === "مكتملة"
                     ? <CheckCircle size={24} className="text-green-400" />
-                    : <Circle size={24} className="text-gray-500 hover:text-blue-400" />
+                    : <Circle size={24} className="text-[#5A5A62] hover:text-[#C9A84C]" />
                   }
                 </button>
                 <div className="flex-1">
-                  <h3 className={"font-medium " + (task.status === "مكتملة" ? "line-through text-gray-500" : "")}>{task.title}</h3>
+                  <h3 className={"font-medium " + (task.status === "مكتملة" ? "line-through text-[#5A5A62]" : "")}>{task.title}</h3>
                   <div className="flex gap-4 mt-1">
-                    <span className="text-xs text-gray-500">{task.task_type}</span>
-                    {task.due_date && <span className="text-xs text-gray-500">{task.due_date}</span>}
-                    {task.notes && <span className="text-xs text-gray-500">{task.notes}</span>}
+                    <span className="text-xs text-[#5A5A62]">{task.task_type}</span>
+                    {task.due_date && <span className="text-xs text-[#5A5A62]">{task.due_date}</span>}
+                    {task.notes && <span className="text-xs text-[#5A5A62]">{task.notes}</span>}
                   </div>
                 </div>
                 {task.priority && (
-                  <span className={"text-xs font-medium " + (priorityColor[task.priority] || "text-gray-400")}>
+                  <span className={"text-xs font-medium " + (priorityColor[task.priority] || "text-[#9A9AA0]")}>
                     {task.priority}
                   </span>
                 )}
