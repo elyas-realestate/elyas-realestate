@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(cmd /c \"cd /d d:\\\\elyas-realestate && npm run dev\")",
+      "Bash(cmd /c \"npm run dev\")",
+      "Bash(where node:*)",
+      "Read(//usr/local/bin/**)"
+    ]
+  }
+}

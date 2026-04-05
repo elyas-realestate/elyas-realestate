@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import { Home, Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette } from "lucide-react";
+import { Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,16 +11,16 @@ const supabase = createClient(
 );
 
 const menuItems = [
-  { label: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
-  { label: "العقارات", href: "/dashboard/properties", icon: Building2 },
-  { label: "العملاء", href: "/dashboard/clients", icon: Users },
-  { label: "الصفقات", href: "/dashboard/deals", icon: TrendingUp },
-  { label: "الطلبات", href: "/dashboard/requests", icon: FileText },
-  { label: "المهام", href: "/dashboard/tasks", icon: CheckSquare },
-  { label: "المحتوى", href: "/dashboard/content", icon: Megaphone },
-  { label: "الإعدادات", href: "/dashboard/settings", icon: Settings },
-  { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe },
-  { label: "المحرر البصري", href: "/dashboard/visual-editor", icon: Palette },
+  { label: "لوحة التحكم",    href: "/dashboard",               icon: LayoutDashboard, group: "main" },
+  { label: "العقارات",       href: "/dashboard/properties",    icon: Building2,       group: "main" },
+  { label: "العملاء",        href: "/dashboard/clients",       icon: Users,           group: "main" },
+  { label: "الصفقات",        href: "/dashboard/deals",         icon: TrendingUp,      group: "main" },
+  { label: "الطلبات",        href: "/dashboard/requests",      icon: FileText,        group: "main" },
+  { label: "المهام",         href: "/dashboard/tasks",         icon: CheckSquare,     group: "main" },
+  { label: "المحتوى",        href: "/dashboard/content",       icon: Megaphone,       group: "main" },
+  { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings,        group: "settings" },
+  { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe,           group: "settings" },
+  { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette,         group: "settings" },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -85,26 +85,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* ═══════ SIDEBAR ═══════ */}
         <aside className="dash-sidebar fixed top-16 right-0 bottom-0 overflow-y-auto" style={{ width:240, background:'#101014', borderLeft:'1px solid rgba(201,168,76,0.08)', padding:'16px 12px' }}>
           <nav className="space-y-1">
-            {menuItems.map((item) => {
-              const isActive = pathname.startsWith(item.href);
+            {menuItems.map((item, idx) => {
+              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+              const isFirstSettings = item.group === "settings" && (idx === 0 || menuItems[idx - 1].group !== "settings");
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 no-underline transition"
-                  style={{
-                    padding:'10px 14px',
-                    borderRadius:10,
-                    fontSize:14,
-                    fontWeight: isActive ? 600 : 400,
-                    color: isActive ? '#C9A84C' : '#9A9AA0',
-                    background: isActive ? 'rgba(201,168,76,0.08)' : 'transparent',
-                    borderRight: isActive ? '3px solid #C9A84C' : '3px solid transparent',
-                  }}
-                >
-                  <item.icon size={18} style={{ opacity: isActive ? 1 : 0.5 }} />
-                  <span>{item.label}</span>
-                </Link>
+                <div key={item.href}>
+                  {isFirstSettings && (
+                    <div style={{ margin:'12px 0 8px', padding:'0 14px' }}>
+                      <div style={{ height:1, background:'rgba(201,168,76,0.12)' }} />
+                      <span style={{ fontSize:10, color:'#5A5A62', display:'block', marginTop:8, letterSpacing:1 }}>الإعدادات</span>
+                    </div>
+                  )}
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-3 no-underline transition"
+                    style={{
+                      padding:'10px 14px',
+                      borderRadius:10,
+                      fontSize:14,
+                      fontWeight: isActive ? 600 : 400,
+                      color: isActive ? '#C9A84C' : '#9A9AA0',
+                      background: isActive ? 'rgba(201,168,76,0.08)' : 'transparent',
+                      borderRight: isActive ? '3px solid #C9A84C' : '3px solid transparent',
+                    }}
+                  >
+                    <item.icon size={18} style={{ opacity: isActive ? 1 : 0.5 }} />
+                    <span>{item.label}</span>
+                  </Link>
+                </div>
               );
             })}
           </nav>

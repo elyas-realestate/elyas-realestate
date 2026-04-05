@@ -1,45 +1,15 @@
 "use client";
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-import { User, Globe, Users, Building } from "lucide-react";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { User, Users, Building } from "lucide-react";
 
 const tabs = [
   { id: "profile", label: "الملف الشخصي", icon: User },
   { id: "team", label: "الفريق", icon: Users },
-  { id: "website", label: "الموقع الإلكتروني", icon: Globe },
   { id: "account", label: "الحساب", icon: Building },
-];
-
-const socialLinks = [
-  { key: "x", label: "X (تويتر)" },
-  { key: "instagram", label: "انستغرام" },
-  { key: "tiktok", label: "تيك توك" },
-  { key: "snapchat", label: "سناب شات" },
-  { key: "linkedin", label: "لينكدإن" },
-  { key: "youtube", label: "يوتيوب" },
-  { key: "threads", label: "ثريدز" },
-  { key: "facebook", label: "فيسبوك" },
-  { key: "whatsapp", label: "واتساب" },
-];
-
-const websitePages = [
-  { key: "home", label: "الصفحة الرئيسية", desc: "تعديل الصفحة الرئيسية لموقعك الإلكتروني" },
-  { key: "map", label: "الخريطة", desc: "تعديل صفحة الخريطة في موقعك الإلكتروني" },
-  { key: "requests", label: "طلبات العقار", desc: "تعديل صفحة الطلبات في موقعك الإلكتروني" },
-  { key: "links", label: "صفحة الروابط", desc: "تعديل صفحة الروابط الخاصة بالمنشأة" },
-  { key: "privacy", label: "سياسة الخصوصية", desc: "تعديل صفحة سياسة الخصوصية لموقعك الإلكتروني" },
-  { key: "terms", label: "الشروط والأحكام", desc: "تعديل صفحة الشروط والأحكام لموقعك الإلكتروني" },
 ];
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
-  const [websiteTab, setWebsiteTab] = useState("pages");
-  const [selectedPage, setSelectedPage] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -47,17 +17,13 @@ export default function Settings() {
     name: "إلياس الدخيل", email: "", phone: "", gender: "male", avatar: "",
   });
 
-  const [social, setSocial] = useState<any>({
-    x: "", instagram: "", tiktok: "", snapchat: "", linkedin: "",
-    youtube: "", threads: "", facebook: "", whatsapp: "",
-  });
-
   const [account, setAccount] = useState({
-    company_name: "إلياس الدخيل", tax_number: "", address: "المملكة العربية السعودية، منطقة الرياض",
-    fal_license: "", commercial_register: "", freelance_doc: "",
+    company_name: "إلياس الدخيل",
+    address: "المملكة العربية السعودية، منطقة الرياض",
+    fal_license: "",
+    commercial_register: "",
+    freelance_doc: "",
   });
-
-  const [pageContent, setPageContent] = useState<any>({});
 
   async function handleSave() {
     setSaving(true);
@@ -67,6 +33,14 @@ export default function Settings() {
     setTimeout(() => setSaved(false), 2000);
   }
 
+  const inputClass = "w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C] transition";
+  const saveBtn = (
+    <button onClick={handleSave} disabled={saving}
+      className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition disabled:opacity-50">
+      {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ التغييرات"}
+    </button>
+  );
+
   return (
     <div dir="rtl">
       <h2 className="text-2xl font-bold mb-8">الإعدادات</h2>
@@ -74,7 +48,8 @@ export default function Settings() {
       <div className="flex gap-2 mb-8 border-b border-[rgba(201,168,76,0.12)]">
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={"flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition " + (activeTab === tab.id ? "border-[#C9A84C] text-white" : "border-transparent text-[#9A9AA0] hover:text-white")}
+            className={"flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition " +
+              (activeTab === tab.id ? "border-[#C9A84C] text-white" : "border-transparent text-[#9A9AA0] hover:text-white")}
           >
             <tab.icon size={16} />
             {tab.label}
@@ -82,13 +57,16 @@ export default function Settings() {
         ))}
       </div>
 
+      {/* ═══ الملف الشخصي ═══ */}
       {activeTab === "profile" && (
         <div className="max-w-2xl">
           <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-6">المعلومات الشخصية</h3>
             <div className="flex items-center gap-6 mb-6">
               <div className="w-20 h-20 rounded-full bg-[#1C1C22] border-2 border-dashed border-gray-600 flex items-center justify-center cursor-pointer hover:border-[#C9A84C] transition">
-                {profile.avatar ? <img src={profile.avatar} className="w-full h-full rounded-full object-cover" /> : <User size={32} className="text-[#5A5A62]" />}
+                {profile.avatar
+                  ? <img src={profile.avatar} className="w-full h-full rounded-full object-cover" />
+                  : <User size={32} className="text-[#5A5A62]" />}
               </div>
               <div>
                 <p className="text-sm font-medium mb-1">صورة الملف الشخصي</p>
@@ -98,43 +76,44 @@ export default function Settings() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">الاسم</label>
-                <input value={profile.name} onChange={e => setProfile(p => ({...p, name: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" />
+                <input value={profile.name} onChange={e => setProfile(p => ({...p, name: e.target.value}))} className={inputClass} />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">البريد الإلكتروني</label>
-                <input value={profile.email} onChange={e => setProfile(p => ({...p, email: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" placeholder="example@email.com" />
+                <input value={profile.email} onChange={e => setProfile(p => ({...p, email: e.target.value}))} className={inputClass} placeholder="example@email.com" />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم الجوال</label>
-                <input value={profile.phone} onChange={e => setProfile(p => ({...p, phone: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" placeholder="05xxxxxxxx" />
+                <input value={profile.phone} onChange={e => setProfile(p => ({...p, phone: e.target.value}))} className={inputClass} placeholder="05xxxxxxxx" />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">الجنس</label>
                 <div className="flex gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="gender" value="male" checked={profile.gender === "male"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-blue-600" />
+                    <input type="radio" name="gender" value="male" checked={profile.gender === "male"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C9A84C]" />
                     <span>ذكر</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="gender" value="female" checked={profile.gender === "female"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-blue-600" />
+                    <input type="radio" name="gender" value="female" checked={profile.gender === "female"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C9A84C]" />
                     <span>أنثى</span>
                   </label>
                 </div>
               </div>
-              <button onClick={handleSave} disabled={saving} className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition disabled:opacity-50">
-                {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ التغييرات"}
-              </button>
+              {saveBtn}
             </div>
           </div>
         </div>
       )}
 
+      {/* ═══ الفريق ═══ */}
       {activeTab === "team" && (
         <div className="max-w-3xl">
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 mb-6">
+          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">الفريق</h3>
-              <button className="bg-[#C9A84C] hover:bg-[#A68A3A] px-4 py-2 rounded-lg text-sm transition">دعوة عضو جديد</button>
+              <button className="bg-[#C9A84C] hover:bg-[#A68A3A] px-4 py-2 rounded-lg text-sm transition">
+                دعوة عضو جديد
+              </button>
             </div>
             <table className="w-full">
               <thead>
@@ -145,9 +124,11 @@ export default function Settings() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-[rgba(201,168,76,0.12)]">
+                <tr>
                   <td className="py-4">إلياس الدخيل</td>
-                  <td className="py-4"><span className="bg-[rgba(201,168,76,0.1)] text-[#C9A84C] text-xs px-2 py-1 rounded">مالك</span></td>
+                  <td className="py-4">
+                    <span className="bg-[rgba(201,168,76,0.1)] text-[#C9A84C] text-xs px-2 py-1 rounded">مالك</span>
+                  </td>
                   <td className="py-4 text-[#9A9AA0] text-sm">المؤسس</td>
                 </tr>
               </tbody>
@@ -156,134 +137,44 @@ export default function Settings() {
         </div>
       )}
 
-      {activeTab === "website" && (
-        <div className="max-w-4xl">
-          <div className="flex gap-2 mb-6">
-            {[["pages","الصفحات"],["identity","الهوية"],["social","روابط التواصل"]].map(([id, label]) => (
-              <button key={id} onClick={() => setWebsiteTab(id)}
-                className={"px-4 py-2 rounded-lg text-sm transition " + (websiteTab === id ? "bg-[#C9A84C] text-white" : "bg-[#16161A] border border-[rgba(201,168,76,0.12)] text-[#9A9AA0] hover:text-white")}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {websiteTab === "pages" && !selectedPage && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {websitePages.map(page => (
-                <button key={page.key} onClick={() => setSelectedPage(page.key)}
-                  className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-5 text-right hover:border-[#C9A84C] transition"
-                >
-                  <h4 className="font-bold text-[#C9A84C] mb-2">{page.label}</h4>
-                  <p className="text-[#9A9AA0] text-sm">{page.desc}</p>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {websiteTab === "pages" && selectedPage && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold">{websitePages.find(p => p.key === selectedPage)?.label}</h3>
-                <button onClick={() => setSelectedPage("")} className="text-[#9A9AA0] hover:text-white text-sm">رجوع</button>
-              </div>
-              <textarea
-                value={pageContent[selectedPage] || ""}
-                onChange={e => setPageContent((p: any) => ({...p, [selectedPage]: e.target.value}))}
-                rows={10}
-                className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]"
-                placeholder="اكتب محتوى الصفحة هنا..."
-              />
-              <button onClick={handleSave} disabled={saving} className="mt-4 bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition">
-                {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ"}
-              </button>
-            </div>
-          )}
-
-          {websiteTab === "identity" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
-              <h3 className="font-bold text-lg mb-6">الهوية البصرية</h3>
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm text-[#9A9AA0] mb-2">الشعار</label>
-                  <div className="w-32 h-32 bg-[#1C1C22] border-2 border-dashed border-gray-600 rounded-xl flex items-center justify-center cursor-pointer hover:border-[#C9A84C] transition">
-                    <p className="text-[#5A5A62] text-sm text-center">رفع الشعار</p>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm text-[#9A9AA0] mb-2">اللون الرئيسي</label>
-                  <div className="flex items-center gap-4">
-                    <input type="color" defaultValue="#2563eb" className="w-12 h-12 rounded-lg cursor-pointer border-0" />
-                    <span className="text-[#9A9AA0] text-sm">اللون الرئيسي للموقع</span>
-                  </div>
-                </div>
-                <button onClick={handleSave} disabled={saving} className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition">
-                  {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ"}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {websiteTab === "social" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
-              <h3 className="font-bold text-lg mb-6">روابط التواصل الاجتماعي</h3>
-              <div className="space-y-4">
-                {socialLinks.map(link => (
-                  <div key={link.key}>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">{link.label}</label>
-                    <input
-                      value={social[link.key] || ""}
-                      onChange={e => setSocial((s: any) => ({...s, [link.key]: e.target.value}))}
-                      className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]"
-                      placeholder={"رابط حساب " + link.label}
-                    />
-                  </div>
-                ))}
-                <button onClick={handleSave} disabled={saving} className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition">
-                  {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ"}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
+      {/* ═══ الحساب ═══ */}
       {activeTab === "account" && (
         <div className="max-w-2xl space-y-6">
           <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-6">معلومات الحساب</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-[#9A9AA0] mb-2">اسم الحساب</label>
-                <input value={account.company_name} onChange={e => setAccount(a => ({...a, company_name: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" />
+                <label className="block text-sm text-[#9A9AA0] mb-2">اسم الحساب / الشركة</label>
+                <input value={account.company_name} onChange={e => setAccount(a => ({...a, company_name: e.target.value}))} className={inputClass} />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">العنوان</label>
-                <input value={account.address} onChange={e => setAccount(a => ({...a, address: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" />
+                <input value={account.address} onChange={e => setAccount(a => ({...a, address: e.target.value}))} className={inputClass} />
               </div>
-              <button onClick={handleSave} disabled={saving} className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition">
-                {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ"}
-              </button>
+              {saveBtn}
             </div>
           </div>
+
           <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
-            <h3 className="font-bold text-lg mb-6">الشهادات والتراخيص</h3>
+            <h3 className="font-bold text-lg mb-2">الشهادات والتراخيص</h3>
+            <p className="text-[#5A5A62] text-sm mb-6">
+              هذه المعلومات تُستخدم داخلياً — لعرض رخصة فال في الموقع اذهب إلى
+              <a href="/dashboard/site-settings" className="text-[#C9A84C] hover:underline mr-1">إعدادات الموقع</a>
+            </p>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم رخصة فال</label>
-                <input value={account.fal_license} onChange={e => setAccount(a => ({...a, fal_license: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" placeholder="أدخل رقم رخصة فال" />
+                <input value={account.fal_license} onChange={e => setAccount(a => ({...a, fal_license: e.target.value}))} className={inputClass} placeholder="مثال: 7001234567" />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم السجل التجاري</label>
-                <input value={account.commercial_register} onChange={e => setAccount(a => ({...a, commercial_register: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" placeholder="أدخل رقم السجل التجاري" />
+                <input value={account.commercial_register} onChange={e => setAccount(a => ({...a, commercial_register: e.target.value}))} className={inputClass} placeholder="أدخل رقم السجل التجاري" />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم وثيقة العمل الحر</label>
-                <input value={account.freelance_doc} onChange={e => setAccount(a => ({...a, freelance_doc: e.target.value}))} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]" placeholder="أدخل رقم وثيقة العمل الحر" />
+                <input value={account.freelance_doc} onChange={e => setAccount(a => ({...a, freelance_doc: e.target.value}))} className={inputClass} placeholder="أدخل رقم وثيقة العمل الحر" />
               </div>
-              <button onClick={handleSave} disabled={saving} className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition">
-                {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ"}
-              </button>
+              {saveBtn}
             </div>
           </div>
         </div>
