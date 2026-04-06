@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
+import SARIcon from "./components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -201,7 +202,7 @@ export default async function Home() {
                     {p.rooms && <span style={{ fontSize:13, color: clrTextMuted }}>🛏 {p.rooms} غرف</span>}
                     {p.land_area && <span style={{ fontSize:13, color: clrTextMuted }}>📐 {p.land_area} م²</span>}
                   </div>
-                  {p.price && <div className="font-kufi accent" style={{ fontSize:20, fontWeight:800 }}>{Number(p.price).toLocaleString()} <span style={{ fontSize:13, color: clrTextMuted, fontWeight:500 }}>ريال</span></div>}
+                  {p.price && <div className="font-kufi accent" style={{ fontSize:20, fontWeight:800, display:'flex', alignItems:'center', gap:6 }}>{Number(p.price).toLocaleString()} <SARIcon size={14} color="muted" style={{ filter: 'invert(1) brightness(0.55)' }} /></div>}
                 </div>
               </Link>
             ))}

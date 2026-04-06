@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { FileText, Plus, Search, Filter, Eye, Pencil, Trash2, X, Save, Check, Clock, AlertCircle, CheckCircle } from "lucide-react";
+import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -261,7 +262,6 @@ export default function RequestsPage() {
                 ["المدينة", selectedRequest.city],
                 ["الحي", selectedRequest.district],
                 ["المساحة", (selectedRequest.area_min || "—") + " - " + (selectedRequest.area_max || "—") + " م²"],
-                ["الميزانية", (selectedRequest.budget_min ? Number(selectedRequest.budget_min).toLocaleString() : "—") + " - " + (selectedRequest.budget_max ? Number(selectedRequest.budget_max).toLocaleString() : "—") + " ريال"],
                 ["المميزات المطلوبة", selectedRequest.required_features],
                 ["الأولوية", selectedRequest.urgency_level],
                 ["الحالة", selectedRequest.status],
@@ -272,6 +272,15 @@ export default function RequestsPage() {
                   <span className="text-sm font-medium text-left" style={{ maxWidth: '60%' }}>{value || "—"}</span>
                 </div>
               ))}
+              <div className="flex justify-between items-start">
+                <span className="text-[#5A5A62] text-sm">الميزانية</span>
+                <span className="text-sm font-medium flex items-center gap-1">
+                  {selectedRequest.budget_min ? Number(selectedRequest.budget_min).toLocaleString() : "—"}
+                  {" - "}
+                  {selectedRequest.budget_max ? Number(selectedRequest.budget_max).toLocaleString() : "—"}
+                  <SARIcon size={12} color="secondary" />
+                </span>
+              </div>
             </div>
             <div className="flex gap-2 mt-6">
               <button onClick={() => { openEdit(selectedRequest); setSelectedRequest(null); }} className="flex-1 bg-[#C6914C] hover:bg-[#A6743A] py-2 rounded-lg text-sm font-bold transition">تعديل</button>

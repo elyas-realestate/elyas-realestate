@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Search, MapPin, Bed, Maximize2, SlidersHorizontal } from "lucide-react";
+import SARIcon from "../components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -264,9 +265,9 @@ function PropertyCard({ p }: { p: any }) {
 
           {/* Price */}
           {price ? (
-            <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <span className="font-kufi" style={{ fontSize: 20, fontWeight: 800, color: "#C6914C" }}>{price}</span>
-              <span style={{ fontSize: 12, color: "#5A5A62", fontWeight: 500 }}>ريال</span>
+              <SARIcon size={14} color="muted" />
             </div>
           ) : (
             <span style={{ fontSize: 13, color: "#5A5A62" }}>السعر عند التواصل</span>

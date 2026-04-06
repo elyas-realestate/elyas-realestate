@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Plus, Search } from "lucide-react";
+import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -160,8 +161,8 @@ export default function Deals() {
                 </div>
                 <h3 className="font-bold text-lg mb-2">{deal.title}</h3>
                 <div className="flex items-center justify-between">
-                  <span className="text-green-400 font-bold text-sm">
-                    {deal.target_value ? deal.target_value.toLocaleString() + " ريال" : "-"}
+                  <span className="text-green-400 font-bold text-sm flex items-center gap-1">
+                    {deal.target_value ? <>{deal.target_value.toLocaleString()} <SARIcon size={12} style={{ filter: 'invert(1) brightness(0.6) sepia(1) hue-rotate(80deg) saturate(2)' }} /></> : "-"}
                   </span>
                   <span className="text-xs text-[#5A5A62]">{deal.priority}</span>
                 </div>

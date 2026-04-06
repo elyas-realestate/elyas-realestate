@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Plus, Search, MapPin } from "lucide-react";
+import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -72,7 +73,7 @@ export default function Properties() {
                   <span>{property.district} — {property.city}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold" style={{ color:'#C6914C' }}>{property.price?.toLocaleString()} ريال</span>
+                  <span className="font-bold flex items-center gap-1" style={{ color:'#C6914C' }}>{property.price?.toLocaleString()} <SARIcon size={13} color="accent" /></span>
                   <span className="text-xs" style={{ color:'#5A5A62' }}>{property.main_category} / {property.sub_category}</span>
                 </div>
               </div>

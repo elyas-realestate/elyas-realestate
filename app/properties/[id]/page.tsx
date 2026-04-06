@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { MapPin, Phone, Share2, ArrowRight, Maximize2, Bed, Bath, Images, ChevronLeft, ChevronRight } from "lucide-react";
+import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -231,7 +232,7 @@ export default function PropertyDetail() {
                     <div style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6, letterSpacing: 0.5 }}>السعر</div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
                       <span className="font-kufi" style={{ fontSize: 28, fontWeight: 900, color: "#C6914C" }}>{price}</span>
-                      <span style={{ fontSize: 13, color: "#9A9AA0" }}>ريال سعودي</span>
+                      <SARIcon size={16} color="secondary" />
                     </div>
                   </>
                 ) : (
