@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import SARIcon from "./components/SARIcon";
+import MobileNav from "./components/MobileNav";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -97,22 +98,60 @@ export default async function Home() {
         @keyframes heroZoom { 0% { transform: scale(1.05); } 100% { transform: scale(1.12); } }
         .social-icon { color: var(--text-muted); }
         .social-icon:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, transparent) !important; background: color-mix(in srgb, var(--accent) 5%, transparent); }
+        /* ── Mobile hamburger ── */
+        .nav-links { display: flex; align-items: center; gap: 32px; }
+        .nav-mobile-btn { display: none; background: none; border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); border-radius: 10px; padding: 8px 10px; cursor: pointer; color: var(--text-sec); }
+        .nav-drawer { display: none; }
+        /* ── Responsive ── */
+        @media (max-width: 767px) {
+          .nav-links { display: none; }
+          .nav-mobile-btn { display: flex; align-items: center; justify-content: center; }
+          .nav-drawer {
+            display: flex; flex-direction: column; gap: 0;
+            position: fixed; top: 72px; right: 0; left: 0; z-index: 49;
+            background: rgba(16,16,20,0.98); backdrop-filter: blur(20px);
+            border-bottom: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+            padding: 16px 24px 20px; transform: translateY(-110%);
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+          }
+          .nav-drawer.open { transform: translateY(0); }
+          .nav-drawer a, .nav-drawer span { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; color: var(--text-sec); text-decoration: none; display: block; }
+          .nav-drawer a:last-child { border-bottom: none; }
+          .hero-search { flex-direction: column !important; gap: 0 !important; border-radius: 16px !important; }
+          .hero-search > div { border-left: none !important; border-bottom: 1px solid rgba(198,145,76,0.12) !important; padding: 12px 16px !important; }
+          .hero-search > a { border-radius: 12px !important; margin: 10px 10px 10px !important; justify-content: center; }
+          .section-pad { padding: 64px 20px !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+          .footer-bottom { flex-direction: column !important; gap: 8px !important; text-align: center; }
+          .prop-grid { grid-template-columns: 1fr !important; }
+          .why-grid { grid-template-columns: 1fr !important; }
+          .svc-grid { grid-template-columns: 1fr !important; }
+          .cta-card { padding: 36px 20px !important; }
+        }
+        @media (min-width: 480px) and (max-width: 767px) {
+          .prop-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important; }
+          .why-grid  { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important; }
+          .svc-grid  { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; }
+        }
       `}</style>
 
       {/* ═══════ NAVBAR ═══════ */}
-      <nav className="fixed top-0 right-0 left-0 z-50" style={{ height:72, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 48px', background:'rgba(22,22,26,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid color-mix(in srgb, var(--accent) 12%, transparent)' }}>
+      <nav className="fixed top-0 right-0 left-0 z-50" style={{ height:72, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 20px', background:'rgba(22,22,26,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid color-mix(in srgb, var(--accent) 12%, transparent)' }}>
         <Link href="/" className="flex items-center gap-3 no-underline">
           {site_logo ? (
-            <img src={site_logo} alt={site_name} style={{ width:44, height:44, borderRadius:12, objectFit:'cover' }} />
+            <img src={site_logo} alt={site_name} style={{ width:40, height:40, borderRadius:10, objectFit:'cover' }} />
           ) : (
-            <div className="accent-bg flex items-center justify-center font-kufi font-black" style={{ width:44, height:44, borderRadius:12, fontSize:20, color: clrBgPrimary }}>إ</div>
+            <div className="accent-bg flex items-center justify-center font-kufi font-black" style={{ width:40, height:40, borderRadius:10, fontSize:18, color: clrBgPrimary, flexShrink:0 }}>إ</div>
           )}
           <div className="flex flex-col" style={{ lineHeight:1.2 }}>
-            <span className="font-kufi font-extrabold" style={{ fontSize:17, color: clrTextPrimary }}>{site_name}</span>
-            <span className="accent" style={{ fontSize:11, fontWeight:500 }}>{hero_badge}</span>
+            <span className="font-kufi font-extrabold" style={{ fontSize:16, color: clrTextPrimary }}>{site_name}</span>
+            <span className="accent" style={{ fontSize:10, fontWeight:500 }}>{hero_badge}</span>
           </div>
         </Link>
-        <div className="flex items-center gap-8">
+
+        {/* Desktop links */}
+        <div className="nav-links">
           {(navbar_links as any[]).map((link: any, i: number) => (
             link.type === "cta" ? (
               <a key={i} href={link.href} className="accent-bg text-[#0A0A0C] no-underline font-bold text-sm" style={{ padding:'10px 24px', borderRadius:10 }}>{link.label}</a>
@@ -124,6 +163,9 @@ export default async function Home() {
           ))}
           <Link href="/login" className="text-[#5A5A62] hover:text-[#9A9AA0] no-underline text-xs" style={{ transition:'color 0.3s', borderRight:'1px solid rgba(198,145,76,0.12)', paddingRight:16, marginRight:-8 }}>{login_text}</Link>
         </div>
+
+        {/* Mobile hamburger + drawer */}
+        <MobileNav links={navbar_links as any[]} loginText={login_text} />
       </nav>
 
       {/* ═══════ HERO ═══════ */}
@@ -143,7 +185,7 @@ export default async function Home() {
             )}
           </h1>
           <p className="fade-up fade-d2" style={{ fontSize: fntBody, color: clrTextSec, lineHeight:1.8, maxWidth:600, margin:'0 auto 40px' }}>{hero_subtitle}</p>
-          <div className="fade-up fade-d3 card flex items-center gap-2" style={{ maxWidth:720, margin:'0 auto', padding:8 }}>
+          <div className="fade-up fade-d3 card hero-search flex items-center gap-2" style={{ maxWidth:720, margin:'0 auto', padding:8 }}>
             <div className="flex-1 flex flex-col" style={{ padding:'8px 16px', borderLeft:'1px solid rgba(198,145,76,0.12)' }}>
               <span style={{ fontSize:11, color:'#5A5A62', fontWeight:600, letterSpacing:0.5, marginBottom:4 }}>نوع العقار</span>
               <span style={{ fontSize:14, color:'#F5F5F5', fontWeight:500 }}>شقة، فيلا، أرض</span>
@@ -163,13 +205,13 @@ export default async function Home() {
 
       {/* ═══════ WHY ═══════ */}
       {show_why && (why_cards as any[]).length > 0 && (
-        <section id="why" style={{ padding:'100px 48px', background: clrBgSecondary }}>
+        <section id="why" className="section-pad" style={{ padding:'100px 48px', background: clrBgSecondary }}>
           <div className="text-center" style={{ marginBottom:64 }}>
             <div className="accent inline-flex items-center gap-2 text-[13px] font-semibold" style={{ letterSpacing:2, marginBottom:16 }}><span style={{ width:32, height:1, background:'var(--accent)', opacity:0.4, display:'inline-block' }}></span>القيمة المضافة<span style={{ width:32, height:1, background:'var(--accent)', opacity:0.4, display:'inline-block' }}></span></div>
             <h2 className="font-kufi font-extrabold" style={{ fontSize: fntSection, lineHeight:1.3, marginBottom:16, color: clrTextPrimary }}>لماذا تختار {site_name.split(' ')[0]}؟</h2>
             <p style={{ fontSize: fntBody, color: clrTextSec, maxWidth:560, margin:'0 auto', lineHeight:1.8 }}>لأن الفرق الحقيقي مو بالإعلان — بل بالفهم، والتنظيم، والمتابعة</p>
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(340px, 1fr))', gap:24, maxWidth:1200, margin:'0 auto' }}>
+          <div className="why-grid" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(320px, 1fr))', gap:24, maxWidth:1200, margin:'0 auto' }}>
             {(why_cards as any[]).map((card: any, i: number) => (
               <div key={i} className="card" style={{ padding:'40px 32px' }}>
                 <div style={{ width:56, height:56, background:'color-mix(in srgb, var(--accent) 8%, transparent)', border:'1px solid color-mix(in srgb, var(--accent) 15%, transparent)', borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:24, fontSize:24 }}>{card.icon}</div>
@@ -183,12 +225,12 @@ export default async function Home() {
 
       {/* ═══════ PROPERTIES ═══════ */}
       {show_properties && properties.length > 0 && (
-        <section style={{ padding:'100px 48px', background: clrBgPrimary }}>
+        <section className="section-pad" style={{ padding:'100px 48px', background: clrBgPrimary }}>
           <div className="text-center" style={{ marginBottom:64 }}>
             <div className="accent inline-flex items-center gap-2 text-[13px] font-semibold" style={{ letterSpacing:2, marginBottom:16 }}><span style={{ width:32, height:1, background:'var(--accent)', opacity:0.4, display:'inline-block' }}></span>عقارات مختارة<span style={{ width:32, height:1, background:'var(--accent)', opacity:0.4, display:'inline-block' }}></span></div>
             <h2 className="font-kufi font-extrabold" style={{ fontSize: fntSection, lineHeight:1.3, color: clrTextPrimary }}>لا نعرض كل شي — فقط اللي يستاهل</h2>
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(340px, 1fr))', gap:24, maxWidth:1200, margin:'0 auto' }}>
+          <div className="prop-grid" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:24, maxWidth:1200, margin:'0 auto' }}>
             {properties.map((p: any) => (
               <Link href={"/properties/" + p.id} key={p.id} className="card no-underline" style={{ overflow:'hidden', cursor:'pointer', color: clrTextPrimary }}>
                 <div style={{ height:220, overflow:'hidden', position:'relative', background:'#1C1C22' }}>
@@ -215,12 +257,12 @@ export default async function Home() {
 
       {/* ═══════ SERVICES ═══════ */}
       {show_services && (services as any[]).length > 0 && (
-        <section id="services" style={{ padding:'100px 48px', background: clrBgSecondary }}>
+        <section id="services" className="section-pad" style={{ padding:'100px 48px', background: clrBgSecondary }}>
           <div className="text-center" style={{ marginBottom:64 }}>
             <div className="accent inline-flex items-center gap-2 text-[13px] font-semibold" style={{ letterSpacing:2, marginBottom:16 }}><span style={{ width:32, height:1, background:'var(--accent)', opacity:0.4, display:'inline-block' }}></span>خدماتنا<span style={{ width:32, height:1, background:'var(--accent)', opacity:0.4, display:'inline-block' }}></span></div>
             <h2 className="font-kufi font-extrabold" style={{ fontSize: fntSection, lineHeight:1.3, color: clrTextPrimary }}>خدمات عقارية متكاملة</h2>
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:20, maxWidth:1200, margin:'0 auto' }}>
+          <div className="svc-grid" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:20, maxWidth:1200, margin:'0 auto' }}>
             {(services as any[]).map((svc: any, i: number) => (
               <div key={i} className="card text-center" style={{ padding:'36px 28px' }}>
                 <div style={{ width:64, height:64, margin:'0 auto 20px', background:'color-mix(in srgb, var(--accent) 6%, transparent)', border:'1px solid color-mix(in srgb, var(--accent) 12%, transparent)', borderRadius:18, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28 }}>{svc.icon}</div>
@@ -234,9 +276,9 @@ export default async function Home() {
 
       {/* ═══════ CTA ═══════ */}
       {show_cta && (
-        <section id="contact" style={{ padding:'100px 48px', textAlign:'center', position:'relative', overflow:'hidden', background: clrBgPrimary }}>
+        <section id="contact" className="section-pad" style={{ padding:'100px 48px', textAlign:'center', position:'relative', overflow:'hidden', background: clrBgPrimary }}>
           <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 70%)`, pointerEvents:'none' }}></div>
-          <div className="card relative" style={{ maxWidth:720, margin:'0 auto', padding:'64px 48px', borderRadius:24 }}>
+          <div className="card cta-card relative" style={{ maxWidth:720, margin:'0 auto', padding:'64px 48px', borderRadius:24 }}>
             <h2 className="font-kufi font-extrabold" style={{ fontSize:'clamp(1.6rem, 3vw, 2.2rem)', marginBottom:16, color: clrTextPrimary }}>{cta_title}</h2>
             <p style={{ color: clrTextSec, fontSize: fntBody, lineHeight:1.8, marginBottom:36 }}>{cta_subtitle}</p>
             <div className="flex justify-center gap-4 flex-wrap">
@@ -264,8 +306,8 @@ export default async function Home() {
       )}
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer style={{ background: clrBgSecondary, borderTop:'1px solid color-mix(in srgb, var(--accent) 12%, transparent)', padding:'64px 48px 32px' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1.5fr 1fr 1fr 1fr', gap:48, maxWidth:1200, margin:'0 auto 48px' }}>
+      <footer style={{ background: clrBgSecondary, borderTop:'1px solid color-mix(in srgb, var(--accent) 12%, transparent)', padding:'64px 24px 32px' }}>
+        <div className="footer-grid" style={{ display:'grid', gridTemplateColumns:'1.5fr 1fr 1fr 1fr', gap:48, maxWidth:1200, margin:'0 auto 48px' }}>
           <div>
             <div className="flex items-center gap-3" style={{ marginBottom:8 }}>
               {site_logo ? (
@@ -351,7 +393,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-        <div style={{ maxWidth:1200, margin:'0 auto', paddingTop:32, borderTop:'1px solid rgba(198,145,76,0.12)', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:13, color:'#5A5A62' }}>
+        <div className="footer-bottom" style={{ maxWidth:1200, margin:'0 auto', paddingTop:32, borderTop:'1px solid rgba(198,145,76,0.12)', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:13, color:'#5A5A62' }}>
           <span>© {new Date().getFullYear()} {site_name}. جميع الحقوق محفوظة.</span>
           {fal_license && <span>رخصة فال — {fal_license}</span>}
         </div>

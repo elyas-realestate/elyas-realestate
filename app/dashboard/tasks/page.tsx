@@ -148,18 +148,18 @@ export default function TasksPage() {
   return (
     <div dir="rtl">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">المهام</h2>
           <p style={{ color:'#5A5A62', fontSize:14 }}>تتبع مهامك ومتابعاتك العقارية</p>
         </div>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition text-[#0A0A0C]" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)' }}>
-          <Plus size={18} /> مهمة جديدة
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-[#0A0A0C] text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)' }}>
+          <Plus size={16} /> مهمة جديدة
         </button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-5 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
         {[
           { label: "الإجمالي", value: stats.total, color: "#C6914C", icon: CheckSquare },
           { label: "جديدة", value: stats.new, color: "#60A5FA", icon: Circle },
@@ -203,7 +203,8 @@ export default function TasksPage() {
       {/* ═══ LIST VIEW ═══ */}
       {view === "list" && (
         <div className="rounded-xl overflow-hidden" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)' }}>
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full" style={{ minWidth: 560 }}>
             <thead>
               <tr style={{ borderBottom:'1px solid rgba(198,145,76,0.08)' }}>
                 {["","المهمة","النوع","الأولوية","التاريخ","الحالة",""].map((h,i) => (
@@ -249,17 +250,18 @@ export default function TasksPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
       {/* ═══ KANBAN VIEW ═══ */}
       {view === "kanban" && (
-        <div className="grid grid-cols-4 gap-4" style={{ minHeight:400 }}>
+        <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight:400 }}>
           {statuses.map(status => {
             const statusTasks = filtered.filter(t => t.status === status);
             const conf = statusConfig[status];
             return (
-              <div key={status} className="rounded-xl" style={{ background:'#111114', border:'1px solid rgba(198,145,76,0.08)', padding:12 }}>
+              <div key={status} className="rounded-xl flex-shrink-0" style={{ background:'#111114', border:'1px solid rgba(198,145,76,0.08)', padding:12, minWidth:220, width:'calc(25% - 12px)' }}>
                 <div className="flex items-center justify-between mb-3 px-1">
                   <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 rounded-full" style={{ background: conf?.color.includes('blue') ? '#60A5FA' : conf?.color.includes('C9A84C') ? '#C6914C' : conf?.color.includes('purple') ? '#C084FC' : '#4ADE80' }}></div>
@@ -335,7 +337,7 @@ export default function TasksPage() {
                 <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>عنوان المهمة *</label>
                 <input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }} placeholder="مثال: متابعة عميل حي النرجس" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>النوع</label>
                   <select value={form.task_type} onChange={e => setForm({...form, task_type: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }}>
@@ -350,7 +352,7 @@ export default function TasksPage() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>تاريخ الاستحقاق</label>
                   <input type="date" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }} />

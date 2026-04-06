@@ -179,7 +179,7 @@ export default function EditProperty() {
         <span style={{ color: "#F5F5F5" }}>تعديل</span>
       </div>
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">تعديل العقار</h2>
           <p style={{ color: "#5A5A62", fontSize: 13 }}>عدّل البيانات ثم احفظ التغييرات</p>
@@ -216,7 +216,7 @@ export default function EditProperty() {
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={lbl}>التصنيف الرئيسي *</label>
                 <select name="main_category" value={form.main_category} onChange={handleChange} required className={inp}>
@@ -238,7 +238,7 @@ export default function EditProperty() {
         {/* ═══ الموقع ═══ */}
         <Section title="الموقع">
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={lbl}>المدينة *</label>
                 <input name="city" value={form.city} onChange={handleChange} required className={inp} />
@@ -258,7 +258,7 @@ export default function EditProperty() {
         {/* ═══ المواصفات ═══ */}
         <Section title="المواصفات">
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={lbl}>مساحة الأرض م²</label>
                 <input name="land_area" value={form.land_area} onChange={handleChange} type="number" className={inp} dir="ltr" />
@@ -349,7 +349,7 @@ export default function EditProperty() {
             </div>
 
             {uploadedImages.length > 0 && (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {uploadedImages.map((url, i) => (
                   <div key={url} className="relative rounded-xl overflow-hidden group"
                     style={{ height: 110, background: "#1C1C22", border: "2px solid " + (url === form.main_image || i === 0 ? "#C6914C" : "transparent") }}>

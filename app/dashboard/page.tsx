@@ -59,7 +59,7 @@ export default function Dashboard() {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-8">نظرة عامة</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         {statCards.map((stat) => (
           <div key={stat.label} className="bg-[#16161A] rounded-xl p-6 border border-[rgba(198,145,76,0.12)]">
             <div className={"w-3 h-3 rounded-full " + stat.color + " mb-4"}></div>
@@ -69,7 +69,7 @@ export default function Dashboard() {
         ))}
       </div>
       <h3 className="text-lg font-semibold mb-4">وصول سريع</h3>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {menuItems.slice(0, 6).map((item) => (
           <Link key={item.href} href={item.href} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 flex items-center gap-4 hover:bg-[#1C1C22] transition">
             <item.icon size={24} className="text-[#C6914C]" />

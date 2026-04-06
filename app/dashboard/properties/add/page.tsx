@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { ArrowRight, Save, Eye, EyeOff, Upload, X, ImageIcon } from "lucide-react";
+import { ArrowRight, Save, Eye, EyeOff, Upload, X } from "lucide-react";
 import SARIcon from "../../../components/SARIcon";
 
 const supabase = createClient(
@@ -144,7 +144,7 @@ export default function AddProperty() {
         <span style={{ color: "#F5F5F5" }}>إضافة عقار جديد</span>
       </div>
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">إضافة عقار جديد</h2>
           <p style={{ color: "#5A5A62", fontSize: 13 }}>أدخل بيانات العقار ثم احفظ</p>
@@ -183,7 +183,7 @@ export default function AddProperty() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={lbl}>التصنيف الرئيسي *</label>
                 <select name="main_category" value={form.main_category} onChange={handleChange} required className={inp}>
@@ -205,7 +205,7 @@ export default function AddProperty() {
         {/* ═══ الموقع ═══ */}
         <Section title="الموقع">
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={lbl}>المدينة *</label>
                 <input name="city" value={form.city} onChange={handleChange} required className={inp} />
@@ -225,7 +225,7 @@ export default function AddProperty() {
         {/* ═══ المواصفات ═══ */}
         <Section title="المواصفات">
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={lbl}>مساحة الأرض م²</label>
                 <input name="land_area" value={form.land_area} onChange={handleChange} type="number" className={inp} placeholder="0" dir="ltr" />
@@ -318,7 +318,7 @@ export default function AddProperty() {
 
             {/* معرض الصور المرفوعة */}
             {uploadedImages.length > 0 && (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {uploadedImages.map((url, i) => (
                   <div key={url} className="relative rounded-xl overflow-hidden group"
                     style={{ height: 110, background: "#1C1C22", border: "2px solid " + (i === 0 ? "#C6914C" : "transparent") }}>

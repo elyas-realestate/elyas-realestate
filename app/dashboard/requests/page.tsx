@@ -146,18 +146,18 @@ export default function RequestsPage() {
   return (
     <div dir="rtl">
       {/* الهيدر */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
-          <h2 className="text-2xl font-bold mb-2">الطلبات العقارية</h2>
+          <h2 className="text-2xl font-bold mb-1">الطلبات العقارية</h2>
           <p className="text-[#9A9AA0] text-sm">إدارة طلبات العملاء — بحث، تصفية، ومتابعة الحالة</p>
         </div>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 bg-[#C6914C] hover:bg-[#A6743A] px-5 py-3 rounded-xl font-bold transition">
-          <Plus size={18} /> طلب جديد
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 bg-[#C6914C] hover:bg-[#A6743A] px-4 py-2.5 rounded-xl font-bold transition text-sm">
+          <Plus size={16} /> طلب جديد
         </button>
       </div>
 
       {/* الإحصائيات */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {[
           { label: "إجمالي الطلبات", value: stats.total, color: "text-[#C6914C]", icon: FileText },
           { label: "طلبات جديدة", value: stats.new, color: "text-green-400", icon: AlertCircle },
@@ -175,16 +175,16 @@ export default function RequestsPage() {
       </div>
 
       {/* البحث والفلترة */}
-      <div className="flex gap-3 mb-6">
-        <div className="flex-1 relative">
+      <div className="flex gap-3 mb-6 flex-wrap">
+        <div className="flex-1 relative" style={{ minWidth: 200 }}>
           <Search size={16} className="absolute right-3 top-3.5 text-[#5A5A62]" />
-          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="بحث بالعميل، الحي، الكود، أو النوع..." className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" />
+          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="بحث بالعميل، الحي، الكود..." className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" />
         </div>
-        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#C6914C]">
           <option value="all">كل الحالات</option>
           {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
+        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#C6914C]">
           <option value="all">كل الأنواع</option>
           {requestTypes.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
@@ -198,7 +198,8 @@ export default function RequestsPage() {
         </div>
       ) : (
         <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden">
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full" style={{ minWidth: 700 }}>
             <thead>
               <tr className="border-b border-[rgba(198,145,76,0.12)] text-[#5A5A62] text-xs">
                 <th className="text-right px-4 py-3 font-medium">الكود</th>
@@ -242,6 +243,7 @@ export default function RequestsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -306,7 +308,7 @@ export default function RequestsPage() {
                   {clients.map(c => <option key={c.id} value={c.id}>{c.name} {c.phone ? "— " + c.phone : ""}</option>)}
                 </select>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">نوع الطلب *</label>
                   <select value={form.request_type} onChange={e => setForm({ ...form, request_type: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
@@ -331,7 +333,7 @@ export default function RequestsPage() {
                   </select>
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">المدينة</label>
                   <input value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" />
@@ -341,7 +343,7 @@ export default function RequestsPage() {
                   <input value={form.district} onChange={e => setForm({ ...form, district: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" placeholder="مثال: النرجس" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">المساحة من (م²)</label>
                   <input type="number" value={form.area_min} onChange={e => setForm({ ...form, area_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
@@ -351,7 +353,7 @@ export default function RequestsPage() {
                   <input type="number" value={form.area_max} onChange={e => setForm({ ...form, area_max: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية من (ريال)</label>
                   <input type="number" value={form.budget_min} onChange={e => setForm({ ...form, budget_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
@@ -365,7 +367,7 @@ export default function RequestsPage() {
                 <label className="block text-sm text-[#9A9AA0] mb-2">المميزات المطلوبة</label>
                 <textarea value={form.required_features} onChange={e => setForm({ ...form, required_features: e.target.value })} rows={3} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" placeholder="مثال: مسبح، مدخل سيارة، قريب من مدرسة..." />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الأولوية</label>
                   <select value={form.urgency_level} onChange={e => setForm({ ...form, urgency_level: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">

@@ -45,7 +45,7 @@ export default function Settings() {
     <div dir="rtl">
       <h2 className="text-2xl font-bold mb-8">الإعدادات</h2>
 
-      <div className="flex gap-2 mb-8 border-b border-[rgba(198,145,76,0.12)]">
+      <div className="flex gap-2 mb-8 border-b border-[rgba(198,145,76,0.12)] overflow-x-auto" style={{ scrollbarWidth:'none', WebkitScrollbar: 'none' } as any}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             className={"flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition " +
