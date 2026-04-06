@@ -81,7 +81,7 @@ export default function PublicProperties() {
     <div dir="rtl" style={{ fontFamily: "'Tajawal', sans-serif" }}>
 
       {/* ═══ HERO SEARCH ═══ */}
-      <div style={{ background: "linear-gradient(180deg, #111114 0%, #0A0A0C 100%)", padding: "64px 48px 48px", borderBottom: "1px solid rgba(198,145,76,0.1)" }}>
+      <div style={{ background: "linear-gradient(180deg, #111114 0%, #0A0A0C 100%)", padding: "clamp(40px,6vw,64px) clamp(16px,4vw,48px) clamp(32px,5vw,48px)", borderBottom: "1px solid rgba(198,145,76,0.1)" }}>
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
           <div className="accent inline-flex items-center gap-2" style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.15)", borderRadius: 100, padding: "6px 18px", marginBottom: 20 }}>
             <span style={{ width: 5, height: 5, background: "#C6914C", borderRadius: "50%", display: "inline-block" }}></span>
@@ -138,7 +138,7 @@ export default function PublicProperties() {
       </div>
 
       {/* ═══ RESULTS ═══ */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 48px" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(24px,4vw,40px) clamp(16px,4vw,48px)" }}>
 
         {/* Count + active filters */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
@@ -180,7 +180,7 @@ export default function PublicProperties() {
             <p style={{ fontSize: 14, color: "#5A5A62" }}>جرّب تغيير الفلاتر أو كلمة البحث</p>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", gap: 24 }}>
             {filtered.map(p => (
               <PropertyCard key={p.id} p={p} />
             ))}

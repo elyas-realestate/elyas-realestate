@@ -114,10 +114,18 @@ export default function PropertyDetail() {
         .action-btn { transition: all 0.25s; }
         .action-btn:hover { opacity: 0.88; transform: translateY(-1px); }
         .lightbox-nav:hover { background: rgba(198,145,76,0.2) !important; }
+        .prop-content-grid { display: grid; grid-template-columns: 1fr 360px; gap: 36px; align-items: start; }
+        .prop-sticky-card { position: sticky; top: 88px; }
+        @media (max-width: 767px) {
+          .prop-content-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+          .prop-sticky-card { position: static !important; }
+          .prop-detail-pad { padding: 24px 16px !important; }
+          .prop-breadcrumb { padding: 10px 16px !important; }
+        }
       `}</style>
 
       {/* ═══ BREADCRUMB ═══ */}
-      <div style={{ background: "#111114", borderBottom: "1px solid rgba(198,145,76,0.08)", padding: "12px 48px" }}>
+      <div className="prop-breadcrumb" style={{ background: "#111114", borderBottom: "1px solid rgba(198,145,76,0.08)", padding: "12px 48px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#5A5A62" }}>
           <Link href="/" style={{ color: "#5A5A62", textDecoration: "none" }}>الرئيسية</Link>
           <ChevronLeft size={13} />
@@ -189,8 +197,8 @@ export default function PropertyDetail() {
       )}
 
       {/* ═══ CONTENT ═══ */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "36px 48px" }} className="prop-fade">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 36, alignItems: "start" }}>
+      <div className="prop-detail-pad prop-fade" style={{ maxWidth: 1200, margin: "0 auto", padding: "36px 48px" }}>
+        <div className="prop-content-grid">
 
           {/* LEFT */}
           <div>
@@ -251,7 +259,7 @@ export default function PropertyDetail() {
           </div>
 
           {/* RIGHT — Sticky Card */}
-          <div style={{ position: "sticky", top: 88 }}>
+          <div className="prop-sticky-card">
             <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.18)", borderRadius: 20, overflow: "hidden" }}>
 
               {/* Price */}
