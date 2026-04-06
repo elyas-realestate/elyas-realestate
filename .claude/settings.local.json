@@ -5,7 +5,11 @@
       "Bash(cmd /c \"cd /d d:\\\\elyas-realestate && npm run dev\")",
       "Bash(cmd /c \"npm run dev\")",
       "Bash(where node:*)",
-      "Read(//usr/local/bin/**)"
+      "Read(//usr/local/bin/**)",
+      "Bash(npx tsc:*)",
+      "Bash(d:/elyas-realestate/node_modules/.bin/tsc --noEmit)",
+      "Bash(cmd /c \"node_modules\\\\.bin\\\\next build 2>&1\")",
+      "Bash(powershell -Command \"cd d:/elyas-realestate; git status; git log --oneline -3\")"
     ]
   }
 }

@@ -115,7 +115,8 @@ export default function Settings() {
                 دعوة عضو جديد
               </button>
             </div>
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="w-full" style={{ minWidth: 360 }}>
               <thead>
                 <tr className="text-[#9A9AA0] text-sm border-b border-[rgba(198,145,76,0.12)]">
                   <th className="text-right pb-3">الاسم</th>
@@ -133,6 +134,7 @@ export default function Settings() {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}

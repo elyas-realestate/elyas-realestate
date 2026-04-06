@@ -27,6 +27,7 @@ const statusConfig: Record<string, { color: string; bg: string }> = {
 };
 
 const arabicDays = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const arabicDaysShort = ["أحد","إثن","ثلث","أرب","خمس","جمع","سبت"];
 const arabicMonths = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 
 export default function TasksPage() {
@@ -178,8 +179,8 @@ export default function TasksPage() {
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-3 mb-6 flex-wrap">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-wrap gap-3 mb-6">
+        <div className="relative flex-1" style={{ minWidth: 160 }}>
           <Search size={16} className="absolute right-3 top-3" style={{ color:'#5A5A62' }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث..." className="w-full rounded-lg pr-10 pl-4 py-2.5 text-sm focus:outline-none" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }} />
         </div>
@@ -191,10 +192,10 @@ export default function TasksPage() {
           <option value="all">كل الأنواع</option>
           {taskTypes.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
-        <div className="flex rounded-lg overflow-hidden mr-auto" style={{ border:'1px solid rgba(198,145,76,0.12)' }}>
+        <div className="flex rounded-lg overflow-hidden" style={{ border:'1px solid rgba(198,145,76,0.12)' }}>
           {([["list","قائمة",List],["kanban","كانبان",LayoutGrid],["calendar","تقويم",Calendar]] as [string,string,any][]).map(([id,label,Icon]) => (
             <button key={id} onClick={() => setView(id as any)} className="flex items-center gap-1.5 px-3 py-2 text-xs transition" style={{ background: view === id ? 'rgba(198,145,76,0.15)' : '#16161A', color: view === id ? '#C6914C' : '#5A5A62' }}>
-              <Icon size={14} />{label}
+              <Icon size={14} /><span className="hidden sm:inline">{label}</span>
             </button>
           ))}
         </div>
@@ -303,7 +304,12 @@ export default function TasksPage() {
             <button onClick={() => { const d = new Date(calendarDate); d.setMonth(d.getMonth() + 1); setCalendarDate(d); }} style={{ color:'#9A9AA0' }}><ChevronLeft size={20} /></button>
           </div>
           <div className="grid grid-cols-7" style={{ borderBottom:'1px solid rgba(198,145,76,0.08)' }}>
-            {arabicDays.map(d => <div key={d} className="text-center text-xs py-2 font-medium" style={{ color:'#5A5A62' }}>{d}</div>)}
+            {arabicDays.map((d, i) => (
+              <div key={d} className="text-center py-2 font-medium" style={{ color:'#5A5A62', fontSize: 11 }}>
+                <span className="hidden sm:inline">{d}</span>
+                <span className="sm:hidden">{arabicDaysShort[i]}</span>
+              </div>
+            ))}
           </div>
           <div className="grid grid-cols-7">
             {getMonthDays().map((item, idx) => {
@@ -311,16 +317,23 @@ export default function TasksPage() {
               const dayTasks = item.current ? getTasksForDate(dateStr) : [];
               const isToday = dateStr === todayStr;
               return (
-                <div key={idx} className="min-h-[90px] p-1.5" style={{ borderLeft:'1px solid rgba(198,145,76,0.05)', borderBottom:'1px solid rgba(198,145,76,0.05)', background: item.current ? 'transparent' : 'rgba(10,10,12,0.5)' }}>
-                  <div className={"text-xs font-bold mb-1 w-6 h-6 flex items-center justify-center rounded-full " + (isToday ? "text-[#0A0A0C]" : "")} style={{ background: isToday ? '#C6914C' : 'transparent', color: isToday ? '#0A0A0C' : item.current ? '#9A9AA0' : '#3A3A42' }}>{item.day}</div>
-                  {dayTasks.slice(0, 3).map(t => (
-                    <div key={t.id} onClick={() => openEdit(t)} className="text-xs rounded px-1 py-0.5 mb-0.5 truncate cursor-pointer" style={{ background: priorityConfig[t.priority]?.bg.replace('bg-','').replace('[','').replace(']','') || 'rgba(198,145,76,0.06)', color: t.status === "مكتملة" ? '#5A5A62' : '#F5F5F5' }}>{t.title}</div>
+                <div key={idx} className="cal-cell p-1" style={{ borderLeft:'1px solid rgba(198,145,76,0.05)', borderBottom:'1px solid rgba(198,145,76,0.05)', background: item.current ? 'transparent' : 'rgba(10,10,12,0.5)', minHeight: 72 }}>
+                  <div className="cal-day-num text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full" style={{ background: isToday ? '#C6914C' : 'transparent', color: isToday ? '#0A0A0C' : item.current ? '#9A9AA0' : '#3A3A42', fontSize: 11 }}>{item.day}</div>
+                  {dayTasks.slice(0, 2).map(t => (
+                    <div key={t.id} onClick={() => openEdit(t)} className="cal-task text-xs rounded px-1 py-0.5 mb-0.5 truncate cursor-pointer" style={{ background: 'rgba(198,145,76,0.1)', color: t.status === "مكتملة" ? '#5A5A62' : '#F5F5F5', fontSize: 10 }}>{t.title}</div>
                   ))}
-                  {dayTasks.length > 3 && <div className="text-xs text-center" style={{ color:'#5A5A62' }}>+{dayTasks.length - 3}</div>}
+                  {dayTasks.length > 2 && <div style={{ color:'#5A5A62', fontSize: 10 }}>+{dayTasks.length - 2}</div>}
                 </div>
               );
             })}
           </div>
+          <style>{`
+            @media (min-width: 640px) {
+              .cal-cell { min-height: 90px !important; padding: 6px !important; }
+              .cal-task { font-size: 12px !important; }
+              .cal-day-num { width: 24px !important; height: 24px !important; font-size: 12px !important; }
+            }
+          `}</style>
         </div>
       )}
 
