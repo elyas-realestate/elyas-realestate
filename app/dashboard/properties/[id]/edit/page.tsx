@@ -50,7 +50,7 @@ export default function EditProperty() {
     city: "", district: "", land_area: "", built_area: "",
     rooms: "", bathrooms: "", floors: "", price: "",
     description: "", main_image: "", extra_images: "", location_url: "",
-    contact_phone: "", is_published: false,
+    contact_phone: "", ad_license_number: "", is_published: false,
   });
 
   useEffect(() => { loadProperty(); }, []);
@@ -84,8 +84,9 @@ export default function EditProperty() {
         main_image:    data.main_image || "",
         extra_images:  extraImgs.join("\n"),
         location_url:  data.location_url || "",
-        contact_phone: data.contact_phone || "",
-        is_published:  data.is_published || false,
+        contact_phone:     data.contact_phone || "",
+        ad_license_number: data.ad_license_number || "",
+        is_published:      data.is_published || false,
       });
     }
     setLoading(false);
@@ -151,6 +152,7 @@ export default function EditProperty() {
       location_url:  form.location_url || null,
       contact_phone: form.contact_phone || null,
       is_published:  form.is_published,
+      ad_license_number: form.ad_license_number.trim() || null,
     };
     if (allImages.length) payload.images = allImages;
 
@@ -297,6 +299,24 @@ export default function EditProperty() {
             <div>
               <label className={lbl}>رقم التواصل</label>
               <input name="contact_phone" value={form.contact_phone} onChange={handleChange} className={inp} dir="ltr" />
+            </div>
+            <div>
+              <label className={lbl}>
+                رقم ترخيص الإعلان
+                <span style={{ color: "#5A5A62", fontWeight: 400, marginRight: 6 }}>(اختياري)</span>
+              </label>
+              <input
+                name="ad_license_number"
+                value={form.ad_license_number}
+                onChange={e => set("ad_license_number", e.target.value.replace(/\D/g, ""))}
+                className={inp}
+                placeholder="71xxxxxxxx أو 72xxxxxxxx"
+                dir="ltr"
+                maxLength={20}
+              />
+              {form.ad_license_number && !/^(71|72)/.test(form.ad_license_number) && (
+                <p style={{ fontSize: 11, color: "#F87171", marginTop: 6 }}>⚠ الرقم يجب أن يبدأ بـ 71 أو 72</p>
+              )}
             </div>
           </div>
         </Section>

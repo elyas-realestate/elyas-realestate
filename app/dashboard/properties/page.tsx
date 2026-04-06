@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { Plus, Search, MapPin } from "lucide-react";
+import { Plus, Search, MapPin, Eye, EyeOff } from "lucide-react";
 import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
@@ -14,6 +14,7 @@ export default function Properties() {
   const [properties, setProperties] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState<string | null>(null);
 
   useEffect(() => { fetchProperties(); }, []);
 
@@ -23,21 +24,30 @@ export default function Properties() {
     setLoading(false);
   }
 
+  async function togglePublish(e: React.MouseEvent, id: string, current: boolean) {
+    e.preventDefault();
+    e.stopPropagation();
+    setToggling(id);
+    await supabase.from("properties").update({ is_published: !current }).eq("id", id);
+    setProperties(prev => prev.map(p => p.id === id ? { ...p, is_published: !current } : p));
+    setToggling(null);
+  }
+
   const filtered = properties.filter(p =>
     p.title?.includes(search) || p.district?.includes(search) || p.code?.includes(search)
   );
 
   return (
     <div dir="rtl">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <h2 className="text-2xl font-bold">العقارات</h2>
-        <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition no-underline text-white" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)' }}>
-          <Plus size={18} />
+        <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
+          <Plus size={16} />
           إضافة عقار
         </Link>
       </div>
 
-      <div className="relative mb-8 max-w-md">
+      <div className="relative mb-6">
         <Search size={18} className="absolute right-3 top-3.5" style={{ color:'#5A5A62' }} />
         <input type="text" placeholder="ابحث بالاسم أو الحي أو الرمز..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-lg pr-10 pl-4 py-3 focus:outline-none text-sm" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }} />
       </div>
@@ -47,40 +57,75 @@ export default function Properties() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-lg mb-4" style={{ color:'#9A9AA0' }}>لا توجد عقارات بعد</p>
-          <Link href="/dashboard/properties/add" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg no-underline text-white font-bold transition" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)' }}>
-            <Plus size={18} /> أضف أول عقار
+          <Link href="/dashboard/properties/add" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg no-underline font-bold transition text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
+            <Plus size={16} /> أضف أول عقار
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(property => (
-            <Link href={"/dashboard/properties/" + property.id} key={property.id} className="rounded-xl overflow-hidden no-underline transition" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }}>
-              <div className="h-48 flex items-center justify-center" style={{ background:'#1C1C22' }}>
-                {property.main_image ? (
-                  <img src={property.main_image} alt={property.title} className="w-full h-full object-cover" />
+            <div key={property.id} style={{ position: "relative" }}>
+
+              {/* ── زر النشر السريع ── */}
+              <button
+                onClick={e => togglePublish(e, property.id, property.is_published)}
+                disabled={toggling === property.id}
+                title={property.is_published ? "انقر لتحويل لمسودة" : "انقر للنشر"}
+                style={{
+                  position: "absolute", top: 10, left: 10, zIndex: 10,
+                  display: "flex", alignItems: "center", gap: 5,
+                  padding: "5px 10px", borderRadius: 8, border: "none",
+                  fontSize: 11, fontWeight: 700, cursor: "pointer",
+                  fontFamily: "'Tajawal', sans-serif",
+                  background: property.is_published ? "rgba(74,222,128,0.15)" : "rgba(90,90,98,0.25)",
+                  color: property.is_published ? "#4ADE80" : "#9A9AA0",
+                  backdropFilter: "blur(8px)",
+                  transition: "all 0.25s",
+                  opacity: toggling === property.id ? 0.5 : 1,
+                }}
+              >
+                {toggling === property.id ? (
+                  <span style={{ width: 10, height: 10, border: "1.5px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+                ) : property.is_published ? (
+                  <Eye size={11} />
                 ) : (
-                  <p style={{ color:'#5A5A62' }}>لا توجد صورة</p>
+                  <EyeOff size={11} />
                 )}
-              </div>
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs px-2 py-1 rounded" style={{ color:'#C6914C', background:'rgba(198,145,76,0.1)' }}>{property.code}</span>
-                  <span className="text-xs" style={{ color:'#5A5A62' }}>{property.offer_type}</span>
+                {property.is_published ? "منشور" : "مسودة"}
+              </button>
+
+              {/* ── البطاقة ── */}
+              <Link href={"/dashboard/properties/" + property.id} className="block rounded-xl overflow-hidden no-underline transition" style={{ background:'#16161A', border:'1px solid ' + (property.is_published ? 'rgba(74,222,128,0.15)' : 'rgba(198,145,76,0.12)'), color:'#F5F5F5' }}>
+                <div className="h-44 flex items-center justify-center" style={{ background:'#1C1C22' }}>
+                  {(property.images?.[0] || property.main_image) ? (
+                    <img src={property.images?.[0] || property.main_image} alt={property.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <p style={{ color:'#5A5A62', fontSize: 13 }}>لا توجد صورة</p>
+                  )}
                 </div>
-                <h3 className="font-bold text-lg mb-2">{property.title}</h3>
-                <div className="flex items-center gap-1 text-sm mb-3" style={{ color:'#9A9AA0' }}>
-                  <MapPin size={14} />
-                  <span>{property.district} — {property.city}</span>
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs px-2 py-1 rounded" style={{ color:'#C6914C', background:'rgba(198,145,76,0.1)' }}>{property.code}</span>
+                    <span className="text-xs" style={{ color:'#5A5A62' }}>{property.offer_type}</span>
+                  </div>
+                  <h3 className="font-bold mb-2 leading-snug" style={{ fontSize: 15 }}>{property.title}</h3>
+                  <div className="flex items-center gap-1 text-sm mb-3" style={{ color:'#9A9AA0', fontSize: 13 }}>
+                    <MapPin size={13} />
+                    <span>{property.district} — {property.city}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold flex items-center gap-1" style={{ color:'#C6914C', fontSize: 15 }}>
+                      {property.price?.toLocaleString()} <SARIcon size={12} color="accent" />
+                    </span>
+                    <span className="text-xs" style={{ color:'#5A5A62' }}>{property.main_category}</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold flex items-center gap-1" style={{ color:'#C6914C' }}>{property.price?.toLocaleString()} <SARIcon size={13} color="accent" /></span>
-                  <span className="text-xs" style={{ color:'#5A5A62' }}>{property.main_category} / {property.sub_category}</span>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </div>
       )}
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

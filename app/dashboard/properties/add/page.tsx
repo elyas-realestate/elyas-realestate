@@ -47,7 +47,7 @@ export default function AddProperty() {
     city: "الرياض", district: "", land_area: "", built_area: "",
     rooms: "", bathrooms: "", floors: "", price: "",
     description: "", main_image: "", extra_images: "", location_url: "",
-    contact_phone: "", is_published: false,
+    contact_phone: "", ad_license_number: "", is_published: false,
   });
 
   useEffect(() => {
@@ -123,6 +123,7 @@ export default function AddProperty() {
       is_published:  form.is_published,
     };
     if (allImages.length) payload.images = allImages;
+    if (form.ad_license_number.trim()) payload.ad_license_number = form.ad_license_number.trim();
 
     const { error: err } = await supabase.from("properties").insert([payload]);
 
@@ -264,6 +265,27 @@ export default function AddProperty() {
             <div>
               <label className={lbl}>رقم التواصل</label>
               <input name="contact_phone" value={form.contact_phone} onChange={handleChange} className={inp} placeholder="05xxxxxxxx" dir="ltr" />
+            </div>
+            <div>
+              <label className={lbl}>
+                رقم ترخيص الإعلان
+                <span style={{ color: "#5A5A62", fontWeight: 400, marginRight: 6 }}>(اختياري)</span>
+              </label>
+              <input
+                name="ad_license_number"
+                value={form.ad_license_number}
+                onChange={e => {
+                  const v = e.target.value.replace(/\D/g, "");
+                  set("ad_license_number", v);
+                }}
+                className={inp}
+                placeholder="71xxxxxxxx أو 72xxxxxxxx"
+                dir="ltr"
+                maxLength={20}
+              />
+              {form.ad_license_number && !/^(71|72)/.test(form.ad_license_number) && (
+                <p style={{ fontSize: 11, color: "#F87171", marginTop: 6 }}>⚠ الرقم يجب أن يبدأ بـ 71 أو 72</p>
+              )}
             </div>
           </div>
         </Section>

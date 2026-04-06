@@ -219,6 +219,12 @@ export default function PropertyDetail() {
               <h1 className="font-kufi" style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, color: "#F5F5F5", lineHeight: 1.35, marginBottom: 12 }}>
                 {property.title}
               </h1>
+              {property.ad_license_number && (
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.15)", borderRadius: 8, padding: "4px 10px", marginBottom: 10, fontSize: 12, color: "#9A9AA0" }}>
+                  <span style={{ color: "#5A5A62" }}>رقم ترخيص الإعلان:</span>
+                  <span style={{ color: "#C6914C", fontWeight: 600, direction: "ltr" }}>{property.ad_license_number}</span>
+                </div>
+              )}
               {(property.district || property.city) && (
                 <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#9A9AA0" }}>
                   <MapPin size={15} style={{ color: "#C6914C", flexShrink: 0 }} />

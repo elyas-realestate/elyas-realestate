@@ -218,6 +218,13 @@ export default function PropertyDetails() {
             </div>
           )}
 
+          {property.ad_license_number && (
+            <div className="rounded-2xl p-5" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.15)" }}>
+              <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 8, letterSpacing: 0.5 }}>رقم ترخيص الإعلان</p>
+              <p style={{ fontSize: 15, fontWeight: 700, color: "#C6914C", direction: "ltr", textAlign: "right" }}>{property.ad_license_number}</p>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
