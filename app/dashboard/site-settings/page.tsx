@@ -102,7 +102,14 @@ export default function SiteSettingsPage() {
       const { data } = supabase.storage.from("assets").getPublicUrl(path);
       handleChange("site_logo", data.publicUrl);
     } catch (e: any) {
-      setLogoError("تعذّر رفع الشعار — تأكد من إنشاء bucket اسمه 'assets' في Supabase Storage");
+      const msg = e?.message || "";
+      if (msg.includes("not found") || msg.includes("Bucket")) {
+        setLogoError("الـ bucket غير موجود — أنشئ bucket اسمه 'assets' في Supabase Storage");
+      } else if (msg.includes("policy") || msg.includes("permission") || msg.includes("unauthorized") || msg.includes("403") || msg.includes("row-level")) {
+        setLogoError("خطأ في الصلاحيات — أضف Policy للـ bucket من Storage → Policies تسمح بالرفع للمستخدمين المسجلين");
+      } else {
+        setLogoError("خطأ: " + (msg || "تعذّر رفع الشعار"));
+      }
     }
     setUploadingLogo(false);
   }
