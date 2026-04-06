@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Save, Check, Globe, Phone, Share2, FileText, Palette, MessageSquare, Layout, Link2, Eye, Plus, Trash2, Image } from "lucide-react";
+import { Save, Check, Globe, Phone, Share2, FileText, Palette, MessageSquare, Layout, Link2, Eye, Plus, Trash2, Image, Upload, X } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,6 +36,8 @@ export default function SiteSettingsPage() {
   const [saved, setSaved] = useState(false);
   const [activeSection, setActiveSection] = useState("general");
   const [selectedPage, setSelectedPage] = useState("");
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [logoError, setLogoError] = useState("");
 
   useEffect(() => { loadSettings(); }, []);
 
@@ -86,6 +88,23 @@ export default function SiteSettingsPage() {
   }
   function removeNavLink(index: number) {
     setSettings((prev: any) => ({ ...prev, navbar_links: prev.navbar_links.filter((_: any, i: number) => i !== index) }));
+  }
+
+  // === Logo Upload ===
+  async function handleLogoUpload(file: File) {
+    setUploadingLogo(true);
+    setLogoError("");
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `logos/logo_${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from("assets").getPublicUrl(path);
+      handleChange("site_logo", data.publicUrl);
+    } catch (e: any) {
+      setLogoError("تعذّر رفع الشعار — تأكد من إنشاء bucket اسمه 'assets' في Supabase Storage");
+    }
+    setUploadingLogo(false);
   }
 
   // === Save ===
@@ -170,12 +189,47 @@ export default function SiteSettingsPage() {
           {activeSection === "identity" && (
             <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-6">
               <h3 className="font-bold text-[#C9A84C] text-lg mb-4">الهوية البصرية</h3>
+
+              {/* Logo Upload */}
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-3">شعار الموقع</label>
-                <div className="w-32 h-32 bg-[#1C1C22] border-2 border-dashed border-gray-600 rounded-xl flex items-center justify-center cursor-pointer hover:border-[#C9A84C] transition">
-                  <p className="text-[#5A5A62] text-sm text-center leading-relaxed">رفع<br />الشعار</p>
+                <div className="flex items-start gap-4">
+                  {/* Preview */}
+                  <div className="w-24 h-24 bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {settings.site_logo ? (
+                      <img src={settings.site_logo} alt="الشعار" className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <Image size={28} className="text-[#5A5A62]" />
+                    )}
+                  </div>
+                  {/* Upload controls */}
+                  <div className="flex-1">
+                    <label className={
+                      "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition " +
+                      (uploadingLogo ? "opacity-50 cursor-not-allowed " : "hover:bg-[#2A2A32] ") +
+                      "bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] text-[#9A9AA0] w-fit"
+                    }>
+                      <Upload size={15} />
+                      {uploadingLogo ? "جاري الرفع..." : "رفع شعار"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={uploadingLogo}
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handleLogoUpload(f); }}
+                      />
+                    </label>
+                    <p className="text-[#5A5A62] text-xs mt-2">PNG أو SVG بخلفية شفافة — الحجم المثالي 200×200px</p>
+                    {logoError && <p className="text-red-400 text-xs mt-2">{logoError}</p>}
+                    {settings.site_logo && (
+                      <button onClick={() => handleChange("site_logo", "")} className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 mt-2 transition">
+                        <X size={12} /> حذف الشعار
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
+
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">اللون الرئيسي للموقع</label>
                 <div className="flex items-center gap-4">
@@ -186,6 +240,7 @@ export default function SiteSettingsPage() {
                   </span>
                 </div>
               </div>
+
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم رخصة فال <span className="text-[#5A5A62]">(يظهر في الموقع)</span></label>
                 <input value={settings.fal_license || ""} onChange={e => handleChange("fal_license", e.target.value)} className={inputClass} placeholder="مثال: 7001234567" />
