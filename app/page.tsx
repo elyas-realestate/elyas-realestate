@@ -101,20 +101,21 @@ export default async function Home() {
         /* ── Mobile hamburger ── */
         .nav-links { display: flex; align-items: center; gap: 32px; }
         .nav-mobile-btn { display: none; background: none; border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); border-radius: 10px; padding: 8px 10px; cursor: pointer; color: var(--text-sec); }
-        .nav-drawer { display: none; }
+        .nav-drawer {
+          display: flex; flex-direction: column; gap: 0;
+          position: fixed; top: 72px; right: 0; left: 0; z-index: 49;
+          background: rgba(16,16,20,0.98); backdrop-filter: blur(20px);
+          border-bottom: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+          padding: 16px 24px 20px;
+          opacity: 0; visibility: hidden; pointer-events: none;
+          transform: translateY(-6px);
+          transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+        }
+        .nav-drawer.open { opacity: 1; visibility: visible; pointer-events: all; transform: translateY(0); }
         /* ── Responsive ── */
         @media (max-width: 767px) {
           .nav-links { display: none; }
           .nav-mobile-btn { display: flex; align-items: center; justify-content: center; }
-          .nav-drawer {
-            display: flex; flex-direction: column; gap: 0;
-            position: fixed; top: 72px; right: 0; left: 0; z-index: 49;
-            background: rgba(16,16,20,0.98); backdrop-filter: blur(20px);
-            border-bottom: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
-            padding: 16px 24px 20px; transform: translateY(-110%);
-            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
-          }
-          .nav-drawer.open { transform: translateY(0); }
           .nav-drawer a, .nav-drawer span { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; color: var(--text-sec); text-decoration: none; display: block; }
           .nav-drawer a:last-child { border-bottom: none; }
           .hero-search { flex-direction: column !important; gap: 0 !important; border-radius: 16px !important; }
