@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
@@ -43,6 +43,8 @@ export default function EditProperty() {
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<any>({
     title: "", main_category: "", sub_category: "", offer_type: "",
     city: "", district: "", land_area: "", built_area: "",
@@ -308,27 +310,43 @@ export default function EditProperty() {
         <Section title="الصور">
           <div className="space-y-4">
 
-            <label style={{ display: "block", cursor: "pointer" }}>
-              <input type="file" accept="image/*" multiple className="hidden"
-                onChange={e => handleImageUpload(e.target.files)} />
-              <div className="flex flex-col items-center justify-center gap-3 rounded-xl transition"
-                style={{ border: "2px dashed rgba(198,145,76,0.25)", padding: "28px 20px", background: "rgba(198,145,76,0.03)", cursor: "pointer" }}>
-                {uploading ? (
-                  <>
-                    <div className="w-7 h-7 border-2 rounded-full border-t-transparent animate-spin" style={{ borderColor: "#C6914C", borderTopColor: "transparent" }} />
-                    <span style={{ color: "#9A9AA0", fontSize: 13 }}>جاري الرفع...</span>
-                  </>
-                ) : (
-                  <>
-                    <Upload size={22} style={{ color: "#C6914C" }} />
-                    <div className="text-center">
-                      <p style={{ color: "#F5F5F5", fontSize: 14, fontWeight: 600 }}>اضغط لإضافة صور</p>
-                      <p style={{ color: "#5A5A62", fontSize: 12, marginTop: 4 }}>JPG, PNG — يمكن اختيار أكثر من صورة</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </label>
+            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
+              onChange={e => { handleImageUpload(e.target.files); e.target.value = ""; }} />
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+              onDragEnter={e => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={e => { e.preventDefault(); setIsDragging(false); }}
+              onDrop={e => { e.preventDefault(); setIsDragging(false); handleImageUpload(e.dataTransfer.files); }}
+              className="flex flex-col items-center justify-center gap-3 rounded-xl transition-all"
+              style={{
+                border: "2px dashed " + (isDragging ? "#C6914C" : "rgba(198,145,76,0.25)"),
+                padding: "32px 20px",
+                background: isDragging ? "rgba(198,145,76,0.08)" : "rgba(198,145,76,0.03)",
+                cursor: "pointer",
+                transform: isDragging ? "scale(1.01)" : "scale(1)",
+              }}>
+              {uploading ? (
+                <>
+                  <div className="w-7 h-7 border-2 rounded-full animate-spin"
+                    style={{ borderColor: "rgba(198,145,76,0.3)", borderTopColor: "#C6914C" }} />
+                  <span style={{ color: "#9A9AA0", fontSize: 13 }}>جاري الرفع...</span>
+                </>
+              ) : isDragging ? (
+                <>
+                  <Upload size={28} style={{ color: "#C6914C" }} />
+                  <p style={{ color: "#C6914C", fontSize: 14, fontWeight: 700 }}>أفلت الصور هنا</p>
+                </>
+              ) : (
+                <>
+                  <Upload size={22} style={{ color: "#C6914C" }} />
+                  <div className="text-center">
+                    <p style={{ color: "#F5F5F5", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
+                    <p style={{ color: "#5A5A62", fontSize: 12, marginTop: 4 }}>JPG, PNG — يمكن اختيار أكثر من صورة</p>
+                  </div>
+                </>
+              )}
+            </div>
 
             {uploadedImages.length > 0 && (
               <div className="grid grid-cols-3 gap-3">
