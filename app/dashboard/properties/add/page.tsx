@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { ArrowRight, Save, Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Save, Eye, EyeOff, Upload, X, ImageIcon } from "lucide-react";
 import SARIcon from "../../../components/SARIcon";
 
 const supabase = createClient(
@@ -38,6 +38,8 @@ export default function AddProperty() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [subCategories, setSubCategories] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     title: "", main_category: "", sub_category: "", offer_type: "",
     city: "الرياض", district: "", land_area: "", built_area: "",
@@ -62,6 +64,31 @@ export default function AddProperty() {
     set(name, type === "checkbox" ? checked : value);
   }
 
+  async function handleImageUpload(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    const newUrls: string[] = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const path = `properties/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+      if (!upErr) {
+        const { data } = supabase.storage.from("assets").getPublicUrl(path);
+        newUrls.push(data.publicUrl);
+      }
+    }
+    setUploadedImages(prev => [...prev, ...newUrls]);
+    if (newUrls.length > 0 && !form.main_image) {
+      set("main_image", newUrls[0]);
+    }
+    setUploading(false);
+  }
+
+  function removeImage(url: string) {
+    setUploadedImages(prev => prev.filter(u => u !== url));
+    if (form.main_image === url) set("main_image", uploadedImages.find(u => u !== url) || "");
+  }
+
   async function handleSubmit(e: any) {
     e.preventDefault();
     setError("");
@@ -72,7 +99,7 @@ export default function AddProperty() {
     setLoading(true);
 
     const extraUrls = form.extra_images.split("\n").map((s: string) => s.trim()).filter(Boolean);
-    const allImages = [form.main_image, ...extraUrls].filter(Boolean);
+    const allImages = [...new Set([...uploadedImages, form.main_image, ...extraUrls].filter(Boolean))];
 
     const payload: any = {
       title:         form.title,
@@ -247,18 +274,60 @@ export default function AddProperty() {
         {/* ═══ الصور ═══ */}
         <Section title="الصور">
           <div className="space-y-4">
+
+            {/* زر الرفع */}
+            <label style={{ display: "block", cursor: "pointer" }}>
+              <input type="file" accept="image/*" multiple className="hidden"
+                onChange={e => handleImageUpload(e.target.files)} />
+              <div className="flex flex-col items-center justify-center gap-3 rounded-xl transition"
+                style={{ border: "2px dashed rgba(198,145,76,0.25)", padding: "32px 20px", background: "rgba(198,145,76,0.03)", cursor: "pointer" }}>
+                {uploading ? (
+                  <>
+                    <div className="w-7 h-7 border-2 rounded-full border-t-transparent animate-spin" style={{ borderColor: "#C6914C", borderTopColor: "transparent" }} />
+                    <span style={{ color: "#9A9AA0", fontSize: 13 }}>جاري الرفع...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload size={24} style={{ color: "#C6914C" }} />
+                    <div className="text-center">
+                      <p style={{ color: "#F5F5F5", fontSize: 14, fontWeight: 600 }}>اضغط لرفع الصور</p>
+                      <p style={{ color: "#5A5A62", fontSize: 12, marginTop: 4 }}>JPG, PNG — يمكن اختيار أكثر من صورة</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </label>
+
+            {/* معرض الصور المرفوعة */}
+            {uploadedImages.length > 0 && (
+              <div className="grid grid-cols-3 gap-3">
+                {uploadedImages.map((url, i) => (
+                  <div key={url} className="relative rounded-xl overflow-hidden group"
+                    style={{ height: 110, background: "#1C1C22", border: "2px solid " + (i === 0 ? "#C6914C" : "transparent") }}>
+                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    {i === 0 && (
+                      <div className="absolute top-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg font-bold"
+                        style={{ background: "#C6914C", color: "#0A0A0C" }}>رئيسية</div>
+                    )}
+                    <button type="button" onClick={() => removeImage(url)}
+                      className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                      style={{ background: "rgba(248,113,113,0.9)" }}>
+                      <X size={12} style={{ color: "white" }} />
+                    </button>
+                    {i !== 0 && (
+                      <button type="button" onClick={() => { setUploadedImages(prev => [url, ...prev.filter(u => u !== url)]); set("main_image", url); }}
+                        className="absolute bottom-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
+                        style={{ background: "rgba(10,10,12,0.8)", color: "#C6914C" }}>تعيين رئيسية</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* أو رابط مباشر */}
             <div>
-              <label className={lbl}>الصورة الرئيسية — رابط URL</label>
+              <label className={lbl}>أو أدخل رابط URL مباشر</label>
               <input name="main_image" value={form.main_image} onChange={handleChange} className={inp} placeholder="https://..." dir="ltr" />
-              {form.main_image && (
-                <div className="mt-3 rounded-xl overflow-hidden" style={{ height: 180, background: "#1C1C22" }}>
-                  <img src={form.main_image} alt="" className="w-full h-full object-cover" onError={e => (e.currentTarget.style.display = "none")} />
-                </div>
-              )}
-            </div>
-            <div>
-              <label className={lbl}>صور إضافية — رابط في كل سطر</label>
-              <textarea name="extra_images" value={form.extra_images} onChange={handleChange} rows={3} className={inp} placeholder={"https://...\nhttps://...\nhttps://..."} dir="ltr" />
             </div>
           </div>
         </Section>
