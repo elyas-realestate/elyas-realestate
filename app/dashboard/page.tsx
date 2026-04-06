@@ -124,19 +124,21 @@ export default function Dashboard() {
         supabase.from("site_analytics").select("id", { count: "exact", head: true }).eq("event_type", "pageview").gte("created_at", monthStart),
         supabase.from("site_analytics").select("id", { count: "exact", head: true }).eq("event_type", "click").gte("created_at", todayStart),
         supabase.from("site_analytics").select("id", { count: "exact", head: true }).eq("event_type", "click").gte("created_at", weekStart),
-        supabase.from("site_analytics").select("page").eq("event_type", "pageview").gte("created_at", monthStart),
+        supabase.from("site_analytics").select("page, element").eq("event_type", "pageview").gte("created_at", monthStart),
       ]);
 
-      // Aggregate top pages
-      const pageCounts: Record<string, number> = {};
+      // Aggregate top pages using Arabic label (stored in element field)
+      const pageCounts: Record<string, { label: string; count: number }> = {};
       (topP.data || []).forEach((r: any) => {
-        const page = r.page || "/";
-        pageCounts[page] = (pageCounts[page] || 0) + 1;
+        const key = r.page || "/";
+        const label = r.element || key;
+        if (!pageCounts[key]) pageCounts[key] = { label, count: 0 };
+        pageCounts[key].count += 1;
       });
-      const topPages = Object.entries(pageCounts)
-        .sort((a, b) => b[1] - a[1])
+      const topPages = Object.values(pageCounts)
+        .sort((a, b) => b.count - a.count)
         .slice(0, 5)
-        .map(([page, count]) => ({ page, count }));
+        .map(({ label, count }) => ({ page: label, count }));
 
       setAnalytics({
         viewsToday: vToday.count || 0,

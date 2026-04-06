@@ -28,6 +28,16 @@ export default function PropertyDetail() {
       setProperty(prop);
       setSettings(s);
       setLoading(false);
+      // تحديث label الزيارة باسم العقار
+      if (prop?.title) {
+        supabase.from("site_analytics")
+          .update({ element: "عقار: " + prop.title })
+          .eq("event_type", "pageview")
+          .eq("page", "/properties/" + params.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .then(() => {});
+      }
     });
   }, [params.id]);
 
