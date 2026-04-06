@@ -74,7 +74,7 @@ export default function AddProperty() {
     const extraUrls = form.extra_images.split("\n").map((s: string) => s.trim()).filter(Boolean);
     const allImages = [form.main_image, ...extraUrls].filter(Boolean);
 
-    const { error: err } = await supabase.from("properties").insert([{
+    const payload: any = {
       title:         form.title,
       main_category: form.main_category,
       sub_category:  form.sub_category,
@@ -89,11 +89,13 @@ export default function AddProperty() {
       price:         form.price      ? Number(form.price)      : null,
       description:   form.description,
       main_image:    form.main_image || null,
-      images:        allImages.length ? allImages : null,
       location_url:  form.location_url || null,
       contact_phone: form.contact_phone || null,
       is_published:  form.is_published,
-    }]);
+    };
+    if (allImages.length) payload.images = allImages;
+
+    const { error: err } = await supabase.from("properties").insert([payload]);
 
     if (err) {
       setError("خطأ من قاعدة البيانات: " + err.message);

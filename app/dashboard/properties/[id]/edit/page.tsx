@@ -101,7 +101,7 @@ export default function EditProperty() {
     const extraUrls = form.extra_images.split("\n").map((s: string) => s.trim()).filter(Boolean);
     const allImages = [form.main_image, ...extraUrls].filter(Boolean);
 
-    await supabase.from("properties").update({
+    const payload: any = {
       title:         form.title,
       main_category: form.main_category,
       sub_category:  form.sub_category,
@@ -116,11 +116,13 @@ export default function EditProperty() {
       price:         form.price      ? Number(form.price)      : null,
       description:   form.description,
       main_image:    form.main_image || null,
-      images:        allImages.length ? allImages : null,
       location_url:  form.location_url || null,
       contact_phone: form.contact_phone || null,
       is_published:  form.is_published,
-    }).eq("id", id);
+    };
+    if (allImages.length) payload.images = allImages;
+
+    await supabase.from("properties").update(payload).eq("id", id);
 
     setSaving(false);
     setSaved(true);
