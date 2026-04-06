@@ -127,7 +127,7 @@ export default function SiteSettingsPage() {
   if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
   if (!settings) return <div className="text-red-400 text-center py-20">لم يتم العثور على الإعدادات</div>;
 
-  const inputClass = "w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C] transition";
+  const inputClass = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C] transition";
 
   const sections = [
     { id: "general",  label: "معلومات عامة",           icon: Globe },
@@ -151,7 +151,7 @@ export default function SiteSettingsPage() {
         </div>
         <button onClick={handleSave} disabled={saving}
           className={"flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition " +
-            (saved ? "bg-green-600 text-white" : "bg-[#C9A84C] hover:bg-[#A68A3A] text-[#0A0A0C]")}>
+            (saved ? "bg-green-600 text-white" : "bg-[#C6914C] hover:bg-[#A6743A] text-[#0A0A0C]")}>
           {saved ? <><Check size={20} /> تم الحفظ</> : saving ? <><Save size={20} className="animate-spin" /> جاري الحفظ...</> : <><Save size={20} /> حفظ التعديلات</>}
         </button>
       </div>
@@ -162,7 +162,7 @@ export default function SiteSettingsPage() {
           {sections.map(sec => (
             <button key={sec.id} onClick={() => { setActiveSection(sec.id); setSelectedPage(""); }}
               className={"w-full text-right flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition " +
-                (activeSection === sec.id ? "bg-[#C9A84C] text-white" : "text-[#9A9AA0] hover:text-white hover:bg-[#16161A]")}>
+                (activeSection === sec.id ? "bg-[#C6914C] text-white" : "text-[#9A9AA0] hover:text-white hover:bg-[#16161A]")}>
               <sec.icon size={16} />{sec.label}
             </button>
           ))}
@@ -173,8 +173,8 @@ export default function SiteSettingsPage() {
 
           {/* ═══ معلومات عامة ═══ */}
           {activeSection === "general" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-5">
-              <h3 className="font-bold text-[#C9A84C] text-lg mb-4">معلومات عامة</h3>
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
+              <h3 className="font-bold text-[#C6914C] text-lg mb-4">معلومات عامة</h3>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">اسم الموقع / اسمك</label>
                 <input value={settings.site_name || ""} onChange={e => handleChange("site_name", e.target.value)} className={inputClass} />
@@ -194,15 +194,15 @@ export default function SiteSettingsPage() {
 
           {/* ═══ الهوية البصرية ═══ */}
           {activeSection === "identity" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-6">
-              <h3 className="font-bold text-[#C9A84C] text-lg mb-4">الهوية البصرية</h3>
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-6">
+              <h3 className="font-bold text-[#C6914C] text-lg mb-4">الهوية البصرية</h3>
 
               {/* Logo Upload */}
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-3">شعار الموقع</label>
                 <div className="flex items-start gap-4">
                   {/* Preview */}
-                  <div className="w-24 h-24 bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div className="w-24 h-24 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {settings.site_logo ? (
                       <img src={settings.site_logo} alt="الشعار" className="w-full h-full object-contain p-1" />
                     ) : (
@@ -214,7 +214,7 @@ export default function SiteSettingsPage() {
                     <label className={
                       "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition " +
                       (uploadingLogo ? "opacity-50 cursor-not-allowed " : "hover:bg-[#2A2A32] ") +
-                      "bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] text-[#9A9AA0] w-fit"
+                      "bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] text-[#9A9AA0] w-fit"
                     }>
                       <Upload size={15} />
                       {uploadingLogo ? "جاري الرفع..." : "رفع شعار"}
@@ -240,10 +240,10 @@ export default function SiteSettingsPage() {
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">اللون الرئيسي للموقع</label>
                 <div className="flex items-center gap-4">
-                  <input type="color" defaultValue="#C9A84C" className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent" />
+                  <input type="color" defaultValue="#C6914C" className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent" />
                   <span className="text-[#9A9AA0] text-sm">
                     للتحكم الكامل بالألوان والخطوط اذهب إلى{" "}
-                    <a href="/dashboard/visual-editor" className="text-[#C9A84C] hover:underline">المحرر البصري</a>
+                    <a href="/dashboard/visual-editor" className="text-[#C6914C] hover:underline">المحرر البصري</a>
                   </span>
                 </div>
               </div>
@@ -258,8 +258,8 @@ export default function SiteSettingsPage() {
           {/* ═══ التواصل والسوشال ═══ */}
           {activeSection === "contact" && (
             <div className="space-y-6">
-              <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-5">
-                <h3 className="font-bold text-[#C9A84C] text-lg mb-4">معلومات التواصل العامة</h3>
+              <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
+                <h3 className="font-bold text-[#C6914C] text-lg mb-4">معلومات التواصل العامة</h3>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">رقم الجوال <span className="text-[#5A5A62]">(مع مفتاح الدولة)</span></label>
                   <input value={settings.phone || ""} onChange={e => handleChange("phone", e.target.value)} className={inputClass} placeholder="+966501234567" dir="ltr" />
@@ -274,8 +274,8 @@ export default function SiteSettingsPage() {
                 </div>
               </div>
 
-              <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-4">
-                <h3 className="font-bold text-[#C9A84C] text-lg mb-4">حسابات السوشال ميديا</h3>
+              <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-4">
+                <h3 className="font-bold text-[#C6914C] text-lg mb-4">حسابات السوشال ميديا</h3>
                 {socialPlatforms.map(p => (
                   <div key={p.key}>
                     <label className="block text-sm text-[#9A9AA0] mb-2">{p.label}</label>
@@ -289,8 +289,8 @@ export default function SiteSettingsPage() {
           {/* ═══ القسم الرئيسي (Hero) ═══ */}
           {activeSection === "hero" && (
             <div className="space-y-6">
-              <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-5">
-                <h3 className="font-bold text-[#C9A84C] text-lg mb-4">القسم الرئيسي (Hero)</h3>
+              <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
+                <h3 className="font-bold text-[#C6914C] text-lg mb-4">القسم الرئيسي (Hero)</h3>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الشارة العلوية <span className="text-[#5A5A62]">(النص الصغير فوق العنوان)</span></label>
                   <input value={settings.hero_badge || ""} onChange={e => handleChange("hero_badge", e.target.value)} className={inputClass} />
@@ -307,13 +307,13 @@ export default function SiteSettingsPage() {
                   <label className="block text-sm text-[#9A9AA0] mb-2">صورة الخلفية <span className="text-[#5A5A62]">(رابط الصورة — URL)</span></label>
                   <input value={settings.hero_image || ""} onChange={e => handleChange("hero_image", e.target.value)} className={inputClass + " text-sm"} dir="ltr" placeholder="https://images.unsplash.com/..." />
                   {settings.hero_image && (
-                    <div className="mt-3 rounded-lg overflow-hidden border border-[rgba(201,168,76,0.15)]" style={{ height: 150 }}>
+                    <div className="mt-3 rounded-lg overflow-hidden border border-[rgba(198,145,76,0.15)]" style={{ height: 150 }}>
                       <img src={settings.hero_image} alt="معاينة" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   )}
                 </div>
               </div>
-              <div className="bg-gray-800/50 border border-[rgba(201,168,76,0.12)] rounded-xl p-4">
+              <div className="bg-gray-800/50 border border-[rgba(198,145,76,0.12)] rounded-xl p-4">
                 <p className="text-[#5A5A62] text-sm">💡 هذه النصوص تظهر في أول شي يشوفه الزائر — اجعلها مؤثرة ومختصرة. صورة الخلفية يُفضل أن تكون بدقة عالية (1920px عرض على الأقل).</p>
               </div>
             </div>
@@ -321,10 +321,10 @@ export default function SiteSettingsPage() {
 
           {/* ═══ روابط القائمة (Navbar) ═══ */}
           {activeSection === "navbar" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="font-bold text-[#C9A84C] text-lg">روابط القائمة العلوية</h3>
+                  <h3 className="font-bold text-[#C6914C] text-lg">روابط القائمة العلوية</h3>
                   <p className="text-[#5A5A62] text-sm mt-1">الروابط اللي تظهر في النافبار — أضف، عدّل، أو احذف</p>
                 </div>
                 <button onClick={addNavLink} className="text-sm bg-[#1C1C22] hover:bg-[#2A2A32] px-4 py-2 rounded-lg transition flex items-center gap-2">
@@ -343,15 +343,15 @@ export default function SiteSettingsPage() {
                     <div className="grid grid-cols-3 gap-3">
                       <div>
                         <label className="block text-xs text-[#5A5A62] mb-1">النص</label>
-                        <input value={link.label || ""} onChange={e => handleNavChange(i, "label", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm" placeholder="الرئيسية" />
+                        <input value={link.label || ""} onChange={e => handleNavChange(i, "label", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" placeholder="الرئيسية" />
                       </div>
                       <div>
                         <label className="block text-xs text-[#5A5A62] mb-1">الرابط</label>
-                        <input value={link.href || ""} onChange={e => handleNavChange(i, "href", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm" dir="ltr" placeholder="/" />
+                        <input value={link.href || ""} onChange={e => handleNavChange(i, "href", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" dir="ltr" placeholder="/" />
                       </div>
                       <div>
                         <label className="block text-xs text-[#5A5A62] mb-1">النوع</label>
-                        <select value={link.type || "link"} onChange={e => handleNavChange(i, "type", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm">
+                        <select value={link.type || "link"} onChange={e => handleNavChange(i, "type", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm">
                           <option value="link">رابط صفحة</option>
                           <option value="anchor">رابط قسم (#)</option>
                           <option value="cta">زر بارز (CTA)</option>
@@ -361,7 +361,7 @@ export default function SiteSettingsPage() {
                   </div>
                 ))}
               </div>
-              <div className="bg-gray-800/50 border border-[rgba(201,168,76,0.15)] rounded-xl p-4 mt-4">
+              <div className="bg-gray-800/50 border border-[rgba(198,145,76,0.15)] rounded-xl p-4 mt-4">
                 <p className="text-[#5A5A62] text-sm">💡 <strong>رابط صفحة:</strong> ينتقل لصفحة أخرى (مثل /properties). <strong>رابط قسم:</strong> ينزل لقسم في نفس الصفحة (مثل #services). <strong>زر بارز:</strong> يظهر كزر ذهبي مميز.</p>
               </div>
             </div>
@@ -369,8 +369,8 @@ export default function SiteSettingsPage() {
 
           {/* ═══ إظهار / إخفاء الأقسام ═══ */}
           {activeSection === "sections" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
-              <h3 className="font-bold text-[#C9A84C] text-lg mb-2">إظهار / إخفاء أقسام الصفحة الرئيسية</h3>
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
+              <h3 className="font-bold text-[#C6914C] text-lg mb-2">إظهار / إخفاء أقسام الصفحة الرئيسية</h3>
               <p className="text-[#5A5A62] text-sm mb-6">تحكّم بالأقسام اللي تبيها تظهر في الصفحة الرئيسية</p>
               <div className="space-y-4">
                 {[
@@ -386,7 +386,7 @@ export default function SiteSettingsPage() {
                     </div>
                     <button
                       onClick={() => handleChange(item.field, !settings[item.field])}
-                      className={"w-14 h-8 rounded-full transition relative " + (settings[item.field] !== false ? "bg-[#C9A84C]" : "bg-[#2A2A32]")}
+                      className={"w-14 h-8 rounded-full transition relative " + (settings[item.field] !== false ? "bg-[#C6914C]" : "bg-[#2A2A32]")}
                     >
                       <div className={"w-6 h-6 bg-white rounded-full absolute top-1 transition-all " + (settings[item.field] !== false ? "left-1" : "right-1")} />
                     </button>
@@ -398,9 +398,9 @@ export default function SiteSettingsPage() {
 
           {/* ═══ الخدمات ═══ */}
           {activeSection === "services" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold text-[#C9A84C] text-lg">الخدمات</h3>
+                <h3 className="font-bold text-[#C6914C] text-lg">الخدمات</h3>
                 <button onClick={addService} className="text-sm bg-[#1C1C22] hover:bg-[#2A2A32] px-4 py-2 rounded-lg transition flex items-center gap-2">
                   <Plus size={14} /> إضافة خدمة
                 </button>
@@ -417,16 +417,16 @@ export default function SiteSettingsPage() {
                     <div className="grid grid-cols-6 gap-3">
                       <div className="col-span-1">
                         <label className="block text-xs text-[#5A5A62] mb-1">الأيقونة</label>
-                        <input value={svc.icon || ""} onChange={e => handleServiceChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 text-center text-xl focus:outline-none focus:border-[#C9A84C]" />
+                        <input value={svc.icon || ""} onChange={e => handleServiceChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]" />
                       </div>
                       <div className="col-span-5">
                         <label className="block text-xs text-[#5A5A62] mb-1">اسم الخدمة</label>
-                        <input value={svc.title || ""} onChange={e => handleServiceChange(i, "title", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm" />
+                        <input value={svc.title || ""} onChange={e => handleServiceChange(i, "title", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" />
                       </div>
                     </div>
                     <div>
                       <label className="block text-xs text-[#5A5A62] mb-1">وصف الخدمة</label>
-                      <textarea value={svc.desc || ""} onChange={e => handleServiceChange(i, "desc", e.target.value)} rows={2} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm" />
+                      <textarea value={svc.desc || ""} onChange={e => handleServiceChange(i, "desc", e.target.value)} rows={2} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" />
                     </div>
                   </div>
                 ))}
@@ -436,9 +436,9 @@ export default function SiteSettingsPage() {
 
           {/* ═══ لماذا تختارنا ═══ */}
           {activeSection === "why" && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold text-[#C9A84C] text-lg">لماذا تختارنا</h3>
+                <h3 className="font-bold text-[#C6914C] text-lg">لماذا تختارنا</h3>
                 <button onClick={addWhyCard} className="text-sm bg-[#1C1C22] hover:bg-[#2A2A32] px-4 py-2 rounded-lg transition flex items-center gap-2">
                   <Plus size={14} /> إضافة بطاقة
                 </button>
@@ -455,16 +455,16 @@ export default function SiteSettingsPage() {
                     <div className="grid grid-cols-6 gap-3">
                       <div className="col-span-1">
                         <label className="block text-xs text-[#5A5A62] mb-1">الأيقونة</label>
-                        <input value={card.icon || ""} onChange={e => handleWhyChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 text-center text-xl focus:outline-none focus:border-[#C9A84C]" />
+                        <input value={card.icon || ""} onChange={e => handleWhyChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]" />
                       </div>
                       <div className="col-span-5">
                         <label className="block text-xs text-[#5A5A62] mb-1">العنوان</label>
-                        <input value={card.title || ""} onChange={e => handleWhyChange(i, "title", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm" />
+                        <input value={card.title || ""} onChange={e => handleWhyChange(i, "title", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" />
                       </div>
                     </div>
                     <div>
                       <label className="block text-xs text-[#5A5A62] mb-1">الوصف</label>
-                      <textarea value={card.desc || ""} onChange={e => handleWhyChange(i, "desc", e.target.value)} rows={2} className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C9A84C] text-sm" />
+                      <textarea value={card.desc || ""} onChange={e => handleWhyChange(i, "desc", e.target.value)} rows={2} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" />
                     </div>
                   </div>
                 ))}
@@ -475,13 +475,13 @@ export default function SiteSettingsPage() {
           {/* ═══ الصفحات الثابتة ═══ */}
           {activeSection === "pages" && !selectedPage && (
             <div>
-              <h3 className="font-bold text-[#C9A84C] text-lg mb-2">الصفحات الثابتة</h3>
+              <h3 className="font-bold text-[#C6914C] text-lg mb-2">الصفحات الثابتة</h3>
               <p className="text-[#5A5A62] text-sm mb-6">تعديل نصوص الصفحات الثابتة في الموقع</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {staticPages.map(page => (
                   <button key={page.key} onClick={() => setSelectedPage(page.key)}
-                    className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-5 text-right hover:border-[#C9A84C] transition">
-                    <h4 className="font-bold text-[#C9A84C] mb-2">{page.label}</h4>
+                    className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 text-right hover:border-[#C6914C] transition">
+                    <h4 className="font-bold text-[#C6914C] mb-2">{page.label}</h4>
                     <p className="text-[#9A9AA0] text-sm">{page.desc}</p>
                   </button>
                 ))}
@@ -490,16 +490,16 @@ export default function SiteSettingsPage() {
           )}
 
           {activeSection === "pages" && selectedPage && (
-            <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold text-[#C9A84C]">{staticPages.find(p => p.key === selectedPage)?.label}</h3>
+                <h3 className="font-bold text-[#C6914C]">{staticPages.find(p => p.key === selectedPage)?.label}</h3>
                 <button onClick={() => setSelectedPage("")} className="text-[#9A9AA0] hover:text-white text-sm transition">رجوع</button>
               </div>
               <textarea
                 value={settings[selectedPage] || ""}
                 onChange={e => handleChange(selectedPage, e.target.value)}
                 rows={12}
-                className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C]"
+                className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C]"
                 placeholder="اكتب محتوى الصفحة هنا..."
               />
             </div>
@@ -508,8 +508,8 @@ export default function SiteSettingsPage() {
           {/* ═══ قسم التواصل والفوتر ═══ */}
           {activeSection === "cta" && (
             <div className="space-y-6">
-              <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-5">
-                <h3 className="font-bold text-[#C9A84C] text-lg mb-4">قسم التواصل (CTA)</h3>
+              <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
+                <h3 className="font-bold text-[#C6914C] text-lg mb-4">قسم التواصل (CTA)</h3>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">عنوان قسم التواصل</label>
                   <input value={settings.cta_title || ""} onChange={e => handleChange("cta_title", e.target.value)} className={inputClass} />
@@ -519,8 +519,8 @@ export default function SiteSettingsPage() {
                   <textarea value={settings.cta_subtitle || ""} onChange={e => handleChange("cta_subtitle", e.target.value)} rows={2} className={inputClass} />
                 </div>
               </div>
-              <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6 space-y-5">
-                <h3 className="font-bold text-[#C9A84C] text-lg mb-4">الفوتر</h3>
+              <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
+                <h3 className="font-bold text-[#C6914C] text-lg mb-4">الفوتر</h3>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">نص الفوتر التعريفي</label>
                   <textarea value={settings.footer_text || ""} onChange={e => handleChange("footer_text", e.target.value)} rows={3} className={inputClass} />

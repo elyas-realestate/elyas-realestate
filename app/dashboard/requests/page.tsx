@@ -18,7 +18,7 @@ const subCategories: Record<string, string[]> = {
 const urgencyLevels = ["عادي", "مستعجل", "عاجل جداً"];
 const statusOptions = ["جديد", "قيد البحث", "تم العرض", "مكتمل", "ملغي"];
 const statusColors: Record<string, string> = {
-  "جديد": "bg-[rgba(201,168,76,0.1)] text-[#C9A84C]",
+  "جديد": "bg-[rgba(198,145,76,0.1)] text-[#C6914C]",
   "قيد البحث": "bg-yellow-900/30 text-yellow-400",
   "تم العرض": "bg-purple-900/30 text-purple-400",
   "مكتمل": "bg-green-900/30 text-green-400",
@@ -150,7 +150,7 @@ export default function RequestsPage() {
           <h2 className="text-2xl font-bold mb-2">الطلبات العقارية</h2>
           <p className="text-[#9A9AA0] text-sm">إدارة طلبات العملاء — بحث، تصفية، ومتابعة الحالة</p>
         </div>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 bg-[#C9A84C] hover:bg-[#A68A3A] px-5 py-3 rounded-xl font-bold transition">
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 bg-[#C6914C] hover:bg-[#A6743A] px-5 py-3 rounded-xl font-bold transition">
           <Plus size={18} /> طلب جديد
         </button>
       </div>
@@ -158,12 +158,12 @@ export default function RequestsPage() {
       {/* الإحصائيات */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: "إجمالي الطلبات", value: stats.total, color: "text-[#C9A84C]", icon: FileText },
+          { label: "إجمالي الطلبات", value: stats.total, color: "text-[#C6914C]", icon: FileText },
           { label: "طلبات جديدة", value: stats.new, color: "text-green-400", icon: AlertCircle },
           { label: "قيد البحث", value: stats.searching, color: "text-yellow-400", icon: Clock },
           { label: "مكتملة", value: stats.done, color: "text-emerald-400", icon: CheckCircle },
         ].map((stat, i) => (
-          <div key={i} className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-4 flex items-center gap-4">
+          <div key={i} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-4 flex items-center gap-4">
             <stat.icon size={24} className={stat.color} />
             <div>
               <div className={"text-2xl font-bold " + stat.color}>{stat.value}</div>
@@ -177,13 +177,13 @@ export default function RequestsPage() {
       <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
           <Search size={16} className="absolute right-3 top-3.5 text-[#5A5A62]" />
-          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="بحث بالعميل، الحي، الكود، أو النوع..." className="w-full bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" />
+          <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="بحث بالعميل، الحي، الكود، أو النوع..." className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" />
         </div>
-        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
           <option value="all">كل الحالات</option>
           {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
           <option value="all">كل الأنواع</option>
           {requestTypes.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
@@ -196,10 +196,10 @@ export default function RequestsPage() {
           <p>{requests.length === 0 ? "لا توجد طلبات بعد — أضف أول طلب" : "لا توجد نتائج مطابقة"}</p>
         </div>
       ) : (
-        <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl overflow-hidden">
+        <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[rgba(201,168,76,0.12)] text-[#5A5A62] text-xs">
+              <tr className="border-b border-[rgba(198,145,76,0.12)] text-[#5A5A62] text-xs">
                 <th className="text-right px-4 py-3 font-medium">الكود</th>
                 <th className="text-right px-4 py-3 font-medium">العميل</th>
                 <th className="text-right px-4 py-3 font-medium">النوع</th>
@@ -232,7 +232,7 @@ export default function RequestsPage() {
                   <td className={"px-4 py-3 text-xs font-medium " + (urgencyColors[req.urgency_level] || "text-[#9A9AA0]")}>{req.urgency_level || "عادي"}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
-                      <button onClick={() => setSelectedRequest(req)} className="text-[#5A5A62] hover:text-[#C9A84C] transition"><Eye size={16} /></button>
+                      <button onClick={() => setSelectedRequest(req)} className="text-[#5A5A62] hover:text-[#C6914C] transition"><Eye size={16} /></button>
                       <button onClick={() => openEdit(req)} className="text-[#5A5A62] hover:text-yellow-400 transition"><Pencil size={16} /></button>
                       <button onClick={() => handleDelete(req.id)} className="text-[#5A5A62] hover:text-red-400 transition"><Trash2 size={16} /></button>
                     </div>
@@ -247,7 +247,7 @@ export default function RequestsPage() {
       {/* نافذة التفاصيل */}
       {selectedRequest && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setSelectedRequest(null)}>
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" dir="rtl" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" dir="rtl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">تفاصيل الطلب</h3>
               <button onClick={() => setSelectedRequest(null)} className="text-[#5A5A62] hover:text-white"><X size={18} /></button>
@@ -274,7 +274,7 @@ export default function RequestsPage() {
               ))}
             </div>
             <div className="flex gap-2 mt-6">
-              <button onClick={() => { openEdit(selectedRequest); setSelectedRequest(null); }} className="flex-1 bg-[#C9A84C] hover:bg-[#A68A3A] py-2 rounded-lg text-sm font-bold transition">تعديل</button>
+              <button onClick={() => { openEdit(selectedRequest); setSelectedRequest(null); }} className="flex-1 bg-[#C6914C] hover:bg-[#A6743A] py-2 rounded-lg text-sm font-bold transition">تعديل</button>
               <button onClick={() => { handleDelete(selectedRequest.id); }} className="bg-red-900/30 hover:bg-red-900/50 text-red-400 px-4 py-2 rounded-lg text-sm transition">حذف</button>
             </div>
           </div>
@@ -284,7 +284,7 @@ export default function RequestsPage() {
       {/* نموذج الإضافة/التعديل */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => { setShowForm(false); resetForm(); }}>
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.15)] rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6" dir="rtl" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6" dir="rtl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">{editingId ? "تعديل الطلب" : "طلب جديد"}</h3>
               <button onClick={() => { setShowForm(false); resetForm(); }} className="text-[#5A5A62] hover:text-white"><X size={18} /></button>
@@ -292,7 +292,7 @@ export default function RequestsPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">العميل</label>
-                <select value={form.client_file_id} onChange={e => setForm({ ...form, client_file_id: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+                <select value={form.client_file_id} onChange={e => setForm({ ...form, client_file_id: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                   <option value="">بدون عميل محدد</option>
                   {clients.map(c => <option key={c.id} value={c.id}>{c.name} {c.phone ? "— " + c.phone : ""}</option>)}
                 </select>
@@ -300,14 +300,14 @@ export default function RequestsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">نوع الطلب *</label>
-                  <select value={form.request_type} onChange={e => setForm({ ...form, request_type: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+                  <select value={form.request_type} onChange={e => setForm({ ...form, request_type: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                     <option value="">اختر...</option>
                     {requestTypes.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">التصنيف الرئيسي</label>
-                  <select value={form.main_category} onChange={e => setForm({ ...form, main_category: e.target.value, sub_category: "" })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+                  <select value={form.main_category} onChange={e => setForm({ ...form, main_category: e.target.value, sub_category: "" })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                     <option value="">اختر...</option>
                     {mainCategories.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
@@ -316,7 +316,7 @@ export default function RequestsPage() {
               {form.main_category && (
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">التصنيف الفرعي</label>
-                  <select value={form.sub_category} onChange={e => setForm({ ...form, sub_category: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+                  <select value={form.sub_category} onChange={e => setForm({ ...form, sub_category: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                     <option value="">اختر...</option>
                     {(subCategories[form.main_category] || []).map((s: string) => <option key={s} value={s}>{s}</option>)}
                   </select>
@@ -325,54 +325,54 @@ export default function RequestsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">المدينة</label>
-                  <input value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" />
+                  <input value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" />
                 </div>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الحي</label>
-                  <input value={form.district} onChange={e => setForm({ ...form, district: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" placeholder="مثال: النرجس" />
+                  <input value={form.district} onChange={e => setForm({ ...form, district: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" placeholder="مثال: النرجس" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">المساحة من (م²)</label>
-                  <input type="number" value={form.area_min} onChange={e => setForm({ ...form, area_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" dir="ltr" />
+                  <input type="number" value={form.area_min} onChange={e => setForm({ ...form, area_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">المساحة إلى (م²)</label>
-                  <input type="number" value={form.area_max} onChange={e => setForm({ ...form, area_max: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" dir="ltr" />
+                  <input type="number" value={form.area_max} onChange={e => setForm({ ...form, area_max: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية من (ريال)</label>
-                  <input type="number" value={form.budget_min} onChange={e => setForm({ ...form, budget_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" dir="ltr" />
+                  <input type="number" value={form.budget_min} onChange={e => setForm({ ...form, budget_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية إلى (ريال)</label>
-                  <input type="number" value={form.budget_max} onChange={e => setForm({ ...form, budget_max: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" dir="ltr" />
+                  <input type="number" value={form.budget_max} onChange={e => setForm({ ...form, budget_max: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">المميزات المطلوبة</label>
-                <textarea value={form.required_features} onChange={e => setForm({ ...form, required_features: e.target.value })} rows={3} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]" placeholder="مثال: مسبح، مدخل سيارة، قريب من مدرسة..." />
+                <textarea value={form.required_features} onChange={e => setForm({ ...form, required_features: e.target.value })} rows={3} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" placeholder="مثال: مسبح، مدخل سيارة، قريب من مدرسة..." />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الأولوية</label>
-                  <select value={form.urgency_level} onChange={e => setForm({ ...form, urgency_level: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+                  <select value={form.urgency_level} onChange={e => setForm({ ...form, urgency_level: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                     {urgencyLevels.map(u => <option key={u} value={u}>{u}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm text-[#9A9AA0] mb-2">الحالة</label>
-                  <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C9A84C]">
+                  <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                     {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={handleSave} className="flex-1 bg-[#C9A84C] hover:bg-[#A68A3A] py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
+              <button onClick={handleSave} className="flex-1 bg-[#C6914C] hover:bg-[#A6743A] py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
                 <Save size={18} /> {editingId ? "حفظ التعديلات" : "إضافة الطلب"}
               </button>
               <button onClick={() => { setShowForm(false); resetForm(); }} className="bg-[#1C1C22] hover:bg-[#2A2A32] px-6 py-3 rounded-xl transition">إلغاء</button>

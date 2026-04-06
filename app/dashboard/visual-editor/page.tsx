@@ -9,8 +9,8 @@ const supabase = createClient(
 );
 
 const defaultColors = {
-  color_accent: "#C9A84C",
-  color_accent_dark: "#A68A3A",
+  color_accent: "#C6914C",
+  color_accent_dark: "#A6743A",
   color_bg_primary: "#0A0A0C",
   color_bg_secondary: "#111114",
   color_bg_card: "#16161A",
@@ -80,7 +80,7 @@ export default function VisualEditorPage() {
     setTimeout(() => setSaved(false), 3000);
   }
 
-  if (loading) return <div style={{ color:'#C9A84C' }} className="text-center py-20">جاري التحميل...</div>;
+  if (loading) return <div style={{ color:'#C6914C' }} className="text-center py-20">جاري التحميل...</div>;
   if (!settings) return <div className="text-red-400 text-center py-20">لم يتم العثور على الإعدادات</div>;
 
   const s = settings;
@@ -107,17 +107,17 @@ export default function VisualEditorPage() {
           <h2 className="text-2xl font-bold mb-1">المحرر البصري</h2>
           <p style={{ color:'#5A5A62', fontSize:14 }}>غيّر الألوان وأحجام الخطوط وشاهد النتيجة مباشرة</p>
         </div>
-        <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition text-[#0A0A0C]" style={{ background: saved ? '#4ADE80' : 'linear-gradient(135deg, #C9A84C, #A68A3A)' }}>
+        <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition text-[#0A0A0C]" style={{ background: saved ? '#4ADE80' : 'linear-gradient(135deg, #C6914C, #A6743A)' }}>
           {saved ? <><Check size={20} /> تم الحفظ</> : saving ? <><Save size={20} className="animate-spin" /> جاري الحفظ...</> : <><Save size={20} /> حفظ</>}
         </button>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
-        <button onClick={() => setActiveTab("colors")} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition" style={{ background: activeTab === "colors" ? 'rgba(201,168,76,0.15)' : '#16161A', color: activeTab === "colors" ? '#C9A84C' : '#5A5A62', border: '1px solid ' + (activeTab === "colors" ? 'rgba(201,168,76,0.3)' : 'rgba(201,168,76,0.12)') }}>
+        <button onClick={() => setActiveTab("colors")} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition" style={{ background: activeTab === "colors" ? 'rgba(198,145,76,0.15)' : '#16161A', color: activeTab === "colors" ? '#C6914C' : '#5A5A62', border: '1px solid ' + (activeTab === "colors" ? 'rgba(198,145,76,0.3)' : 'rgba(198,145,76,0.12)') }}>
           <Palette size={16} /> الألوان
         </button>
-        <button onClick={() => setActiveTab("fonts")} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition" style={{ background: activeTab === "fonts" ? 'rgba(201,168,76,0.15)' : '#16161A', color: activeTab === "fonts" ? '#C9A84C' : '#5A5A62', border: '1px solid ' + (activeTab === "fonts" ? 'rgba(201,168,76,0.3)' : 'rgba(201,168,76,0.12)') }}>
+        <button onClick={() => setActiveTab("fonts")} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition" style={{ background: activeTab === "fonts" ? 'rgba(198,145,76,0.15)' : '#16161A', color: activeTab === "fonts" ? '#C6914C' : '#5A5A62', border: '1px solid ' + (activeTab === "fonts" ? 'rgba(198,145,76,0.3)' : 'rgba(198,145,76,0.12)') }}>
           <Type size={16} /> الخطوط
         </button>
       </div>
@@ -126,9 +126,9 @@ export default function VisualEditorPage() {
         {/* ═══ LEFT: Controls ═══ */}
         <div>
           {activeTab === "colors" && (
-            <div className="rounded-xl p-5 space-y-4" style={{ background:'#16161A', border:'1px solid rgba(201,168,76,0.12)' }}>
+            <div className="rounded-xl p-5 space-y-4" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)' }}>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-bold" style={{ color:'#C9A84C' }}>الألوان</h3>
+                <h3 className="font-bold" style={{ color:'#C6914C' }}>الألوان</h3>
                 <button onClick={resetColors} className="flex items-center gap-1 text-xs transition" style={{ color:'#5A5A62' }}><RotateCcw size={12} /> استعادة الافتراضي</button>
               </div>
               {colorFields.map(field => (
@@ -138,16 +138,16 @@ export default function VisualEditorPage() {
                     <div className="text-sm font-medium" style={{ color:'#F5F5F5' }}>{field.label}</div>
                     <div className="text-xs" style={{ color:'#5A5A62' }}>{field.desc}</div>
                   </div>
-                  <input type="text" value={s[field.key] || (defaultColors as any)[field.key]} onChange={e => handleChange(field.key, e.target.value)} className="w-24 text-center text-xs rounded-lg px-2 py-1.5 focus:outline-none" style={{ background:'#0A0A0C', border:'1px solid rgba(201,168,76,0.12)', color:'#9A9AA0' }} dir="ltr" />
+                  <input type="text" value={s[field.key] || (defaultColors as any)[field.key]} onChange={e => handleChange(field.key, e.target.value)} className="w-24 text-center text-xs rounded-lg px-2 py-1.5 focus:outline-none" style={{ background:'#0A0A0C', border:'1px solid rgba(198,145,76,0.12)', color:'#9A9AA0' }} dir="ltr" />
                 </div>
               ))}
             </div>
           )}
 
           {activeTab === "fonts" && (
-            <div className="rounded-xl p-5 space-y-4" style={{ background:'#16161A', border:'1px solid rgba(201,168,76,0.12)' }}>
+            <div className="rounded-xl p-5 space-y-4" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)' }}>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-bold" style={{ color:'#C9A84C' }}>أحجام الخطوط</h3>
+                <h3 className="font-bold" style={{ color:'#C6914C' }}>أحجام الخطوط</h3>
                 <button onClick={resetFonts} className="flex items-center gap-1 text-xs transition" style={{ color:'#5A5A62' }}><RotateCcw size={12} /> استعادة الافتراضي</button>
               </div>
               {fontFields.map(field => (
@@ -158,12 +158,12 @@ export default function VisualEditorPage() {
                   </div>
                   <div className="flex gap-2">
                     {field.presets.map((preset, i) => (
-                      <button key={i} onClick={() => handleChange(field.key, preset)} className="flex-1 py-2 rounded-lg text-xs font-medium transition" style={{ background: (s[field.key] || (defaultFonts as any)[field.key]) === preset ? 'rgba(201,168,76,0.15)' : '#0A0A0C', color: (s[field.key] || (defaultFonts as any)[field.key]) === preset ? '#C9A84C' : '#5A5A62', border: '1px solid ' + ((s[field.key] || (defaultFonts as any)[field.key]) === preset ? 'rgba(201,168,76,0.3)' : 'rgba(201,168,76,0.08)') }}>
+                      <button key={i} onClick={() => handleChange(field.key, preset)} className="flex-1 py-2 rounded-lg text-xs font-medium transition" style={{ background: (s[field.key] || (defaultFonts as any)[field.key]) === preset ? 'rgba(198,145,76,0.15)' : '#0A0A0C', color: (s[field.key] || (defaultFonts as any)[field.key]) === preset ? '#C6914C' : '#5A5A62', border: '1px solid ' + ((s[field.key] || (defaultFonts as any)[field.key]) === preset ? 'rgba(198,145,76,0.3)' : 'rgba(198,145,76,0.08)') }}>
                         {field.presetLabels[i]}
                       </button>
                     ))}
                   </div>
-                  <input type="text" value={s[field.key] || (defaultFonts as any)[field.key]} onChange={e => handleChange(field.key, e.target.value)} className="w-full text-xs rounded-lg px-3 py-2 focus:outline-none" style={{ background:'#0A0A0C', border:'1px solid rgba(201,168,76,0.12)', color:'#9A9AA0' }} dir="ltr" placeholder="أو اكتب قيمة مخصصة..." />
+                  <input type="text" value={s[field.key] || (defaultFonts as any)[field.key]} onChange={e => handleChange(field.key, e.target.value)} className="w-full text-xs rounded-lg px-3 py-2 focus:outline-none" style={{ background:'#0A0A0C', border:'1px solid rgba(198,145,76,0.12)', color:'#9A9AA0' }} dir="ltr" placeholder="أو اكتب قيمة مخصصة..." />
                 </div>
               ))}
             </div>
@@ -172,9 +172,9 @@ export default function VisualEditorPage() {
 
         {/* ═══ RIGHT: Live Preview ═══ */}
         <div>
-          <div className="rounded-xl overflow-hidden sticky top-20" style={{ border:'1px solid rgba(201,168,76,0.12)' }}>
-            <div className="px-4 py-2 flex items-center justify-between" style={{ background:'#1C1C22', borderBottom:'1px solid rgba(201,168,76,0.08)' }}>
-              <span className="text-xs font-bold" style={{ color:'#C9A84C' }}>معاينة مباشرة</span>
+          <div className="rounded-xl overflow-hidden sticky top-20" style={{ border:'1px solid rgba(198,145,76,0.12)' }}>
+            <div className="px-4 py-2 flex items-center justify-between" style={{ background:'#1C1C22', borderBottom:'1px solid rgba(198,145,76,0.08)' }}>
+              <span className="text-xs font-bold" style={{ color:'#C6914C' }}>معاينة مباشرة</span>
               <div className="flex gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full" style={{ background:'#F87171' }}></div>
                 <div className="w-2.5 h-2.5 rounded-full" style={{ background:'#FBBF24' }}></div>

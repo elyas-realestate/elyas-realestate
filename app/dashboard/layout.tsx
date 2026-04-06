@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   if (!authorized) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background:'#0A0A0C', color:'#C9A84C', fontFamily:"'Tajawal', sans-serif" }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background:'#0A0A0C', color:'#C6914C', fontFamily:"'Tajawal', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');`}</style>
       <div className="flex items-center gap-3">
         <div className="w-6 h-6 border-2 border-current rounded-full border-t-transparent animate-spin"></div>
@@ -56,16 +56,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
         .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
         .dash-sidebar::-webkit-scrollbar { width: 4px; }
-        .dash-sidebar::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 4px; }
+        .dash-sidebar::-webkit-scrollbar-thumb { background: rgba(198,145,76,0.2); border-radius: 4px; }
       `}</style>
 
       {/* ═══════ HEADER ═══════ */}
-      <header className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between" style={{ height:64, padding:'0 24px', background:'rgba(16,16,20,0.95)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(201,168,76,0.1)' }}>
+      <header className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between" style={{ height:64, padding:'0 24px', background:'rgba(16,16,20,0.95)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(198,145,76,0.1)' }}>
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center font-kufi font-black" style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg, #C9A84C, #A68A3A)', color:'#0A0A0C', fontSize:16 }}>إ</div>
+          <div className="flex items-center justify-center font-kufi font-black" style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C', fontSize:16 }}>إ</div>
           <div className="flex flex-col" style={{ lineHeight:1.2 }}>
             <span className="font-kufi font-bold" style={{ fontSize:15, color:'#F5F5F5' }}>إلياس الدخيل</span>
-            <span style={{ fontSize:10, color:'#C9A84C', fontWeight:500 }}>لوحة التحكم</span>
+            <span style={{ fontSize:10, color:'#C6914C', fontWeight:500 }}>لوحة التحكم</span>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -73,7 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <ExternalLink size={14} />
             <span>الموقع</span>
           </Link>
-          <div style={{ width:1, height:20, background:'rgba(201,168,76,0.12)' }}></div>
+          <div style={{ width:1, height:20, background:'rgba(198,145,76,0.12)' }}></div>
           <button onClick={handleLogout} className="flex items-center gap-1.5 transition" style={{ color:'#5A5A62', fontSize:13, background:'none', border:'none', cursor:'pointer' }}>
             <LogOut size={14} />
             <span>خروج</span>
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="flex" style={{ paddingTop:64 }}>
         {/* ═══════ SIDEBAR ═══════ */}
-        <aside className="dash-sidebar fixed top-16 right-0 bottom-0 overflow-y-auto" style={{ width:240, background:'#101014', borderLeft:'1px solid rgba(201,168,76,0.08)', padding:'16px 12px' }}>
+        <aside className="dash-sidebar fixed top-16 right-0 bottom-0 overflow-y-auto" style={{ width:240, background:'#101014', borderLeft:'1px solid rgba(198,145,76,0.08)', padding:'16px 12px' }}>
           <nav className="space-y-1">
             {menuItems.map((item, idx) => {
               const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -92,7 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div key={item.href}>
                   {isFirstSettings && (
                     <div style={{ margin:'12px 0 8px', padding:'0 14px' }}>
-                      <div style={{ height:1, background:'rgba(201,168,76,0.12)' }} />
+                      <div style={{ height:1, background:'rgba(198,145,76,0.12)' }} />
                       <span style={{ fontSize:10, color:'#5A5A62', display:'block', marginTop:8, letterSpacing:1 }}>الإعدادات</span>
                     </div>
                   )}
@@ -104,9 +104,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       borderRadius:10,
                       fontSize:14,
                       fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#C9A84C' : '#9A9AA0',
-                      background: isActive ? 'rgba(201,168,76,0.08)' : 'transparent',
-                      borderRight: isActive ? '3px solid #C9A84C' : '3px solid transparent',
+                      color: isActive ? '#C6914C' : '#9A9AA0',
+                      background: isActive ? 'rgba(198,145,76,0.08)' : 'transparent',
+                      borderRight: isActive ? '3px solid #C6914C' : '3px solid transparent',
                     }}
                   >
                     <item.icon size={18} style={{ opacity: isActive ? 1 : 0.5 }} />
@@ -118,10 +118,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </nav>
 
           {/* فاصل + رخصة */}
-          <div style={{ marginTop:24, padding:'16px 14px', borderTop:'1px solid rgba(201,168,76,0.08)' }}>
+          <div style={{ marginTop:24, padding:'16px 14px', borderTop:'1px solid rgba(198,145,76,0.08)' }}>
             <div style={{ fontSize:11, color:'#5A5A62', lineHeight:1.6 }}>
               وسيط عقاري مرخّص<br />
-              <span style={{ color:'#C9A84C' }}>رخصة فال</span>
+              <span style={{ color:'#C6914C' }}>رخصة فال</span>
             </div>
           </div>
         </aside>

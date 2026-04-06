@@ -35,10 +35,10 @@ export default function Login() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
         .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
-        .login-input { width: 100%; background: #1C1C22; border: 1px solid rgba(201,168,76,0.15); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: #F5F5F5; outline: none; transition: border-color 0.3s; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-        .login-input:focus { border-color: #C9A84C; }
+        .login-input { width: 100%; background: #1C1C22; border: 1px solid rgba(198,145,76,0.15); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: #F5F5F5; outline: none; transition: border-color 0.3s; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        .login-input:focus { border-color: #C6914C; }
         .login-input::placeholder { color: #5A5A62; }
-        .dot-pattern { background-image: radial-gradient(rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 32px 32px; }
+        .dot-pattern { background-image: radial-gradient(rgba(198,145,76,0.04) 1px, transparent 1px); background-size: 32px 32px; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .fade-up { animation: fadeUp 0.6s ease-out both; }
       `}</style>
@@ -46,7 +46,7 @@ export default function Login() {
       {/* Background pattern */}
       <div className="dot-pattern" style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }} />
       {/* Gold glow */}
-      <div style={{ position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 300, background: "radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 300, background: "radial-gradient(ellipse, rgba(198,145,76,0.05) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
       {/* Card */}
       <div className="fade-up" style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 420 }}>
@@ -54,14 +54,14 @@ export default function Login() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-block" }}>
-            <div style={{ width: 60, height: 60, borderRadius: 18, background: "linear-gradient(135deg, #C9A84C, #A68A3A)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", fontSize: 26, fontWeight: 900, color: "#0A0A0C", fontFamily: "'Noto Kufi Arabic', serif" }}>إ</div>
+            <div style={{ width: 60, height: 60, borderRadius: 18, background: "linear-gradient(135deg, #C6914C, #A6743A)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", fontSize: 26, fontWeight: 900, color: "#0A0A0C", fontFamily: "'Noto Kufi Arabic', serif" }}>إ</div>
           </Link>
           <h1 className="font-kufi" style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>إلياس الدخيل</h1>
           <p style={{ fontSize: 13, color: "#5A5A62" }}>وسيط عقاري مرخّص — الرياض</p>
         </div>
 
         {/* Form Card */}
-        <div style={{ background: "#16161A", border: "1px solid rgba(201,168,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)" }}>
+        <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)" }}>
           <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 4, textAlign: "center" }}>دخول الفريق</h2>
           <p style={{ fontSize: 13, color: "#5A5A62", textAlign: "center", marginBottom: 28 }}>مخصص لأعضاء الفريق فقط</p>
 
@@ -116,7 +116,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              style={{ width: "100%", padding: "15px", borderRadius: 14, background: loading ? "rgba(201,168,76,0.4)" : "linear-gradient(135deg, #C9A84C, #A68A3A)", border: "none", color: "#0A0A0C", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", transition: "all 0.3s", fontFamily: "'Tajawal', sans-serif", marginTop: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+              style={{ width: "100%", padding: "15px", borderRadius: 14, background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, #C6914C, #A6743A)", border: "none", color: "#0A0A0C", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", transition: "all 0.3s", fontFamily: "'Tajawal', sans-serif", marginTop: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
             >
               {loading ? (
                 <>

@@ -33,10 +33,10 @@ export default function Settings() {
     setTimeout(() => setSaved(false), 2000);
   }
 
-  const inputClass = "w-full bg-[#1C1C22] border border-[rgba(201,168,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C9A84C] transition";
+  const inputClass = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C] transition";
   const saveBtn = (
     <button onClick={handleSave} disabled={saving}
-      className="bg-[#C9A84C] hover:bg-[#A68A3A] px-6 py-3 rounded-lg font-medium transition disabled:opacity-50">
+      className="bg-[#C6914C] hover:bg-[#A6743A] px-6 py-3 rounded-lg font-medium transition disabled:opacity-50">
       {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ التغييرات"}
     </button>
   );
@@ -45,11 +45,11 @@ export default function Settings() {
     <div dir="rtl">
       <h2 className="text-2xl font-bold mb-8">الإعدادات</h2>
 
-      <div className="flex gap-2 mb-8 border-b border-[rgba(201,168,76,0.12)]">
+      <div className="flex gap-2 mb-8 border-b border-[rgba(198,145,76,0.12)]">
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
             className={"flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition " +
-              (activeTab === tab.id ? "border-[#C9A84C] text-white" : "border-transparent text-[#9A9AA0] hover:text-white")}
+              (activeTab === tab.id ? "border-[#C6914C] text-white" : "border-transparent text-[#9A9AA0] hover:text-white")}
           >
             <tab.icon size={16} />
             {tab.label}
@@ -60,10 +60,10 @@ export default function Settings() {
       {/* ═══ الملف الشخصي ═══ */}
       {activeTab === "profile" && (
         <div className="max-w-2xl">
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-6">المعلومات الشخصية</h3>
             <div className="flex items-center gap-6 mb-6">
-              <div className="w-20 h-20 rounded-full bg-[#1C1C22] border-2 border-dashed border-gray-600 flex items-center justify-center cursor-pointer hover:border-[#C9A84C] transition">
+              <div className="w-20 h-20 rounded-full bg-[#1C1C22] border-2 border-dashed border-gray-600 flex items-center justify-center cursor-pointer hover:border-[#C6914C] transition">
                 {profile.avatar
                   ? <img src={profile.avatar} className="w-full h-full rounded-full object-cover" />
                   : <User size={32} className="text-[#5A5A62]" />}
@@ -90,11 +90,11 @@ export default function Settings() {
                 <label className="block text-sm text-[#9A9AA0] mb-2">الجنس</label>
                 <div className="flex gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="gender" value="male" checked={profile.gender === "male"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C9A84C]" />
+                    <input type="radio" name="gender" value="male" checked={profile.gender === "male"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C6914C]" />
                     <span>ذكر</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="gender" value="female" checked={profile.gender === "female"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C9A84C]" />
+                    <input type="radio" name="gender" value="female" checked={profile.gender === "female"} onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C6914C]" />
                     <span>أنثى</span>
                   </label>
                 </div>
@@ -108,16 +108,16 @@ export default function Settings() {
       {/* ═══ الفريق ═══ */}
       {activeTab === "team" && (
         <div className="max-w-3xl">
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">الفريق</h3>
-              <button className="bg-[#C9A84C] hover:bg-[#A68A3A] px-4 py-2 rounded-lg text-sm transition">
+              <button className="bg-[#C6914C] hover:bg-[#A6743A] px-4 py-2 rounded-lg text-sm transition">
                 دعوة عضو جديد
               </button>
             </div>
             <table className="w-full">
               <thead>
-                <tr className="text-[#9A9AA0] text-sm border-b border-[rgba(201,168,76,0.12)]">
+                <tr className="text-[#9A9AA0] text-sm border-b border-[rgba(198,145,76,0.12)]">
                   <th className="text-right pb-3">الاسم</th>
                   <th className="text-right pb-3">الصلاحية</th>
                   <th className="text-right pb-3">تاريخ الانضمام</th>
@@ -127,7 +127,7 @@ export default function Settings() {
                 <tr>
                   <td className="py-4">إلياس الدخيل</td>
                   <td className="py-4">
-                    <span className="bg-[rgba(201,168,76,0.1)] text-[#C9A84C] text-xs px-2 py-1 rounded">مالك</span>
+                    <span className="bg-[rgba(198,145,76,0.1)] text-[#C6914C] text-xs px-2 py-1 rounded">مالك</span>
                   </td>
                   <td className="py-4 text-[#9A9AA0] text-sm">المؤسس</td>
                 </tr>
@@ -140,7 +140,7 @@ export default function Settings() {
       {/* ═══ الحساب ═══ */}
       {activeTab === "account" && (
         <div className="max-w-2xl space-y-6">
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-6">معلومات الحساب</h3>
             <div className="space-y-4">
               <div>
@@ -155,11 +155,11 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="bg-[#16161A] border border-[rgba(201,168,76,0.12)] rounded-xl p-6">
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-2">الشهادات والتراخيص</h3>
             <p className="text-[#5A5A62] text-sm mb-6">
               هذه المعلومات تُستخدم داخلياً — لعرض رخصة فال في الموقع اذهب إلى
-              <a href="/dashboard/site-settings" className="text-[#C9A84C] hover:underline mr-1">إعدادات الموقع</a>
+              <a href="/dashboard/site-settings" className="text-[#C6914C] hover:underline mr-1">إعدادات الموقع</a>
             </p>
             <div className="space-y-4">
               <div>
