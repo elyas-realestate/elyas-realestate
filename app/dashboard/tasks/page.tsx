@@ -219,7 +219,8 @@ export default function TasksPage() {
               {/* Mobile Cards */}
               <div className="md:hidden space-y-2">
                 {filtered.map(task => {
-                  const pColor = { "عاجل":"#F87171","مرتفع":"#FB923C","متوسط":"#FACC15","منخفض":"#9A9AA0" }[task.priority] || "#5A5A62";
+                  const pColorMap: Record<string, string> = { "عاجل":"#F87171","مرتفع":"#FB923C","متوسط":"#FACC15","منخفض":"#9A9AA0" };
+                  const pColor = pColorMap[task.priority] || "#5A5A62";
                   const overdue = isOverdue(task);
                   return (
                     <div key={task.id} className="rounded-xl p-4 flex gap-3" style={{ background:'#16161A', borderRight:`3px solid ${pColor}`, border:`1px solid rgba(198,145,76,0.1)`, borderRightWidth:3, borderRightColor:pColor }}>
