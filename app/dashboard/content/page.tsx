@@ -56,8 +56,11 @@ function ModelSelector({ label, provider, setProvider, model, setModel, showMode
           <label className="block text-xs text-[#5A5A62] mb-2">وضع التشغيل</label>
           <div className="space-y-1">
             {modes.map(m => (
-              <button key={m.id} onClick={() => setMode(m.id)} className={"w-full text-right px-3 py-2 rounded-lg text-sm transition flex items-center justify-between " + (mode === m.id ? "bg-[#C6914C]/20 border border-[rgba(198,145,76,0.2)] text-[#C6914C]" : "bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] text-[#9A9AA0] hover:text-white")}>
-                <span>{m.name}</span><span className="text-xs text-[#5A5A62]">{m.desc}</span>
+              <button key={m.id} onClick={() => setMode(m.id)} className={"w-full text-right px-3 py-2 rounded-lg text-sm transition " + (mode === m.id ? "bg-[#C6914C]/20 border border-[rgba(198,145,76,0.2)] text-[#C6914C]" : "bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] text-[#9A9AA0] hover:text-white")}>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium">{m.name}</span>
+                  <span className="text-xs text-[#5A5A62] hidden sm:inline">{m.desc}</span>
+                </div>
               </button>
             ))}
           </div>
@@ -968,7 +971,7 @@ export default function ContentAI() {
   return (
     <div dir="rtl">
       <div className="mb-8"><h2 className="text-2xl font-bold mb-2">وكيل المحتوى العقاري</h2><p className="text-[#9A9AA0] text-sm">منصة ذكاء اصطناعي متكاملة لصناعة المحتوى العقاري — من الفكرة إلى النشر</p></div>
-      <div className="flex gap-2 mb-8 overflow-x-auto pb-2">{tabs.map(tab => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={"flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition whitespace-nowrap " + (activeTab === tab.id ? "bg-[#C6914C] text-white" : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white hover:border-[rgba(198,145,76,0.15)]")}><tab.icon size={16} />{tab.label}</button>))}</div>
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>{tabs.map(tab => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={"flex items-center gap-1.5 rounded-xl font-medium transition whitespace-nowrap text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 " + (activeTab === tab.id ? "bg-[#C6914C] text-white" : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white hover:border-[rgba(198,145,76,0.15)]")}><tab.icon size={14} />{tab.label}</button>))}</div>
       {activeTab === "identity" && <IdentityTab />}
       {activeTab === "factory" && <FactoryTab onDraftsCreated={() => setDraftsRefresh(r => r + 1)} />}
       {activeTab === "expert" && <ExpertTab onDraftsCreated={() => setDraftsRefresh(r => r + 1)} />}

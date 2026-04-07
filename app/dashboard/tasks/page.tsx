@@ -160,7 +160,7 @@ export default function TasksPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
         {[
           { label: "الإجمالي", value: stats.total, color: "#C6914C", icon: CheckSquare },
           { label: "جديدة", value: stats.new, color: "#60A5FA", icon: Circle },

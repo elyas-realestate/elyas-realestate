@@ -144,21 +144,36 @@ export default function SiteSettingsPage() {
 
   return (
     <div dir="rtl">
-      <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-2">إعدادات الموقع</h2>
-          <p className="text-[#9A9AA0] text-sm">تحكّم بكل محتوى الصفحة الرئيسية — النصوص، الصور، الروابط، والأقسام</p>
+          <p className="text-[#9A9AA0] text-sm hidden sm:block">تحكّم بكل محتوى الصفحة الرئيسية — النصوص، الصور، الروابط، والأقسام</p>
         </div>
         <button onClick={handleSave} disabled={saving}
-          className={"flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-lg transition " +
+          className={"flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-sm " +
             (saved ? "bg-green-600 text-white" : "bg-[#C6914C] hover:bg-[#A6743A] text-[#0A0A0C]")}>
-          {saved ? <><Check size={20} /> تم الحفظ</> : saving ? <><Save size={20} className="animate-spin" /> جاري الحفظ...</> : <><Save size={20} /> حفظ التعديلات</>}
+          {saved ? <><Check size={16} /> تم الحفظ</> : saving ? <><Save size={16} className="animate-spin" /> جاري...</> : <><Save size={16} /> حفظ</>}
         </button>
       </div>
 
-      <div className="flex gap-6">
-        {/* القائمة الجانبية */}
-        <div className="w-56 flex-shrink-0 space-y-1">
+      {/* Mobile: dropdown selector */}
+      <div className="md:hidden mb-4">
+        <select
+          value={activeSection}
+          onChange={e => { setActiveSection(e.target.value); setSelectedPage(""); }}
+          className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.2)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]"
+          style={{ color: "#F5F5F5" }}
+        >
+          {sections.map(sec => (
+            <option key={sec.id} value={sec.id}>{sec.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="md:flex md:gap-6">
+        {/* Desktop: القائمة الجانبية */}
+        <div className="hidden md:block w-56 flex-shrink-0 space-y-1">
           {sections.map(sec => (
             <button key={sec.id} onClick={() => { setActiveSection(sec.id); setSelectedPage(""); }}
               className={"w-full text-right flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition " +
@@ -169,7 +184,7 @@ export default function SiteSettingsPage() {
         </div>
 
         {/* المحتوى */}
-        <div className="flex-1 max-w-3xl">
+        <div className="flex-1 min-w-0 max-w-3xl">
 
           {/* ═══ معلومات عامة ═══ */}
           {activeSection === "general" && (
@@ -340,7 +355,7 @@ export default function SiteSettingsPage() {
                         <Trash2 size={12} /> حذف
                       </button>
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
                         <label className="block text-xs text-[#5A5A62] mb-1">النص</label>
                         <input value={link.label || ""} onChange={e => handleNavChange(i, "label", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" placeholder="الرئيسية" />
@@ -414,12 +429,12 @@ export default function SiteSettingsPage() {
                         <Trash2 size={12} /> حذف
                       </button>
                     </div>
-                    <div className="grid grid-cols-6 gap-3">
-                      <div className="col-span-1">
+                    <div className="flex gap-3">
+                      <div style={{ width: 56, flexShrink: 0 }}>
                         <label className="block text-xs text-[#5A5A62] mb-1">الأيقونة</label>
-                        <input value={svc.icon || ""} onChange={e => handleServiceChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]" />
+                        <input value={svc.icon || ""} onChange={e => handleServiceChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]" />
                       </div>
-                      <div className="col-span-5">
+                      <div className="flex-1 min-w-0">
                         <label className="block text-xs text-[#5A5A62] mb-1">اسم الخدمة</label>
                         <input value={svc.title || ""} onChange={e => handleServiceChange(i, "title", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" />
                       </div>
@@ -452,12 +467,12 @@ export default function SiteSettingsPage() {
                         <Trash2 size={12} /> حذف
                       </button>
                     </div>
-                    <div className="grid grid-cols-6 gap-3">
-                      <div className="col-span-1">
+                    <div className="flex gap-3">
+                      <div style={{ width: 56, flexShrink: 0 }}>
                         <label className="block text-xs text-[#5A5A62] mb-1">الأيقونة</label>
-                        <input value={card.icon || ""} onChange={e => handleWhyChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]" />
+                        <input value={card.icon || ""} onChange={e => handleWhyChange(i, "icon", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]" />
                       </div>
-                      <div className="col-span-5">
+                      <div className="flex-1 min-w-0">
                         <label className="block text-xs text-[#5A5A62] mb-1">العنوان</label>
                         <input value={card.title || ""} onChange={e => handleWhyChange(i, "title", e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" />
                       </div>
