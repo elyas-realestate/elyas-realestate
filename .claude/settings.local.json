@@ -9,7 +9,13 @@
       "Bash(npx tsc:*)",
       "Bash(d:/elyas-realestate/node_modules/.bin/tsc --noEmit)",
       "Bash(cmd /c \"node_modules\\\\.bin\\\\next build 2>&1\")",
-      "Bash(powershell -Command \"cd d:/elyas-realestate; git status; git log --oneline -3\")"
+      "Bash(powershell -Command \"cd d:/elyas-realestate; git status; git log --oneline -3\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git -C \"d:/elyas-realestate\" add app/dashboard/site-settings/page.tsx app/dashboard/content/page.tsx app/dashboard/tasks/page.tsx)",
+      "Bash(git -C \"d:/elyas-realestate\" commit -m \"fix: mobile fixes, dashboard site-settings + content + tasks\")",
+      "Bash(git -C \"d:/elyas-realestate\" push)"
     ]
   }
 }
