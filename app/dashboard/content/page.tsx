@@ -965,9 +965,20 @@ function TrendsTab({ onSendToFactory }: { onSendToFactory: (idea: string) => voi
 
   return (
     <div>
-      <div className="mb-6"><h3 className="text-xl font-bold mb-2">ترندات ومناسبات عقارية</h3><p className="text-[#9A9AA0] text-sm">أفكار محتوى مرتبطة بالسوق والمناسبات — اضغط على أي فكرة لإرسالها لمصنع المحتوى</p></div>
+      <div className="mb-4">
+        <h3 className="text-lg sm:text-xl font-bold mb-1">ترندات ومناسبات عقارية</h3>
+        <p className="text-[#9A9AA0] text-xs sm:text-sm hidden sm:block">أفكار محتوى مرتبطة بالسوق والمناسبات</p>
+      </div>
 
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+      {/* Mobile: dropdown */}
+      <div className="md:hidden mb-4">
+        <select value={activeSection} onChange={e => setActiveSection(e.target.value)} className="w-full rounded-xl px-4 py-3 text-sm font-medium focus:outline-none" style={{ background: '#16161A', border: '1px solid rgba(198,145,76,0.25)', color: '#F5F5F5' }}>
+          {sections.map(s => (<option key={s.id} value={s.id}>{s.icon} {s.label}</option>))}
+        </select>
+      </div>
+
+      {/* Desktop: tab buttons */}
+      <div className="hidden md:flex gap-2 mb-6 overflow-x-auto pb-2">
         {sections.map(s => (
           <button key={s.id} onClick={() => setActiveSection(s.id)} className={"flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition whitespace-nowrap " + (activeSection === s.id ? "bg-[#C6914C] text-white" : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white")}><span>{s.icon}</span>{s.label}</button>
         ))}
@@ -975,7 +986,14 @@ function TrendsTab({ onSendToFactory }: { onSendToFactory: (idea: string) => voi
 
       {activeSection === "events" && (
         <div>
-          <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          {/* Mobile: month select */}
+          <div className="md:hidden mb-4">
+            <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none" style={{ background: '#16161A', border: '1px solid rgba(198,145,76,0.15)', color: '#F5F5F5' }}>
+              {arabicMonths.map((m, idx) => (<option key={idx} value={idx + 1}>{m}</option>))}
+            </select>
+          </div>
+          {/* Desktop: month buttons */}
+          <div className="hidden md:flex gap-2 mb-4 overflow-x-auto pb-2">
             {arabicMonths.map((m, idx) => (
               <button key={idx} onClick={() => setSelectedMonth(idx + 1)} className={"px-3 py-2 rounded-lg text-xs transition whitespace-nowrap " + (selectedMonth === idx + 1 ? "bg-[#C6914C] text-white" : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white")}>{m}</button>
             ))}
@@ -1036,19 +1054,21 @@ function TrendsTab({ onSendToFactory }: { onSendToFactory: (idea: string) => voi
 
       {activeSection === "generate" && (
         <div>
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 mb-6">
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-4 sm:p-5 mb-6">
             <h4 className="font-bold text-[#C6914C] text-sm mb-4">توليد أفكار محتوى بالذكاء الاصطناعي</h4>
-            <div className="flex gap-3 mb-4">
-              <select value={aiProvider} onChange={e => { setAiProvider(e.target.value); const prov = providers.find(p => p.id === e.target.value); if (prov) setAiModel(prov.models[0].id); }} className="bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]">
+            <div className="flex gap-2 mb-4 flex-wrap">
+              <select value={aiProvider} onChange={e => { setAiProvider(e.target.value); const prov = providers.find(p => p.id === e.target.value); if (prov) setAiModel(prov.models[0].id); }} className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]" style={{ minWidth: 100 }}>
                 {providers.map(p => (<option key={p.id} value={p.id}>{p.name}</option>))}
               </select>
-              <select value={aiModel} onChange={e => setAiModel(e.target.value)} className="bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]">
+              <select value={aiModel} onChange={e => setAiModel(e.target.value)} className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]" style={{ minWidth: 120 }}>
                 {providers.find(p => p.id === aiProvider)?.models.map(m => (<option key={m.id} value={m.id}>{m.name}</option>))}
               </select>
             </div>
-            <div className="flex gap-3">
-              <input value={customTopic} onChange={e => setCustomTopic(e.target.value)} placeholder="اكتب موضوع أو ترند تبي أفكار محتوى عنه..." className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" onKeyDown={e => { if (e.key === "Enter" && customTopic.trim()) generateIdeas(customTopic); }} />
-              <button onClick={() => { if (customTopic.trim()) generateIdeas(customTopic); }} disabled={generating || !customTopic.trim()} className={"px-6 py-3 rounded-lg font-bold transition flex items-center gap-2 " + (generating ? "bg-[#2A2A32] text-[#9A9AA0]" : "bg-[#C6914C] hover:bg-[#A6743A] text-white")}>{generating ? <><Loader2 size={16} className="animate-spin" /> جاري التوليد...</> : <><Sparkles size={16} /> ولّد أفكار</>}</button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input value={customTopic} onChange={e => setCustomTopic(e.target.value)} placeholder="اكتب موضوع أو ترند..." className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" onKeyDown={e => { if (e.key === "Enter" && customTopic.trim()) generateIdeas(customTopic); }} />
+              <button onClick={() => { if (customTopic.trim()) generateIdeas(customTopic); }} disabled={generating || !customTopic.trim()} className={"w-full sm:w-auto px-5 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 " + (generating ? "bg-[#2A2A32] text-[#9A9AA0]" : "bg-[#C6914C] hover:bg-[#A6743A] text-white")}>
+                {generating ? <><Loader2 size={16} className="animate-spin" /> جاري التوليد...</> : <><Sparkles size={16} /> ولّد أفكار</>}
+              </button>
             </div>
           </div>
 
