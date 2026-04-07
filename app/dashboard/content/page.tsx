@@ -1081,9 +1081,19 @@ function ComingSoon({ title, desc }: { title: string; desc: string }) {
 
 // ====== MAIN ======
 export default function ContentAI() {
-  const [activeTab, setActiveTab] = useState("factory");
+  const [activeTab, setActiveTab] = useState("identity");
   const [draftsRefresh, setDraftsRefresh] = useState(0);
   const activeTabData = tabs.find(t => t.id === activeTab);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("contentTab");
+    if (saved && tabs.find(t => t.id === saved)) setActiveTab(saved);
+  }, []);
+
+  function switchTab(id: string) {
+    setActiveTab(id);
+    localStorage.setItem("contentTab", id);
+  }
   return (
     <div dir="rtl">
       <div className="mb-4 sm:mb-8">
@@ -1095,7 +1105,7 @@ export default function ContentAI() {
       <div className="md:hidden mb-4">
         <select
           value={activeTab}
-          onChange={e => setActiveTab(e.target.value)}
+          onChange={e => switchTab(e.target.value)}
           className="w-full rounded-xl px-4 py-3 text-sm font-medium focus:outline-none"
           style={{ background: '#16161A', border: '1px solid rgba(198,145,76,0.25)', color: '#F5F5F5' }}
         >
@@ -1111,7 +1121,7 @@ export default function ContentAI() {
       {/* Desktop: tab buttons */}
       <div className="hidden md:flex gap-2 mb-6 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
         {tabs.map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={"flex items-center gap-1.5 rounded-xl font-medium transition whitespace-nowrap text-sm px-4 py-3 " + (activeTab === tab.id ? "bg-[#C6914C] text-white" : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white hover:border-[rgba(198,145,76,0.15)]")}>
+          <button key={tab.id} onClick={() => switchTab(tab.id)} className={"flex items-center gap-1.5 rounded-xl font-medium transition whitespace-nowrap text-sm px-4 py-3 " + (activeTab === tab.id ? "bg-[#C6914C] text-white" : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white hover:border-[rgba(198,145,76,0.15)]")}>
             <tab.icon size={14} />{tab.label}
           </button>
         ))}
@@ -1121,7 +1131,7 @@ export default function ContentAI() {
       {activeTab === "expert" && <ExpertTab onDraftsCreated={() => setDraftsRefresh(r => r + 1)} />}
       {activeTab === "drafts" && <DraftsTab refreshKey={draftsRefresh} />}
       {activeTab === "calendar" && <CalendarTab refreshKey={draftsRefresh} onDraftsCreated={() => setDraftsRefresh(r => r + 1)} />}
-      {activeTab === "trends" && <TrendsTab onSendToFactory={(idea) => { setActiveTab("factory"); }} />}
+      {activeTab === "trends" && <TrendsTab onSendToFactory={(idea) => { switchTab("factory"); }} />}
     </div>
   );
 }
