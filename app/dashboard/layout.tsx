@@ -27,31 +27,14 @@ const menuItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => { checkAuth(); }, []);
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
-
-  async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.push("/login"); } else { setAuthorized(true); }
-  }
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push("/login");
+    window.location.href = "/login";
   }
-
-  if (!authorized) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background:'#0A0A0C', color:'#C6914C', fontFamily:"'Tajawal', sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');`}</style>
-      <div className="flex items-center gap-3">
-        <div className="w-6 h-6 border-2 border-current rounded-full border-t-transparent animate-spin"></div>
-        <span>جاري التحقق...</span>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen" dir="rtl" style={{ background:'#0A0A0C', color:'#F5F5F5', fontFamily:"'Tajawal', sans-serif" }}>
