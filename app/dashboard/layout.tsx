@@ -28,13 +28,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
 
+  useEffect(() => { checkAuth(); }, []);
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
+
+  async function checkAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { window.location.href = "/login"; } else { setAuthorized(true); }
+  }
 
   async function handleLogout() {
     await supabase.auth.signOut();
     window.location.href = "/login";
   }
+
+  if (!authorized) return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0A0A0C" }}>
+      <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "#C6914C", borderTopColor: "transparent" }} />
+    </div>
+  );
 
   return (
     <div className="min-h-screen" dir="rtl" style={{ background:'#0A0A0C', color:'#F5F5F5', fontFamily:"'Tajawal', sans-serif" }}>
