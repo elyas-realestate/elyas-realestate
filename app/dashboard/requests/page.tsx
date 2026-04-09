@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { FileText, Plus, Search, Filter, Eye, Pencil, Trash2, X, Save, Check, Clock, AlertCircle, CheckCircle } from "lucide-react";
+import { toast } from "sonner";
+import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
@@ -103,8 +105,10 @@ export default function RequestsPage() {
 
     if (editingId) {
       await supabase.from("property_requests").update(data).eq("id", editingId);
+      toast.success("تم تحديث الطلب");
     } else {
       await supabase.from("property_requests").insert([data]);
+      toast.success("تمت إضافة الطلب بنجاح");
     }
     setShowForm(false);
     resetForm();
@@ -114,6 +118,7 @@ export default function RequestsPage() {
   async function handleDelete(id: string) {
     if (!confirm("حذف هذا الطلب؟")) return;
     await supabase.from("property_requests").delete().eq("id", id);
+    toast.success("تم حذف الطلب");
     setSelectedRequest(null);
     loadData();
   }
@@ -141,10 +146,18 @@ export default function RequestsPage() {
     done: requests.filter(r => r.status === "مكتمل").length,
   };
 
-  if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (loading) return (
+    <div dir="rtl" className="p-4">
+      <div className="skeleton h-8 rounded w-36 mb-6" />
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="skeleton h-20 rounded-xl mb-3" />
+      ))}
+    </div>
+  );
 
   return (
     <div dir="rtl">
+      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "الطلبات العقارية" }]} />
       {/* الهيدر */}
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>

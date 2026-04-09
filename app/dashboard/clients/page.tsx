@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Plus, Search, X } from "lucide-react";
+import { toast } from "sonner";
+import Breadcrumb from "../../components/Breadcrumb";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,7 +34,9 @@ export default function Clients() {
 
   async function handleSubmit(e: any) {
     e.preventDefault();
-    await supabase.from("clients").insert([{ ...form }]);
+    const { error } = await supabase.from("clients").insert([{ ...form }]);
+    if (error) { toast.error("حدث خطأ أثناء الإضافة"); return; }
+    toast.success("تمت إضافة العميل بنجاح");
     setForm({ full_name: "", phone: "", category: "", city: "", district: "", notes: "" });
     setShowAdd(false);
     loadClients();
@@ -50,10 +54,18 @@ export default function Clients() {
     "وسيط عقاري": "bg-red-900/30 text-red-400",
   };
 
-  if (loading) return <div className="text-center py-20" style={{ color:'#9A9AA0' }}>جاري التحميل...</div>;
+  if (loading) return (
+    <div dir="rtl" className="p-4">
+      <div className="skeleton h-8 rounded w-40 mb-6" />
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="skeleton h-16 rounded-xl mb-3" />
+      ))}
+    </div>
+  );
 
   return (
     <div dir="rtl">
+      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "العملاء" }]} />
       {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Plus, Search, MapPin, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
@@ -30,6 +32,7 @@ export default function Properties() {
     setToggling(id);
     await supabase.from("properties").update({ is_published: !current }).eq("id", id);
     setProperties(prev => prev.map(p => p.id === id ? { ...p, is_published: !current } : p));
+    toast.success(!current ? "تم نشر العقار" : "تم إيقاف نشر العقار");
     setToggling(null);
   }
 
@@ -39,6 +42,7 @@ export default function Properties() {
 
   return (
     <div dir="rtl">
+      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "العقارات" }]} />
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <h2 className="text-2xl font-bold">العقارات</h2>
         <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
@@ -53,7 +57,15 @@ export default function Properties() {
       </div>
 
       {loading ? (
-        <p style={{ color:'#9A9AA0' }}>جاري التحميل...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-xl p-4" style={{ background:'#16161A', border:'1px solid rgba(193,141,74,0.08)' }}>
+              <div className="skeleton h-40 rounded-lg mb-3" />
+              <div className="skeleton h-4 rounded w-3/4 mb-2" />
+              <div className="skeleton h-3 rounded w-1/2" />
+            </div>
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-lg mb-4" style={{ color:'#9A9AA0' }}>لا توجد عقارات بعد</p>

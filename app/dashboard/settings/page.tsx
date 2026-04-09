@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { User, Users, Building } from "lucide-react";
+import { toast } from "sonner";
 
 const tabs = [
   { id: "profile", label: "الملف الشخصي", icon: User },
@@ -30,6 +31,7 @@ export default function Settings() {
     await new Promise(r => setTimeout(r, 800));
     setSaving(false);
     setSaved(true);
+    toast.success("تم حفظ التغييرات بنجاح");
     setTimeout(() => setSaved(false), 2000);
   }
 

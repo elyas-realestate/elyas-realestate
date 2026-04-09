@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
 async function callOpenAI(model: string, systemPrompt: string, messages: any[]) {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -44,6 +45,20 @@ async function callModel(provider: string, model: string, systemPrompt: string, 
 
 export async function POST(req: NextRequest) {
   try {
+    // التحقق من جلسة المستخدم
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return req.cookies.getAll(); },
+          setAll() {},
+        },
+      }
+    );
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "غير مصرح — يرجى تسجيل الدخول أولاً" }, { status: 401 });
+
     const body = await req.json();
     const { systemPrompt, userPrompt, messages, provider, model, mode, provider2, model2 } = body;
 

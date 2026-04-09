@@ -1,26 +1,209 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════
+   ألوان العلامة التجارية — Real Estate Platform
+═══════════════════════════════════════════════ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* الألوان الأساسية */
+  --gold:          #C18D4A;
+  --gold-dark:     #A68A3A;
+  --gold-light:    #D4A862;
+
+  /* الخلفيات */
+  --bg-main:       #0A0A0C;
+  --bg-card:       #16161A;
+  --bg-elevated:   #1C1C22;
+  --bg-header:     rgba(16,16,20,0.95);
+
+  /* الحدود */
+  --border:        rgba(193,141,74,0.12);
+  --border-hover:  rgba(193,141,74,0.28);
+  --border-active: rgba(193,141,74,0.5);
+
+  /* النصوص */
+  --text-primary:   #F5F5F5;
+  --text-secondary: #9A9AA0;
+  --text-muted:     #5A5A62;
+
+  /* الحالات */
+  --success:  #4ADE80;
+  --warning:  #FACC15;
+  --error:    #F87171;
+  --info:     #C18D4A;
+
+  /* الظلال */
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md:  0 4px 24px rgba(0,0,0,0.5);
+  --shadow-lg:  0 8px 48px rgba(0,0,0,0.6);
+  --shadow-gold: 0 4px 20px rgba(193,141,74,0.15);
+
+  /* التحولات */
+  --transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ═══════════════════════════════════════════════
+   الخلفية والنص الافتراضي
+═══════════════════════════════════════════════ */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Tajawal', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ═══════════════════════════════════════════════
+   الخطوط
+═══════════════════════════════════════════════ */
+.font-kufi,
+h1, h2, h3 {
+  font-family: 'Noto Kufi Arabic', serif;
+}
+
+/* ═══════════════════════════════════════════════
+   Scrollbar مخصصة
+═══════════════════════════════════════════════ */
+::-webkit-scrollbar          { width: 5px; height: 5px; }
+::-webkit-scrollbar-track    { background: var(--bg-main); }
+::-webkit-scrollbar-thumb    { background: rgba(193,141,74,0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(193,141,74,0.4); }
+
+/* ═══════════════════════════════════════════════
+   تأثيرات الكروت — بطاقات لوحة التحكم
+═══════════════════════════════════════════════ */
+.card-luxury {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: var(--transition);
+}
+.card-luxury:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════
+   أزرار — البريق الذهبي
+═══════════════════════════════════════════════ */
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: #0A0A0C;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Tajawal', sans-serif;
+}
+.btn-gold:hover {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-1px);
+}
+.btn-gold:active  { transform: translateY(0); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Tajawal', sans-serif;
+}
+.btn-ghost:hover {
+  border-color: var(--border-hover);
+  color: var(--gold);
+  background: rgba(193,141,74,0.05);
+}
+
+/* ═══════════════════════════════════════════════
+   حقول الإدخال
+═══════════════════════════════════════════════ */
+.input-luxury {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: 10px;
+  transition: var(--transition);
+  font-family: 'Tajawal', sans-serif;
+  outline: none;
+}
+.input-luxury:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(193,141,74,0.1);
+}
+.input-luxury::placeholder { color: var(--text-muted); }
+
+/* ═══════════════════════════════════════════════
+   شارات الحالة
+═══════════════════════════════════════════════ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════
+   حركة الظهور التدريجي
+═══════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.fade-up { animation: fadeUp 0.35s cubic-bezier(0.16,1,0.3,1) both; }
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+.pulse-gold { animation: pulse-gold 1.8s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════
+   Skeleton Loading
+═══════════════════════════════════════════════ */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ═══════════════════════════════════════════════
+   جدول فاخر
+═══════════════════════════════════════════════ */
+.table-luxury th {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.table-luxury td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(193,141,74,0.05);
+  transition: var(--transition);
+}
+.table-luxury tr:hover td {
+  background: rgba(193,141,74,0.03);
+}
+
+/* ═══════════════════════════════════════════════
+   عناصر عامة
+═══════════════════════════════════════════════ */
+a { text-decoration: none; }
+* { box-sizing: border-box; }
+
+/* إخفاء مؤشر التحديد من Tailwind إذا كان مخالفاً للتصميم */
+[class~="focus:ring-blue-500"] { --tw-ring-color: rgba(193,141,74,0.4) !important; }
+[class~="border-blue-500"]     { border-color: var(--gold) !important; }

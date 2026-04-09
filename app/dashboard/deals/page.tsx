@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { Plus, Search, X } from "lucide-react";
+import { toast } from "sonner";
+import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
 
 const supabase = createClient(
@@ -52,6 +54,7 @@ export default function Deals() {
       next_action: form.next_action,
       expected_close_date: form.expected_close_date || null,
     }]);
+    toast.success("تمت إضافة الصفقة بنجاح");
     setShowAdd(false);
     loadAll();
   }
@@ -69,10 +72,18 @@ export default function Deals() {
 
   const filtered = deals.filter(d => d.title?.includes(search));
 
-  if (loading) return <div className="text-center py-20" style={{ color:'#9A9AA0' }}>جاري التحميل...</div>;
+  if (loading) return (
+    <div dir="rtl" className="p-4">
+      <div className="skeleton h-8 rounded w-36 mb-6" />
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="skeleton h-20 rounded-xl mb-3" />
+      ))}
+    </div>
+  );
 
   return (
     <div dir="rtl">
+      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "الصفقات" }]} />
       {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>

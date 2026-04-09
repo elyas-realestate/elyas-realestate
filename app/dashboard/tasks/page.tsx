@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Plus, Search, CheckCircle, Circle, List, LayoutGrid, Calendar, Filter, Clock, AlertTriangle, CheckSquare, Trash2, Pencil, X, Save, ChevronRight, ChevronLeft } from "lucide-react";
+import { toast } from "sonner";
+import Breadcrumb from "../../components/Breadcrumb";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,7 +22,7 @@ const priorityConfig: Record<string, { color: string; bg: string; dot: string }>
 };
 
 const statusConfig: Record<string, { color: string; bg: string }> = {
-  "جديد": { color: "text-blue-400", bg: "bg-[rgba(96,165,250,0.1)]" },
+  "جديد": { color: "text-[#C18D4A]", bg: "bg-[rgba(193,141,74,0.1)]" },
   "قيد التنفيذ": { color: "text-[#C6914C]", bg: "bg-[rgba(198,145,76,0.1)]" },
   "قيد المراجعة": { color: "text-purple-400", bg: "bg-[rgba(192,132,252,0.1)]" },
   "مكتملة": { color: "text-green-400", bg: "bg-[rgba(74,222,128,0.1)]" },
@@ -68,8 +70,10 @@ export default function TasksPage() {
     if (!form.title.trim()) return;
     if (editingId) {
       await supabase.from("tasks").update(form).eq("id", editingId);
+      toast.success("تم تحديث المهمة");
     } else {
       await supabase.from("tasks").insert([{ ...form, completion_percent: 0 }]);
+      toast.success("تمت إضافة المهمة");
     }
     setShowForm(false);
     resetForm();
@@ -84,12 +88,14 @@ export default function TasksPage() {
   async function deleteTask(id: string) {
     if (!confirm("حذف هذه المهمة؟")) return;
     await supabase.from("tasks").delete().eq("id", id);
+    toast.success("تم حذف المهمة");
     loadTasks();
   }
 
   async function toggleDone(task: any) {
     const newStatus = task.status === "مكتملة" ? "جديد" : "مكتملة";
     await supabase.from("tasks").update({ status: newStatus, completion_percent: newStatus === "مكتملة" ? 100 : 0 }).eq("id", task.id);
+    if (newStatus === "مكتملة") toast.success("أحسنت! تم إنجاز المهمة ✓");
     loadTasks();
   }
 
@@ -147,10 +153,22 @@ export default function TasksPage() {
 
   const todayStr = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0") + "-" + String(new Date().getDate()).padStart(2, "0");
 
-  if (loading) return <div style={{ color:'#C6914C' }} className="text-center py-20">جاري التحميل...</div>;
+  if (loading) return (
+    <div dir="rtl" className="p-4">
+      <div className="flex gap-3 mb-6">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="skeleton h-20 rounded-xl flex-1" />
+        ))}
+      </div>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="skeleton h-16 rounded-xl mb-3" />
+      ))}
+    </div>
+  );
 
   return (
     <div dir="rtl">
+      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "المهام" }]} />
       {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
@@ -166,7 +184,7 @@ export default function TasksPage() {
       <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-6">
         {[
           { label: "الإجمالي", value: stats.total, color: "#C6914C", icon: CheckSquare },
-          { label: "جديدة", value: stats.new, color: "#60A5FA", icon: Circle },
+          { label: "جديدة", value: stats.new, color: "#C18D4A", icon: Circle },
           { label: "قيد التنفيذ", value: stats.inProgress, color: "#C6914C", icon: Clock },
           { label: "مكتملة", value: stats.done, color: "#4ADE80", icon: CheckCircle },
           { label: "متأخرة", value: stats.overdue, color: "#F87171", icon: AlertTriangle },
@@ -300,7 +318,7 @@ export default function TasksPage() {
               <div key={status} className="kanban-col rounded-xl" style={{ background:'#111114', border:'1px solid rgba(198,145,76,0.08)', padding:12 }}>
                 <div className="flex items-center justify-between mb-3 px-1">
                   <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: conf?.color.includes('blue') ? '#60A5FA' : conf?.color.includes('C9A84C') ? '#C6914C' : conf?.color.includes('purple') ? '#C084FC' : '#4ADE80' }}></div>
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: conf?.color.includes('C18D4A') ? '#C18D4A' : conf?.color.includes('C9A84C') || conf?.color.includes('C6914C') ? '#C6914C' : conf?.color.includes('purple') ? '#C084FC' : '#4ADE80' }}></div>
                     <span className="text-sm font-bold" style={{ color:'#F5F5F5' }}>{status}</span>
                   </div>
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{ background:'rgba(198,145,76,0.08)', color:'#5A5A62' }}>{statusTasks.length}</span>

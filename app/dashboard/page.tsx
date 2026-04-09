@@ -209,7 +209,7 @@ export default function Dashboard() {
         />
         <KPICard
           label="العملاء" value={stats.clients}
-          icon={Users} color="#60A5FA"
+          icon={Users} color="#C18D4A"
           href="/dashboard/clients"
         />
         <KPICard
@@ -353,7 +353,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-2 gap-2">
             {[
               { label: "العقارات", href: "/dashboard/properties", icon: Building2, color: "#C6914C" },
-              { label: "العملاء", href: "/dashboard/clients", icon: Users, color: "#60A5FA" },
+              { label: "العملاء", href: "/dashboard/clients", icon: Users, color: "#C18D4A" },
               { label: "الصفقات", href: "/dashboard/deals", icon: TrendingUp, color: "#4ADE80" },
               { label: "الطلبات", href: "/dashboard/requests", icon: FileText, color: "#FB923C" },
               { label: "المهام", href: "/dashboard/tasks", icon: CheckSquare, color: "#A78BFA" },

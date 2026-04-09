@@ -447,7 +447,7 @@ function DraftsTab({ refreshKey }: { refreshKey: number }) {
 
 // ====== CALENDAR TAB ======
 const platformColors: Record<string, string> = {
-  "X (تويتر)": "bg-blue-500",
+  "X (تويتر)": "bg-[#1C2333] text-[#C18D4A]",
   "Instagram": "bg-pink-500",
   "TikTok": "bg-gray-100 text-black",
   "Snapchat": "bg-yellow-400 text-black",
@@ -457,7 +457,7 @@ const platformColors: Record<string, string> = {
 };
 
 const platformDots: Record<string, string> = {
-  "X (تويتر)": "bg-blue-500",
+  "X (تويتر)": "bg-[#C18D4A]",
   "Instagram": "bg-pink-500",
   "TikTok": "bg-white",
   "Snapchat": "bg-yellow-400",
@@ -663,7 +663,7 @@ function CalendarTab({ refreshKey, onDraftsCreated }: { refreshKey: number; onDr
                 const dayPosts = item.current ? getPostsForDate(dateStr) : [];
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} onClick={() => { if (item.current) { setSelectedDay(dateStr); setSelectedPost(null); } }} className={"min-h-[70px] sm:min-h-[100px] border-l border-b border-[rgba(198,145,76,0.12)] last:border-l-0 p-1 sm:p-1.5 cursor-pointer transition " + (item.current ? "hover:bg-[#1C1C22]/50" : "bg-gray-950/30") + (selectedDay === dateStr ? " bg-blue-900/10" : "")}>
+                  <div key={idx} onClick={() => { if (item.current) { setSelectedDay(dateStr); setSelectedPost(null); } }} className={"min-h-[70px] sm:min-h-[100px] border-l border-b border-[rgba(198,145,76,0.12)] last:border-l-0 p-1 sm:p-1.5 cursor-pointer transition " + (item.current ? "hover:bg-[#1C1C22]/50" : "bg-gray-950/30") + (selectedDay === dateStr ? " bg-[rgba(193,141,74,0.06)]" : "")}>
                     <div className={"text-xs font-bold mb-1 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center rounded-full " + (isToday ? "bg-[#C6914C] text-white" : item.current ? "text-[#9A9AA0]" : "text-[#3A3A42]")}>{item.day}</div>
                     {item.current && (
                       <div className="space-y-0.5">
@@ -694,7 +694,7 @@ function CalendarTab({ refreshKey, onDraftsCreated }: { refreshKey: number; onDr
                 const dayPosts = getPostsForDate(dateStr);
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} className={"border-l border-[rgba(198,145,76,0.12)] last:border-l-0 min-h-[300px] " + (isToday ? "bg-blue-900/5" : "")}>
+                  <div key={idx} className={"border-l border-[rgba(198,145,76,0.12)] last:border-l-0 min-h-[300px] " + (isToday ? "bg-[rgba(193,141,74,0.04)]" : "")}>
                     <div className={"px-1 py-2 border-b border-[rgba(198,145,76,0.12)] text-center " + (isToday ? "bg-[rgba(198,145,76,0.08)]" : "")}>
                       <div className="text-xs text-[#5A5A62]">
                         <span className="hidden sm:inline">{arabicDays[d.getDay()]}</span>

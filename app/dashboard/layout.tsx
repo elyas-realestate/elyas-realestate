@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette, Menu, X } from "lucide-react";
+import { Toaster } from "sonner";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -170,6 +171,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </main>
       </div>
+
+      <Toaster
+        position="top-center"
+        dir="rtl"
+        toastOptions={{
+          style: {
+            background: '#16161A',
+            border: '1px solid rgba(193,141,74,0.2)',
+            color: '#F5F5F5',
+            fontFamily: "'Tajawal', sans-serif",
+            fontSize: 14,
+            borderRadius: 12,
+          },
+        }}
+      />
     </div>
   );
 }
