@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import {
   Building2, Users, TrendingUp, CheckSquare, FileText, Megaphone,
@@ -53,8 +52,6 @@ function MiniStatRow({ label, value, color }: { label: string; value: number; co
 }
 
 export default function Dashboard() {
-  const router = useRouter();
-  const [checking, setChecking] = useState(true);
   const [stats, setStats] = useState({
     propertiesTotal: 0, propertiesPublished: 0,
     clients: 0,
@@ -70,14 +67,7 @@ export default function Dashboard() {
   });
   const [recentTasks, setRecentTasks] = useState<any[]>([]);
 
-  useEffect(() => { checkAuth(); }, []);
-
-  async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.push("/login"); return; }
-    setChecking(false);
-    loadAll();
-  }
+  useEffect(() => { loadAll(); }, []);
 
   async function loadAll() {
     const now = new Date();
@@ -160,7 +150,6 @@ export default function Dashboard() {
 
   const priorityColor: Record<string, string> = { "عاجل": "#F87171", "مرتفع": "#FB923C", "متوسط": "#FACC15", "منخفض": "#9A9AA0" };
 
-  if (checking) return <div className="flex items-center justify-center h-64" style={{ color: "#C6914C" }}>...</div>;
 
   return (
     <div dir="rtl">
