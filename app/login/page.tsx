@@ -26,8 +26,7 @@ export default function Login() {
       setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       setLoading(false);
     } else {
-      router.refresh();
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     }
   }
 
