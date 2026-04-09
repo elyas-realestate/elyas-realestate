@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 import Link from "next/link";
 
-const supabase = createClient(
+const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -26,6 +26,7 @@ export default function Login() {
       setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       setLoading(false);
     } else {
+      router.refresh();
       router.push("/dashboard");
     }
   }
