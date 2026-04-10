@@ -80,7 +80,15 @@ export default function VisualEditorPage() {
     setTimeout(() => setSaved(false), 3000);
   }
 
-  if (loading) return <div style={{ color:'#C6914C' }} className="text-center py-20">جاري التحميل...</div>;
+  if (loading) return (
+    <div dir="rtl" className="p-4">
+      <div className="skeleton h-8 rounded w-48 mb-6" />
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        {Array.from({ length: 6 }).map((_, i) => <div key={i} className="skeleton h-16 rounded-xl" />)}
+      </div>
+      <div className="skeleton h-40 rounded-xl" />
+    </div>
+  );
   if (!settings) return <div className="text-red-400 text-center py-20">لم يتم العثور على الإعدادات</div>;
 
   const s = settings;

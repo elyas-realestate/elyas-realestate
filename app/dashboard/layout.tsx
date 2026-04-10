@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
-import { Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette, Menu, X } from "lucide-react";
+import { Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette, Menu, X, BarChart3, Scale } from "lucide-react";
 import { Toaster } from "sonner";
 
 const supabase = createBrowserClient(
@@ -19,6 +19,8 @@ const menuItems = [
   { label: "الطلبات",        href: "/dashboard/requests",      icon: FileText,        group: "main" },
   { label: "المهام",         href: "/dashboard/tasks",         icon: CheckSquare,     group: "main" },
   { label: "المحتوى",        href: "/dashboard/content",       icon: Megaphone,       group: "main" },
+  { label: "التحليل المالي", href: "/dashboard/financial",     icon: BarChart3,       group: "main" },
+  { label: "الوثائق",        href: "/dashboard/documents",     icon: Scale,           group: "main" },
   { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings,        group: "settings" },
   { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe,           group: "settings" },
   { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette,         group: "settings" },

@@ -124,7 +124,13 @@ export default function SiteSettingsPage() {
     setTimeout(() => setSaved(false), 3000);
   }
 
-  if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (loading) return (
+    <div dir="rtl" className="p-4">
+      <div className="skeleton h-8 rounded w-48 mb-6" />
+      <div className="skeleton h-64 rounded-xl mb-4" />
+      <div className="skeleton h-40 rounded-xl" />
+    </div>
+  );
   if (!settings) return <div className="text-red-400 text-center py-20">لم يتم العثور على الإعدادات</div>;
 
   const inputClass = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C] transition";

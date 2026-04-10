@@ -112,7 +112,7 @@ function IdentityTab() {
   function handleChange(field: string, value: any) { setIdentity((prev: any) => ({ ...prev, [field]: value })); }
   function handleArrayChange(field: string, value: string) { setIdentity((prev: any) => ({ ...prev, [field]: value.split("،").map((s: string) => s.trim()).filter(Boolean) })); }
   async function handleSave() { setSaving(true); if (identity.id) { await supabase.from("broker_identity").update({ broker_name: identity.broker_name, fal_license: identity.fal_license, specialization: identity.specialization, coverage_areas: identity.coverage_areas, target_audiences: identity.target_audiences, brand_keywords: identity.brand_keywords, avoid_phrases: identity.avoid_phrases, bio_short: identity.bio_short, bio_long: identity.bio_long, updated_at: new Date().toISOString() }).eq("id", identity.id); } else { const { data } = await supabase.from("broker_identity").insert([identity]).select().single(); if (data) setIdentity(data); } setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000); }
-  if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (loading) return <div className="p-4 space-y-3">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-16 rounded-xl"/>)}</div>;
   if (!identity) return null;
   return (
     <div className="max-w-3xl">
@@ -217,7 +217,7 @@ function FactoryTab({ onDraftsCreated }: { onDraftsCreated: () => void }) {
     setGenerating(false);
   }
 
-  if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (loading) return <div className="p-4 space-y-3">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-16 rounded-xl"/>)}</div>;
   const totalPosts = queue.reduce((sum, q) => sum + parseInt(q.postCount), 0);
   const providerName = (pid: string) => providers.find(p => p.id === pid)?.name || pid;
   const modelName = (pid: string, mid: string) => providers.find(p => p.id === pid)?.models.find(m => m.id === mid)?.name || mid;
@@ -338,7 +338,7 @@ function ExpertTab({ onDraftsCreated }: { onDraftsCreated: () => void }) {
   function copyMsg(idx: number, text: string) { navigator.clipboard.writeText(text.replace(/===/g, "").trim()); setCopiedIdx(idx); setTimeout(() => setCopiedIdx(-1), 2000); }
   async function saveDraft(idx: number, text: string) { const clean = text.replace(/===/g, "").trim(); await supabase.from("content").insert([{ title: clean.substring(0, 50) + "...", main_text: clean, content_goal: "خبير المحتوى", main_channel: "متعدد", content_format: "نص", status: "مسودة" }]); setSavedIdx(idx); setTimeout(() => setSavedIdx(-1), 2000); onDraftsCreated(); }
 
-  if (initLoading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (initLoading) return <div className="p-4 space-y-3">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-16 rounded-xl"/>)}</div>;
 
   return (
     <div>
@@ -423,7 +423,7 @@ function DraftsTab({ refreshKey }: { refreshKey: number }) {
   function copyText(id: string, text: string) { navigator.clipboard.writeText(text); setCopiedId(id); setTimeout(() => setCopiedId(""), 2000); }
   const filtered = drafts.filter(d => filter === "all" || d.status === filter);
   const sc: any = { all: drafts.length, "مسودة": drafts.filter(d => d.status === "مسودة").length, "جاهز": drafts.filter(d => d.status === "جاهز").length, "منشور": drafts.filter(d => d.status === "منشور").length };
-  if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (loading) return <div className="p-4 space-y-3">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-16 rounded-xl"/>)}</div>;
   return (
     <div>
       <div className="mb-6"><h3 className="text-xl font-bold mb-2">المسودات</h3><p className="text-[#9A9AA0] text-sm">جميع المحتوى المُنتج — عدّل، انسخ، أو غيّر الحالة</p></div>
@@ -604,7 +604,7 @@ function CalendarTab({ refreshKey, onDraftsCreated }: { refreshKey: number; onDr
   const todayStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
   const monthPostsCount = posts.filter(p => { const d = new Date(p.scheduled_date); return d.getFullYear() === currentDate.getFullYear() && d.getMonth() === currentDate.getMonth(); }).length;
 
-  if (loading) return <div className="text-[#9A9AA0] text-center py-20">جاري التحميل...</div>;
+  if (loading) return <div className="p-4 space-y-3">{Array.from({length:4}).map((_,i)=><div key={i} className="skeleton h-16 rounded-xl"/>)}</div>;
 
   return (
     <div>

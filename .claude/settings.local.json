@@ -15,7 +15,14 @@
       "Bash(git push:*)",
       "Bash(git -C \"d:/elyas-realestate\" add app/dashboard/site-settings/page.tsx app/dashboard/content/page.tsx app/dashboard/tasks/page.tsx)",
       "Bash(git -C \"d:/elyas-realestate\" commit -m \"fix: mobile fixes, dashboard site-settings + content + tasks\")",
-      "Bash(git -C \"d:/elyas-realestate\" push)"
+      "Bash(git -C \"d:/elyas-realestate\" push)",
+      "Bash(cmd /c \"cd /d d:\\\\elyas-realestate && npx tsc --noEmit 2>&1\")",
+      "Bash(xargs grep:*)",
+      "Bash(ls -la d:/elyas-realestate/.env*)",
+      "Bash(ls d:/elyas-realestate/.env*)",
+      "Bash(npm list:*)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)"
     ]
   }
 }
