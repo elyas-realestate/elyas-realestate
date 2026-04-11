@@ -8,11 +8,23 @@ const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+function toSlug(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+}
+
 export default function Register() {
   const [name, setName]         = useState("");
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [fal, setFal]           = useState("");
+  const [slug, setSlug]         = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState("");
@@ -24,6 +36,12 @@ export default function Register() {
 
     if (password.length < 8) {
       setError("كلمة المرور يجب أن تكون ٨ أحرف على الأقل");
+      return;
+    }
+
+    const finalSlug = slug || toSlug(email.split("@")[0]);
+    if (!finalSlug) {
+      setError("رابط الملف الشخصي غير صالح — استخدم أحرفاً إنجليزية وأرقاماً");
       return;
     }
 
@@ -46,6 +64,39 @@ export default function Register() {
       setError(msg);
       setLoading(false);
       return;
+    }
+
+    if (data.user) {
+      // ── أنشئ tenant ──
+      const { data: tenant, error: tenantErr } = await supabase
+        .from("tenants")
+        .insert({ slug: finalSlug, owner_id: data.user.id, plan: "free" })
+        .select("id")
+        .single();
+
+      if (tenantErr && tenantErr.code === "23505") {
+        // slug مكرر — أضف رقم عشوائي
+        const fallbackSlug = `${finalSlug}-${Math.floor(Math.random() * 9000) + 1000}`;
+        await supabase
+          .from("tenants")
+          .insert({ slug: fallbackSlug, owner_id: data.user.id, plan: "free" });
+      }
+
+      if (tenant?.id) {
+        // أنشئ إعدادات أولية
+        await Promise.all([
+          supabase.from("site_settings").insert({
+            tenant_id: tenant.id,
+            broker_name: name,
+            site_name: name,
+            plan: "free",
+          }),
+          supabase.from("broker_identity").insert({
+            tenant_id: tenant.id,
+            broker_name: name,
+          }),
+        ]);
+      }
     }
 
     // إذا الجلسة موجودة مباشرة (email confirmation معطّل) — انتقل للداشبورد
@@ -173,6 +224,34 @@ export default function Register() {
                       {password.length >= 8 ? "قوية ✓" : password.length >= 4 ? "متوسطة" : "ضعيفة"}
                     </span>
                   </div>
+                )}
+              </div>
+
+              {/* رابط الملف الشخصي */}
+              <div>
+                <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>
+                  رابط الملف الشخصي
+                  <span style={{ color: "#3A3A42", fontWeight: 400, marginRight: 6 }}>(يظهر في /broker/...)</span>
+                </label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    value={slug}
+                    onChange={e => { setSlug(toSlug(e.target.value)); setSlugTouched(true); }}
+                    onBlur={() => { if (!slugTouched && !slug) setSlug(toSlug(email.split("@")[0])); }}
+                    className="reg-input"
+                    placeholder="elyas-aldakheel"
+                    dir="ltr"
+                    style={{ paddingLeft: 110 }}
+                  />
+                  <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#5A5A62", pointerEvents: "none", whiteSpace: "nowrap" }}>
+                    /broker/
+                  </span>
+                </div>
+                {slug && (
+                  <p style={{ fontSize: 11, color: "#4ADE80", marginTop: 5 }}>
+                    رابطك: وسيط-برو.com/broker/{slug}
+                  </p>
                 )}
               </div>
 

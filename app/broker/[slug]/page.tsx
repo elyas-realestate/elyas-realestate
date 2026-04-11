@@ -11,17 +11,39 @@ const supabase = createClient(
 export const revalidate = 60;
 
 // ══ جلب البيانات ══════════════════════════════════════════
-async function getBrokerData() {
-  // TODO: عند إضافة multi-tenancy، فلتر بـ slug من جدول tenants
+async function getBrokerData(slug: string) {
+  // 1. ابحث عن tenant بالـ slug
+  const { data: tenant } = await supabase
+    .from("tenants")
+    .select("id, plan")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+
+  // fallback: إذا لا يوجد tenants بعد (قبل تشغيل migration) اقرأ أول سجل
+  const tenantId = tenant?.id ?? null;
+
   const [settingsRes, identityRes, propertiesRes] = await Promise.all([
-    supabase.from("site_settings").select("*").limit(1).single(),
-    supabase.from("broker_identity").select("*").limit(1).single(),
-    supabase.from("properties")
-      .select("id, title, district, city, price, offer_type, sub_category, land_area, rooms, images")
-      .eq("is_published", true)
-      .order("created_at", { ascending: false })
-      .limit(6),
+    tenantId
+      ? supabase.from("site_settings").select("*").eq("tenant_id", tenantId).single()
+      : supabase.from("site_settings").select("*").limit(1).single(),
+    tenantId
+      ? supabase.from("broker_identity").select("*").eq("tenant_id", tenantId).single()
+      : supabase.from("broker_identity").select("*").limit(1).single(),
+    tenantId
+      ? supabase.from("properties")
+          .select("id, title, district, city, price, offer_type, sub_category, land_area, rooms, images")
+          .eq("tenant_id", tenantId)
+          .eq("is_published", true)
+          .order("created_at", { ascending: false })
+          .limit(6)
+      : supabase.from("properties")
+          .select("id, title, district, city, price, offer_type, sub_category, land_area, rooms, images")
+          .eq("is_published", true)
+          .order("created_at", { ascending: false })
+          .limit(6),
   ]);
+
   return {
     s: settingsRes.data,
     identity: identityRes.data,
@@ -31,7 +53,8 @@ async function getBrokerData() {
 
 // ══ SEO Metadata ══════════════════════════════════════════
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { s, identity } = await getBrokerData();
+  const { slug } = await params;
+  const { s, identity } = await getBrokerData(slug);
   const name = identity?.broker_name || s?.site_name || "وسيط عقاري";
   const bio  = identity?.bio_short || s?.hero_subtitle || "وسيط عقاري مرخّص في الرياض";
   return {
@@ -49,7 +72,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 // ══ الصفحة الرئيسية ══════════════════════════════════════
 export default async function BrokerPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { s, identity, properties } = await getBrokerData();
+  const { slug } = await params;
+  const { s, identity, properties } = await getBrokerData(slug);
   if (!s && !identity) notFound();
 
   // ── بيانات العرض ──
