@@ -127,14 +127,19 @@ export default function FinancialPage() {
           </div>
 
           <div className="mb-3">
-            <label className="block text-xs mb-2" style={{ color: "#9A9AA0" }}>قيمة الصفقة (ريال)</label>
+            <label className="block text-xs mb-2" style={{ color: "#9A9AA0" }}>قيمة الصفقة <SARIcon color="muted" size={11} /></label>
             <input
               type="text"
-              value={calcVal}
-              onChange={e => setCalcVal(e.target.value.replace(/[^\d.]/g, ""))}
-              placeholder="مثال: 1500000"
+              inputMode="numeric"
+              value={calcVal ? Number(calcVal).toLocaleString("en-US") : ""}
+              onChange={e => {
+                const raw = e.target.value.replace(/,/g, "").replace(/[^\d]/g, "");
+                setCalcVal(raw);
+              }}
+              placeholder="1,500,000"
               className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
               style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }}
+              dir="ltr"
             />
           </div>
 
