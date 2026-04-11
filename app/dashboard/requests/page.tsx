@@ -54,7 +54,7 @@ export default function RequestsPage() {
   async function loadData() {
     const [reqRes, clientRes] = await Promise.all([
       supabase.from("property_requests").select("*").order("created_at", { ascending: false }),
-      supabase.from("clients").select("id, name, phone"),
+      supabase.from("clients").select("id, full_name, phone"),
     ]);
     setRequests(reqRes.data || []);
     setClients(clientRes.data || []);
@@ -63,7 +63,7 @@ export default function RequestsPage() {
 
   function getClientName(id: string) {
     const client = clients.find(c => c.id === id);
-    return client ? client.name : "غير محدد";
+    return client ? client.full_name : "غير محدد";
   }
 
   function resetForm() {
@@ -318,7 +318,7 @@ export default function RequestsPage() {
                 <label className="block text-sm text-[#9A9AA0] mb-2">العميل</label>
                 <select value={form.client_file_id} onChange={e => setForm({ ...form, client_file_id: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
                   <option value="">بدون عميل محدد</option>
-                  {clients.map(c => <option key={c.id} value={c.id}>{c.name} {c.phone ? "— " + c.phone : ""}</option>)}
+                  {clients.map(c => <option key={c.id} value={c.id}>{c.full_name} {c.phone ? "— " + c.phone : ""}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

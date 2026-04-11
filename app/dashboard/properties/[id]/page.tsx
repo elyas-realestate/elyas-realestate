@@ -58,8 +58,8 @@ export default function PropertyDetails() {
     if (property.location_url) {
       lines.push("📌 الموقع: " + property.location_url);
     }
-    if (property.images_url) {
-      lines.push("🖼️ الصور: " + property.images_url);
+    if (property.images?.length) {
+      lines.push("🖼️ الصور: " + property.images[0]);
     }
     lines.push("");
     lines.push("للتواصل: إلياس الدخيل — وسيط عقاري مرخص");
@@ -166,9 +166,9 @@ export default function PropertyDetails() {
             </a>
           )}
 
-          {property.images_url && (
+          {property.images?.length > 0 && (
             <a
-              href={property.images_url}
+              href={property.images[0]}
               target="_blank"
               rel="noreferrer"
               className="px-6 py-3 rounded-lg font-medium transition no-underline"
