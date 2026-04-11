@@ -137,14 +137,14 @@ export default function FinancialPage() {
           <div className="mb-4">
             <label className="block text-xs mb-2" style={{ color: "#9A9AA0" }}>نسبة العمولة: <span style={{ color: "#C18D4A" }}>{commRate}%</span></label>
             <input
-              type="range" min={0.5} max={5} step={0.25}
+              type="range" min={0.5} max={100} step={0.5}
               value={commRate}
               onChange={e => setCommRate(parseFloat(e.target.value))}
               className="w-full"
               style={{ accentColor: "#C18D4A" }}
             />
             <div className="flex justify-between text-xs mt-1" style={{ color: "#5A5A62" }}>
-              <span>0.5%</span><span>2.5%</span><span>5%</span>
+              <span>0.5%</span><span>25%</span><span>50%</span><span>100%</span>
             </div>
           </div>
 
