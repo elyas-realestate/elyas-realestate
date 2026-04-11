@@ -80,8 +80,8 @@ export default function FinancialPage() {
   });
 
   const kpi = [
-    { label: "إجمالي قيمة الصفقات",    value: fmt(totalValue),    sub: fmtFull(totalValue) + " ﷼",  color: "#C18D4A", icon: TrendingUp },
-    { label: "العمولات المتوقعة",       value: fmt(totalComm),     sub: fmtFull(totalComm) + " ﷼",   color: "#4ADE80", icon: DollarSign },
+    { label: "إجمالي قيمة الصفقات",    value: fmt(totalValue),    sub: fmtFull(totalValue),  subSAR: true,  color: "#C18D4A", icon: TrendingUp },
+    { label: "العمولات المتوقعة",       value: fmt(totalComm),     sub: fmtFull(totalComm),   subSAR: true,  color: "#4ADE80", icon: DollarSign },
     { label: "الصفقات المكتملة",        value: fmt(completedVal),  sub: completed.length + " صفقة",  color: "#A78BFA", icon: Award },
     { label: "متوسط قيمة الصفقة",      value: fmt(deals.length ? totalValue / deals.length : 0), sub: deals.length + " صفقة إجمالاً", color: "#FB923C", icon: BarChart3 },
   ];
@@ -108,7 +108,10 @@ export default function FinancialPage() {
             </div>
             <div className="text-2xl font-bold mb-0.5" style={{ color: "#F5F5F5" }}>{k.value}</div>
             <div className="text-xs font-medium mb-1" style={{ color: "#9A9AA0" }}>{k.label}</div>
-            <div className="text-xs" style={{ color: "#5A5A62" }}>{k.sub}</div>
+            <div className="text-xs flex items-center gap-1" style={{ color: "#5A5A62" }}>
+              {k.sub}
+              {(k as any).subSAR && <SARIcon color="muted" size={11} />}
+            </div>
           </div>
         ))}
       </div>
@@ -134,20 +137,26 @@ export default function FinancialPage() {
             />
           </div>
 
+          <style>{`
+            .comm-input::-webkit-outer-spin-button,
+            .comm-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+            .comm-input { -moz-appearance: textfield; }
+          `}</style>
           <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 mb-2">
               <label className="text-xs" style={{ color: "#9A9AA0" }}>نسبة العمولة</label>
               <div className="flex items-center gap-1">
                 <input
                   type="number"
+                  inputMode="decimal"
                   min={0.5} max={100} step={0.5}
                   value={commRate}
                   onChange={e => {
                     const v = parseFloat(e.target.value);
                     if (!isNaN(v)) setCommRate(Math.min(100, Math.max(0.5, v)));
                   }}
-                  className="text-center font-bold text-sm"
-                  style={{ width: 60, background: "#1C1C22", border: "1px solid rgba(193,141,74,0.25)", borderRadius: 8, padding: "3px 6px", color: "#C18D4A", outline: "none" }}
+                  className="comm-input font-bold text-sm"
+                  style={{ width: 52, background: "#1C1C22", border: "1px solid rgba(193,141,74,0.3)", borderRadius: 8, padding: "3px 8px", color: "#C18D4A", outline: "none", textAlign: "center" }}
                   dir="ltr"
                 />
                 <span className="text-sm font-bold" style={{ color: "#C18D4A" }}>%</span>
@@ -168,8 +177,12 @@ export default function FinancialPage() {
           {calcResult > 0 && (
             <div className="rounded-xl p-4 text-center" style={{ background: "rgba(193,141,74,0.08)", border: "1px solid rgba(193,141,74,0.2)" }}>
               <div className="text-xs mb-1" style={{ color: "#9A9AA0" }}>العمولة المتوقعة</div>
-              <div className="text-2xl font-bold" style={{ color: "#C18D4A" }}>{fmtFull(Math.round(calcResult))} ﷼</div>
-              <div className="text-xs mt-1" style={{ color: "#5A5A62" }}>بنسبة {commRate}% من {fmtFull(parseFloat(calcVal) || 0)} ﷼</div>
+              <div className="text-2xl font-bold flex items-center justify-center gap-1.5" style={{ color: "#C18D4A" }}>
+                {fmtFull(Math.round(calcResult))} <SARIcon color="accent" size={18} />
+              </div>
+              <div className="text-xs mt-1 flex items-center justify-center gap-1" style={{ color: "#5A5A62" }}>
+                بنسبة {commRate}% من {fmtFull(parseFloat(calcVal) || 0)} <SARIcon color="muted" size={11} />
+              </div>
             </div>
           )}
         </div>
@@ -211,15 +224,18 @@ export default function FinancialPage() {
           </div>
           <div className="space-y-3">
             {[
-              { label: "قيمة الصفقات النشطة",    value: fmtFull(active.reduce((s, d) => s + (Number(d.target_value) || 0), 0)) + " ﷼", color: "#C18D4A" },
-              { label: "قيمة الصفقات المكتملة",   value: fmtFull(completedVal) + " ﷼", color: "#4ADE80" },
-              { label: "عمولات محققة",            value: fmtFull(completedComm) + " ﷼", color: "#A78BFA" },
-              { label: "عمولات متوقعة (نشطة)",    value: fmtFull(active.reduce((s, d) => s + (Number(d.expected_commission) || 0), 0)) + " ﷼", color: "#FB923C" },
-              { label: "أعلى صفقة بالقيمة",       value: topDeal ? fmtFull(Number(topDeal.target_value) || 0) + " ﷼" : "—", color: "#FACC15" },
+              { label: "قيمة الصفقات النشطة",    num: fmtFull(active.reduce((s, d) => s + (Number(d.target_value) || 0), 0)), color: "#C18D4A" },
+              { label: "قيمة الصفقات المكتملة",   num: fmtFull(completedVal), color: "#4ADE80" },
+              { label: "عمولات محققة",            num: fmtFull(completedComm), color: "#A78BFA" },
+              { label: "عمولات متوقعة (نشطة)",    num: fmtFull(active.reduce((s, d) => s + (Number(d.expected_commission) || 0), 0)), color: "#FB923C" },
+              { label: "أعلى صفقة بالقيمة",       num: topDeal ? fmtFull(Number(topDeal.target_value) || 0) : null, color: "#FACC15" },
             ].map((row, i) => (
               <div key={i} className="flex justify-between items-center py-2" style={{ borderBottom: "1px solid rgba(193,141,74,0.06)" }}>
                 <span className="text-xs" style={{ color: "#9A9AA0" }}>{row.label}</span>
-                <span className="text-sm font-bold" style={{ color: row.color }}>{row.value}</span>
+                <span className="text-sm font-bold flex items-center gap-1" style={{ color: row.color }}>
+                  {row.num ?? "—"}
+                  {row.num != null && <SARIcon color={row.color} size={13} />}
+                </span>
               </div>
             ))}
           </div>
@@ -264,8 +280,12 @@ export default function FinancialPage() {
                       <td className="px-4 py-3">
                         <span className="text-xs font-medium" style={{ color: priColors[d.priority] || "#9A9AA0" }}>{d.priority || "—"}</span>
                       </td>
-                      <td className="px-4 py-3 text-sm font-bold" style={{ color: "#F5F5F5" }}>{val ? fmtFull(val) + " ﷼" : "—"}</td>
-                      <td className="px-4 py-3 text-sm font-bold" style={{ color: "#4ADE80" }}>{comm ? fmtFull(comm) + " ﷼" : "—"}</td>
+                      <td className="px-4 py-3 text-sm font-bold" style={{ color: "#F5F5F5" }}>
+                        {val ? <span className="flex items-center gap-1">{fmtFull(val)} <SARIcon color="#F5F5F5" size={12} /></span> : "—"}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold" style={{ color: "#4ADE80" }}>
+                        {comm ? <span className="flex items-center gap-1">{fmtFull(comm)} <SARIcon color="#4ADE80" size={12} /></span> : "—"}
+                      </td>
                       <td className="px-4 py-3 text-sm" style={{ color: "#C18D4A" }}>{pct !== "—" ? pct + "%" : "—"}</td>
                     </tr>
                   );
