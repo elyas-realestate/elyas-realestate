@@ -135,7 +135,24 @@ export default function FinancialPage() {
           </div>
 
           <div className="mb-4">
-            <label className="block text-xs mb-2" style={{ color: "#9A9AA0" }}>نسبة العمولة: <span style={{ color: "#C18D4A" }}>{commRate}%</span></label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs" style={{ color: "#9A9AA0" }}>نسبة العمولة</label>
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  min={0.5} max={100} step={0.5}
+                  value={commRate}
+                  onChange={e => {
+                    const v = parseFloat(e.target.value);
+                    if (!isNaN(v)) setCommRate(Math.min(100, Math.max(0.5, v)));
+                  }}
+                  className="text-center font-bold text-sm"
+                  style={{ width: 60, background: "#1C1C22", border: "1px solid rgba(193,141,74,0.25)", borderRadius: 8, padding: "3px 6px", color: "#C18D4A", outline: "none" }}
+                  dir="ltr"
+                />
+                <span className="text-sm font-bold" style={{ color: "#C18D4A" }}>%</span>
+              </div>
+            </div>
             <input
               type="range" min={0.5} max={100} step={0.5}
               value={commRate}
