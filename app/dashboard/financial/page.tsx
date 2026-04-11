@@ -35,6 +35,7 @@ export default function FinancialPage() {
   const [deals, setDeals]       = useState<any[]>([]);
   const [loading, setLoading]   = useState(true);
   const [commRate, setCommRate] = useState(2.5);
+  const [commInput, setCommInput] = useState("2.5");
   const [calcVal, setCalcVal]   = useState("");
 
   useEffect(() => { loadDeals(); }, []);
@@ -147,16 +148,23 @@ export default function FinancialPage() {
               <label className="text-xs" style={{ color: "#9A9AA0" }}>نسبة العمولة</label>
               <div className="flex items-center gap-1">
                 <input
-                  type="number"
+                  type="text"
                   inputMode="decimal"
-                  min={0.5} max={100} step={0.5}
-                  value={commRate}
+                  value={commInput}
                   onChange={e => {
-                    const v = parseFloat(e.target.value);
-                    if (!isNaN(v)) setCommRate(Math.min(100, Math.max(0.5, v)));
+                    const raw = e.target.value;
+                    setCommInput(raw);
+                    const v = parseFloat(raw);
+                    if (!isNaN(v) && v >= 0.1 && v <= 100) setCommRate(v);
                   }}
-                  className="comm-input font-bold text-sm"
-                  style={{ width: 52, background: "#1C1C22", border: "1px solid rgba(193,141,74,0.3)", borderRadius: 8, padding: "3px 8px", color: "#C18D4A", outline: "none", textAlign: "center" }}
+                  onBlur={() => {
+                    const v = parseFloat(commInput);
+                    if (isNaN(v) || v < 0.1) { setCommRate(0.5); setCommInput("0.5"); }
+                    else if (v > 100) { setCommRate(100); setCommInput("100"); }
+                    else { setCommRate(v); setCommInput(String(v)); }
+                  }}
+                  className="font-bold text-sm"
+                  style={{ width: 56, background: "#1C1C22", border: "1px solid rgba(193,141,74,0.3)", borderRadius: 8, padding: "3px 8px", color: "#C18D4A", outline: "none", textAlign: "center" }}
                   dir="ltr"
                 />
                 <span className="text-sm font-bold" style={{ color: "#C18D4A" }}>%</span>
@@ -165,7 +173,7 @@ export default function FinancialPage() {
             <input
               type="range" min={0.5} max={100} step={0.5}
               value={commRate}
-              onChange={e => setCommRate(parseFloat(e.target.value))}
+              onChange={e => { const v = parseFloat(e.target.value); setCommRate(v); setCommInput(String(v)); }}
               className="w-full"
               style={{ accentColor: "#C18D4A" }}
             />
