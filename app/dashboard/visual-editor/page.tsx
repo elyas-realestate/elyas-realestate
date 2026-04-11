@@ -269,7 +269,8 @@ export default function VisualEditorPage() {
                 <div className="text-center" style={{ padding: "40px 20px 30px" }}>
                   <div style={{ display: "inline-block", fontSize: 9, color: accent, background: `${accent}15`, border: `1px solid ${accent}30`, borderRadius: 50, padding: "4px 12px", marginBottom: 12 }}>وسيط عقاري مرخّص</div>
                   <h1 style={{ fontFamily: "'Noto Kufi Arabic', serif", fontSize: heroSize, fontWeight: 900, lineHeight: 1.25, color: textPrimary, marginBottom: 10 }}>
-                    نختصر عليك <span style={{ background: `linear-gradient(135deg, ${accent}, ${accentDark})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>الطريق</span>
+                    نختصر عليك{" "}
+                    <span style={{ display: "inline-block", background: `linear-gradient(135deg, ${accent}, ${accentDark})`, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>الطريق</span>
                   </h1>
                   <p style={{ fontSize: bodySize, color: textSec, lineHeight: 1.8, maxWidth: 360, margin: "0 auto 20px" }}>{s.hero_subtitle || "من البحث إلى التملّك، خبرة عملية في سوق الرياض"}</p>
                   <div className="flex justify-center gap-2">
