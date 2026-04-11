@@ -3,8 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { ArrowRight, Save, Eye, EyeOff, Upload, X } from "lucide-react";
+import { ArrowRight, Save, Eye, EyeOff, Upload, X, Lock } from "lucide-react";
 import SARIcon from "../../../components/SARIcon";
+import { checkLimit } from "@/lib/plan-limits";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -35,11 +36,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function AddProperty() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading]       = useState(false);
+  const [error, setError]           = useState("");
+  const [limitBlocked, setLimitBlocked] = useState<string | null>(null);
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading]   = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
@@ -49,6 +51,13 @@ export default function AddProperty() {
     description: "", main_image: "", extra_images: "", location_url: "",
     contact_phone: "", ad_license_number: "", is_published: false,
   });
+
+  useEffect(() => {
+    // تحقق من حد العقارات عند تحميل الصفحة
+    checkLimit(supabase, "properties").then(result => {
+      if (!result.allowed) setLimitBlocked(result.reason || "وصلت للحد الأقصى");
+    });
+  }, []);
 
   useEffect(() => {
     if (form.main_category) {
@@ -134,6 +143,25 @@ export default function AddProperty() {
     }
 
     router.push("/dashboard/properties");
+  }
+
+  // ── حد الخطة ──
+  if (limitBlocked) {
+    return (
+      <div dir="rtl" style={{ maxWidth: 480, margin: "80px auto", textAlign: "center" }}>
+        <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+          <Lock size={26} style={{ color: "#C6914C" }} />
+        </div>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 10 }}>تجاوزت حد خطتك</h2>
+        <p style={{ fontSize: 14, color: "#9A9AA0", lineHeight: 1.7, marginBottom: 24 }}>{limitBlocked}</p>
+        <Link href="/dashboard/subscription" style={{ display: "inline-block", padding: "12px 28px", borderRadius: 12, background: "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+          عرض الخطط والترقية
+        </Link>
+        <div style={{ marginTop: 16 }}>
+          <Link href="/dashboard/properties" style={{ fontSize: 13, color: "#5A5A62", textDecoration: "none" }}>← العودة للعقارات</Link>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { checkLimit } from "@/lib/plan-limits";
 
 async function callOpenAI(model: string, systemPrompt: string, messages: any[]) {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -58,6 +59,12 @@ export async function POST(req: NextRequest) {
     );
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرح — يرجى تسجيل الدخول أولاً" }, { status: 401 });
+
+    // ── التحقق من حد AI حسب الخطة ──
+    const limitCheck = await checkLimit(supabase, "ai_requests");
+    if (!limitCheck.allowed) {
+      return NextResponse.json({ error: limitCheck.reason }, { status: 403 });
+    }
 
     const body = await req.json();
     const { systemPrompt, userPrompt, messages, provider, model, mode, provider2, model2 } = body;

@@ -119,7 +119,36 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
 
   const hasSocials = Object.values(socials).some(Boolean);
 
+  // ── JSON-LD Schema ──
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waseet-pro.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": name,
+    "description": bioShort,
+    "url": `${baseUrl}/broker/${slug}`,
+    "telephone": phone || undefined,
+    "email": email || undefined,
+    "image": heroImage || undefined,
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "SA",
+      "addressLocality": areas[0] || "الرياض",
+    },
+    "areaServed": areas.map(a => ({ "@type": "City", "name": a })),
+    "hasOfferCatalog": properties.length > 0 ? {
+      "@type": "OfferCatalog",
+      "name": "العقارات المتاحة",
+      "numberOfItems": properties.length,
+    } : undefined,
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div dir="rtl" style={{ background: clrBgPrimary, color: clrTextPrimary, minHeight: "100vh", fontFamily: "'Tajawal', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
@@ -368,5 +397,6 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
         </div>
       </footer>
     </div>
+    </>
   );
 }

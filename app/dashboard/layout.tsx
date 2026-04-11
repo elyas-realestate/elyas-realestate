@@ -32,13 +32,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authorized, setAuthorized] = useState(false);
+  const [newRequests, setNewRequests] = useState(0);
 
   useEffect(() => { checkAuth(); }, []);
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
 
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.href = "/login"; } else { setAuthorized(true); }
+    if (!session) { window.location.href = "/login"; return; }
+    setAuthorized(true);
+    // عدّاد الطلبات الجديدة
+    const { count } = await supabase
+      .from("property_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "جديد");
+    setNewRequests(count || 0);
   }
 
   async function handleLogout() {
@@ -150,7 +158,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     }}
                   >
                     <item.icon size={18} style={{ opacity: isActive ? 1 : 0.5 }} />
-                    <span>{item.label}</span>
+                    <span style={{ flex: 1 }}>{item.label}</span>
+                    {item.href === '/dashboard/requests' && newRequests > 0 && (
+                      <span style={{ fontSize: 10, fontWeight: 700, color: '#0A0A0C', background: '#C6914C', borderRadius: 100, padding: '1px 7px', minWidth: 18, textAlign: 'center' }}>
+                        {newRequests > 99 ? '99+' : newRequests}
+                      </span>
+                    )}
                   </Link>
                 </div>
               );
