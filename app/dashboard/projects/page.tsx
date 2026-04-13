@@ -25,6 +25,7 @@ const UNIT_STATUS_CFG: Record<string, { color: string; bg: string; dot: string }
   "متاح":  { color: "#4ADE80", bg: "rgba(74,222,128,0.1)",  dot: "#4ADE80" },
   "محجوز": { color: "#FACC15", bg: "rgba(250,204,21,0.1)",  dot: "#FACC15" },
   "مُباع": { color: "#F87171", bg: "rgba(248,113,113,0.1)", dot: "#F87171" },
+  "مؤجر":  { color: "#60A5FA", bg: "rgba(96,165,250,0.1)",  dot: "#60A5FA" },
 };
 
 const PROJECT_STATUS_CFG: Record<string, { color: string; bg: string }> = {
@@ -204,7 +205,8 @@ function ProjectCard({ project, onRefresh }: { project: any; onRefresh: () => vo
     available: units.filter(u => u.status === "متاح").length,
     reserved:  units.filter(u => u.status === "محجوز").length,
     sold:      units.filter(u => u.status === "مُباع").length,
-    revenue:   units.filter(u => u.status === "مُباع").reduce((s, u) => s + (u.price || 0), 0),
+    rented:    units.filter(u => u.status === "مؤجر").length,
+    revenue:   units.filter(u => u.status === "مُباع" || u.status === "مؤجر").reduce((s, u) => s + (u.price || 0), 0),
   }), [units]);
 
   async function loadUnits() {
@@ -311,7 +313,8 @@ function ProjectCard({ project, onRefresh }: { project: any; onRefresh: () => vo
               { label: "متاح",  val: stats.available, color: "#4ADE80" },
               { label: "محجوز", val: stats.reserved,  color: "#FACC15" },
               { label: "مُباع", val: stats.sold,      color: "#F87171" },
-            ].map(s => (
+              { label: "مؤجر",  val: stats.rented,    color: "#60A5FA" },
+            ].filter(s => s.val > 0).map(s => (
               <span key={s.label} style={{ fontSize: 11, padding: "3px 10px", borderRadius: 20, background: s.color + "12", color: s.color, fontWeight: 700 }}>
                 {s.val} {s.label}
               </span>

@@ -59,11 +59,12 @@ async function applyWatermark(file: File, brokerName: string): Promise<Blob> {
 
       const label = `وسيط برو | ${brokerName}`;
 
-      // 3 fixed positions: top-right, center, bottom-left
+      // 3 random positions across the image (within safe margins)
+      const randBetween = (min: number, max: number) => min + Math.random() * (max - min);
       const positions = [
-        { x: img.width * 0.75, y: img.height * 0.12 },
-        { x: img.width * 0.5,  y: img.height * 0.5  },
-        { x: img.width * 0.25, y: img.height * 0.88 },
+        { x: randBetween(img.width * 0.55, img.width * 0.9), y: randBetween(img.height * 0.06, img.height * 0.25) },
+        { x: randBetween(img.width * 0.2, img.width * 0.8),  y: randBetween(img.height * 0.35, img.height * 0.65) },
+        { x: randBetween(img.width * 0.1, img.width * 0.45), y: randBetween(img.height * 0.75, img.height * 0.94) },
       ];
 
       positions.forEach(({ x, y }) => {

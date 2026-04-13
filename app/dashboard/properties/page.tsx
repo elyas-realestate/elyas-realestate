@@ -11,8 +11,11 @@ import SARIcon from "../../components/SARIcon";
 export default function Properties() {
   const [properties, setProperties] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [offerFilter, setOfferFilter] = useState("الكل");
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
+
+  const offerTabs = ["الكل", "بيع", "إيجار", "استثمار"];
 
   useEffect(() => { fetchProperties(); }, []);
 
@@ -32,9 +35,19 @@ export default function Properties() {
     setToggling(null);
   }
 
-  const filtered = properties.filter(p =>
-    p.title?.includes(search) || p.district?.includes(search) || p.code?.includes(search)
-  );
+  const filtered = properties.filter(p => {
+    const matchSearch = p.title?.includes(search) || p.district?.includes(search) || p.code?.includes(search);
+    const matchOffer = offerFilter === "الكل" || p.offer_type === offerFilter;
+    return matchSearch && matchOffer;
+  });
+
+  // حساب العدد لكل نوع
+  const offerCounts = {
+    "الكل": properties.length,
+    "بيع": properties.filter(p => p.offer_type === "بيع").length,
+    "إيجار": properties.filter(p => p.offer_type === "إيجار").length,
+    "استثمار": properties.filter(p => p.offer_type === "استثمار").length,
+  };
 
   return (
     <div dir="rtl">
@@ -47,9 +60,44 @@ export default function Properties() {
         </Link>
       </div>
 
-      <div className="relative mb-6">
+      <div className="relative mb-4">
         <Search size={18} className="absolute right-3 top-3.5" style={{ color:'#5A5A62' }} />
         <input type="text" placeholder="ابحث بالاسم أو الحي أو الرمز..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-lg pr-10 pl-4 py-3 focus:outline-none text-sm" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }} />
+      </div>
+
+      {/* ── فلتر نوع العرض ── */}
+      <div className="flex gap-2 mb-6 flex-wrap">
+        {offerTabs.map(tab => {
+          const isActive = offerFilter === tab;
+          const count = offerCounts[tab as keyof typeof offerCounts] || 0;
+          return (
+            <button
+              key={tab}
+              onClick={() => setOfferFilter(tab)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition"
+              style={{
+                background: isActive ? "rgba(198,145,76,0.15)" : "#16161A",
+                color: isActive ? "#C6914C" : "#5A5A62",
+                border: "1px solid " + (isActive ? "rgba(198,145,76,0.35)" : "rgba(198,145,76,0.08)"),
+                cursor: "pointer",
+              }}
+            >
+              {tab}
+              <span
+                className="text-xs font-bold rounded-full px-1.5 py-0.5"
+                style={{
+                  background: isActive ? "rgba(198,145,76,0.2)" : "rgba(90,90,98,0.15)",
+                  color: isActive ? "#C6914C" : "#5A5A62",
+                  fontSize: 10,
+                  minWidth: 20,
+                  textAlign: "center",
+                }}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {loading ? (
