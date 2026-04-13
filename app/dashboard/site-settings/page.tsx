@@ -1,12 +1,8 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { Save, Check, Globe, Phone, Share2, FileText, Palette, MessageSquare, Layout, Link2, Eye, Plus, Trash2, Image, Upload, X } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const socialPlatforms = [
   { key: "social_x",         label: "X (تويتر)",   placeholder: "https://x.com/username" },

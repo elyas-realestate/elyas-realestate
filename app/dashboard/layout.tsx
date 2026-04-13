@@ -99,8 +99,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
 
   async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.href = "/login"; return; }
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) { window.location.href = "/login"; return; }
     setAuthorized(true);
 
     const [{ count }, { data: identity }] = await Promise.all([

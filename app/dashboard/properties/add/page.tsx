@@ -1,8 +1,8 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import {
   ArrowRight, Save, Eye, EyeOff, Upload, X, Lock,
   Sparkles, Loader2, CheckCircle2, AlertCircle,
@@ -11,10 +11,6 @@ import SARIcon from "../../../components/SARIcon";
 import { checkLimit } from "@/lib/plan-limits";
 import { toast } from "sonner";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const categoriesMap: Record<string, string[]> = {
   "سكني":    ["شقة","فيلا","دور","استوديو","دوبلكس","تاون هاوس","عمارة سكنية","مجمع سكني","قصر","استراحة"],

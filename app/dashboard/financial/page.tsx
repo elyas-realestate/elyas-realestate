@@ -1,6 +1,6 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
-import { createClient } from "@supabase/supabase-js";
 import {
   TrendingUp, DollarSign, Calculator, Award, BarChart3,
   Plus, Trash2, Check, X, Download, Receipt, PieChart,
@@ -9,10 +9,6 @@ import {
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function fmt(n: number) {

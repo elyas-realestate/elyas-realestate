@@ -1,6 +1,6 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
-import { createClient } from "@supabase/supabase-js";
 import {
   TrendingUp, Download, CheckCircle2, Clock, AlertCircle,
   Banknote, Star, Edit3, Check, X,
@@ -8,10 +8,6 @@ import {
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function fmtNum(n: number) {

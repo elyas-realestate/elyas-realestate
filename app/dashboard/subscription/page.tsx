@@ -1,13 +1,9 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { Check, X, Zap, Crown, Gift, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ══ تعريف الخطط ══════════════════════════════════════════
 const PLANS = [

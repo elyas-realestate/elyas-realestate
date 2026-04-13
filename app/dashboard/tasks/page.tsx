@@ -1,14 +1,10 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { Plus, Search, CheckCircle, Circle, List, LayoutGrid, Calendar, Filter, Clock, AlertTriangle, CheckSquare, Trash2, Pencil, X, Save, ChevronRight, ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const taskTypes = ["مكالمة", "اجتماع", "معاينة", "متابعة", "توثيق", "أخرى"];
 const priorities = ["منخفض", "متوسط", "مرتفع", "عاجل"];

@@ -1,14 +1,10 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { FileText, Plus, Search, Trash2, X, ExternalLink, Upload, Tag, Calendar, Building2, Users } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const docTypes = ["عقد بيع", "عقد إيجار", "توكيل", "عقد وساطة", "شهادة", "وثيقة هوية", "تصريح", "أخرى"];
 const statusOpts = ["نشط", "منتهي", "معلق", "ملغي"];

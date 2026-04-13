@@ -1,13 +1,9 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useRef } from "react";
 import { User, Users, Building, Camera, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { createBrowserClient } from "@supabase/ssr";
 
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const tabs = [
   { id: "profile", label: "الملف الشخصي", icon: User },

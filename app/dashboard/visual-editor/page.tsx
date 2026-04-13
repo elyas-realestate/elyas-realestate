@@ -1,12 +1,8 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { Save, Check, RotateCcw, Palette, Type, Monitor, Smartphone, ChevronDown, ChevronUp } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const defaults = {
   color_accent:         "#C6914C",

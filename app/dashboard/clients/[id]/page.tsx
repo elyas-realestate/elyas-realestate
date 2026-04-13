@@ -1,6 +1,6 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -11,10 +11,6 @@ import {
 import { toast } from "sonner";
 import Breadcrumb from "../../../components/Breadcrumb";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ── Category config ──────────────────────────────────────────────────────
 const CAT_CFG: Record<string, { color: string; bg: string }> = {

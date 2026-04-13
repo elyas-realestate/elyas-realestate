@@ -1,7 +1,7 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import {
   Building2, Users, TrendingUp, CheckSquare, FileText, Megaphone,
   Eye, MousePointerClick, BarChart3, ArrowUpRight, ArrowDownRight,
@@ -10,10 +10,6 @@ import {
   MapPin, Bell, BellOff, Info, ChevronRight,
 } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ── Deal stages pipeline order ──────────────────────────────────────────
 const STAGES = ["تواصل أولي", "عرض", "تفاوض", "توثيق", "إتمام"];

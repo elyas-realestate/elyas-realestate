@@ -1,6 +1,6 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
-import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import {
   Plus, Search, X, Phone, MapPin, StickyNote, Pencil, Trash2,
@@ -9,10 +9,6 @@ import {
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const emptyForm = { full_name: "", phone: "", category: "", city: "", district: "", notes: "", budget: "" };
 
