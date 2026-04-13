@@ -1,16 +1,12 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
 import { LayoutDashboard, Users, CreditCard, Settings, LogOut, ShieldCheck, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
 
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
 

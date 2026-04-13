@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
+import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
@@ -10,11 +10,6 @@ import {
 } from "lucide-react";
 import { Toaster } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
-
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const mainMenu = [
   { label: "لوحة التحكم",    href: "/dashboard",               icon: LayoutDashboard },

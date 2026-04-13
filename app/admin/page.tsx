@@ -1,16 +1,12 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import {
   Building2, Users, TrendingUp, FileText, CheckSquare, Megaphone,
   Scale, BarChart3, RefreshCw, Crown, Zap, Gift, AlertCircle, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const PLANS = [
   { id: "free",  name: "مجاني",     icon: Gift,  color: "#71717A" },

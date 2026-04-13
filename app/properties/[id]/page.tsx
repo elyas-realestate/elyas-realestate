@@ -1,15 +1,11 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import { MapPin, Phone, Share2, ArrowRight, Maximize2, Bed, Bath, Layers, ChevronLeft, ChevronRight, X } from "lucide-react";
 import SARIcon from "../../components/SARIcon";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function PropertyDetail() {
   const params = useParams();

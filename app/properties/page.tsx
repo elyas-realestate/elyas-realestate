@@ -1,14 +1,10 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import { Search, MapPin, Bed, Maximize2, SlidersHorizontal } from "lucide-react";
 import SARIcon from "../components/SARIcon";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const aliases: Record<string, string[]> = {
   "شقة": ["شقه", "شقت", "شقا"],

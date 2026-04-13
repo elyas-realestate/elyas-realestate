@@ -1,13 +1,9 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
 import Link from "next/link";
 
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function Login() {
   const router = useRouter();

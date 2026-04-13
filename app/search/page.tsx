@@ -1,17 +1,13 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import {
   Search, SlidersHorizontal, MapPin, X, ChevronDown,
   Home, Bed, Maximize2, ArrowUpDown, Phone, ExternalLink,
   Calculator,
 } from "lucide-react";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(n: number) {

@@ -1,13 +1,9 @@
 "use client";
+import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { Users, Crown, Zap, Gift, RefreshCw, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const PLAN_META: Record<string, { label: string; color: string; Icon: typeof Gift }> = {
   free:  { label: "مجاني",   color: "#71717A", Icon: Gift  },
