@@ -2,7 +2,7 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Eye, EyeOff } from "lucide-react";
+import { Plus, Search, MapPin, Eye, EyeOff, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
@@ -54,10 +54,16 @@ export default function Properties() {
       <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "العقارات" }]} />
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <h2 className="text-2xl font-bold">العقارات</h2>
-        <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
-          <Plus size={16} />
-          إضافة عقار
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/dashboard/properties/smart-add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, rgba(198,145,76,0.15), rgba(168,93,255,0.08))', color:'#C6914C', border: '1px solid rgba(198,145,76,0.25)' }}>
+            <Sparkles size={15} />
+            إضافة ذكية AI
+          </Link>
+          <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
+            <Plus size={16} />
+            إضافة عقار
+          </Link>
+        </div>
       </div>
 
       <div className="relative mb-4">

@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield,
 } from "lucide-react";
 import { Toaster } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -17,6 +17,8 @@ const mainMenu = [
   { label: "العملاء",        href: "/dashboard/clients",       icon: Users           },
   { label: "الصفقات",        href: "/dashboard/deals",         icon: TrendingUp      },
   { label: "العمولات",       href: "/dashboard/commissions",   icon: Banknote        },
+  { label: "عروض الأسعار",   href: "/dashboard/quotations",    icon: FileText        },
+  { label: "الفواتير",       href: "/dashboard/invoices",      icon: CreditCard      },
   { label: "الطلبات",        href: "/dashboard/requests",      icon: FileText        },
   { label: "المهام",         href: "/dashboard/tasks",         icon: CheckSquare     },
   { label: "المحتوى",        href: "/dashboard/content",       icon: Megaphone       },
@@ -28,6 +30,7 @@ const mainMenu = [
 
 const settingsMenu = [
   { label: "الاشتراك",        href: "/dashboard/subscription",  icon: CreditCard },
+  { label: "سجل التدقيق",    href: "/dashboard/audit",         icon: Shield     },
   { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings   },
   { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe      },
   { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette    },

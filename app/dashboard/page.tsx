@@ -595,62 +595,99 @@ export default function Dashboard() {
       {/* ── Recent Properties + Summary ─────────────────────────── */}
       <div className="bot-grid grid gap-4" style={{ gridTemplateColumns: "2fr 1fr" }}>
 
-        {/* Recent Properties */}
+        {/* Recent Properties — Sale / Rent tabs */}
         <div className="card-luxury p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Building2 size={15} style={{ color: "#C6914C" }} />
-              <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>آخر العقارات المضافة</h3>
+              <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>آخر العقارات</h3>
             </div>
             <Link href="/dashboard/properties" className="no-underline" style={{ fontSize: 12, color: "#C6914C" }}>عرض الكل</Link>
           </div>
-          {recentProps.length === 0 ? (
-            <div className="text-center py-8" style={{ color: "#5A5A62" }}>
-              <Building2 size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
-              <p style={{ fontSize: 13 }}>لا توجد عقارات بعد</p>
-            </div>
-          ) : (
-            <div className="space-y-1">
-              {recentProps.map(prop => (
-                <Link key={prop.id} href={`/dashboard/properties/${prop.id}`}
-                  className="flex items-center gap-3 p-3 rounded-xl no-underline transition group"
-                  style={{ background: "transparent", border: "1px solid transparent" }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(198,145,76,0.04)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(198,145,76,0.1)";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.background = "transparent";
-                    (e.currentTarget as HTMLElement).style.borderColor = "transparent";
-                  }}
-                >
-                  <div className="flex items-center justify-center rounded-lg flex-shrink-0"
-                    style={{ width: 38, height: 38, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.12)" }}>
-                    <Building2 size={16} style={{ color: "#C6914C" }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate" style={{ fontSize: 13.5, color: "#E5E5E5" }}>{prop.title || "عقار بدون عنوان"}</p>
-                    <p style={{ fontSize: 11, color: "#5A5A62" }}>{prop.district || prop.city || "—"}</p>
-                  </div>
-                  <div className="text-left flex-shrink-0">
-                    {prop.price ? (
-                      <p className="font-cairo font-bold" style={{ fontSize: 13, color: "#C6914C" }}>
-                        {prop.price.toLocaleString()} ر.س
-                      </p>
-                    ) : null}
-                    <span className="status-pill" style={{
-                      fontSize: 10, padding: "1px 8px",
-                      background: prop.is_published ? "rgba(74,222,128,0.1)" : "rgba(90,90,98,0.2)",
-                      color: prop.is_published ? "#4ADE80" : "#9A9AA0",
-                    }}>
-                      {prop.is_published ? "منشور" : "مسودة"}
+
+          {/* Offer type mini-tabs */}
+          {(() => {
+            const saleProps = recentProps.filter((p: any) => p.offer_type === "بيع" || !p.offer_type);
+            const rentProps = recentProps.filter((p: any) => p.offer_type === "إيجار");
+            const tabs = [
+              { key: "sale", label: "بيع", count: saleProps.length, color: "#C6914C", items: saleProps },
+              { key: "rent", label: "إيجار", count: rentProps.length, color: "#60A5FA", items: rentProps },
+            ];
+
+            return (
+              <>
+                <div className="flex gap-2 mb-4">
+                  {tabs.map(tab => (
+                    <span key={tab.key}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                      style={{ background: tab.color + "12", color: tab.color, border: "1px solid " + tab.color + "25" }}>
+                      {tab.label}
+                      <span style={{ fontSize: 10, opacity: 0.8 }}>({tab.count})</span>
                     </span>
+                  ))}
+                </div>
+
+                {recentProps.length === 0 ? (
+                  <div className="text-center py-8" style={{ color: "#5A5A62" }}>
+                    <Building2 size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
+                    <p style={{ fontSize: 13 }}>لا توجد عقارات بعد</p>
                   </div>
-                  <ChevronLeft size={14} style={{ color: "#3A3A42", flexShrink: 0 }} />
-                </Link>
-              ))}
-            </div>
-          )}
+                ) : (
+                  <div className="space-y-1">
+                    {recentProps.map((prop: any) => (
+                      <Link key={prop.id} href={`/dashboard/properties/${prop.id}`}
+                        className="flex items-center gap-3 p-3 rounded-xl no-underline transition group"
+                        style={{ background: "transparent", border: "1px solid transparent" }}
+                        onMouseEnter={e => {
+                          (e.currentTarget as HTMLElement).style.background = "rgba(198,145,76,0.04)";
+                          (e.currentTarget as HTMLElement).style.borderColor = "rgba(198,145,76,0.1)";
+                        }}
+                        onMouseLeave={e => {
+                          (e.currentTarget as HTMLElement).style.background = "transparent";
+                          (e.currentTarget as HTMLElement).style.borderColor = "transparent";
+                        }}
+                      >
+                        <div className="flex items-center justify-center rounded-lg flex-shrink-0"
+                          style={{ width: 38, height: 38, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.12)" }}>
+                          <Building2 size={16} style={{ color: "#C6914C" }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate" style={{ fontSize: 13.5, color: "#E5E5E5" }}>{prop.title || "عقار بدون عنوان"}</p>
+                          <p style={{ fontSize: 11, color: "#5A5A62" }}>{prop.district || prop.city || "—"}</p>
+                        </div>
+                        <div className="text-left flex-shrink-0">
+                          {prop.price ? (
+                            <p className="font-cairo font-bold" style={{ fontSize: 13, color: "#C6914C" }}>
+                              {prop.price.toLocaleString()} ر.س
+                            </p>
+                          ) : null}
+                          <div className="flex gap-1.5">
+                            {prop.offer_type && (
+                              <span style={{
+                                fontSize: 10, padding: "1px 6px", borderRadius: 6,
+                                background: prop.offer_type === "إيجار" ? "rgba(96,165,250,0.1)" : "rgba(198,145,76,0.1)",
+                                color: prop.offer_type === "إيجار" ? "#60A5FA" : "#C6914C",
+                              }}>
+                                {prop.offer_type}
+                              </span>
+                            )}
+                            <span style={{
+                              fontSize: 10, padding: "1px 6px", borderRadius: 6,
+                              background: prop.is_published ? "rgba(74,222,128,0.1)" : "rgba(90,90,98,0.2)",
+                              color: prop.is_published ? "#4ADE80" : "#9A9AA0",
+                            }}>
+                              {prop.is_published ? "منشور" : "مسودة"}
+                            </span>
+                          </div>
+                        </div>
+                        <ChevronLeft size={14} style={{ color: "#3A3A42", flexShrink: 0 }} />
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
 
         {/* Summary */}
