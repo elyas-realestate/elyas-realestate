@@ -88,7 +88,7 @@ export default function SubscriptionPage() {
 
   async function loadData() {
     const [settingsRes, propsRes, clientsRes, aiRes, docsRes] = await Promise.all([
-      supabase.from("site_settings").select("id, plan").limit(1).single(),
+      supabase.from("site_settings").select("*").limit(1).single(),
       supabase.from("properties").select("id", { count: "exact", head: true }),
       supabase.from("clients").select("id", { count: "exact", head: true }),
       supabase.from("content").select("id", { count: "exact", head: true }),
@@ -96,9 +96,32 @@ export default function SubscriptionPage() {
     ]);
 
     if (settingsRes.data) {
-      setCurrentPlan(settingsRes.data.plan || "free");
+      // إذا عمود plan موجود ولديه قيمة — استخدمه
+      const plan = settingsRes.data.plan;
+      if (plan) {
+        setCurrentPlan(plan);
+      } else {
+        // عمود plan غير موجود أو فارغ — حاول تعيينه كـ pro (كمالك)
+        const { error: updateErr } = await supabase
+          .from("site_settings")
+          .update({ plan: "pro" })
+          .eq("id", settingsRes.data.id);
+        
+        if (!updateErr) {
+          setCurrentPlan("pro");
+        } else {
+          // عمود plan غير موجود في الجدول — أظهر pro مؤقتاً
+          console.warn("عمود plan غير موجود في site_settings — يجب إضافته:", updateErr.message);
+          setCurrentPlan("pro");
+        }
+      }
       setSettingsId(settingsRes.data.id);
+    } else {
+      // لا يوجد سجل site_settings أصلاً — المالك يحصل على pro
+      console.warn("لا يوجد سجل site_settings:", settingsRes.error?.message);
+      setCurrentPlan("pro");
     }
+
     setUsage({
       properties: propsRes.count || 0,
       clients:    clientsRes.count || 0,

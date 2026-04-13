@@ -12,13 +12,17 @@ export type ResourceKey = "properties" | "clients" | "ai_requests" | "documents"
 
 // ── جلب خطة المستخدم الحالي ──────────────────────────────
 export async function getCurrentPlan(supabase: SupabaseClient): Promise<PlanId> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("site_settings")
     .select("plan")
     .limit(1)
     .single();
-  const plan = data?.plan as PlanId | undefined;
-  return (plan && plan in PLAN_LIMITS) ? plan : "free";
+
+  // إذا فشل الاستعلام أو عمود plan غير موجود — المالك يحصل على pro
+  if (error || !data) return "pro";
+
+  const plan = data.plan as PlanId | undefined;
+  return (plan && plan in PLAN_LIMITS) ? plan : "pro";
 }
 
 // ── التحقق من حد معين ─────────────────────────────────────
