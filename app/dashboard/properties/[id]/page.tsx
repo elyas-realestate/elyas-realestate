@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
+import SARIcon from "../../../components/SARIcon";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -133,7 +134,7 @@ export default function PropertyDetails() {
             <div>
               <p className="text-gray-400 text-sm mb-1">السعر</p>
               <p className="font-bold text-green-400 text-lg">
-                {property.price ? property.price.toLocaleString() : "—"} ريال
+                {property.price ? property.price.toLocaleString() : "—"} <SARIcon color="accent" size={14} />
               </p>
             </div>
           </div>

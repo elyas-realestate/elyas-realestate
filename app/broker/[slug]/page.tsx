@@ -28,8 +28,8 @@ async function getBrokerData(slug: string) {
       ? supabase.from("site_settings").select("*").eq("tenant_id", tenantId).single()
       : supabase.from("site_settings").select("*").limit(1).single(),
     tenantId
-      ? supabase.from("broker_identity").select("*").eq("tenant_id", tenantId).single()
-      : supabase.from("broker_identity").select("*").limit(1).single(),
+      ? supabase.from("broker_identity").select("*, photo_url").eq("tenant_id", tenantId).single()
+      : supabase.from("broker_identity").select("*, photo_url").limit(1).single(),
     tenantId
       ? supabase.from("properties")
           .select("id, title, district, city, price, offer_type, sub_category, land_area, rooms, images")
@@ -82,6 +82,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
   const bioShort     = identity?.bio_short || s?.hero_subtitle || "";
   const bioLong      = identity?.bio_long  || "";
   const specialization = identity?.specialization || "";
+  const brokerPhoto    = identity?.photo_url     || "";
   const areas        = (identity?.coverage_areas || []) as string[];
   const audiences    = (identity?.target_audiences || []) as string[];
   const phone        = s?.phone    || "";
@@ -208,6 +209,22 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
         <div style={{ position:"absolute", inset:0, background:`radial-gradient(ellipse at 50% 0%, color-mix(in srgb, ${clrAccent} 7%, transparent) 0%, transparent 65%)`, pointerEvents:"none" }} />
 
         <div className="fade-up" style={{ position:"relative", zIndex:1, textAlign:"center", maxWidth:820, padding:"0 28px" }}>
+          {brokerPhoto && (
+            <div className="d1 fade-up" style={{ display:"inline-block", marginBottom:24 }}>
+              <img
+                src={brokerPhoto}
+                alt={name}
+                style={{
+                  width: 96,
+                  height: 96,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: `3px solid color-mix(in srgb, ${clrAccent} 35%, transparent)`,
+                  boxShadow: `0 0 0 6px color-mix(in srgb, ${clrAccent} 8%, transparent)`,
+                }}
+              />
+            </div>
+          )}
           <div className="d1 fade-up accent" style={{ display:"inline-flex", alignItems:"center", gap:8, fontSize:12, fontWeight:600, background:`color-mix(in srgb, ${clrAccent} 10%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 20%, transparent)`, borderRadius:100, padding:"7px 18px", marginBottom:28 }}>
             <span style={{ width:5, height:5, background:clrAccent, borderRadius:"50%", display:"inline-block" }} />
             {badge}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Kufi_Arabic, Tajawal } from "next/font/google";
+import { Noto_Kufi_Arabic, Tajawal, Cairo } from "next/font/google";
 import "./globals.css";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 
@@ -17,6 +17,13 @@ const tajawal = Tajawal({
   display: "swap",
 });
 
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "إلياس الدخيل — وسيط عقاري",
   description: "منصة إدارة عقارية متكاملة",
@@ -31,7 +38,7 @@ export default function RootLayout({
     <html
       lang="ar"
       dir="rtl"
-      className={`${notoKufi.variable} ${tajawal.variable} h-full antialiased`}
+      className={`${notoKufi.variable} ${tajawal.variable} ${cairo.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AnalyticsTracker />

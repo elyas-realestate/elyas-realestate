@@ -1,45 +1,120 @@
 "use client";
-import { useState } from "react";
-import { User, Users, Building } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { User, Users, Building, Camera, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { createBrowserClient } from "@supabase/ssr";
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const tabs = [
   { id: "profile", label: "الملف الشخصي", icon: User },
-  { id: "team", label: "الفريق", icon: Users },
-  { id: "account", label: "الحساب", icon: Building },
+  { id: "team",    label: "الفريق",        icon: Users },
+  { id: "account", label: "الحساب",        icon: Building },
 ];
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profile, setProfile] = useState({
-    name: "إلياس الدخيل", email: "", phone: "", gender: "male", avatar: "",
+    name: "إلياس الدخيل", email: "", phone: "", gender: "male", photo_url: "",
   });
 
   const [account, setAccount] = useState({
     company_name: "إلياس الدخيل",
     address: "المملكة العربية السعودية، منطقة الرياض",
-    fal_license: "",
     commercial_register: "",
     freelance_doc: "",
   });
 
+  useEffect(() => { loadProfile(); }, []);
+
+  async function loadProfile() {
+    const { data: identity } = await supabase
+      .from("broker_identity")
+      .select("broker_name, photo_url")
+      .limit(1)
+      .single();
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    setProfile(p => ({
+      ...p,
+      name:      identity?.broker_name || p.name,
+      email:     user?.email           || p.email,
+      photo_url: identity?.photo_url   || "",
+    }));
+  }
+
+  async function handlePhotoClick() {
+    fileInputRef.current?.click();
+  }
+
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error("حجم الصورة يجب أن يكون أقل من 3 ميغابايت");
+      return;
+    }
+
+    setUploadingPhoto(true);
+    try {
+      const ext  = file.name.split(".").pop();
+      const path = `broker-photos/${Date.now()}.${ext}`;
+
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true });
+
+      if (upErr) throw upErr;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(path);
+
+      // Save to broker_identity
+      await supabase
+        .from("broker_identity")
+        .update({ photo_url: publicUrl })
+        .not("id", "is", null); // update all rows (single-tenant)
+
+      setProfile(p => ({ ...p, photo_url: publicUrl }));
+      toast.success("تم رفع الصورة بنجاح");
+    } catch (err: any) {
+      toast.error("حدث خطأ أثناء رفع الصورة");
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
+
   async function handleSave() {
     setSaving(true);
-    await new Promise(r => setTimeout(r, 800));
-    setSaving(false);
-    setSaved(true);
-    toast.success("تم حفظ التغييرات بنجاح");
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await supabase
+        .from("broker_identity")
+        .update({ broker_name: profile.name })
+        .not("id", "is", null);
+
+      toast.success("تم حفظ التغييرات بنجاح");
+    } catch {
+      toast.error("حدث خطأ أثناء الحفظ");
+    } finally {
+      setSaving(false);
+    }
   }
 
   const inputClass = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C] transition";
   const saveBtn = (
     <button onClick={handleSave} disabled={saving}
       className="bg-[#C6914C] hover:bg-[#A6743A] px-6 py-3 rounded-lg font-medium transition disabled:opacity-50">
-      {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ التغييرات"}
+      {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
     </button>
   );
 
@@ -64,17 +139,62 @@ export default function Settings() {
         <div className="max-w-2xl">
           <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-6">المعلومات الشخصية</h3>
+
+            {/* Avatar */}
             <div className="flex items-center gap-6 mb-6">
-              <div className="w-20 h-20 rounded-full bg-[#1C1C22] border-2 border-dashed border-gray-600 flex items-center justify-center cursor-pointer hover:border-[#C6914C] transition">
-                {profile.avatar
-                  ? <img src={profile.avatar} className="w-full h-full rounded-full object-cover" />
-                  : <User size={32} className="text-[#5A5A62]" />}
+              <div
+                onClick={handlePhotoClick}
+                className="relative cursor-pointer group"
+                style={{ width: 80, height: 80, flexShrink: 0 }}
+              >
+                <div
+                  className="w-full h-full rounded-full overflow-hidden border-2 border-dashed border-[#3A3A42] group-hover:border-[#C6914C] transition"
+                  style={{ background: "#1C1C22" }}
+                >
+                  {profile.photo_url ? (
+                    <img src={profile.photo_url} alt="صورة الملف الشخصي" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <User size={32} className="text-[#5A5A62]" />
+                    </div>
+                  )}
+                </div>
+                {/* Overlay icon */}
+                <div
+                  className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                  style={{ background: "rgba(0,0,0,0.5)" }}
+                >
+                  {uploadingPhoto
+                    ? <Loader2 size={22} className="text-white animate-spin" />
+                    : <Camera size={22} className="text-white" />
+                  }
+                </div>
               </div>
               <div>
                 <p className="text-sm font-medium mb-1">صورة الملف الشخصي</p>
-                <p className="text-xs text-[#9A9AA0]">اضغط لتغيير الصورة</p>
+                <p className="text-xs text-[#9A9AA0] mb-2">اضغط لرفع صورة — JPG أو PNG بحجم أقصاه 3MB</p>
+                {profile.photo_url && (
+                  <button
+                    className="text-xs text-red-400 hover:text-red-300 transition"
+                    onClick={async () => {
+                      await supabase.from("broker_identity").update({ photo_url: null }).not("id", "is", null);
+                      setProfile(p => ({ ...p, photo_url: "" }));
+                      toast.success("تم حذف الصورة");
+                    }}
+                  >
+                    حذف الصورة
+                  </button>
+                )}
               </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={handlePhotoChange}
+              />
             </div>
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">الاسم</label>
@@ -82,7 +202,7 @@ export default function Settings() {
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">البريد الإلكتروني</label>
-                <input value={profile.email} onChange={e => setProfile(p => ({...p, email: e.target.value}))} className={inputClass} placeholder="example@email.com" />
+                <input value={profile.email} disabled className={inputClass + " opacity-50 cursor-not-allowed"} placeholder="example@email.com" />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم الجوال</label>
@@ -166,17 +286,18 @@ export default function Settings() {
               <a href="/dashboard/site-settings" className="text-[#C6914C] hover:underline mr-1">إعدادات الموقع</a>
             </p>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-[#9A9AA0] mb-2">رقم رخصة فال</label>
-                <input value={account.fal_license} onChange={e => setAccount(a => ({...a, fal_license: e.target.value}))} className={inputClass} placeholder="مثال: 7001234567" />
+              <div className="p-3 rounded-lg text-sm" style={{ background: 'rgba(198,145,76,0.06)', border: '1px solid rgba(198,145,76,0.12)', color: '#9A9AA0' }}>
+                رقم رخصة فال يُدار من
+                <a href="/dashboard/site-settings" className="text-[#C6914C] hover:underline mx-1">إعدادات الموقع</a>
+                ويظهر تلقائياً في جميع الصفحات
               </div>
               <div>
-                <label className="block text-sm text-[#9A9AA0] mb-2">رقم السجل التجاري</label>
-                <input value={account.commercial_register} onChange={e => setAccount(a => ({...a, commercial_register: e.target.value}))} className={inputClass} placeholder="أدخل رقم السجل التجاري" />
+                <label className="block text-sm text-[#9A9AA0] mb-2">رقم السجل التجاري / الرقم الموحد</label>
+                <input value={account.commercial_register} onChange={e => setAccount(a => ({...a, commercial_register: e.target.value}))} className={inputClass} placeholder="مثال: 1010000000" maxLength={10} dir="ltr" />
               </div>
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم وثيقة العمل الحر</label>
-                <input value={account.freelance_doc} onChange={e => setAccount(a => ({...a, freelance_doc: e.target.value}))} className={inputClass} placeholder="أدخل رقم وثيقة العمل الحر" />
+                <input value={account.freelance_doc} onChange={e => setAccount(a => ({...a, freelance_doc: e.target.value}))} className={inputClass} placeholder="أدخل رقم وثيقة العمل الحر" dir="ltr" />
               </div>
               {saveBtn}
             </div>

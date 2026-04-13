@@ -128,9 +128,15 @@ export default function Login() {
           </form>
         </div>
 
-        {/* Back link */}
-        <div style={{ textAlign: "center", marginTop: 20 }}>
-          <Link href="/" style={{ fontSize: 13, color: "#5A5A62", textDecoration: "none", transition: "color 0.3s" }}>
+        {/* Bottom links */}
+        <div style={{ textAlign: "center", marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div>
+            <Link href="/register" style={{ fontSize: 13, color: "#9A9AA0", textDecoration: "none" }}>
+              ليس لديك حساب؟{" "}
+              <span style={{ color: "#C6914C", fontWeight: 700 }}>سجّل الآن مجاناً</span>
+            </Link>
+          </div>
+          <Link href="/" style={{ fontSize: 12, color: "#3A3A42", textDecoration: "none" }}>
             ← العودة للموقع
           </Link>
         </div>

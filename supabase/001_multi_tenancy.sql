@@ -177,10 +177,9 @@ CREATE POLICY "analytics_public_insert"
 
 DO $$
 DECLARE
-  v_owner_id  UUID := NULL;  -- ← ضع هنا UUID المستخدم الموجود
+v_owner_id  UUID := 'd5162dae-e3bf-48fa-91a6-b0e0c2c5c43a';
   v_slug      TEXT := 'elyas'; -- ← ضع هنا الـ slug المطلوب
   v_tenant_id UUID;
-  v_plan      TEXT;
 BEGIN
   -- توقف إذا لم يُحدد owner_id
   IF v_owner_id IS NULL THEN
@@ -188,12 +187,9 @@ BEGIN
     RETURN;
   END IF;
 
-  -- اقرأ الخطة الحالية
-  SELECT COALESCE(plan, 'free') INTO v_plan FROM public.site_settings LIMIT 1;
-
   -- أنشئ tenant
   INSERT INTO public.tenants (slug, owner_id, plan)
-  VALUES (v_slug, v_owner_id, COALESCE(v_plan, 'free'))
+  VALUES (v_slug, v_owner_id, 'free')
   ON CONFLICT (slug) DO NOTHING
   RETURNING id INTO v_tenant_id;
 

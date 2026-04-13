@@ -1,38 +1,99 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
-import { Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings, LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette, Menu, X, BarChart3, Scale, CreditCard } from "lucide-react";
+import {
+  Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
+  LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target,
+} from "lucide-react";
 import { Toaster } from "sonner";
+import AIAssistant from "@/components/AIAssistant";
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-const menuItems = [
-  { label: "لوحة التحكم",    href: "/dashboard",               icon: LayoutDashboard, group: "main" },
-  { label: "العقارات",       href: "/dashboard/properties",    icon: Building2,       group: "main" },
-  { label: "العملاء",        href: "/dashboard/clients",       icon: Users,           group: "main" },
-  { label: "الصفقات",        href: "/dashboard/deals",         icon: TrendingUp,      group: "main" },
-  { label: "الطلبات",        href: "/dashboard/requests",      icon: FileText,        group: "main" },
-  { label: "المهام",         href: "/dashboard/tasks",         icon: CheckSquare,     group: "main" },
-  { label: "المحتوى",        href: "/dashboard/content",       icon: Megaphone,       group: "main" },
-  { label: "التحليل المالي", href: "/dashboard/financial",     icon: BarChart3,       group: "main" },
-  { label: "الوثائق",        href: "/dashboard/documents",     icon: Scale,           group: "main" },
-  { label: "الاشتراك",        href: "/dashboard/subscription",  icon: CreditCard,      group: "settings" },
-  { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings,        group: "settings" },
-  { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe,           group: "settings" },
-  { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette,         group: "settings" },
+const mainMenu = [
+  { label: "لوحة التحكم",    href: "/dashboard",               icon: LayoutDashboard },
+  { label: "العقارات",       href: "/dashboard/properties",    icon: Building2       },
+  { label: "العملاء",        href: "/dashboard/clients",       icon: Users           },
+  { label: "الصفقات",        href: "/dashboard/deals",         icon: TrendingUp      },
+  { label: "العمولات",       href: "/dashboard/commissions",   icon: Banknote        },
+  { label: "الطلبات",        href: "/dashboard/requests",      icon: FileText        },
+  { label: "المهام",         href: "/dashboard/tasks",         icon: CheckSquare     },
+  { label: "المحتوى",        href: "/dashboard/content",       icon: Megaphone       },
+  { label: "التسويق",        href: "/dashboard/marketing",     icon: Target          },
+  { label: "التحليل المالي", href: "/dashboard/financial",     icon: BarChart3       },
+  { label: "المشاريع",       href: "/dashboard/projects",      icon: Building2       },
+  { label: "الوثائق",        href: "/dashboard/documents",     icon: Scale           },
 ];
+
+const settingsMenu = [
+  { label: "الاشتراك",        href: "/dashboard/subscription",  icon: CreditCard },
+  { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings   },
+  { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe      },
+  { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette    },
+];
+
+function NavItem({
+  item, isActive, badge,
+}: {
+  item: { label: string; href: string; icon: any };
+  isActive: boolean;
+  badge?: number;
+}) {
+  return (
+    <Link
+      href={item.href}
+      className="flex items-center gap-3 no-underline transition-all group"
+      style={{
+        padding: "9px 12px",
+        borderRadius: 10,
+        fontSize: 13.5,
+        fontWeight: isActive ? 600 : 400,
+        color: isActive ? "#C6914C" : "#6A6A72",
+        background: isActive ? "rgba(198,145,76,0.09)" : "transparent",
+        borderRight: isActive ? "3px solid #C6914C" : "3px solid transparent",
+        marginBottom: 1,
+      }}
+    >
+      <item.icon
+        size={17}
+        style={{
+          color: isActive ? "#C6914C" : "#6A6A72",
+          flexShrink: 0,
+          transition: "color 0.2s",
+        }}
+      />
+      <span style={{ flex: 1, lineHeight: 1 }}>{item.label}</span>
+      {badge && badge > 0 ? (
+        <span
+          style={{
+            fontSize: 10, fontWeight: 700,
+            color: "#0A0A0C",
+            background: "#C6914C",
+            borderRadius: 999,
+            padding: "1px 6px",
+            minWidth: 18,
+            textAlign: "center",
+          }}
+        >
+          {badge > 99 ? "99+" : badge}
+        </span>
+      ) : null}
+    </Link>
+  );
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const [newRequests, setNewRequests] = useState(0);
+  const [brokerName, setBrokerName] = useState("إلياس الدخيل");
 
   useEffect(() => { checkAuth(); }, []);
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
@@ -41,12 +102,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { window.location.href = "/login"; return; }
     setAuthorized(true);
-    // عدّاد الطلبات الجديدة
-    const { count } = await supabase
-      .from("property_requests")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "جديد");
+
+    const [{ count }, { data: identity }] = await Promise.all([
+      supabase.from("property_requests").select("id", { count: "exact", head: true }).eq("status", "جديد"),
+      supabase.from("broker_identity").select("broker_name").limit(1).single(),
+    ]);
     setNewRequests(count || 0);
+    if (identity?.broker_name) setBrokerName(identity.broker_name);
   }
 
   async function handleLogout() {
@@ -54,145 +116,259 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     window.location.href = "/login";
   }
 
+  // Current page label
+  const currentPage = [...mainMenu, ...settingsMenu].find(
+    (m) => pathname === m.href || (m.href !== "/dashboard" && pathname.startsWith(m.href))
+  );
+
   if (!authorized) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: "#0A0A0C" }}>
-      <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "#C6914C", borderTopColor: "transparent" }} />
+      <div
+        className="w-8 h-8 rounded-full border-2 animate-spin"
+        style={{ borderColor: "rgba(198,145,76,0.3)", borderTopColor: "#C6914C" }}
+      />
+    </div>
+  );
+
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full">
+      {/* Logo */}
+      <div style={{ padding: "20px 16px 16px" }}>
+        <div className="flex items-center gap-3">
+          <div
+            className="flex items-center justify-center font-cairo font-black"
+            style={{
+              width: 38, height: 38, borderRadius: 11,
+              background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
+              color: "#0A0A0C", fontSize: 17, flexShrink: 0,
+              boxShadow: "0 4px 12px rgba(198,145,76,0.3)",
+            }}
+          >
+            و
+          </div>
+          <div>
+            <div className="font-cairo font-bold" style={{ fontSize: 14, color: "#F5F5F5", lineHeight: 1.2 }}>
+              وسيط برو
+            </div>
+            <div style={{ fontSize: 10, color: "#C6914C", fontWeight: 500 }}>لوحة التحكم</div>
+          </div>
+        </div>
+      </div>
+
+      {/* New Property CTA */}
+      <div style={{ padding: "0 12px 14px" }}>
+        <Link
+          href="/dashboard/properties"
+          className="flex items-center justify-center gap-2 no-underline transition-all"
+          style={{
+            padding: "9px 12px",
+            borderRadius: 10,
+            background: "linear-gradient(135deg, rgba(198,145,76,0.18), rgba(198,145,76,0.08))",
+            border: "1px solid rgba(198,145,76,0.25)",
+            color: "#C6914C",
+            fontSize: 13,
+            fontWeight: 600,
+          }}
+        >
+          <Plus size={15} />
+          إضافة عقار
+        </Link>
+      </div>
+
+      {/* Main Nav */}
+      <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto" }}>
+        <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 600, color: "#3A3A44", letterSpacing: "1.2px" }}>
+          القائمة الرئيسية
+        </div>
+        {mainMenu.map((item) => {
+          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+          return (
+            <NavItem
+              key={item.href}
+              item={item}
+              isActive={isActive}
+              badge={item.href === "/dashboard/requests" ? newRequests : undefined}
+            />
+          );
+        })}
+
+        <div style={{ margin: "14px 0 8px", padding: "0 6px 6px", fontSize: 10, fontWeight: 600, color: "#3A3A44", letterSpacing: "1.2px", borderTop: "1px solid rgba(198,145,76,0.08)", paddingTop: 12 }}>
+          الإعدادات
+        </div>
+        {settingsMenu.map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(item.href);
+          return <NavItem key={item.href} item={item} isActive={isActive} />;
+        })}
+      </nav>
+
+      {/* Bottom Profile */}
+      <div style={{ padding: "12px 12px 16px", borderTop: "1px solid rgba(198,145,76,0.08)" }}>
+        <div className="flex items-center gap-3" style={{ padding: "10px 10px", borderRadius: 12, background: "rgba(198,145,76,0.04)" }}>
+          <div
+            className="flex items-center justify-center font-cairo font-black flex-shrink-0"
+            style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg, #C6914C, #8A5F2E)", color: "#0A0A0C", fontSize: 14 }}
+          >
+            {brokerName.charAt(0)}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="truncate" style={{ fontSize: 12.5, fontWeight: 600, color: "#E5E5E5", lineHeight: 1.3 }}>{brokerName}</div>
+            <div style={{ fontSize: 10, color: "#5A5A62" }}>وسيط عقاري</div>
+          </div>
+          <button
+            onClick={handleLogout}
+            title="تسجيل خروج"
+            style={{ background: "none", border: "none", cursor: "pointer", color: "#5A5A62", padding: 4, borderRadius: 6, transition: "color 0.2s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#F87171")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#5A5A62")}
+          >
+            <LogOut size={15} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen" dir="rtl" style={{ background:'#0A0A0C', color:'#F5F5F5', fontFamily:"'Tajawal', sans-serif" }}>
+    <div className="min-h-screen" dir="rtl" style={{ background: "#0A0A0C", color: "#F5F5F5" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
-        .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
-        .dash-sidebar::-webkit-scrollbar { width: 4px; }
-        .dash-sidebar::-webkit-scrollbar-thumb { background: rgba(198,145,76,0.2); border-radius: 4px; }
         .dash-sidebar {
           transform: translateX(100%);
           transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
         }
         .dash-sidebar.open { transform: translateX(0); }
         .dash-main { margin-right: 0; padding: 20px 16px; }
+        .dash-nav-item:hover { color: #C6914C !important; background: rgba(198,145,76,0.05) !important; }
         @media (min-width: 768px) {
           .dash-sidebar { transform: translateX(0) !important; }
-          .dash-main { margin-right: 240px; padding: 32px; }
+          .dash-main { margin-right: 240px; padding: 28px 32px; }
         }
+        nav::-webkit-scrollbar { width: 3px; }
+        nav::-webkit-scrollbar-thumb { background: rgba(198,145,76,0.15); border-radius: 4px; }
       `}</style>
 
       {/* ═══════ HEADER ═══════ */}
-      <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between" style={{ height:64, padding:'0 16px', background:'rgba(16,16,20,0.95)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(198,145,76,0.1)' }}>
+      <header
+        className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between"
+        style={{
+          height: 60,
+          padding: "0 20px",
+          background: "rgba(10,10,12,0.92)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(198,145,76,0.08)",
+        }}
+      >
+        {/* Right: hamburger + page title */}
         <div className="flex items-center gap-3">
-          {/* Hamburger — mobile only */}
           <button
             className="md:hidden flex items-center justify-center rounded-lg transition"
-            style={{ width:40, height:40, background:'rgba(198,145,76,0.05)', border:'1px solid rgba(198,145,76,0.12)', color:'#9A9AA0' }}
+            style={{
+              width: 36, height: 36,
+              background: "rgba(198,145,76,0.06)",
+              border: "1px solid rgba(198,145,76,0.12)",
+              color: "#9A9AA0",
+            }}
             onClick={() => setSidebarOpen(v => !v)}
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
-          <div className="flex items-center justify-center font-kufi font-black" style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C', fontSize:16, flexShrink:0 }}>إ</div>
-          <div className="flex flex-col" style={{ lineHeight:1.2 }}>
-            <span className="font-kufi font-bold" style={{ fontSize:15, color:'#F5F5F5' }}>إلياس الدخيل</span>
-            <span style={{ fontSize:10, color:'#C6914C', fontWeight:500 }}>لوحة التحكم</span>
-          </div>
+
+          {/* Page title — desktop */}
+          {currentPage && (
+            <div className="hidden md:flex items-center gap-2">
+              <currentPage.icon size={16} style={{ color: "#C6914C" }} />
+              <span className="font-cairo font-semibold" style={{ fontSize: 15, color: "#E5E5E5" }}>
+                {currentPage.label}
+              </span>
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/" target="_blank" className="hidden sm:flex items-center gap-1.5 no-underline transition" style={{ color:'#5A5A62', fontSize:13 }}>
-            <ExternalLink size={14} />
+
+        {/* Left: actions */}
+        <div className="flex items-center gap-2">
+          {newRequests > 0 && (
+            <Link
+              href="/dashboard/requests"
+              className="relative no-underline flex items-center justify-center rounded-lg transition"
+              style={{ width: 36, height: 36, background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.12)", color: "#C6914C" }}
+            >
+              <Bell size={16} />
+              <span
+                className="absolute"
+                style={{ top: 6, left: 6, width: 7, height: 7, borderRadius: "50%", background: "#F87171", border: "1.5px solid #0A0A0C" }}
+              />
+            </Link>
+          )}
+          <Link
+            href="/search"
+            target="_blank"
+            className="hidden sm:flex items-center gap-1.5 no-underline transition"
+            style={{ color: "#5A5A62", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}
+          >
+            <ExternalLink size={13} />
+            <span>صفحة البحث</span>
+          </Link>
+          <Link
+            href="/mortgage"
+            target="_blank"
+            className="hidden sm:flex items-center gap-1.5 no-underline transition"
+            style={{ color: "#5A5A62", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}
+          >
+            <ExternalLink size={13} />
+            <span>التمويل</span>
+          </Link>
+          <Link
+            href="/"
+            target="_blank"
+            className="hidden sm:flex items-center gap-1.5 no-underline transition"
+            style={{ color: "#5A5A62", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}
+          >
+            <ExternalLink size={13} />
             <span>الموقع</span>
           </Link>
-          <div className="hidden sm:block" style={{ width:1, height:20, background:'rgba(198,145,76,0.12)' }}></div>
-          <button onClick={handleLogout} className="flex items-center gap-1.5 transition" style={{ color:'#5A5A62', fontSize:13, background:'none', border:'none', cursor:'pointer' }}>
-            <LogOut size={14} />
-            <span className="hidden sm:inline">خروج</span>
-          </button>
         </div>
       </header>
 
-      <div className="flex" style={{ paddingTop:64 }}>
+      <div className="flex" style={{ paddingTop: 60 }}>
 
-        {/* ═══════ OVERLAY — mobile only ═══════ */}
+        {/* Overlay — mobile */}
         {sidebarOpen && (
           <div
             className="md:hidden fixed inset-0 z-30"
-            style={{ background:'rgba(0,0,0,0.6)', backdropFilter:'blur(2px)' }}
+            style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(3px)" }}
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
         {/* ═══════ SIDEBAR ═══════ */}
         <aside
-          className={"dash-sidebar fixed top-16 right-0 bottom-0 overflow-y-auto z-30" + (sidebarOpen ? " open" : "")}
-          style={{ width:240, background:'#101014', borderLeft:'1px solid rgba(198,145,76,0.08)', padding:'16px 12px' }}
+          className={"dash-sidebar fixed top-[60px] right-0 bottom-0 z-30" + (sidebarOpen ? " open" : "")}
+          style={{
+            width: 240,
+            background: "#0D0D10",
+            borderLeft: "1px solid rgba(198,145,76,0.07)",
+          }}
         >
-          {/* Close button — mobile only */}
-          <div className="md:hidden flex justify-end mb-2">
-            <button onClick={() => setSidebarOpen(false)} style={{ color:'#5A5A62', background:'none', border:'none', cursor:'pointer', padding:4 }}>
-              <X size={18} />
-            </button>
-          </div>
-
-          <nav className="space-y-1">
-            {menuItems.map((item, idx) => {
-              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-              const isFirstSettings = item.group === "settings" && (idx === 0 || menuItems[idx - 1].group !== "settings");
-              return (
-                <div key={item.href}>
-                  {isFirstSettings && (
-                    <div style={{ margin:'12px 0 8px', padding:'0 14px' }}>
-                      <div style={{ height:1, background:'rgba(198,145,76,0.12)' }} />
-                      <span style={{ fontSize:10, color:'#5A5A62', display:'block', marginTop:8, letterSpacing:1 }}>الإعدادات</span>
-                    </div>
-                  )}
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-3 no-underline transition"
-                    style={{
-                      padding:'10px 14px',
-                      borderRadius:10,
-                      fontSize:14,
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#C6914C' : '#9A9AA0',
-                      background: isActive ? 'rgba(198,145,76,0.08)' : 'transparent',
-                      borderRight: isActive ? '3px solid #C6914C' : '3px solid transparent',
-                    }}
-                  >
-                    <item.icon size={18} style={{ opacity: isActive ? 1 : 0.5 }} />
-                    <span style={{ flex: 1 }}>{item.label}</span>
-                    {item.href === '/dashboard/requests' && newRequests > 0 && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: '#0A0A0C', background: '#C6914C', borderRadius: 100, padding: '1px 7px', minWidth: 18, textAlign: 'center' }}>
-                        {newRequests > 99 ? '99+' : newRequests}
-                      </span>
-                    )}
-                  </Link>
-                </div>
-              );
-            })}
-          </nav>
-
-          <div style={{ marginTop:24, padding:'16px 14px', borderTop:'1px solid rgba(198,145,76,0.08)' }}>
-            <div style={{ fontSize:11, color:'#5A5A62', lineHeight:1.6 }}>
-              وسيط عقاري مرخّص<br />
-              <span style={{ color:'#C6914C' }}>رخصة فال</span>
-            </div>
-          </div>
+          <SidebarContent />
         </aside>
 
-        {/* ═══════ MAIN CONTENT ═══════ */}
-        <main className="dash-main flex-1" style={{ minHeight:'calc(100vh - 64px)' }}>
+        {/* ═══════ MAIN ═══════ */}
+        <main className="dash-main flex-1" style={{ minHeight: "calc(100vh - 60px)" }}>
           {children}
         </main>
       </div>
+
+      <AIAssistant />
 
       <Toaster
         position="top-center"
         dir="rtl"
         toastOptions={{
           style: {
-            background: '#16161A',
-            border: '1px solid rgba(193,141,74,0.2)',
-            color: '#F5F5F5',
-            fontFamily: "'Tajawal', sans-serif",
+            background: "#16161A",
+            border: "1px solid rgba(198,145,76,0.2)",
+            color: "#F5F5F5",
+            fontFamily: "var(--font-tajawal), 'Tajawal', sans-serif",
             fontSize: 14,
             borderRadius: 12,
           },

@@ -3,8 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { ArrowRight, Save, Eye, EyeOff, Check, Upload, X } from "lucide-react";
+import { ArrowRight, Save, Eye, EyeOff, Check, Upload, X, Sparkles, Loader2 } from "lucide-react";
 import SARIcon from "../../../../components/SARIcon";
+import { toast } from "sonner";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -44,6 +45,7 @@ export default function EditProperty() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<any>({
     title: "", main_category: "", sub_category: "", offer_type: "",
@@ -119,6 +121,45 @@ export default function EditProperty() {
     if (form.main_image === url) {
       const remaining = uploadedImages.filter(u => u !== url);
       set("main_image", remaining[0] || "");
+    }
+  }
+
+  async function handleAIDescription() {
+    const hasData = form.main_category || form.city || form.district || form.price;
+    if (!hasData) { toast.error("أدخل بعض بيانات العقار أولاً"); return; }
+    setAiLoading(true);
+    try {
+      const specs: string[] = [];
+      if (form.offer_type)    specs.push(`نوع العرض: ${form.offer_type}`);
+      if (form.main_category) specs.push(`التصنيف: ${form.main_category}`);
+      if (form.sub_category)  specs.push(`النوع: ${form.sub_category}`);
+      if (form.city)          specs.push(`المدينة: ${form.city}`);
+      if (form.district)      specs.push(`الحي: ${form.district}`);
+      if (form.land_area)     specs.push(`مساحة الأرض: ${form.land_area} م²`);
+      if (form.built_area)    specs.push(`مسطح البناء: ${form.built_area} م²`);
+      if (form.rooms)         specs.push(`الغرف: ${form.rooms}`);
+      if (form.bathrooms)     specs.push(`دورات المياه: ${form.bathrooms}`);
+      if (form.floors)        specs.push(`الأدوار: ${form.floors}`);
+      if (form.price)         specs.push(`السعر: ${Number(form.price).toLocaleString("ar-SA")} ريال`);
+      const res = await fetch("/api/ai-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: "anthropic",
+          model: "claude-opus-4-6",
+          mode: "single",
+          systemPrompt: "أنت خبير تسويق عقاري سعودي متميز. اكتب وصفاً عقارياً احترافياً باللغة العربية الفصحى، من 3 إلى 5 فقرات، لا يتجاوز 350 كلمة، بدون عناوين أو نقاط.",
+          userPrompt: `اكتب وصفاً لهذا العقار:\n${specs.join("\n")}${form.title ? `\nعنوان: ${form.title}` : ""}`,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      set("description", data.result);
+      toast.success("تم توليد الوصف بنجاح");
+    } catch (err: any) {
+      toast.error("تعذّر توليد الوصف: " + err.message);
+    } finally {
+      setAiLoading(false);
     }
   }
 
@@ -323,7 +364,27 @@ export default function EditProperty() {
 
         {/* ═══ الوصف ═══ */}
         <Section title="الوصف">
-          <textarea name="description" value={form.description} onChange={handleChange} rows={4} className={inp} />
+          <div className="space-y-3">
+            <div className="flex items-center justify-end">
+              <button
+                type="button"
+                onClick={handleAIDescription}
+                disabled={aiLoading}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl transition disabled:opacity-50"
+                style={{
+                  background: "linear-gradient(135deg, rgba(198,145,76,0.15), rgba(198,145,76,0.08))",
+                  border: "1px solid rgba(198,145,76,0.3)",
+                  color: "#C6914C", fontSize: 13, fontWeight: 600,
+                  cursor: aiLoading ? "not-allowed" : "pointer",
+                }}
+              >
+                {aiLoading
+                  ? <><Loader2 size={15} className="animate-spin" /> جاري التوليد...</>
+                  : <><Sparkles size={15} /> اكتب بالذكاء الاصطناعي</>}
+              </button>
+            </div>
+            <textarea name="description" value={form.description} onChange={handleChange} rows={5} className={inp} style={{ resize: "vertical" }} />
+          </div>
         </Section>
 
         {/* ═══ الصور ═══ */}

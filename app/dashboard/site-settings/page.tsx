@@ -119,6 +119,10 @@ export default function SiteSettingsPage() {
     setSaving(true);
     const { id, created_at, ...updateData } = settings;
     await supabase.from("site_settings").update(updateData).eq("id", settings.id);
+    // توحيد رخصة فال في broker_identity
+    if (settings.fal_license !== undefined) {
+      await supabase.from("broker_identity").update({ fal_license: settings.fal_license }).not("id", "is", null);
+    }
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
@@ -271,7 +275,7 @@ export default function SiteSettingsPage() {
 
               <div>
                 <label className="block text-sm text-[#9A9AA0] mb-2">رقم رخصة فال <span className="text-[#5A5A62]">(يظهر في الموقع)</span></label>
-                <input value={settings.fal_license || ""} onChange={e => handleChange("fal_license", e.target.value)} className={inputClass} placeholder="مثال: 7001234567" />
+                <input value={settings.fal_license || ""} onChange={e => handleChange("fal_license", e.target.value)} className={inputClass} placeholder="مثال: 1100000000" maxLength={10} dir="ltr" />
               </div>
             </div>
           )}

@@ -47,7 +47,6 @@
 body {
   background: var(--bg-main);
   color: var(--text-primary);
-  font-family: 'Tajawal', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -55,9 +54,17 @@ body {
 /* ═══════════════════════════════════════════════
    الخطوط
 ═══════════════════════════════════════════════ */
-.font-kufi,
-h1, h2, h3 {
+.font-kufi {
   font-family: 'Noto Kufi Arabic', serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-cairo {
+  font-family: var(--font-cairo), 'Cairo', 'Noto Kufi Arabic', sans-serif;
+}
+
+body {
+  font-family: var(--font-tajawal), 'Tajawal', 'Arial', sans-serif;
 }
 
 /* ═══════════════════════════════════════════════
@@ -207,3 +214,133 @@ a { text-decoration: none; }
 /* إخفاء مؤشر التحديد من Tailwind إذا كان مخالفاً للتصميم */
 [class~="focus:ring-blue-500"] { --tw-ring-color: rgba(193,141,74,0.4) !important; }
 [class~="border-blue-500"]     { border-color: var(--gold) !important; }
+
+/* ═══════════════════════════════════════════════
+   كروت إحصائية — hero stat cards
+═══════════════════════════════════════════════ */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 0 16px 0 80px;
+  opacity: 0.04;
+  background: var(--gold);
+  transition: var(--transition);
+}
+.stat-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+.stat-card:hover::before { opacity: 0.08; }
+
+/* ═══════════════════════════════════════════════
+   Hero Banner — بطاقة الترحيب
+═══════════════════════════════════════════════ */
+.hero-banner {
+  background: linear-gradient(135deg, #1A1208 0%, #0F0D0A 50%, #0A0A0C 100%);
+  border: 1px solid rgba(198,145,76,0.2);
+  border-radius: 20px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  top: -40px; left: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(198,145,76,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════
+   شارة الحالة — status pill
+═══════════════════════════════════════════════ */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-tajawal), 'Tajawal', sans-serif;
+}
+.status-pill.green  { background: rgba(74,222,128,0.1);  color: #4ADE80; }
+.status-pill.gold   { background: rgba(198,145,76,0.12); color: #C6914C; }
+.status-pill.red    { background: rgba(248,113,113,0.1); color: #F87171; }
+.status-pill.purple { background: rgba(167,139,250,0.1); color: #A78BFA; }
+.status-pill.gray   { background: rgba(90,90,98,0.2);    color: #9A9AA0; }
+
+/* ═══════════════════════════════════════════════
+   قسم العنوان — section header
+═══════════════════════════════════════════════ */
+.section-title {
+  font-family: var(--font-cairo), 'Cairo', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   أزرار الإجراء السريع — quick action
+═══════════════════════════════════════════════ */
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(198,145,76,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--transition);
+  text-decoration: none;
+  cursor: pointer;
+}
+.quick-action:hover {
+  background: rgba(198,145,76,0.08);
+  border-color: var(--border-hover);
+  color: var(--gold);
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════
+   خط فاصل مع نص — divider label
+═══════════════════════════════════════════════ */
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.divider-label::before, .divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}

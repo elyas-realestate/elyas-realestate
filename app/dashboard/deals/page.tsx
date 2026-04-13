@@ -200,7 +200,7 @@ export default function Deals() {
               <h3 className="font-bold text-lg mb-2">{deal.title}</h3>
               <div className="flex items-center justify-between">
                 <span className="text-green-400 font-bold text-sm flex items-center gap-1">
-                  {deal.target_value ? <>{deal.target_value.toLocaleString()} <SARIcon size={12} style={{ filter: 'invert(1) brightness(0.6) sepia(1) hue-rotate(80deg) saturate(2)' }} /></> : "—"}
+                  {deal.target_value ? <>{deal.target_value.toLocaleString()} <SARIcon size={12} color="accent" /></> : "—"}
                 </span>
                 <span className="text-xs text-[#5A5A62]">{deal.priority}</span>
               </div>
