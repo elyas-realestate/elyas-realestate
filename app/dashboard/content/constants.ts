@@ -66,6 +66,14 @@ export const providers: AIProvider[] = [
       { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash", desc: "مستقر وأرخص" },
     ],
   },
+  {
+    id: "manus",
+    name: "Manus",
+    desc: "نموذج Manus — متخصص في التنفيذ والتحليل",
+    models: [
+      { id: "manus-1", name: "Manus 1", desc: "النموذج الرئيسي" },
+    ],
+  },
 ];
 
 export const modes = [

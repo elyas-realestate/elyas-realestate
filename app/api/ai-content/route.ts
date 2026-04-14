@@ -13,7 +13,7 @@ const MAX_MESSAGES_COUNT = 50;
 const MAX_SYSTEM_PROMPT_LENGTH = 4000;
 
 // ── المزودات والنماذج المسموحة ──
-const ALLOWED_PROVIDERS = ["openai", "anthropic", "google"] as const;
+const ALLOWED_PROVIDERS = ["openai", "anthropic", "google", "manus"] as const;
 const ALLOWED_MODES = ["single", "chain", "compare"] as const;
 
 // ── التحقق من صحة المدخلات ──
@@ -121,10 +121,23 @@ async function callGoogle(model: string, systemPrompt: string, messages: any[]) 
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
 
+async function callManus(model: string, systemPrompt: string, messages: any[]) {
+  // Manus uses OpenAI-compatible API format
+  const response = await fetch("https://api.manus.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + process.env.MANUS_API_KEY },
+    body: JSON.stringify({ model: model || "manus-1", messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.choices?.[0]?.message?.content || "";
+}
+
 async function callModel(provider: string, model: string, systemPrompt: string, messages: any[]) {
   if (provider === "openai") return callOpenAI(model, systemPrompt, messages);
   if (provider === "anthropic") return callAnthropic(model, systemPrompt, messages);
   if (provider === "google") return callGoogle(model, systemPrompt, messages);
+  if (provider === "manus") return callManus(model, systemPrompt, messages);
   throw new Error("مزود غير معروف: " + provider);
 }
 
@@ -189,6 +202,7 @@ export async function POST(req: NextRequest) {
     if (p === "openai" && !process.env.OPENAI_API_KEY) return NextResponse.json({ error: "مفتاح OpenAI API غير موجود — أضفه في الإعدادات" }, { status: 400 });
     if (p === "anthropic" && !process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "مفتاح Anthropic API غير موجود — أضفه في الإعدادات" }, { status: 400 });
     if (p === "google" && !process.env.GOOGLE_API_KEY) return NextResponse.json({ error: "مفتاح Google API غير موجود — أضفه في الإعدادات" }, { status: 400 });
+    if (p === "manus" && !process.env.MANUS_API_KEY) return NextResponse.json({ error: "مفتاح Manus API غير موجود — أضفه في الإعدادات" }, { status: 400 });
 
     const chatMessages = messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
 

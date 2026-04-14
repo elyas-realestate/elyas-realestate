@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain,
 } from "lucide-react";
 import { Toaster } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -29,8 +29,9 @@ const mainMenu = [
 ];
 
 const settingsMenu = [
-  { label: "الاشتراك",        href: "/dashboard/subscription",  icon: CreditCard },
-  { label: "سجل التدقيق",    href: "/dashboard/audit",         icon: Shield     },
+  { label: "الاشتراك",        href: "/dashboard/subscription",     icon: CreditCard },
+  { label: "تأسيس AI",      href: "/dashboard/ai-foundation",   icon: Brain      },
+  { label: "سجل التدقيق",    href: "/dashboard/audit",            icon: Shield     },
   { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings   },
   { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe      },
   { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette    },
