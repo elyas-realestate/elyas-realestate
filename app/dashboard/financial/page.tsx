@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import {
   TrendingUp, DollarSign, Calculator, Award, BarChart3,
   Plus, Trash2, Check, X, Download, Receipt, PieChart,
-  ArrowUpCircle, ArrowDownCircle, Percent,
+  ArrowUpCircle, ArrowDownCircle, Percent, Activity,
 } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
@@ -701,6 +701,137 @@ function ROITab({ deals }: { deals: any[] }) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
+// TAB 5 — التدفق النقدي
+// ══════════════════════════════════════════════════════════════════════════════
+function CashFlowTab({ deals }: { deals: any[] }) {
+  const months = useMemo(() => {
+    // آخر 6 أشهر + 3 أشهر توقع
+    const now = new Date();
+    const result: { key: string; label: string; income: number; expense: number; forecast?: boolean }[] = [];
+
+    // الأشهر الماضية (بيانات حقيقية)
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const mNames = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+      const label = mNames[d.getMonth()] + " " + d.getFullYear();
+
+      const monthDeals = deals.filter(deal => deal.created_at?.startsWith(key));
+      const income = monthDeals.filter(deal => deal.current_stage === "مكتملة").reduce((s, d) => s + (Number(d.target_value) || 0) * 0.025, 0);
+      const expense = Math.round(income * 0.3 + 2000); // تقدير بسيط
+
+      result.push({ key, label, income: Math.round(income), expense });
+    }
+
+    // التوقع (3 أشهر قادمة)
+    const last3Income = result.slice(-3).reduce((s, m) => s + m.income, 0) / 3;
+    const last3Expense = result.slice(-3).reduce((s, m) => s + m.expense, 0) / 3;
+
+    for (let i = 1; i <= 3; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      const mNames = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+      const label = mNames[d.getMonth()] + " " + d.getFullYear();
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+
+      result.push({
+        key, label,
+        income: Math.round(last3Income * (1 + 0.05 * i)),
+        expense: Math.round(last3Expense),
+        forecast: true,
+      });
+    }
+
+    return result;
+  }, [deals]);
+
+  const maxVal = Math.max(...months.map(m => Math.max(m.income, m.expense)), 1);
+  const totalIncome = months.filter(m => !m.forecast).reduce((s, m) => s + m.income, 0);
+  const totalExpense = months.filter(m => !m.forecast).reduce((s, m) => s + m.expense, 0);
+  const netCash = totalIncome - totalExpense;
+
+  return (
+    <div className="space-y-5">
+      {/* KPIs */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: "إجمالي الدخل (6 أشهر)", val: fmt(totalIncome) + " ﷼", color: "#4ADE80" },
+          { label: "إجمالي المصروفات", val: fmt(totalExpense) + " ﷼", color: "#F87171" },
+          { label: "صافي التدفق", val: fmt(netCash) + " ﷼", color: netCash >= 0 ? "#4ADE80" : "#F87171" },
+        ].map((k, i) => (
+          <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
+            <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6 }}>{k.label}</p>
+            <p className="font-cairo font-bold" style={{ fontSize: 22, color: k.color }}>{k.val}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Chart */}
+      <div className="rounded-2xl p-6" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <Activity size={15} style={{ color: "#C6914C" }} />
+            <h3 className="font-bold" style={{ fontSize: 14 }}>التدفق النقدي الشهري</h3>
+          </div>
+          <div className="flex gap-4" style={{ fontSize: 11 }}>
+            <span className="flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: 2, background: "#4ADE80", display: "inline-block" }} /> دخل</span>
+            <span className="flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: 2, background: "#F87171", display: "inline-block" }} /> مصروف</span>
+            <span className="flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: 2, background: "rgba(198,145,76,0.3)", display: "inline-block", border: "1px dashed #C6914C" }} /> توقع</span>
+          </div>
+        </div>
+
+        {/* Bar chart */}
+        <div className="flex items-end gap-2" style={{ height: 180 }}>
+          {months.map(m => {
+            const incH = (m.income / maxVal) * 160;
+            const expH = (m.expense / maxVal) * 160;
+            return (
+              <div key={m.key} className="flex-1 flex flex-col items-center gap-1">
+                <div className="w-full flex gap-0.5 items-end" style={{ height: 160 }}>
+                  <div className="flex-1 rounded-t-md transition-all" style={{
+                    height: incH || 2,
+                    background: m.forecast ? "rgba(74,222,128,0.2)" : "#4ADE80",
+                    border: m.forecast ? "1px dashed rgba(74,222,128,0.4)" : "none",
+                  }} />
+                  <div className="flex-1 rounded-t-md transition-all" style={{
+                    height: expH || 2,
+                    background: m.forecast ? "rgba(248,113,113,0.2)" : "#F87171",
+                    border: m.forecast ? "1px dashed rgba(248,113,113,0.4)" : "none",
+                  }} />
+                </div>
+                <p style={{ fontSize: 9, color: m.forecast ? "#C6914C" : "#5A5A62", textAlign: "center", lineHeight: 1.2 }}>
+                  {m.label.split(" ")[0]}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Table */}
+        <div className="mt-6 pt-4" style={{ borderTop: "1px solid rgba(198,145,76,0.06)" }}>
+          <div className="grid gap-2">
+            {months.map(m => (
+              <div key={m.key} className="flex items-center justify-between py-2 px-3 rounded-lg" style={{ background: m.forecast ? "rgba(198,145,76,0.04)" : "transparent", fontSize: 12 }}>
+                <div className="flex items-center gap-2">
+                  <span style={{ color: m.forecast ? "#C6914C" : "#9A9AA0", fontWeight: 600 }}>{m.label}</span>
+                  {m.forecast && <span style={{ fontSize: 9, padding: "1px 6px", borderRadius: 4, background: "rgba(198,145,76,0.1)", color: "#C6914C" }}>توقع</span>}
+                </div>
+                <div className="flex gap-6">
+                  <span style={{ color: "#4ADE80" }}>+{fmtFull(m.income)} ﷼</span>
+                  <span style={{ color: "#F87171" }}>-{fmtFull(m.expense)} ﷼</span>
+                  <span style={{ color: m.income - m.expense >= 0 ? "#E5E5E5" : "#F87171", fontWeight: 700 }}>
+                    {fmtFull(m.income - m.expense)} ﷼
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
 // PAGE
 // ══════════════════════════════════════════════════════════════════════════════
 const TABS = [
@@ -708,6 +839,7 @@ const TABS = [
   { id: "pnl",      label: "الإيرادات والمصروفات", icon: Receipt         },
   { id: "vat",      label: "ضريبة القيمة المضافة", icon: Percent         },
   { id: "roi",      label: "عائد الاستثمار",       icon: PieChart        },
+  { id: "cashflow", label: "التدفق النقدي",        icon: Activity        },
 ];
 
 export default function FinancialPage() {
@@ -758,6 +890,7 @@ export default function FinancialPage() {
       {tab === "pnl"      && <PnLTab      deals={deals} />}
       {tab === "vat"      && <VATTab      deals={deals} />}
       {tab === "roi"      && <ROITab      deals={deals} />}
+      {tab === "cashflow" && <CashFlowTab  deals={deals} />}
     </div>
   );
 }

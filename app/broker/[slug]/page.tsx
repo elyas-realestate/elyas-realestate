@@ -296,10 +296,35 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
       {properties.length > 0 && (
         <section id="properties" style={{ padding:"90px 48px", background:clrBgSecondary }} className="section-pad">
           <div style={{ maxWidth:1100, margin:"0 auto" }}>
-            <div style={{ textAlign:"center", marginBottom:56 }}>
+            <div style={{ textAlign:"center", marginBottom:32 }}>
               <div className="accent" style={{ fontSize:12, fontWeight:700, letterSpacing:2, marginBottom:14 }}>— عقارات مختارة —</div>
               <h2 className="font-kufi" style={{ fontSize:fntSection, fontWeight:800, color:clrTextPrimary, lineHeight:1.3 }}>لا نعرض كل شي — فقط اللي يستاهل</h2>
             </div>
+
+            {/* ── فلتر بيع / إيجار ── */}
+            {(() => {
+              const saleCount = properties.filter((p: any) => p.offer_type === "بيع" || !p.offer_type).length;
+              const rentCount = properties.filter((p: any) => p.offer_type === "إيجار").length;
+              return (
+                <div style={{ display:"flex", justifyContent:"center", gap:10, marginBottom:40, flexWrap:"wrap" }}>
+                  {[
+                    { label: "الكل", count: properties.length },
+                    { label: "بيع", count: saleCount },
+                    { label: "إيجار", count: rentCount },
+                  ].filter(t => t.count > 0).map(t => (
+                    <span key={t.label} style={{
+                      fontSize:13, fontWeight:600, padding:"8px 20px", borderRadius:20,
+                      background:`color-mix(in srgb, ${clrAccent} 8%, transparent)`,
+                      border:`1px solid color-mix(in srgb, ${clrAccent} 18%, transparent)`,
+                      color:clrAccent,
+                    }}>
+                      {t.label} ({t.count})
+                    </span>
+                  ))}
+                </div>
+              );
+            })()}
+
             <div className="prop-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(300px, 1fr))", gap:22 }}>
               {properties.map((p: any) => (
                 <div key={p.id} className="card" style={{ overflow:"hidden", color:clrTextPrimary }}>
@@ -308,7 +333,12 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                       ? <img src={p.images[0]} alt={p.title} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                       : <div style={{ display:"flex", alignItems:"center", justifyContent:"center", height:"100%", fontSize:36, color:clrTextMuted }}>🏠</div>
                     }
-                    <span className="accent-bg" style={{ position:"absolute", top:14, right:14, color:clrBgPrimary, fontSize:12, fontWeight:700, padding:"4px 12px", borderRadius:7 }}>{p.offer_type || "للبيع"}</span>
+                    <span style={{
+                      position:"absolute", top:14, right:14,
+                      background: p.offer_type === "إيجار" ? "rgba(96,165,250,0.9)" : clrAccent,
+                      color: p.offer_type === "إيجار" ? "#fff" : clrBgPrimary,
+                      fontSize:12, fontWeight:700, padding:"4px 12px", borderRadius:7
+                    }}>{p.offer_type || "للبيع"}</span>
                   </div>
                   <div style={{ padding:22 }}>
                     <h3 className="font-kufi" style={{ fontSize:16, fontWeight:700, marginBottom:6, color:clrTextPrimary }}>{p.title}</h3>
