@@ -53,7 +53,8 @@ export const providers: AIProvider[] = [
     desc: "صانعة Claude — ممتاز في الفهم والكتابة العربية",
     models: [
       { id: "claude-sonnet-4-20250514", name: "Claude Sonnet 4", desc: "ممتاز في الكتابة والفهم العربي" },
-      { id: "claude-haiku-4.5-20251001", name: "Claude Haiku 4.5", desc: "سريع جداً وأرخص" },
+      { id: "claude-3-5-sonnet-20241022", name: "Claude 3.5 Sonnet", desc: "مستقر وموثوق" },
+      { id: "claude-3-haiku-20240307", name: "Claude 3 Haiku", desc: "سريع جداً وأرخص" },
     ],
   },
   {
@@ -61,9 +62,9 @@ export const providers: AIProvider[] = [
     name: "Google",
     desc: "صانعة Gemini — قوي في المحتوى متعدد اللغات",
     models: [
-      { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", desc: "الأقوى من Google" },
-      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", desc: "سريع واقتصادي" },
-      { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash", desc: "مستقر وأرخص" },
+      { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash", desc: "مستقر وسريع — مجاني" },
+      { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", desc: "قوي ومستقر" },
+      { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash", desc: "سريع واقتصادي" },
     ],
   },
   {
