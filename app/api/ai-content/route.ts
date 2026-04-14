@@ -244,8 +244,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: "وضع غير معروف" }, { status: 400 });
   } catch (err: any) {
-    // ── تنقية رسائل الخطأ — لا نكشف تفاصيل داخلية ──
+    // ── مؤقت: عرض الخطأ الفعلي للتشخيص ──
     console.error("[AI API Error]", err?.message);
-    return NextResponse.json({ error: sanitizeError(err) }, { status: 500 });
+    return NextResponse.json({ error: "خطأ: " + (err?.message || "غير معروف") }, { status: 500 });
   }
 }
