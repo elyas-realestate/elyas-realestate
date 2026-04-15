@@ -197,6 +197,8 @@ export async function POST(req: NextRequest) {
     }
 
     const { systemPrompt, userPrompt, messages, provider, model, mode, provider2, model2 } = body;
+    const p = provider || "openai";
+    const m = model || "gpt-3.5-turbo";
 
     // ── Fetch AI Configuration Keys Dynamically ──
     const { data: dbKeys } = await supabase

@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
     if (!tData) return NextResponse.json({ error: "لم يتم العثور على حساب المستأجر" }, { status: 403 });
     
     const { checkLimit } = await import("@/lib/plan-limits");
-    const limitCheck = await checkLimit(tData.id, "ai_requests");
+    const limitCheck = await checkLimit(supabase, "ai_requests");
     if (!limitCheck.allowed) return NextResponse.json({ error: limitCheck.error }, { status: 403 });
 
     // ── Fetch Config ──
