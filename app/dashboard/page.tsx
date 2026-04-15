@@ -35,17 +35,17 @@ function KPICard({ label, value, sub, icon: Icon, color, trend, trendLabel, href
         </div>
         {trend && trendLabel ? (
           <span className="flex items-center gap-1 text-xs font-semibold"
-            style={{ color: trend === "up" ? "#4ADE80" : trend === "down" ? "#F87171" : "#9A9AA0" }}>
+            style={{ color: trend === "up" ? "#4ADE80" : trend === "down" ? "#F87171" : "#94A3B8" }}>
             {trend === "up" ? <ArrowUpRight size={13} /> : trend === "down" ? <ArrowDownRight size={13} /> : null}
             {trendLabel}
           </span>
         ) : href ? <ChevronLeft size={15} style={{ color: "#3A3A42" }} /> : null}
       </div>
-      <div className="font-cairo font-bold" style={{ fontSize: 28, color: "#F5F5F5", lineHeight: 1.1, marginBottom: 4 }}>
+      <div className="font-cairo font-bold" style={{ fontSize: 28, color: "#F8FAFC", lineHeight: 1.1, marginBottom: 4 }}>
         {value}
       </div>
-      <div style={{ fontSize: 13, fontWeight: 500, color: "#9A9AA0", marginBottom: sub ? 3 : 0 }}>{label}</div>
-      {sub && <div style={{ fontSize: 11, color: "#5A5A62" }}>{sub}</div>}
+      <div style={{ fontSize: 13, fontWeight: 500, color: "#94A3B8", marginBottom: sub ? 3 : 0 }}>{label}</div>
+      {sub && <div style={{ fontSize: 11, color: "#64748B" }}>{sub}</div>}
     </div>
   );
   if (href) return <Link href={href} className="block no-underline" style={{ height: "100%" }}>{inner}</Link>;
@@ -54,8 +54,8 @@ function KPICard({ label, value, sub, icon: Icon, color, trend, trendLabel, href
 
 function MiniRow({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: "1px solid rgba(198,145,76,0.06)" }}>
-      <span style={{ color: "#9A9AA0", fontSize: 13 }}>{label}</span>
+    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: "1px solid rgba(16,185,129,0.06)" }}>
+      <span style={{ color: "#94A3B8", fontSize: 13 }}>{label}</span>
       <span className="font-cairo font-bold text-sm" style={{ color }}>{value.toLocaleString()}</span>
     </div>
   );
@@ -72,7 +72,7 @@ function InsightItem({ text, type }: { text: string; type: "warn" | "info" | "go
   return (
     <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
       <Icon size={15} style={{ color: cfg.color, flexShrink: 0, marginTop: 1 }} />
-      <p style={{ fontSize: 13, color: "#D5D5DA", lineHeight: 1.6 }}>{text}</p>
+      <p style={{ fontSize: 13, color: "#E2E8F0", lineHeight: 1.6 }}>{text}</p>
     </div>
   );
 }
@@ -80,11 +80,11 @@ function InsightItem({ text, type }: { text: string; type: "warn" | "info" | "go
 // ── Pipeline bar ──────────────────────────────────────────────────────────
 function PipelineBar({ stage, count, max }: { stage: string; count: number; max: number }) {
   const pct = max > 0 ? (count / max) * 100 : 0;
-  const color = STAGE_COLOR[stage] || "#C6914C";
+  const color = STAGE_COLOR[stage] || "#10B981";
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span style={{ fontSize: 12, color: "#9A9AA0" }}>{stage}</span>
+        <span style={{ fontSize: 12, color: "#94A3B8" }}>{stage}</span>
         <span className="font-cairo font-bold" style={{ fontSize: 13, color }}>{count}</span>
       </div>
       <div style={{ height: 6, borderRadius: 999, background: "rgba(255,255,255,0.05)" }}>
@@ -106,14 +106,14 @@ function DistrictCell({ name, count, max }: { name: string; count: number; max: 
   return (
     <div className="rounded-xl p-3 text-center transition"
       style={{
-        background: `rgba(198,145,76,${alpha})`,
-        border: `1px solid rgba(198,145,76,${alpha * 1.5})`,
+        background: `rgba(16,185,129,${alpha})`,
+        border: `1px solid rgba(16,185,129,${alpha * 1.5})`,
         cursor: "default",
       }}>
-      <div className="font-cairo font-bold" style={{ fontSize: 16, color: intensity > 0.5 ? "#F5E6CC" : "#C6914C" }}>
+      <div className="font-cairo font-bold" style={{ fontSize: 16, color: intensity > 0.5 ? "#F8FAFC" : "#10B981" }}>
         {count}
       </div>
-      <div style={{ fontSize: 10, color: intensity > 0.5 ? "#D4A862" : "#7A7A82", marginTop: 2 }}>{name}</div>
+      <div style={{ fontSize: 10, color: intensity > 0.5 ? "#34D399" : "#64748B", marginTop: 2 }}>{name}</div>
     </div>
   );
 }
@@ -277,7 +277,7 @@ export default function Dashboard() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "صباح الخير" : hour < 17 ? "مساء النور" : "مساء الخير";
   const today = new Date().toLocaleDateString("ar-SA", { weekday: "long", month: "long", day: "numeric" });
-  const priorityColor: Record<string, string> = { "عاجل": "#F87171", "مرتفع": "#FB923C", "متوسط": "#FACC15", "منخفض": "#9A9AA0" };
+  const priorityColor: Record<string, string> = { "عاجل": "#F87171", "مرتفع": "#FB923C", "متوسط": "#FACC15", "منخفض": "#94A3B8" };
 
   return (
     <div dir="rtl">
@@ -295,13 +295,13 @@ export default function Dashboard() {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles size={14} style={{ color: "#C6914C" }} />
-              <span style={{ fontSize: 12, color: "#C6914C", fontWeight: 600 }}>{today}</span>
+              <Sparkles size={14} style={{ color: "#10B981" }} />
+              <span style={{ fontSize: 12, color: "#10B981", fontWeight: 600 }}>{today}</span>
             </div>
-            <h1 className="font-cairo font-bold" style={{ fontSize: 26, color: "#F5F5F5", marginBottom: 6, lineHeight: 1.2 }}>
+            <h1 className="font-cairo font-bold" style={{ fontSize: 26, color: "#F8FAFC", marginBottom: 6, lineHeight: 1.2 }}>
               {greeting}، {brokerName} 👋
             </h1>
-            <p style={{ fontSize: 13.5, color: "#7A7A82", maxWidth: 420, lineHeight: 1.7 }}>
+            <p style={{ fontSize: 13.5, color: "#64748B", maxWidth: 420, lineHeight: 1.7 }}>
               إليك نظرة ذكية على أداء منصتك — كل شيء محسوب بناءً على بياناتك الحقيقية.
             </p>
           </div>
@@ -326,15 +326,15 @@ export default function Dashboard() {
         {stats.tasksTotal > 0 && (
           <div style={{ marginTop: 20 }}>
             <div className="flex justify-between mb-1.5">
-              <span style={{ fontSize: 11, color: "#5A5A62" }}>إنجاز المهام</span>
-              <span style={{ fontSize: 11, color: "#C6914C", fontWeight: 600 }}>
+              <span style={{ fontSize: 11, color: "#64748B" }}>إنجاز المهام</span>
+              <span style={{ fontSize: 11, color: "#10B981", fontWeight: 600 }}>
                 {Math.round((stats.tasksDone / stats.tasksTotal) * 100)}%
               </span>
             </div>
-            <div style={{ height: 4, borderRadius: 999, background: "rgba(198,145,76,0.1)" }}>
+            <div style={{ height: 4, borderRadius: 999, background: "rgba(16,185,129,0.1)" }}>
               <div style={{
                 height: "100%", borderRadius: 999,
-                background: "linear-gradient(90deg, #C6914C, #E8B472)",
+                background: "linear-gradient(90deg, #10B981, #34D399)",
                 width: Math.round((stats.tasksDone / stats.tasksTotal) * 100) + "%",
                 transition: "width 1s cubic-bezier(0.16,1,0.3,1)",
               }} />
@@ -345,7 +345,7 @@ export default function Dashboard() {
 
       {/* ── KPI Grid ────────────────────────────────────────────── */}
       <div className="kpi-grid grid gap-4 mb-6" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-        <KPICard label="العقارات" value={stats.propertiesTotal} sub={stats.propertiesPublished + " منشور"} icon={Building2} color="#C6914C" href="/dashboard/properties" />
+        <KPICard label="العقارات" value={stats.propertiesTotal} sub={stats.propertiesPublished + " منشور"} icon={Building2} color="#10B981" href="/dashboard/properties" />
         <KPICard label="العملاء" value={stats.clients} icon={Users} color="#A78BFA" href="/dashboard/clients" />
         <KPICard label="الصفقات النشطة" value={stats.dealsActive} sub={stats.dealsCompleted + " مكتملة"} icon={TrendingUp} color="#4ADE80" href="/dashboard/deals"
           trend={stats.dealsCompleted > 0 ? "up" : "neutral"} trendLabel={stats.dealsCompleted > 0 ? stats.dealsCompleted + " أُغلقت" : undefined} />
@@ -361,12 +361,12 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center rounded-lg"
-                style={{ width: 32, height: 32, background: "linear-gradient(135deg, rgba(198,145,76,0.2), rgba(198,145,76,0.08))", border: "1px solid rgba(198,145,76,0.25)" }}>
-                <Brain size={16} style={{ color: "#C6914C" }} />
+                style={{ width: 32, height: 32, background: "linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.08))", border: "1px solid rgba(16,185,129,0.25)" }}>
+                <Brain size={16} style={{ color: "#10B981" }} />
               </div>
               <div>
                 <h3 className="font-cairo font-bold" style={{ fontSize: 14, lineHeight: 1 }}>المساعد الذكي</h3>
-                <p style={{ fontSize: 10, color: "#5A5A62", marginTop: 1 }}>تحليل مبني على بياناتك الحقيقية</p>
+                <p style={{ fontSize: 10, color: "#64748B", marginTop: 1 }}>تحليل مبني على بياناتك الحقيقية</p>
               </div>
             </div>
             <span className="status-pill green" style={{ fontSize: 10 }}>
@@ -385,13 +385,13 @@ export default function Dashboard() {
         <div className="card-luxury p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Bell size={15} style={{ color: "#C6914C" }} />
+              <Bell size={15} style={{ color: "#10B981" }} />
               <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>التنبيهات</h3>
             </div>
             {alerts.length > 0 && (
               <button
                 onClick={() => setAlertsDismissed(v => !v)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "#5A5A62", fontSize: 11 }}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#64748B", fontSize: 11 }}
               >
                 {alertsDismissed ? <Bell size={14} /> : <BellOff size={14} />}
               </button>
@@ -400,15 +400,15 @@ export default function Dashboard() {
 
           {alertsDismissed || alerts.length === 0 ? (
             <div className="text-center py-6">
-              <CheckCircle size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
-              <p style={{ fontSize: 12, color: "#5A5A62" }}>لا تنبيهات عاجلة</p>
+              <CheckCircle size={28} className="mx-auto mb-2" style={{ color: "#475569" }} />
+              <p style={{ fontSize: 12, color: "#64748B" }}>لا تنبيهات عاجلة</p>
             </div>
           ) : (
             <div className="space-y-2">
               {alerts.map((a, i) => {
                 const colors = {
                   red:  { bg: "rgba(248,113,113,0.07)", border: "rgba(248,113,113,0.2)", dot: "#F87171" },
-                  gold: { bg: "rgba(198,145,76,0.07)",  border: "rgba(198,145,76,0.2)",  dot: "#C6914C" },
+                  gold: { bg: "rgba(251,191,36,0.07)",  border: "rgba(251,191,36,0.2)",  dot: "#FBBF24" }, // Swapped to yellow-ish warning
                   blue: { bg: "rgba(56,189,248,0.07)",  border: "rgba(56,189,248,0.2)",  dot: "#38BDF8" },
                 }[a.type];
                 return (
@@ -417,8 +417,8 @@ export default function Dashboard() {
                     <div className="w-2 h-2 rounded-full flex-shrink-0 mt-1"
                       style={{ background: colors.dot }} />
                     <div>
-                      <div style={{ fontSize: 12.5, fontWeight: 600, color: "#E5E5E5" }}>{a.text}</div>
-                      <div style={{ fontSize: 11, color: "#7A7A82", marginTop: 2 }}>{a.sub}</div>
+                      <div style={{ fontSize: 12.5, fontWeight: 600, color: "#F8FAFC" }}>{a.text}</div>
+                      <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>{a.sub}</div>
                     </div>
                   </div>
                 );
@@ -435,20 +435,20 @@ export default function Dashboard() {
         <div className="card-luxury p-5">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <TrendingUp size={15} style={{ color: "#C6914C" }} />
+              <TrendingUp size={15} style={{ color: "#10B981" }} />
               <div>
                 <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>خط أنابيب الصفقات</h3>
-                <p style={{ fontSize: 10, color: "#5A5A62" }}>توزيع الصفقات النشطة حسب المرحلة</p>
+                <p style={{ fontSize: 10, color: "#64748B" }}>توزيع الصفقات النشطة حسب المرحلة</p>
               </div>
             </div>
-            <Link href="/dashboard/deals" className="no-underline" style={{ fontSize: 12, color: "#C6914C" }}>عرض الكل</Link>
+            <Link href="/dashboard/deals" className="no-underline" style={{ fontSize: 12, color: "#10B981" }}>عرض الكل</Link>
           </div>
 
           {deals.length === 0 ? (
-            <div className="text-center py-8" style={{ color: "#5A5A62" }}>
-              <TrendingUp size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
+            <div className="text-center py-8" style={{ color: "#64748B" }}>
+              <TrendingUp size={28} className="mx-auto mb-2" style={{ color: "#475569" }} />
               <p style={{ fontSize: 13 }}>لا توجد صفقات بعد</p>
-              <Link href="/dashboard/deals" className="no-underline" style={{ fontSize: 12, color: "#C6914C", display: "block", marginTop: 8 }}>
+              <Link href="/dashboard/deals" className="no-underline" style={{ fontSize: 12, color: "#10B981", display: "block", marginTop: 8 }}>
                 أضف أول صفقة →
               </Link>
             </div>
@@ -458,9 +458,9 @@ export default function Dashboard() {
                 <PipelineBar key={stage} stage={stage} count={count} max={pipelineMax} />
               ))}
               <div className="flex items-center justify-between pt-3"
-                style={{ borderTop: "1px solid rgba(198,145,76,0.08)", marginTop: 8 }}>
-                <span style={{ fontSize: 12, color: "#5A5A62" }}>إجمالي الصفقات النشطة</span>
-                <span className="font-cairo font-bold" style={{ fontSize: 16, color: "#C6914C" }}>
+                style={{ borderTop: "1px solid rgba(16,185,129,0.08)", marginTop: 8 }}>
+                <span style={{ fontSize: 12, color: "#64748B" }}>إجمالي الصفقات النشطة</span>
+                <span className="font-cairo font-bold" style={{ fontSize: 16, color: "#10B981" }}>
                   {pipeline.reduce((s, p) => s + p.count, 0)}
                 </span>
               </div>
@@ -471,14 +471,14 @@ export default function Dashboard() {
         {/* District Heatmap */}
         <div className="card-luxury p-5">
           <div className="flex items-center gap-2 mb-1">
-            <MapPin size={15} style={{ color: "#C6914C" }} />
+            <MapPin size={15} style={{ color: "#10B981" }} />
             <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>خريطة حرارة المناطق</h3>
           </div>
-          <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 16 }}>توزيع العقارات حسب الحي — الأعمق = الأكثر نشاطاً</p>
+          <p style={{ fontSize: 10, color: "#64748B", marginBottom: 16 }}>توزيع العقارات حسب الحي — الأعمق = الأكثر نشاطاً</p>
 
           {districtMap.length === 0 ? (
-            <div className="text-center py-8" style={{ color: "#5A5A62" }}>
-              <MapPin size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
+            <div className="text-center py-8" style={{ color: "#64748B" }}>
+              <MapPin size={28} className="mx-auto mb-2" style={{ color: "#475569" }} />
               <p style={{ fontSize: 13 }}>أضف عقارات لرؤية الخريطة</p>
             </div>
           ) : (
@@ -489,12 +489,12 @@ export default function Dashboard() {
                 ))}
               </div>
               <div className="flex items-center justify-between mt-3 pt-3"
-                style={{ borderTop: "1px solid rgba(198,145,76,0.08)" }}>
+                style={{ borderTop: "1px solid rgba(16,185,129,0.08)" }}>
                 <div className="flex items-center gap-2">
-                  <div style={{ width: 40, height: 6, borderRadius: 999, background: "linear-gradient(90deg, rgba(198,145,76,0.1), rgba(198,145,76,0.6))" }} />
-                  <span style={{ fontSize: 10, color: "#5A5A62" }}>منخفض → مرتفع</span>
+                  <div style={{ width: 40, height: 6, borderRadius: 999, background: "linear-gradient(90deg, rgba(16,185,129,0.1), rgba(16,185,129,0.6))" }} />
+                  <span style={{ fontSize: 10, color: "#64748B" }}>منخفض → مرتفع</span>
                 </div>
-                <span style={{ fontSize: 11, color: "#5A5A62" }}>{districtMap.length} منطقة</span>
+                <span style={{ fontSize: 11, color: "#64748B" }}>{districtMap.length} منطقة</span>
               </div>
             </>
           )}
@@ -508,42 +508,42 @@ export default function Dashboard() {
         <div className="card-luxury p-5">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <Activity size={15} style={{ color: "#C6914C" }} />
+              <Activity size={15} style={{ color: "#10B981" }} />
               <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>زيارات الموقع</h3>
             </div>
-            {analytics.analyticsReady && <span style={{ fontSize: 11, color: "#5A5A62" }}>آخر 30 يوم</span>}
+            {analytics.analyticsReady && <span style={{ fontSize: 11, color: "#64748B" }}>آخر 30 يوم</span>}
           </div>
 
           {!analytics.analyticsReady ? (
             <div className="text-center py-6">
-              <Activity size={32} className="mx-auto mb-3" style={{ color: "#3A3A42" }} />
-              <p style={{ color: "#5A5A62", fontSize: 13 }}>تتبع الزيارات غير مفعّل بعد</p>
+              <Activity size={32} className="mx-auto mb-3" style={{ color: "#475569" }} />
+              <p style={{ color: "#64748B", fontSize: 13 }}>تتبع الزيارات غير مفعّل بعد</p>
             </div>
           ) : (
             <>
               <div className="grid grid-cols-3 gap-3 mb-4">
                 {[{ label: "اليوم", value: analytics.viewsToday, icon: Eye }, { label: "الأسبوع", value: analytics.viewsWeek, icon: BarChart3 }, { label: "الشهر", value: analytics.viewsMonth, icon: Calendar }].map(({ label, value, icon: Icon }) => (
-                  <div key={label} className="rounded-xl p-3 text-center" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}>
-                    <Icon size={14} className="mx-auto mb-2" style={{ color: "#C6914C" }} />
-                    <div className="font-cairo font-bold text-lg">{value.toLocaleString()}</div>
-                    <div style={{ color: "#5A5A62", fontSize: 11 }}>{label}</div>
+                  <div key={label} className="rounded-xl p-3 text-center" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.08)" }}>
+                    <Icon size={14} className="mx-auto mb-2" style={{ color: "#10B981" }} />
+                    <div className="font-cairo font-bold text-lg text-white">{value.toLocaleString()}</div>
+                    <div style={{ color: "#94A3B8", fontSize: 11 }}>{label}</div>
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between py-2 mb-3" style={{ borderTop: "1px solid rgba(198,145,76,0.08)" }}>
-                <div className="flex items-center gap-2" style={{ color: "#9A9AA0", fontSize: 13 }}>
-                  <MousePointerClick size={13} style={{ color: "#C6914C" }} />
+              <div className="flex justify-between py-2 mb-3" style={{ borderTop: "1px solid rgba(16,185,129,0.08)" }}>
+                <div className="flex items-center gap-2" style={{ color: "#94A3B8", fontSize: 13 }}>
+                  <MousePointerClick size={13} style={{ color: "#10B981" }} />
                   نقرات اليوم
                 </div>
-                <span className="font-cairo font-bold" style={{ color: "#F5F5F5" }}>{analytics.clicksToday.toLocaleString()}</span>
+                <span className="font-cairo font-bold" style={{ color: "#F8FAFC" }}>{analytics.clicksToday.toLocaleString()}</span>
               </div>
               {analytics.topPages.length > 0 && (
                 <div>
-                  <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 8 }}>أكثر الصفحات زيارةً</p>
+                  <p style={{ fontSize: 11, color: "#64748B", marginBottom: 8 }}>أكثر الصفحات زيارةً</p>
                   {analytics.topPages.map(({ page, count }) => (
-                    <div key={page} className="flex items-center justify-between py-1.5" style={{ borderBottom: "1px solid rgba(198,145,76,0.05)" }}>
-                      <span style={{ color: "#9A9AA0", fontSize: 12, direction: "ltr" }} className="truncate">{page}</span>
-                      <span style={{ color: "#C6914C", fontSize: 12, fontWeight: 600, flexShrink: 0, marginRight: 8 }}>{count}</span>
+                    <div key={page} className="flex items-center justify-between py-1.5" style={{ borderBottom: "1px solid rgba(16,185,129,0.05)" }}>
+                      <span style={{ color: "#94A3B8", fontSize: 12, direction: "ltr" }} className="truncate">{page}</span>
+                      <span style={{ color: "#10B981", fontSize: 12, fontWeight: 600, flexShrink: 0, marginRight: 8 }}>{count}</span>
                     </div>
                   ))}
                 </div>
@@ -556,14 +556,14 @@ export default function Dashboard() {
         <div className="card-luxury p-5">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <Clock size={15} style={{ color: "#C6914C" }} />
+              <Clock size={15} style={{ color: "#10B981" }} />
               <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>المهام القادمة</h3>
             </div>
-            <Link href="/dashboard/tasks" className="no-underline" style={{ fontSize: 12, color: "#C6914C" }}>عرض الكل</Link>
+            <Link href="/dashboard/tasks" className="no-underline" style={{ fontSize: 12, color: "#10B981" }}>عرض الكل</Link>
           </div>
           {recentTasks.length === 0 ? (
-            <div className="text-center py-10" style={{ color: "#5A5A62" }}>
-              <CheckCircle size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
+            <div className="text-center py-10" style={{ color: "#64748B" }}>
+              <CheckCircle size={28} className="mx-auto mb-2" style={{ color: "#475569" }} />
               <p style={{ fontSize: 13 }}>لا توجد مهام معلقة</p>
             </div>
           ) : (
@@ -572,18 +572,18 @@ export default function Dashboard() {
                 const isOverdue = task.due_date && new Date(task.due_date) < new Date();
                 return (
                   <div key={task.id} className="flex items-start gap-3 p-3 rounded-xl"
-                    style={{ background: "rgba(198,145,76,0.03)", border: "1px solid rgba(198,145,76,0.06)" }}>
-                    <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: priorityColor[task.priority] || "#9A9AA0" }} />
+                    style={{ background: "rgba(16,185,129,0.03)", border: "1px solid rgba(16,185,129,0.06)" }}>
+                    <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: priorityColor[task.priority] || "#94A3B8" }} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate" style={{ color: "#F5F5F5" }}>{task.title}</p>
+                      <p className="text-sm font-medium truncate" style={{ color: "#F8FAFC" }}>{task.title}</p>
                       {task.due_date && (
-                        <p className="text-xs mt-0.5" style={{ color: isOverdue ? "#F87171" : "#5A5A62" }}>
+                        <p className="text-xs mt-0.5" style={{ color: isOverdue ? "#F87171" : "#64748B" }}>
                           {isOverdue ? "متأخرة — " : ""}
                           {new Date(task.due_date).toLocaleDateString("ar-SA", { month: "short", day: "numeric" })}
                         </p>
                       )}
                     </div>
-                    <span className="status-pill gray" style={{ fontSize: 10, padding: "2px 7px" }}>{task.status}</span>
+                    <span className="status-pill gray" style={{ fontSize: 10, padding: "2px 7px", border: "1px solid rgba(255,255,255,0.05)" }}>{task.status}</span>
                   </div>
                 );
               })}
@@ -599,10 +599,10 @@ export default function Dashboard() {
         <div className="card-luxury p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Building2 size={15} style={{ color: "#C6914C" }} />
+              <Building2 size={15} style={{ color: "#10B981" }} />
               <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>آخر العقارات</h3>
             </div>
-            <Link href="/dashboard/properties" className="no-underline" style={{ fontSize: 12, color: "#C6914C" }}>عرض الكل</Link>
+            <Link href="/dashboard/properties" className="no-underline" style={{ fontSize: 12, color: "#10B981" }}>عرض الكل</Link>
           </div>
 
           {/* Offer type mini-tabs */}
@@ -610,8 +610,8 @@ export default function Dashboard() {
             const saleProps = recentProps.filter((p: any) => p.offer_type === "بيع" || !p.offer_type);
             const rentProps = recentProps.filter((p: any) => p.offer_type === "إيجار");
             const tabs = [
-              { key: "sale", label: "بيع", count: saleProps.length, color: "#C6914C", items: saleProps },
-              { key: "rent", label: "إيجار", count: rentProps.length, color: "#60A5FA", items: rentProps },
+              { key: "sale", label: "بيع", count: saleProps.length, color: "#10B981", items: saleProps },
+              { key: "rent", label: "إيجار", count: rentProps.length, color: "#38BDF8", items: rentProps },
             ];
 
             return (
@@ -620,7 +620,7 @@ export default function Dashboard() {
                   {tabs.map(tab => (
                     <span key={tab.key}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                      style={{ background: tab.color + "12", color: tab.color, border: "1px solid " + tab.color + "25" }}>
+                      style={{ background: tab.color + "15", color: tab.color, border: "1px solid " + tab.color + "25" }}>
                       {tab.label}
                       <span style={{ fontSize: 10, opacity: 0.8 }}>({tab.count})</span>
                     </span>
@@ -628,59 +628,52 @@ export default function Dashboard() {
                 </div>
 
                 {recentProps.length === 0 ? (
-                  <div className="text-center py-8" style={{ color: "#5A5A62" }}>
-                    <Building2 size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
+                  <div className="text-center py-8" style={{ color: "#64748B" }}>
+                    <Building2 size={28} className="mx-auto mb-2" style={{ color: "#475569" }} />
                     <p style={{ fontSize: 13 }}>لا توجد عقارات بعد</p>
                   </div>
                 ) : (
                   <div className="space-y-1">
                     {recentProps.map((prop: any) => (
                       <Link key={prop.id} href={`/dashboard/properties/${prop.id}`}
-                        className="flex items-center gap-3 p-3 rounded-xl no-underline transition group"
-                        style={{ background: "transparent", border: "1px solid transparent" }}
-                        onMouseEnter={e => {
-                          (e.currentTarget as HTMLElement).style.background = "rgba(198,145,76,0.04)";
-                          (e.currentTarget as HTMLElement).style.borderColor = "rgba(198,145,76,0.1)";
-                        }}
-                        onMouseLeave={e => {
-                          (e.currentTarget as HTMLElement).style.background = "transparent";
-                          (e.currentTarget as HTMLElement).style.borderColor = "transparent";
-                        }}
+                        className="flex items-center gap-3 p-3 rounded-xl no-underline transition group hover:bg-[#0F172A] border border-transparent hover:border-[#10B98120]"
                       >
-                        <div className="flex items-center justify-center rounded-lg flex-shrink-0"
-                          style={{ width: 38, height: 38, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.12)" }}>
-                          <Building2 size={16} style={{ color: "#C6914C" }} />
+                        <div className="flex items-center justify-center rounded-lg flex-shrink-0 bg-[#0F172A] border border-[#10B98120]"
+                          style={{ width: 38, height: 38 }}>
+                          <Building2 size={16} style={{ color: "#10B981" }} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate" style={{ fontSize: 13.5, color: "#E5E5E5" }}>{prop.title || "عقار بدون عنوان"}</p>
-                          <p style={{ fontSize: 11, color: "#5A5A62" }}>{prop.district || prop.city || "—"}</p>
+                          <p className="font-medium truncate" style={{ fontSize: 13.5, color: "#F8FAFC" }}>{prop.title || "عقار بدون عنوان"}</p>
+                          <p style={{ fontSize: 11, color: "#64748B" }}>{prop.district || prop.city || "—"}</p>
                         </div>
                         <div className="text-left flex-shrink-0">
                           {prop.price ? (
-                            <p className="font-cairo font-bold" style={{ fontSize: 13, color: "#C6914C" }}>
+                            <p className="font-cairo font-bold mb-1" style={{ fontSize: 13, color: "#10B981" }}>
                               {prop.price.toLocaleString()} ر.س
                             </p>
                           ) : null}
-                          <div className="flex gap-1.5">
+                          <div className="flex gap-1.5 justify-end">
                             {prop.offer_type && (
                               <span style={{
-                                fontSize: 10, padding: "1px 6px", borderRadius: 6,
-                                background: prop.offer_type === "إيجار" ? "rgba(96,165,250,0.1)" : "rgba(198,145,76,0.1)",
-                                color: prop.offer_type === "إيجار" ? "#60A5FA" : "#C6914C",
+                                fontSize: 10, padding: "2px 8px", borderRadius: 6,
+                                background: prop.offer_type === "إيجار" ? "rgba(56,189,248,0.1)" : "rgba(16,185,129,0.1)",
+                                color: prop.offer_type === "إيجار" ? "#38BDF8" : "#10B981",
+                                border: "1px solid " + (prop.offer_type === "إيجار" ? "rgba(56,189,248,0.2)" : "rgba(16,185,129,0.2)")
                               }}>
                                 {prop.offer_type}
                               </span>
                             )}
                             <span style={{
-                              fontSize: 10, padding: "1px 6px", borderRadius: 6,
+                              fontSize: 10, padding: "2px 8px", borderRadius: 6,
                               background: prop.is_published ? "rgba(74,222,128,0.1)" : "rgba(90,90,98,0.2)",
-                              color: prop.is_published ? "#4ADE80" : "#9A9AA0",
+                              color: prop.is_published ? "#4ADE80" : "#94A3B8",
+                              border: prop.is_published ? "1px solid rgba(74,222,128,0.2)" : "1px solid rgba(90,90,98,0.2)"
                             }}>
                               {prop.is_published ? "منشور" : "مسودة"}
                             </span>
                           </div>
                         </div>
-                        <ChevronLeft size={14} style={{ color: "#3A3A42", flexShrink: 0 }} />
+                        <ChevronLeft size={14} style={{ color: "#475569", flexShrink: 0, marginLeft: 0 }} />
                       </Link>
                     ))}
                   </div>
@@ -693,23 +686,23 @@ export default function Dashboard() {
         {/* Summary */}
         <div className="card-luxury p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Target size={15} style={{ color: "#C6914C" }} />
+            <Target size={15} style={{ color: "#10B981" }} />
             <h3 className="font-cairo font-bold" style={{ fontSize: 14 }}>ملخص سريع</h3>
           </div>
-          <MiniRow label="عقارات منشورة"  value={stats.propertiesPublished}                          color="#C6914C" />
-          <MiniRow label="عقارات مسودة"   value={stats.propertiesTotal - stats.propertiesPublished} color="#5A5A62" />
+          <MiniRow label="عقارات منشورة"  value={stats.propertiesPublished}                          color="#10B981" />
+          <MiniRow label="عقارات مسودة"   value={stats.propertiesTotal - stats.propertiesPublished} color="#94A3B8" />
           <MiniRow label="طلبات جديدة"    value={stats.requestsNew}                                 color="#4ADE80" />
           <MiniRow label="صفقات مكتملة"   value={stats.dealsCompleted}                              color="#A78BFA" />
           <MiniRow label="مهام متأخرة"    value={stats.tasksOverdue}                                color="#F87171" />
 
           <div className="grid grid-cols-2 gap-2 mt-4">
             {[
-              { label: "العقارات",  href: "/dashboard/properties", icon: Building2,  color: "#C6914C" },
+              { label: "العقارات",  href: "/dashboard/properties", icon: Building2,  color: "#10B981" },
               { label: "العملاء",   href: "/dashboard/clients",    icon: Users,       color: "#A78BFA" },
               { label: "الصفقات",   href: "/dashboard/deals",      icon: TrendingUp,  color: "#4ADE80" },
               { label: "المهام",    href: "/dashboard/tasks",      icon: CheckSquare, color: "#FB923C" },
             ].map(item => (
-              <Link key={item.href} href={item.href} className="quick-action">
+              <Link key={item.href} href={item.href} className="quick-action rounded-lg flex items-center justify-center gap-2 p-2 hover:bg-white/5 transition bg-[#0F172A] border border-[#10B98120] text-sm text-[#F8FAFC]">
                 <item.icon size={14} style={{ color: item.color, flexShrink: 0 }} />
                 <span>{item.label}</span>
               </Link>

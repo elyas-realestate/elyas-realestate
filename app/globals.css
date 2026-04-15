@@ -5,40 +5,40 @@
 ═══════════════════════════════════════════════ */
 :root {
   /* الألوان الأساسية */
-  --gold:          #C18D4A;
-  --gold-dark:     #A68A3A;
-  --gold-light:    #D4A862;
+  --gold:          #10B981; /* تحويل الذهبي إلى زمردي (Emerald) ليتماشى مع روح MVP */
+  --gold-dark:     #059669;
+  --gold-light:    #34D399;
 
-  /* الخلفيات */
-  --bg-main:       #0A0A0C;
-  --bg-card:       #16161A;
-  --bg-elevated:   #1C1C22;
-  --bg-header:     rgba(16,16,20,0.95);
+  /* الخلفيات للمنصة (Power BI) */
+  --bg-main:       #020617; /* Slate 950 */
+  --bg-card:       #0F172A; /* Slate 900 */
+  --bg-elevated:   #1E293B; /* Slate 800 */
+  --bg-header:     rgba(2, 6, 23, 0.8);
 
   /* الحدود */
-  --border:        rgba(193,141,74,0.12);
-  --border-hover:  rgba(193,141,74,0.28);
-  --border-active: rgba(193,141,74,0.5);
+  --border:        rgba(16, 185, 129, 0.12); /* Emerald border */
+  --border-hover:  rgba(16, 185, 129, 0.28);
+  --border-active: rgba(16, 185, 129, 0.5);
 
   /* النصوص */
-  --text-primary:   #F5F5F5;
-  --text-secondary: #9A9AA0;
-  --text-muted:     #5A5A62;
+  --text-primary:   #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted:     #64748B;
 
   /* الحالات */
-  --success:  #4ADE80;
-  --warning:  #FACC15;
+  --success:  #34D399;
+  --warning:  #FBBF24;
   --error:    #F87171;
-  --info:     #C18D4A;
+  --info:     #38BDF8;
 
   /* الظلال */
-  --shadow-sm:  0 2px 8px rgba(0,0,0,0.4);
-  --shadow-md:  0 4px 24px rgba(0,0,0,0.5);
-  --shadow-lg:  0 8px 48px rgba(0,0,0,0.6);
-  --shadow-gold: 0 4px 20px rgba(193,141,74,0.15);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.5);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.5);
+  --shadow-gold: 0 4px 20px rgba(16, 185, 129, 0.2);
 
   /* التحولات */
-  --transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 /* ═══════════════════════════════════════════════

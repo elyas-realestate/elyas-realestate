@@ -8,6 +8,7 @@ import {
   Loader2, Check, AlertCircle, Edit3, Save, Brain, Zap, Eye,
 } from "lucide-react";
 import { toast } from "sonner";
+import { applyWatermark } from "@/lib/watermark";
 
 const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#3A3A42] focus:outline-none focus:border-[#C6914C] transition";
 const lbl = "block text-xs font-semibold text-[#9A9AA0] mb-2 tracking-wide";
@@ -101,12 +102,22 @@ export default function SmartAddProperty() {
     setStep("saving");
 
     try {
-      // Upload images to Supabase Storage
+      // Upload images to Supabase Storage with Watermarking
       const uploadedUrls: string[] = [];
       for (const file of imageFiles) {
-        const ext = file.name.split(".").pop() || "jpg";
+        let processedFile = file;
+        try {
+          // جلب اسم الوسيط أو المنصة من الهوية (إن أمكن) أو استخدام ثابت مؤقت للحماية
+          const { data: idData } = await supabase.from("broker_identity").select("broker_name").limit(1).single();
+          const watermarkText = idData?.broker_name || "وسيط برو";
+          processedFile = await applyWatermark(file, watermarkText);
+        } catch (we) {
+          console.warn("فشل ختم الصورة، سيتم رفع النسخة الأصلية", we);
+        }
+
+        const ext = processedFile.name.split(".").pop() || "jpg";
         const path = `properties/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+        const { error: upErr } = await supabase.storage.from("assets").upload(path, processedFile, { upsert: true });
         if (!upErr) {
           const { data } = supabase.storage.from("assets").getPublicUrl(path);
           uploadedUrls.push(data.publicUrl);

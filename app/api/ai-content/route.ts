@@ -87,10 +87,11 @@ function sanitizeError(err: any): string {
   return "حدث خطأ أثناء المعالجة — حاول مجدداً";
 }
 
-async function callOpenAI(model: string, systemPrompt: string, messages: any[]) {
+async function callOpenAI(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+  if (!apiKey) throw new Error("مفتاح OpenAI منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + process.env.OPENAI_API_KEY },
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
     body: JSON.stringify({ model, messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
   });
   const data = await response.json();
@@ -98,10 +99,11 @@ async function callOpenAI(model: string, systemPrompt: string, messages: any[]) 
   return data.choices?.[0]?.message?.content || "";
 }
 
-async function callAnthropic(model: string, systemPrompt: string, messages: any[]) {
+async function callAnthropic(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+  if (!apiKey) throw new Error("مفتاح Anthropic منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY || "", "anthropic-version": "2023-06-01" },
+    headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({ model, max_tokens: 4000, system: systemPrompt, messages }),
   });
   const data = await response.json();
@@ -109,9 +111,10 @@ async function callAnthropic(model: string, systemPrompt: string, messages: any[
   return data.content?.[0]?.text || "";
 }
 
-async function callGoogle(model: string, systemPrompt: string, messages: any[]) {
+async function callGoogle(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+  if (!apiKey) throw new Error("مفتاح Google منسني أو غير متاح في الإعدادات");
   const fullPrompt = systemPrompt + "\n\n" + messages.map((m: any) => (m.role === "user" ? "المستخدم: " : "المساعد: ") + m.content).join("\n");
-  const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + process.env.GOOGLE_API_KEY, {
+  const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }], generationConfig: { temperature: 0.8, maxOutputTokens: 4000 } }),
@@ -121,11 +124,11 @@ async function callGoogle(model: string, systemPrompt: string, messages: any[]) 
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
 
-async function callManus(model: string, systemPrompt: string, messages: any[]) {
-  // Manus uses OpenAI-compatible API format
+async function callManus(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+  if (!apiKey) throw new Error("مفتاح Manus منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.manus.ai/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + process.env.MANUS_API_KEY },
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
     body: JSON.stringify({ model: model || "manus-1", messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
   });
   const data = await response.json();
@@ -133,11 +136,11 @@ async function callManus(model: string, systemPrompt: string, messages: any[]) {
   return data.choices?.[0]?.message?.content || "";
 }
 
-async function callModel(provider: string, model: string, systemPrompt: string, messages: any[]) {
-  if (provider === "openai") return callOpenAI(model, systemPrompt, messages);
-  if (provider === "anthropic") return callAnthropic(model, systemPrompt, messages);
-  if (provider === "google") return callGoogle(model, systemPrompt, messages);
-  if (provider === "manus") return callManus(model, systemPrompt, messages);
+async function callModel(provider: string, model: string, systemPrompt: string, messages: any[], apiKey: string) {
+  if (provider === "openai") return callOpenAI(model, systemPrompt, messages, apiKey);
+  if (provider === "anthropic") return callAnthropic(model, systemPrompt, messages, apiKey);
+  if (provider === "google") return callGoogle(model, systemPrompt, messages, apiKey);
+  if (provider === "manus") return callManus(model, systemPrompt, messages, apiKey);
   throw new Error("مزود غير معروف: " + provider);
 }
 
@@ -195,20 +198,31 @@ export async function POST(req: NextRequest) {
 
     const { systemPrompt, userPrompt, messages, provider, model, mode, provider2, model2 } = body;
 
-    const p = provider || "openai";
-    const m = model || "gpt-4o";
+    // ── Fetch AI Configuration Keys Dynamically ──
+    const { data: dbKeys } = await supabase
+      .from("ai_config")
+      .select("provider, api_key_encrypted")
+      .eq("is_active", true);
+      
+    // Helper to get key from DB first, then fallback to Env variable
+    const getProviderKey = (prov: string) => {
+      const dbKey = (dbKeys || []).find(k => k.provider === prov)?.api_key_encrypted;
+      if (dbKey) return dbKey; // in reality, decrypt it if encoded, assuming stored direct for MVP
+      if (prov === "openai") return process.env.OPENAI_API_KEY || "";
+      if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
+      if (prov === "google") return process.env.GOOGLE_API_KEY || "";
+      if (prov === "manus") return process.env.MANUS_API_KEY || "";
+      return "";
+    };
 
-    // التحقق من وجود مفتاح API
-    if (p === "openai" && !process.env.OPENAI_API_KEY) return NextResponse.json({ error: "مفتاح OpenAI API غير موجود — أضفه في الإعدادات" }, { status: 400 });
-    if (p === "anthropic" && !process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "مفتاح Anthropic API غير موجود — أضفه في الإعدادات" }, { status: 400 });
-    if (p === "google" && !process.env.GOOGLE_API_KEY) return NextResponse.json({ error: "مفتاح Google API غير موجود — أضفه في الإعدادات" }, { status: 400 });
-    if (p === "manus" && !process.env.MANUS_API_KEY) return NextResponse.json({ error: "مفتاح Manus API غير موجود — أضفه في الإعدادات" }, { status: 400 });
+    const apiKey1 = getProviderKey(p);
+    if (!apiKey1) return NextResponse.json({ error: `مفتاح ${p} غير موجود — يرجى ربطه في مركز الذكاء الاصطناعي` }, { status: 400 });
 
     const chatMessages = messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
 
     // ── وضع نموذج واحد ──
     if (!mode || mode === "single") {
-      const result = await callModel(p, m, systemPrompt, chatMessages);
+      const result = await callModel(p, m, systemPrompt, chatMessages, apiKey1);
       return NextResponse.json(
         { result },
         { headers: { "X-RateLimit-Remaining": String(rateLimitResult.remaining) } }
@@ -219,12 +233,12 @@ export async function POST(req: NextRequest) {
     if (mode === "chain") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      if (p2 === "anthropic" && !process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "مفتاح Anthropic API غير موجود للنموذج المراجع" }, { status: 400 });
-      if (p2 === "google" && !process.env.GOOGLE_API_KEY) return NextResponse.json({ error: "مفتاح Google API غير موجود للنموذج المراجع" }, { status: 400 });
+      const apiKey2 = getProviderKey(p2);
+      if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج المراجع` }, { status: 400 });
 
-      const draft = await callModel(p, m, systemPrompt, chatMessages);
+      const draft = await callModel(p, m, systemPrompt, chatMessages, apiKey1);
       const reviewPrompt = "أنت مراجع محتوى عقاري محترف. راجع المحتوى التالي وحسّنه مع الحفاظ على نفس الفكرة والأسلوب. أعد كتابة المحتوى المحسّن فقط بدون شرح:\n\n" + draft;
-      const reviewed = await callModel(p2, m2, systemPrompt, [{ role: "user", content: reviewPrompt }]);
+      const reviewed = await callModel(p2, m2, systemPrompt, [{ role: "user", content: reviewPrompt }], apiKey2);
       return NextResponse.json({ result: reviewed, draft });
     }
 
@@ -232,12 +246,12 @@ export async function POST(req: NextRequest) {
     if (mode === "compare") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      if (p2 === "anthropic" && !process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "مفتاح Anthropic API غير موجود للنموذج الثاني" }, { status: 400 });
-      if (p2 === "google" && !process.env.GOOGLE_API_KEY) return NextResponse.json({ error: "مفتاح Google API غير موجود للنموذج الثاني" }, { status: 400 });
+      const apiKey2 = getProviderKey(p2);
+      if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج الثاني` }, { status: 400 });
 
       const [result1, result2] = await Promise.all([
-        callModel(p, m, systemPrompt, chatMessages),
-        callModel(p2, m2, systemPrompt, chatMessages),
+        callModel(p, m, systemPrompt, chatMessages, apiKey1),
+        callModel(p2, m2, systemPrompt, chatMessages, apiKey2),
       ]);
       return NextResponse.json({ result: result1, result2 });
     }

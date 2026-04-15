@@ -11,25 +11,59 @@ import {
 import { Toaster } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
 
-const mainMenu = [
-  { label: "لوحة التحكم",    href: "/dashboard",               icon: LayoutDashboard },
-  { label: "الواتساب",       href: "/dashboard/whatsapp",      icon: MessageCircle   },
-  { label: "العقارات",       href: "/dashboard/properties",    icon: Building2       },
-  { label: "العملاء",        href: "/dashboard/clients",       icon: Users           },
-  { label: "الصفقات",        href: "/dashboard/deals",         icon: TrendingUp      },
-  { label: "العمولات",       href: "/dashboard/commissions",   icon: Banknote        },
-  { label: "عروض الأسعار",   href: "/dashboard/quotations",    icon: FileText        },
-  { label: "الفواتير",       href: "/dashboard/invoices",      icon: CreditCard      },
-  { label: "الطلبات",        href: "/dashboard/requests",      icon: FileText        },
-  { label: "المهام",         href: "/dashboard/tasks",         icon: CheckSquare     },
-  { label: "المحتوى",        href: "/dashboard/content",       icon: Megaphone       },
-  { label: "التسويق",        href: "/dashboard/marketing",     icon: Target          },
-  { label: "التحليل المالي", href: "/dashboard/financial",     icon: BarChart3       },
-  { label: "المشاريع",       href: "/dashboard/projects",      icon: Building2       },
-  { label: "الوثائق",        href: "/dashboard/documents",     icon: Scale           },
+type NavItemData = { label: string; href: string; icon: any };
+type NavGroup = { title: string; items: NavItemData[] };
+
+const menuGroups: NavGroup[] = [
+  {
+    title: "الرئيسية",
+    items: [
+      { label: "لوحة التحكم",    href: "/dashboard",           icon: LayoutDashboard },
+      { label: "المهام",         href: "/dashboard/tasks",     icon: CheckSquare     },
+    ]
+  },
+  {
+    title: "المبيعات والعملاء (CRM)",
+    items: [
+      { label: "العملاء",        href: "/dashboard/clients",   icon: Users           },
+      { label: "الصفقات",        href: "/dashboard/deals",     icon: TrendingUp      },
+      { label: "الواتساب",       href: "/dashboard/whatsapp",  icon: MessageCircle   },
+    ]
+  },
+  {
+    title: "إدارة الأملاك",
+    items: [
+      { label: "العقارات",       href: "/dashboard/properties",icon: Building2       },
+      { label: "المشاريع",       href: "/dashboard/projects",  icon: Building2       },
+      { label: "الطلبات",        href: "/dashboard/requests",  icon: FileText        },
+    ]
+  },
+  {
+    title: "المالية",
+    items: [
+      { label: "عروض الأسعار",   href: "/dashboard/quotations",icon: FileText        },
+      { label: "الفواتير",       href: "/dashboard/invoices",  icon: CreditCard      },
+      { label: "العمولات",       href: "/dashboard/commissions",icon: Banknote       },
+      { label: "التحليل المالي", href: "/dashboard/financial", icon: BarChart3       },
+    ]
+  },
+  {
+    title: "التسويق والمحتوى",
+    items: [
+      { label: "المحتوى",        href: "/dashboard/content",   icon: Megaphone       },
+      { label: "التسويق",        href: "/dashboard/marketing", icon: Target          },
+    ]
+  },
+  {
+    title: "أدوات أخرى",
+    items: [
+      { label: "اشتراكات التطبيقات", href: "/dashboard/external-subscriptions", icon: CreditCard },
+      { label: "الوثائق",        href: "/dashboard/documents", icon: Scale           },
+    ]
+  }
 ];
 
-const settingsMenu = [
+const settingsMenu: NavItemData[] = [
   { label: "الاشتراك",        href: "/dashboard/subscription",     icon: CreditCard },
   { label: "تأسيس AI",      href: "/dashboard/ai-foundation",   icon: Brain      },
   { label: "سجل التدقيق",    href: "/dashboard/audit",            icon: Shield     },
@@ -41,7 +75,7 @@ const settingsMenu = [
 function NavItem({
   item, isActive, badge,
 }: {
-  item: { label: string; href: string; icon: any };
+  item: NavItemData;
   isActive: boolean;
   badge?: number;
 }) {
@@ -117,7 +151,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   // Current page label
-  const currentPage = [...mainMenu, ...settingsMenu].find(
+  const allNavItems = [...menuGroups.flatMap(g => g.items), ...settingsMenu];
+  const currentPage = allNavItems.find(
     (m) => pathname === m.href || (m.href !== "/dashboard" && pathname.startsWith(m.href))
   );
 
@@ -177,28 +212,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Main Nav */}
       <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto" }}>
-        <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 600, color: "#3A3A44", letterSpacing: "1.2px" }}>
-          القائمة الرئيسية
-        </div>
-        {mainMenu.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-          return (
-            <NavItem
-              key={item.href}
-              item={item}
-              isActive={isActive}
-              badge={item.href === "/dashboard/requests" ? newRequests : undefined}
-            />
-          );
-        })}
+        {menuGroups.map((group, i) => (
+          <div key={group.title} style={{ marginBottom: 12 }}>
+            <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 700, color: "#5A5A62", letterSpacing: "1.2px", borderTop: i > 0 ? "1px solid rgba(198,145,76,0.08)" : "none", paddingTop: i > 0 ? 12 : 0 }}>
+              {group.title}
+            </div>
+            {group.items.map((item) => {
+              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+              return (
+                <NavItem
+                  key={item.href}
+                  item={item}
+                  isActive={isActive}
+                  badge={item.href === "/dashboard/requests" ? newRequests : undefined}
+                />
+              );
+            })}
+          </div>
+        ))}
 
-        <div style={{ margin: "14px 0 8px", padding: "0 6px 6px", fontSize: 10, fontWeight: 600, color: "#3A3A44", letterSpacing: "1.2px", borderTop: "1px solid rgba(198,145,76,0.08)", paddingTop: 12 }}>
-          الإعدادات
+        <div style={{ margin: "14px 0 12px" }}>
+          <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 700, color: "#5A5A62", letterSpacing: "1.2px", borderTop: "1px solid rgba(198,145,76,0.08)", paddingTop: 12 }}>
+            الإعدادات
+          </div>
+          {settingsMenu.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href);
+            return <NavItem key={item.href} item={item} isActive={isActive} />;
+          })}
         </div>
-        {settingsMenu.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href);
-          return <NavItem key={item.href} item={item} isActive={isActive} />;
-        })}
       </nav>
 
       {/* Bottom Profile */}
