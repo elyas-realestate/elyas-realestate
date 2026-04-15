@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
     
     const { checkLimit } = await import("@/lib/plan-limits");
     const limitCheck = await checkLimit(supabase, "ai_requests");
-    if (!limitCheck.allowed) return NextResponse.json({ error: limitCheck.error }, { status: 403 });
+    if (!limitCheck.allowed) return NextResponse.json({ error: limitCheck.reason }, { status: 403 });
 
     // ── Fetch Config ──
     const { data: dbKeys } = await supabase.from("ai_config").select("provider, api_key_encrypted").eq("is_active", true);

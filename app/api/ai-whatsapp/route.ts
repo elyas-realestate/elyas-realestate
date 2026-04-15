@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     // 1. Rate Limiting Protection
     const clientKey = getClientKey(req);
-    const rateLimitRes = checkRateLimit(clientKey, AI_RATE_LIMIT, "WhatsApp AI Parse");
+    const rateLimitRes = checkRateLimit(clientKey, AI_RATE_LIMIT);
     if (!rateLimitRes.allowed) {
       return NextResponse.json({ error: "تم تجاوز الحد المسموح للطلبات. يرجى المحاولة لاحقاً." }, { status: 429 });
     }
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       {
         cookies: {
           getAll() { return req.cookies.getAll(); },
-          setAll() {},
+          setAll(_cookiesToSet) {},
         },
       }
     );
@@ -32,9 +32,9 @@ export async function POST(req: NextRequest) {
     const { data: tData } = await supabase.from("tenants").select("id").eq("owner_id", user.id).limit(1).single();
     if (!tData) return NextResponse.json({ error: "لم يتم العثور على حساب المستأجر" }, { status: 403 });
     
-    const limitCheck = await checkLimit(tData.id, "ai_requests");
+    const limitCheck = await checkLimit(supabase, "ai_requests");
     if (!limitCheck.allowed) {
-      return NextResponse.json({ error: limitCheck.error }, { status: 403 });
+      return NextResponse.json({ error: limitCheck.reason }, { status: 403 });
     }
 
     const body = await req.json();
