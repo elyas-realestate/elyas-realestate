@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import { Plus, X, Trash2, BellRing, Smartphone } from "lucide-react";
 import { toast } from "sonner";
-import SARIcon from "@/components/SARIcon";
+import SARIcon from "../../components/SARIcon";
 
 export default function ExternalSubscriptionsPage() {
   const [subs, setSubs] = useState<any[]>([]);

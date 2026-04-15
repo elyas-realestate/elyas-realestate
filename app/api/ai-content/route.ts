@@ -266,11 +266,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ── Sanitize Errors for safety ──
-function sanitizeError(err: any): string {
-  const msg = err?.message || "";
-  if (msg.includes("API key") || msg.includes("invalid_api_key")) return "مفتاح مزود الخدمة غير صالح — تأكد من الإعدادات";
-  if (msg.includes("rate limit") || msg.includes("429") || msg.includes("Too Many Requests")) return "تجاوز الحد المسموح — يرجى الانتظار قليلاً";
-  if (msg.includes("tokens") || msg.includes("context length")) return "النص طويل جداً وتجاوز الحد المسموح للنموذج";
-  return "حدث خطأ داخلي أثناء المعالجة، الرجاء المحاولة لاحقاً";
-}
+
