@@ -3,11 +3,11 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
-  Building2, Users, TrendingUp, CheckSquare, FileText, Megaphone,
+  Building2, Users, TrendingUp, CheckSquare, FileText,
   Eye, MousePointerClick, BarChart3, ArrowUpRight, ArrowDownRight,
   Clock, AlertTriangle, CheckCircle, Calendar, Activity,
-  Layers, ChevronLeft, Sparkles, Target, Zap, Brain,
-  MapPin, Bell, BellOff, Info, ChevronRight,
+  ChevronLeft, Sparkles, Target, Zap, Brain,
+  MapPin, Bell, BellOff, Info,
 } from "lucide-react";
 
 

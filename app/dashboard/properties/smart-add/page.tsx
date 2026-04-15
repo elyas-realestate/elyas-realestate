@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight, Upload, FileText, Image as ImageIcon, X, Sparkles,
-  Loader2, Check, AlertCircle, Edit3, Save, Brain, Zap, Eye,
+  Loader2, Check, Edit3, Save, Brain, Zap, Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import { applyWatermark } from "@/lib/watermark";

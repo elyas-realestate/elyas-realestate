@@ -1,7 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
-import { Plus, X, Check, CreditCard, Trash2, Calendar, BellRing, Smartphone, AlertTriangle } from "lucide-react";
+import { Plus, X, Trash2, BellRing, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "@/components/SARIcon";
 
