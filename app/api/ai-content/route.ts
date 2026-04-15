@@ -170,7 +170,7 @@ export async function POST(req: NextRequest) {
       {
         cookies: {
           getAll() { return req.cookies.getAll(); },
-          setAll() {},
+          setAll(_cookiesToSet) {},
         },
       }
     );
