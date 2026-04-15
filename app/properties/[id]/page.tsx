@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Phone, Share2, ArrowRight, Maximize2, Bed, Bath, Layers, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { MapPin, Phone, Share2, ArrowRight, Maximize2, Bed, Bath, Layers, ChevronLeft, ChevronRight, X, Printer } from "lucide-react";
 import SARIcon from "../../components/SARIcon";
 
 
@@ -305,11 +305,18 @@ export default function PropertyDetail() {
                     </button>
                   </>
                 )}
-                <button onClick={handleShare} className="action-btn"
-                  style={{ width: "100%", padding: "11px", borderRadius: 12, background: copied ? "rgba(74,222,128,0.08)" : "transparent", border: "1px solid " + (copied ? "rgba(74,222,128,0.2)" : "rgba(198,145,76,0.08)"), color: copied ? "#4ADE80" : "#5A5A62", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
-                  <Share2 size={14} />
-                  {copied ? "تم نسخ الرابط ✓" : "مشاركة الإعلان"}
-                </button>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={handleShare} className="action-btn"
+                    style={{ flex: 1, padding: "11px", borderRadius: 12, background: copied ? "rgba(74,222,128,0.08)" : "transparent", border: "1px solid " + (copied ? "rgba(74,222,128,0.2)" : "rgba(198,145,76,0.08)"), color: copied ? "#4ADE80" : "#5A5A62", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
+                    <Share2 size={14} />
+                    {copied ? "تم النسخ ✓" : "مشاركة"}
+                  </button>
+                  <Link href={`/properties/${params.id}/print`} target="_blank" className="action-btn"
+                    style={{ flex: 1, padding: "11px", borderRadius: 12, background: "transparent", border: "1px solid rgba(198,145,76,0.08)", color: "#5A5A62", textDecoration: "none", fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
+                    <Printer size={14} />
+                    طباعة / PDF
+                  </Link>
+                </div>
               </div>
 
               {/* Agent */}

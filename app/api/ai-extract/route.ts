@@ -58,6 +58,18 @@ export async function POST(request: NextRequest) {
         { status: 429 }
       );
     }
+    
+    // ── Plan limits protection ──
+    const { data: tData } = await supabase.from("tenants").select("id").eq("owner_id", user.id).limit(1).single();
+    if (!tData) {
+      return NextResponse.json({ error: "لم يتم العثور على حساب المستأجر" }, { status: 403 });
+    }
+    
+    const { checkLimit } = await import("@/lib/plan-limits");
+    const limitCheck = await checkLimit(tData.id, "ai_requests");
+    if (!limitCheck.allowed) {
+      return NextResponse.json({ error: limitCheck.error }, { status: 403 });
+    }
 
     // ── Parse input ──
     const body = await request.json();

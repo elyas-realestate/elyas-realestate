@@ -6,13 +6,14 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle,
 } from "lucide-react";
 import { Toaster } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
 
 const mainMenu = [
   { label: "لوحة التحكم",    href: "/dashboard",               icon: LayoutDashboard },
+  { label: "الواتساب",       href: "/dashboard/whatsapp",      icon: MessageCircle   },
   { label: "العقارات",       href: "/dashboard/properties",    icon: Building2       },
   { label: "العملاء",        href: "/dashboard/clients",       icon: Users           },
   { label: "الصفقات",        href: "/dashboard/deals",         icon: TrendingUp      },

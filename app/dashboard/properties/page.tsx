@@ -170,7 +170,23 @@ export default function Properties() {
                     <span className="text-xs px-2 py-1 rounded" style={{ color:'#C6914C', background:'rgba(198,145,76,0.1)' }}>{property.code}</span>
                     <span className="text-xs" style={{ color:'#5A5A62' }}>{property.offer_type}</span>
                   </div>
-                  <h3 className="font-bold mb-2 leading-snug" style={{ fontSize: 15 }}>{property.title}</h3>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="font-bold leading-snug" style={{ fontSize: 15 }}>{property.title}</h3>
+                    {(() => {
+                      const avail = property.owner_confirmed_available;
+                      const checkDate = property.owner_last_check ? new Date(property.owner_last_check) : null;
+                      const isStale = checkDate ? Math.floor((Date.now() - checkDate.getTime()) / 86400000) > 7 : false;
+                      let dColor = "#9A9AA0"; let text = "لم يُتحقق";
+                      if (avail === true) { dColor = isStale ? "#FACC15" : "#4ADE80"; text = isStale ? "متاح (قديم)" : "متاح باعتراف"; }
+                      else if (avail === false) { dColor = "#F87171"; text = "غير متاح"; }
+                      return (
+                        <div className="flex items-center gap-1.5 flex-shrink-0" style={{ background: "rgba(255,255,255,0.03)", padding: "2px 6px", borderRadius: 6 }} title="حالة الاتاحة مع المالك">
+                          <span style={{ width: 6, height: 6, borderRadius: "50%", background: dColor }} />
+                          <span style={{ fontSize: 10, color: dColor, fontWeight: 600 }}>{text}</span>
+                        </div>
+                      );
+                    })()}
+                  </div>
                   <div className="flex items-center gap-1 text-sm mb-3" style={{ color:'#9A9AA0', fontSize: 13 }}>
                     <MapPin size={13} />
                     <span>{property.district} — {property.city}</span>
