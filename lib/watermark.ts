@@ -5,10 +5,9 @@
 
 export async function applyWatermark(
   imageFile: File,
-  watermarkText: string = "وسيط برو",
-  logoUrl?: string
+  watermarkText: string = "وسيط برو"
 ): Promise<File> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     try {
       const img = new Image();
       const objUrl = URL.createObjectURL(imageFile);
