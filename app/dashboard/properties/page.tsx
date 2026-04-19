@@ -2,7 +2,7 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Plus, Search, MapPin, Eye, EyeOff, Sparkles, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
@@ -15,7 +15,7 @@ export default function Properties() {
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
 
-  const offerTabs = ["الكل", "بيع", "إيجار", "استثمار"];
+  const offerTabs = ["الكل", "بيع", "إيجار", "استثمار", "تحتاج متابعة"];
 
   useEffect(() => { fetchProperties(); }, []);
 
@@ -35,18 +35,29 @@ export default function Properties() {
     setToggling(null);
   }
 
+  function needsAvailabilityCheck(p: any): boolean {
+    if (p.owner_confirmed_available === null || p.owner_confirmed_available === undefined) return true;
+    if (!p.owner_last_check) return true;
+    const days = Math.floor((Date.now() - new Date(p.owner_last_check).getTime()) / 86400000);
+    return days > 7;
+  }
+
+  const staleProperties = properties.filter(needsAvailabilityCheck);
+
   const filtered = properties.filter(p => {
     const matchSearch = p.title?.includes(search) || p.district?.includes(search) || p.code?.includes(search);
+    if (offerFilter === "تحتاج متابعة") return matchSearch && needsAvailabilityCheck(p);
     const matchOffer = offerFilter === "الكل" || p.offer_type === offerFilter;
     return matchSearch && matchOffer;
   });
 
   // حساب العدد لكل نوع
-  const offerCounts = {
+  const offerCounts: Record<string, number> = {
     "الكل": properties.length,
     "بيع": properties.filter(p => p.offer_type === "بيع").length,
     "إيجار": properties.filter(p => p.offer_type === "إيجار").length,
     "استثمار": properties.filter(p => p.offer_type === "استثمار").length,
+    "تحتاج متابعة": staleProperties.length,
   };
 
   return (
@@ -66,6 +77,21 @@ export default function Properties() {
         </div>
       </div>
 
+      {/* ── تنبيه الإتاحة المجمّع ── */}
+      {staleProperties.length > 0 && (
+        <button
+          onClick={() => setOfferFilter("تحتاج متابعة")}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-4 text-right transition"
+          style={{ background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.2)", cursor: "pointer" }}
+        >
+          <AlertTriangle size={16} style={{ color: "#FACC15", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "#FACC15", fontWeight: 600 }}>
+            {staleProperties.length} {staleProperties.length === 1 ? "عقار يحتاج" : "عقارات تحتاج"} تحديث إتاحة مع المالك
+          </span>
+          <span style={{ fontSize: 12, color: "#9A9AA0", marginRight: "auto" }}>انقر للعرض ←</span>
+        </button>
+      )}
+
       <div className="relative mb-4">
         <Search size={18} className="absolute right-3 top-3.5" style={{ color:'#5A5A62' }} />
         <input type="text" placeholder="ابحث بالاسم أو الحي أو الرمز..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-lg pr-10 pl-4 py-3 focus:outline-none text-sm" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }} />
@@ -82,9 +108,15 @@ export default function Properties() {
               onClick={() => setOfferFilter(tab)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition"
               style={{
-                background: isActive ? "rgba(198,145,76,0.15)" : "#16161A",
-                color: isActive ? "#C6914C" : "#5A5A62",
-                border: "1px solid " + (isActive ? "rgba(198,145,76,0.35)" : "rgba(198,145,76,0.08)"),
+                background: tab === "تحتاج متابعة"
+                  ? (isActive ? "rgba(250,204,21,0.12)" : "rgba(250,204,21,0.04)")
+                  : (isActive ? "rgba(198,145,76,0.15)" : "#16161A"),
+                color: tab === "تحتاج متابعة"
+                  ? (isActive ? "#FACC15" : "#9A9AA0")
+                  : (isActive ? "#C6914C" : "#5A5A62"),
+                border: "1px solid " + (tab === "تحتاج متابعة"
+                  ? (isActive ? "rgba(250,204,21,0.35)" : "rgba(250,204,21,0.1)")
+                  : (isActive ? "rgba(198,145,76,0.35)" : "rgba(198,145,76,0.08)")),
                 cursor: "pointer",
               }}
             >
