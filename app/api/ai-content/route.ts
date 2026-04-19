@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { checkLimit } from "@/lib/plan-limits";
+import { safeDecrypt } from "@/lib/crypto";
 import {
   checkRateLimit,
   AI_RATE_LIMIT,
@@ -222,18 +223,21 @@ export async function POST(req: NextRequest) {
       .select("provider, api_key_encrypted")
       .eq("is_active", true);
       
-    // Helper to get key from DB first, then fallback to Env variable
-    const getProviderKey = (prov: string) => {
+    // Helper: يقرأ المفتاح من DB (مع فك التشفير) ثم يرجع لمتغيرات البيئة
+    const getProviderKey = async (prov: string): Promise<string> => {
       const dbKey = (dbKeys || []).find(k => k.provider === prov)?.api_key_encrypted;
-      if (dbKey) return dbKey; // in reality, decrypt it if encoded, assuming stored direct for MVP
-      if (prov === "openai") return process.env.OPENAI_API_KEY || "";
+      if (dbKey) return await safeDecrypt(dbKey);
+      if (prov === "openai")    return process.env.OPENAI_API_KEY    || "";
       if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
-      if (prov === "google") return process.env.GOOGLE_API_KEY || "";
-      if (prov === "manus") return process.env.MANUS_API_KEY || "";
+      if (prov === "google")    return process.env.GOOGLE_API_KEY    || "";
+      if (prov === "manus")     return process.env.MANUS_API_KEY     || "";
+      if (prov === "groq")      return process.env.GROQ_API_KEY      || "";
+      if (prov === "deepseek")  return process.env.DEEPSEEK_API_KEY  || "";
+      if (prov === "xai")       return process.env.XAI_API_KEY       || "";
       return "";
     };
 
-    const apiKey1 = getProviderKey(p);
+    const apiKey1 = await getProviderKey(p);
     if (!apiKey1) return NextResponse.json({ error: `مفتاح ${p} غير موجود — يرجى ربطه في مركز الذكاء الاصطناعي` }, { status: 400 });
 
     const chatMessages = messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
@@ -251,7 +255,7 @@ export async function POST(req: NextRequest) {
     if (mode === "chain") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      const apiKey2 = getProviderKey(p2);
+      const apiKey2 = await getProviderKey(p2);
       if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج المراجع` }, { status: 400 });
 
       const draft = await callModel(p, m, systemPrompt, chatMessages, apiKey1);
@@ -264,7 +268,7 @@ export async function POST(req: NextRequest) {
     if (mode === "compare") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      const apiKey2 = getProviderKey(p2);
+      const apiKey2 = await getProviderKey(p2);
       if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج الثاني` }, { status: 400 });
 
       const [result1, result2] = await Promise.all([

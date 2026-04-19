@@ -45,8 +45,19 @@ export async function POST(req: NextRequest) {
       metadata: { plan, billing },
     });
 
-    // On success, update subscription in DB
+    // ── تحقق مستقل من المبلغ والحالة قبل الترقية ──
     if (payment.status === "paid" || payment.status === "authorized") {
+      // إعادة استعلام Moyasar للتأكد (server-to-server verification)
+      const verified = await getPayment(payment.id);
+      const expectedHalalas = amountHalalas;
+
+      if (
+        (verified.status !== "paid" && verified.status !== "authorized") ||
+        verified.amount < expectedHalalas
+      ) {
+        return NextResponse.json({ error: "لم يتم التحقق من الدفع" }, { status: 402 });
+      }
+
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -54,11 +65,20 @@ export async function POST(req: NextRequest) {
       const expiresAt = new Date();
       expiresAt.setMonth(expiresAt.getMonth() + (billing === "monthly" ? 1 : 12));
 
-      await supabase.from("site_settings").update({
-        plan,
-        plan_expires_at: expiresAt.toISOString(),
-        payment_id: payment.id,
-      }).eq("id", (await supabase.from("site_settings").select("id").limit(1).single()).data?.id);
+      // ربط الإعدادات بالمستخدم الحالي (وليس أول صف)
+      const { data: settings } = await supabase
+        .from("site_settings")
+        .select("id")
+        .eq("tenant_id", user.id)
+        .single();
+
+      if (settings) {
+        await supabase.from("site_settings").update({
+          plan,
+          plan_expires_at: expiresAt.toISOString(),
+          payment_id: payment.id,
+        }).eq("id", settings.id);
+      }
     }
 
     return NextResponse.json({ payment_id: payment.id, status: payment.status });

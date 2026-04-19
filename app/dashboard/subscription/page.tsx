@@ -140,11 +140,19 @@ export default function SubscriptionPage() {
   async function handleUpgrade(planId: string) {
     if (planId === currentPlan) return;
     if (planId === "free") {
-      if (!settingsId) { toast.error("خطأ في الإعدادات"); return; }
       setUpgrading(planId);
-      await supabase.from("site_settings").update({ plan: planId }).eq("id", settingsId);
-      setCurrentPlan(planId);
-      toast.success("تم التحويل للخطة المجانية");
+      const res = await fetch("/api/subscription/downgrade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "free" }),
+      });
+      if (res.ok) {
+        setCurrentPlan(planId);
+        toast.success("تم التحويل للخطة المجانية");
+      } else {
+        const d = await res.json();
+        toast.error(d.error || "فشل تغيير الخطة");
+      }
       setUpgrading(null);
       return;
     }
