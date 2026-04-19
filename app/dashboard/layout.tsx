@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
+import LangToggle from "@/components/LangToggle";
 
 type NavItemData = { label: string; href: string; icon: any };
 type NavGroup = { title: string; items: NavItemData[] };
@@ -384,6 +385,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </span>
             )}
           </Link>
+          <LangToggle />
           <Link
             href="/search"
             target="_blank"
