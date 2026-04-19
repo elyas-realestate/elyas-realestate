@@ -14,7 +14,7 @@ const MAX_MESSAGES_COUNT = 50;
 const MAX_SYSTEM_PROMPT_LENGTH = 4000;
 
 // ── المزودات والنماذج المسموحة ──
-const ALLOWED_PROVIDERS = ["openai", "anthropic", "google", "manus"] as const;
+const ALLOWED_PROVIDERS = ["openai", "anthropic", "google", "manus", "groq", "deepseek", "xai"] as const;
 const ALLOWED_MODES = ["single", "chain", "compare"] as const;
 
 // ── التحقق من صحة المدخلات ──
