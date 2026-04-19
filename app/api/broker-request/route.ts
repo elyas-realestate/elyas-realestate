@@ -34,6 +34,15 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
 
+    // ── التحقق أن tenant_id حقيقي وموجود في قاعدة البيانات ──
+    // يمنع حقن بيانات مزيفة تحت أي tenant_id يرسله المهاجم
+    const { data: tenantExists } = await supabase
+      .from("tenants")
+      .select("id")
+      .eq("id", tenant_id)
+      .single();
+    if (!tenantExists) return NextResponse.json({ error: "مكتب غير موجود" }, { status: 400 });
+
     // أنشئ أو ابحث عن العميل بالجوال
     let clientId: string | null = null;
     const { data: existing } = await supabase

@@ -12,6 +12,16 @@ function formatDate(d: string | null | undefined) {
   return new Date(d).toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" });
 }
 
+// ── HTML escape — يمنع XSS في template literals ──
+function h(s: unknown): string {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function GET(req: NextRequest) {
   // ── التحقق من هوية المستخدم ──
   const authClient = createServerClient(
@@ -105,17 +115,17 @@ export async function GET(req: NextRequest) {
 <body>
   <div class="header">
     <div class="brand">
-      ${logo ? `<img src="${logo}" alt="${brokerName}" style="width:50px;height:50px;border-radius:12px;object-fit:cover;">` : `<div class="logo-circle">${brokerName.charAt(0)}</div>`}
+      ${logo ? `<img src="${h(logo)}" alt="${h(brokerName)}" style="width:50px;height:50px;border-radius:12px;object-fit:cover;">` : `<div class="logo-circle">${h(brokerName.charAt(0))}</div>`}
       <div>
-        <div class="brand-name">${brokerName}</div>
-        <div class="brand-sub">${falLicense ? `رخصة فال: ${falLicense}` : "وسيط عقاري مرخّص"}</div>
-        ${phone ? `<div class="brand-sub">${phone}</div>` : ""}
-        ${email ? `<div class="brand-sub">${email}</div>` : ""}
+        <div class="brand-name">${h(brokerName)}</div>
+        <div class="brand-sub">${falLicense ? `رخصة فال: ${h(falLicense)}` : "وسيط عقاري مرخّص"}</div>
+        ${phone ? `<div class="brand-sub">${h(phone)}</div>` : ""}
+        ${email ? `<div class="brand-sub">${h(email)}</div>` : ""}
       </div>
     </div>
     <div class="doc-info">
-      <div class="doc-type">${docTitle}</div>
-      <div class="doc-number">${docNumber}</div>
+      <div class="doc-type">${h(docTitle)}</div>
+      <div class="doc-number">${h(docNumber)}</div>
       <div class="doc-number">التاريخ: ${formatDate(doc.created_at)}</div>
     </div>
   </div>
@@ -124,14 +134,14 @@ export async function GET(req: NextRequest) {
     <div class="meta-box">
       <div class="meta-label">العميل</div>
       <div class="meta-value">
-        ${doc.client_name || "—"}<br>
-        ${doc.client_phone ? doc.client_phone : ""}
+        ${h(doc.client_name) || "—"}<br>
+        ${doc.client_phone ? h(doc.client_phone) : ""}
       </div>
     </div>
     <div class="meta-box">
       <div class="meta-label">${isInvoice ? "تاريخ الاستحقاق" : "صالح حتى"}</div>
       <div class="meta-value">${formatDate(isInvoice ? doc.due_date : doc.valid_until)}</div>
-      ${doc.status ? `<div style="margin-top:8px;"><span class="status-badge" style="background:rgba(198,145,76,0.1);color:#C6914C;">${doc.status}</span></div>` : ""}
+      ${doc.status ? `<div style="margin-top:8px;"><span class="status-badge" style="background:rgba(198,145,76,0.1);color:#C6914C;">${h(doc.status)}</span></div>` : ""}
     </div>
   </div>
 
@@ -144,7 +154,7 @@ export async function GET(req: NextRequest) {
     </thead>
     <tbody>
       <tr>
-        <td>${doc.title}</td>
+        <td>${h(doc.title)}</td>
         <td style="text-align:left;font-weight:700;">${money(total)}</td>
       </tr>
     </tbody>
@@ -162,7 +172,7 @@ export async function GET(req: NextRequest) {
     </div>
   </div>
 
-  ${doc.notes ? `<div class="notes-box"><div class="notes-label">ملاحظات</div><div class="notes-text">${doc.notes}</div></div>` : ""}
+  ${doc.notes ? `<div class="notes-box"><div class="notes-label">ملاحظات</div><div class="notes-text">${h(doc.notes)}</div></div>` : ""}
 
   <div class="footer">
     <span>مُولَّد بواسطة وسيط برو</span>

@@ -69,6 +69,15 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  // ── التحقق من هوية المستخدم ──
+  const authClient = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+  );
+  const { data: { user } } = await authClient.auth.getUser();
+  if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
+
   const id = new URL(req.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "missing id" }, { status: 400 });
   try {
