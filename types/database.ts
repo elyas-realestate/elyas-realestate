@@ -33,6 +33,7 @@ export interface Client {
   notes?: string;
   budget?: string;
   code?: string;
+  sentiment?: "hot" | "warm" | "cold" | null;
   tenant_id?: string;
   created_at: string;
 }
