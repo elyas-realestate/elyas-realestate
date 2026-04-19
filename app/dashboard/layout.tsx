@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase-browser";
@@ -8,7 +8,7 @@ import {
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
   Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle,
 } from "lucide-react";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
 
 type NavItemData = { label: string; href: string; icon: any };
@@ -128,9 +128,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [authorized, setAuthorized] = useState(false);
   const [newRequests, setNewRequests] = useState(0);
   const [brokerName, setBrokerName] = useState("إلياس الدخيل");
+  const [notifCount, setNotifCount] = useState(0);
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   useEffect(() => { checkAuth(); }, []);
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
+
+  // cleanup realtime on unmount
+  useEffect(() => {
+    return () => { channelRef.current?.unsubscribe(); };
+  }, []);
 
   async function checkAuth() {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -143,6 +150,41 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     ]);
     setNewRequests(count || 0);
     if (identity?.broker_name) setBrokerName(identity.broker_name);
+
+    // ── Realtime subscriptions ──
+    const channel = supabase
+      .channel("dashboard-realtime")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "property_requests" }, (payload) => {
+        const r = payload.new as any;
+        setNewRequests(n => n + 1);
+        setNotifCount(n => n + 1);
+        toast("🏠 طلب عقار جديد", {
+          description: `${r.request_type || "طلب"} · ${r.main_category || ""} · ميزانية ${r.budget_min ? Number(r.budget_min).toLocaleString() + " ﷼" : "غير محددة"}`,
+          action: { label: "عرض", onClick: () => { window.location.href = "/dashboard/requests"; } },
+          duration: 7000,
+        });
+      })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "clients" }, (payload) => {
+        const c = payload.new as any;
+        setNotifCount(n => n + 1);
+        toast("👤 عميل جديد", {
+          description: `${c.full_name || "عميل"} · ${c.phone || ""} · من ${c.source || "غير محدد"}`,
+          action: { label: "عرض", onClick: () => { window.location.href = "/dashboard/clients"; } },
+          duration: 6000,
+        });
+      })
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "deals" }, (payload) => {
+        const d = payload.new as any;
+        setNotifCount(n => n + 1);
+        toast("🤝 صفقة جديدة", {
+          description: `${d.title || "صفقة"} · ${d.deal_type || ""}`,
+          action: { label: "عرض", onClick: () => { window.location.href = "/dashboard/deals"; } },
+          duration: 6000,
+        });
+      })
+      .subscribe();
+
+    channelRef.current = channel;
   }
 
   async function handleLogout() {
@@ -327,19 +369,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Left: actions */}
         <div className="flex items-center gap-2">
-          {newRequests > 0 && (
-            <Link
-              href="/dashboard/requests"
-              className="relative no-underline flex items-center justify-center rounded-lg transition"
-              style={{ width: 36, height: 36, background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.12)", color: "#C6914C" }}
-            >
-              <Bell size={16} />
+          <Link
+            href="/dashboard/requests"
+            className="relative no-underline flex items-center justify-center rounded-lg transition"
+            style={{ width: 36, height: 36, background: newRequests > 0 ? "rgba(198,145,76,0.08)" : "rgba(198,145,76,0.04)", border: `1px solid ${newRequests > 0 ? "rgba(198,145,76,0.2)" : "rgba(198,145,76,0.08)"}`, color: newRequests > 0 ? "#C6914C" : "#5A5A62" }}
+          >
+            <Bell size={16} />
+            {(newRequests > 0 || notifCount > 0) && (
               <span
-                className="absolute"
-                style={{ top: 6, left: 6, width: 7, height: 7, borderRadius: "50%", background: "#F87171", border: "1.5px solid #0A0A0C" }}
-              />
-            </Link>
-          )}
+                className="absolute flex items-center justify-center"
+                style={{ top: -4, left: -4, minWidth: 16, height: 16, borderRadius: 999, background: "#F87171", border: "1.5px solid #0A0A0C", fontSize: 9, fontWeight: 800, color: "#fff", padding: "0 3px" }}
+              >
+                {notifCount > 0 ? (notifCount > 9 ? "9+" : notifCount) : newRequests > 9 ? "9+" : newRequests}
+              </span>
+            )}
+          </Link>
           <Link
             href="/search"
             target="_blank"
