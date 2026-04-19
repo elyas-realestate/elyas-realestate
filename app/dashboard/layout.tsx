@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle, KeyRound,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -34,9 +34,10 @@ const menuGroups: NavGroup[] = [
   {
     title: "إدارة الأملاك",
     items: [
-      { label: "العقارات",       href: "/dashboard/properties",icon: Building2       },
-      { label: "المشاريع",       href: "/dashboard/projects",  icon: Building2       },
-      { label: "الطلبات",        href: "/dashboard/requests",  icon: FileText        },
+      { label: "العقارات",       href: "/dashboard/properties",       icon: Building2  },
+      { label: "المشاريع",       href: "/dashboard/projects",         icon: Building2  },
+      { label: "الطلبات",        href: "/dashboard/requests",         icon: FileText   },
+      { label: "بوابة المستأجر", href: "/dashboard/tenant-portal",    icon: KeyRound   },
     ]
   },
   {
