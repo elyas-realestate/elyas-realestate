@@ -33,6 +33,8 @@ export interface Client {
   notes?: string;
   budget?: string;
   code?: string;
+  source?: string;
+  lead_score?: number;
   sentiment?: "hot" | "warm" | "cold" | null;
   tenant_id?: string;
   created_at: string;
@@ -128,6 +130,11 @@ export interface PropertyRequest {
   phone?: string;
   message?: string;
   property_id?: string;
+  request_type?: string;
+  main_category?: string;
+  budget_min?: number;
+  budget_max?: number;
+  notes?: string;
   status: string;
   tenant_id?: string;
   created_at: string;

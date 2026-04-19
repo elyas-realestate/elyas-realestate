@@ -11,8 +11,10 @@ import {
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
 import LangToggle from "@/components/LangToggle";
+import type { LucideIcon } from "lucide-react";
+import type { PropertyRequest, Client, Deal } from "@/types/database";
 
-type NavItemData = { label: string; href: string; icon: any };
+type NavItemData = { label: string; href: string; icon: LucideIcon };
 type NavGroup = { title: string; items: NavItemData[] };
 
 const menuGroups: NavGroup[] = [
@@ -157,7 +159,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const channel = supabase
       .channel("dashboard-realtime")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "property_requests" }, (payload) => {
-        const r = payload.new as any;
+        const r = payload.new as PropertyRequest;
         setNewRequests(n => n + 1);
         setNotifCount(n => n + 1);
         toast("🏠 طلب عقار جديد", {
@@ -167,7 +169,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         });
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "clients" }, (payload) => {
-        const c = payload.new as any;
+        const c = payload.new as Client;
         setNotifCount(n => n + 1);
         toast("👤 عميل جديد", {
           description: `${c.full_name || "عميل"} · ${c.phone || ""} · من ${c.source || "غير محدد"}`,
@@ -176,7 +178,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         });
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "deals" }, (payload) => {
-        const d = payload.new as any;
+        const d = payload.new as Deal;
         setNotifCount(n => n + 1);
         toast("🤝 صفقة جديدة", {
           description: `${d.title || "صفقة"} · ${d.deal_type || ""}`,
