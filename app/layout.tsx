@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Kufi_Arabic, Tajawal, Cairo } from "next/font/google";
 import "./globals.css";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import { I18nProvider } from "@/lib/i18n";
 
 const notoKufi = Noto_Kufi_Arabic({
   variable: "--font-noto-kufi",
@@ -42,7 +43,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AnalyticsTracker />
-        {children}
+        <I18nProvider>{children}</I18nProvider>
       </body>
     </html>
   );

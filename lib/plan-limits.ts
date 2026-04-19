@@ -67,9 +67,18 @@ export async function checkLimit(
   const table = tableMap[resource];
   if (!table) return { allowed: true };
 
+  // ── فلترة بـ tenants.id الصحيح (وليس user.id) ──
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: tenantRow } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user?.id ?? "")
+    .limit(1)
+    .single();
   const { count } = await supabase
     .from(table)
-    .select("id", { count: "exact", head: true });
+    .select("id", { count: "exact", head: true })
+    .eq("tenant_id", tenantRow?.id ?? "");
 
   const current = count || 0;
   if (current >= limit) {

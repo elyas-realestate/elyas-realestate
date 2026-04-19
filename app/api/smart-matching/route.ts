@@ -18,15 +18,24 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
+    // ── جلب tenant_id للمستخدم الحالي ──
+    const { data: tenantData } = await supabase
+      .from("tenants")
+      .select("id")
+      .eq("owner_id", user.id)
+      .limit(1)
+      .single();
+    if (!tenantData) return NextResponse.json({ error: "لم يتم العثور على الحساب" }, { status: 403 });
+
     const body = await req.json();
     const { request_id, filters } = body;
 
-    // 1. جلب العقارات النشطة بناءً على نفس الـ tenant_id (لتفعيل multi-tenancy)
-    // سنجلب كل العقارات لكن في الواقع يفضل جلبها بناءً على الـ tenant_id
+    // 1. جلب عقارات الـ tenant الحالي فقط
     const { data: properties, error } = await supabase
       .from("properties")
       .select("id, city, district, price, offer_type, main_category, rooms")
-      .eq("is_published", true);
+      .eq("is_published", true)
+      .eq("tenant_id", tenantData.id);
 
     if (error || !properties) {
       return NextResponse.json({ error: "فشل في جلب العقارات" }, { status: 500 });

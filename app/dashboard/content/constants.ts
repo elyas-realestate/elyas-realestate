@@ -75,6 +75,34 @@ export const providers: AIProvider[] = [
       { id: "manus-1", name: "Manus 1", desc: "النموذج الرئيسي" },
     ],
   },
+  {
+    id: "groq",
+    name: "Groq ⚡",
+    desc: "سريع جداً ومجاني — مثالي للاستخدام اليومي",
+    models: [
+      { id: "llama-3.3-70b-versatile", name: "Llama 3.3 70B", desc: "الأقوى من Groq — جودة عالية" },
+      { id: "llama-3.1-8b-instant",    name: "Llama 3.1 8B Instant", desc: "الأسرع — للردود الفورية" },
+      { id: "mixtral-8x7b-32768",      name: "Mixtral 8x7B", desc: "قوي في المحتوى العربي" },
+    ],
+  },
+  {
+    id: "deepseek",
+    name: "DeepSeek",
+    desc: "نموذج صيني قوي — أداء ممتاز بسعر منخفض",
+    models: [
+      { id: "deepseek-chat",     name: "DeepSeek Chat",     desc: "النموذج الرئيسي" },
+      { id: "deepseek-reasoner", name: "DeepSeek Reasoner", desc: "ممتاز للتحليل والتفكير" },
+    ],
+  },
+  {
+    id: "xai",
+    name: "xAI (Grok)",
+    desc: "نموذج Elon Musk — إبداعي وجريء",
+    models: [
+      { id: "grok-3",      name: "Grok 3",      desc: "الأقوى من xAI" },
+      { id: "grok-3-mini", name: "Grok 3 Mini", desc: "أسرع وأرخص" },
+    ],
+  },
 ];
 
 export const modes = [

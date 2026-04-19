@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
+import type { Deal } from "@/types/database";
 
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -59,7 +60,7 @@ const lbl = "block text-xs font-semibold text-[#9A9AA0] mb-2 tracking-wide";
 // ══════════════════════════════════════════════════════════════════════════════
 // TAB 1 — نظرة عامة
 // ══════════════════════════════════════════════════════════════════════════════
-function OverviewTab({ deals }: { deals: any[] }) {
+function OverviewTab({ deals }: { deals: Deal[] }) {
   const [commRate, setCommRate] = useState(2.5);
   const [commInput, setCommInput] = useState("2.5");
   const [calcVal, setCalcVal]   = useState("");
@@ -230,7 +231,7 @@ function OverviewTab({ deals }: { deals: any[] }) {
                   const val  = Number(d.target_value) || 0;
                   const comm = Number(d.expected_commission) || 0;
                   const vat  = Math.round(comm * VAT_RATE);
-                  const col  = stageColors[d.current_stage] || "#9A9AA0";
+                  const col  = stageColors[d.current_stage ?? ""] || "#9A9AA0";
                   return (
                     <tr key={d.id} style={{ borderBottom: "1px solid rgba(198,145,76,0.04)" }}>
                       <td className="px-4 py-3">
@@ -267,7 +268,7 @@ function OverviewTab({ deals }: { deals: any[] }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // TAB 2 — الإيرادات والمصروفات (P&L)
 // ══════════════════════════════════════════════════════════════════════════════
-function PnLTab({ deals }: { deals: any[] }) {
+function PnLTab({ deals }: { deals: Deal[] }) {
   const [expenses, setExpenses]   = useState<any[]>([]);
   const [loading, setLoading]     = useState(true);
   const [showForm, setShowForm]   = useState(false);
@@ -506,7 +507,7 @@ function PnLTab({ deals }: { deals: any[] }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // TAB 3 — ضريبة القيمة المضافة
 // ══════════════════════════════════════════════════════════════════════════════
-function VATTab({ deals }: { deals: any[] }) {
+function VATTab({ deals }: { deals: Deal[] }) {
   const [calcAmt, setCalcAmt] = useState("");
   const [mode, setMode]       = useState<"excl"|"incl">("excl");
 
@@ -632,7 +633,7 @@ function VATTab({ deals }: { deals: any[] }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // TAB 4 — عائد الاستثمار (ROI)
 // ══════════════════════════════════════════════════════════════════════════════
-function ROITab({ deals }: { deals: any[] }) {
+function ROITab({ deals }: { deals: Deal[] }) {
   const roiDeals = deals
     .filter(d => d.target_value && d.expected_commission)
     .map(d => ({
@@ -703,7 +704,7 @@ function ROITab({ deals }: { deals: any[] }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // TAB 5 — التدفق النقدي
 // ══════════════════════════════════════════════════════════════════════════════
-function CashFlowTab({ deals }: { deals: any[] }) {
+function CashFlowTab({ deals }: { deals: Deal[] }) {
   const months = useMemo(() => {
     // آخر 6 أشهر + 3 أشهر توقع
     const now = new Date();
@@ -843,7 +844,7 @@ const TABS = [
 ];
 
 export default function FinancialPage() {
-  const [deals, setDeals]   = useState<any[]>([]);
+  const [deals, setDeals]   = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab]         = useState("overview");
 

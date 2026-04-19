@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase-browser";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import RequestForm from "./RequestForm";
 
 
 export const revalidate = 60;
@@ -19,7 +20,7 @@ async function getBrokerData(slug: string) {
   // fallback: إذا لا يوجد tenants بعد (قبل تشغيل migration) اقرأ أول سجل
   const tenantId = tenant?.id ?? null;
 
-  const [settingsRes, identityRes, propertiesRes] = await Promise.all([
+  const [settingsRes, identityRes, propertiesRes, countRes] = await Promise.all([
     tenantId
       ? supabase.from("site_settings").select("*").eq("tenant_id", tenantId).single()
       : supabase.from("site_settings").select("*").limit(1).single(),
@@ -32,18 +33,23 @@ async function getBrokerData(slug: string) {
           .eq("tenant_id", tenantId)
           .eq("is_published", true)
           .order("created_at", { ascending: false })
-          .limit(6)
+          .limit(12)
       : supabase.from("properties")
           .select("id, title, district, city, price, offer_type, sub_category, land_area, rooms, images")
           .eq("is_published", true)
           .order("created_at", { ascending: false })
-          .limit(6),
+          .limit(12),
+    tenantId
+      ? supabase.from("properties").select("id", { count: "exact", head: true }).eq("tenant_id", tenantId).eq("is_published", true)
+      : supabase.from("properties").select("id", { count: "exact", head: true }).eq("is_published", true),
   ]);
 
   return {
     s: settingsRes.data,
     identity: identityRes.data,
     properties: propertiesRes.data || [],
+    totalProperties: countRes.count ?? 0,
+    tenantId: tenantId ?? null,
   };
 }
 
@@ -69,7 +75,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 // ══ الصفحة الرئيسية ══════════════════════════════════════
 export default async function BrokerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { s, identity, properties } = await getBrokerData(slug);
+  const { s, identity, properties, totalProperties, tenantId } = await getBrokerData(slug);
   if (!s && !identity) notFound();
 
   // ── بيانات العرض ──
@@ -250,7 +256,26 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                 اتصال
               </a>
             )}
+            <a href="#request-form" className="accent-bg" style={{ color:clrBgPrimary, textDecoration:"none", fontSize:14, fontWeight:700, padding:"14px 24px", borderRadius:11, display:"flex", alignItems:"center", gap:8, opacity:0.9 }}>
+              طلب عقار
+            </a>
           </div>
+
+          {/* ── شريط الإحصائيات ── */}
+          {(totalProperties > 0 || areas.length > 0) && (
+            <div className="d4 fade-up" style={{ display:"flex", justifyContent:"center", gap:0, marginTop:40, flexWrap:"wrap" }}>
+              {[
+                totalProperties > 0 && { value: `${totalProperties}+`, label: "عقار منشور" },
+                areas.length > 0     && { value: areas.length, label: "منطقة تغطية" },
+                identity?.fal_license && { value: "✓", label: "مرخّص فال" },
+              ].filter(Boolean).map((stat: any, i, arr) => (
+                <div key={i} style={{ textAlign:"center", padding:"16px 32px", borderRight: i < arr.length - 1 ? `1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)` : "none" }}>
+                  <div className="font-kufi accent" style={{ fontSize:28, fontWeight:900, lineHeight:1 }}>{stat.value}</div>
+                  <div style={{ fontSize:12, color:clrTextSec, marginTop:5 }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -459,6 +484,33 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══ نموذج طلب عقار ═══ */}
+      {tenantId && (
+        <section id="request-form" style={{ padding:"90px 48px", background:clrBgPrimary }} className="section-pad">
+          <div style={{ maxWidth:680, margin:"0 auto" }}>
+            <div style={{ textAlign:"center", marginBottom:48 }}>
+              <div className="accent" style={{ fontSize:12, fontWeight:700, letterSpacing:2, marginBottom:14 }}>— أرسل طلبك —</div>
+              <h2 className="font-kufi" style={{ fontSize:fntSection, fontWeight:900, color:clrTextPrimary, lineHeight:1.3, marginBottom:12 }}>
+                أخبرني عن العقار الذي تبحث عنه
+              </h2>
+              <p style={{ fontSize:fntBody, color:clrTextSec, lineHeight:1.8 }}>
+                سأبحث لك عن أفضل الخيارات وأتواصل معك مباشرة.
+              </p>
+            </div>
+            <RequestForm
+              tenantId={tenantId}
+              accentColor={clrAccent}
+              accentDark={clrAccentDark}
+              bgCard={clrBgCard}
+              bgPrimary={clrBgPrimary}
+              textPrimary={clrTextPrimary}
+              textSecondary={clrTextSec}
+              fontBody={fntBody}
+            />
           </div>
         </section>
       )}

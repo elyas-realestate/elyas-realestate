@@ -33,6 +33,9 @@ export interface Client {
   notes?: string;
   budget?: string;
   code?: string;
+  source?: string;
+  lead_score?: number;
+  sentiment?: "hot" | "warm" | "cold" | null;
   tenant_id?: string;
   created_at: string;
 }
@@ -127,6 +130,11 @@ export interface PropertyRequest {
   phone?: string;
   message?: string;
   property_id?: string;
+  request_type?: string;
+  main_category?: string;
+  budget_min?: number;
+  budget_max?: number;
+  notes?: string;
   status: string;
   tenant_id?: string;
   created_at: string;
@@ -138,6 +146,51 @@ export interface SiteAnalytics {
   page?: string;
   element?: string;
   tenant_id?: string;
+  created_at: string;
+}
+
+export interface Contract {
+  id: string;
+  tenant_id?: string;
+  client_id?: string;
+  property_id?: string;
+  title: string;
+  type: "rent" | "sale" | "management";
+  start_date?: string;
+  end_date?: string;
+  monthly_rent?: number;
+  total_value?: number;
+  status: "active" | "expired" | "cancelled";
+  notes?: string;
+  file_url?: string;
+  created_at: string;
+}
+
+export interface TenantPayment {
+  id: string;
+  tenant_id?: string;
+  contract_id?: string;
+  client_id?: string;
+  amount: number;
+  due_date: string;
+  paid_date?: string;
+  status: "pending" | "paid" | "late" | "cancelled";
+  notes?: string;
+  created_at: string;
+}
+
+export interface MaintenanceRequest {
+  id: string;
+  tenant_id?: string;
+  contract_id?: string;
+  client_id?: string;
+  property_id?: string;
+  title: string;
+  description?: string;
+  priority: "low" | "medium" | "high" | "urgent";
+  status: "open" | "in_progress" | "resolved" | "cancelled";
+  cost?: number;
+  resolved_at?: string;
   created_at: string;
 }
 

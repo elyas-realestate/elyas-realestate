@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { checkLimit } from "@/lib/plan-limits";
+import { safeDecrypt } from "@/lib/crypto";
 import {
   checkRateLimit,
   AI_RATE_LIMIT,
@@ -136,11 +137,27 @@ async function callManus(model: string, systemPrompt: string, messages: any[], a
   return data.choices?.[0]?.message?.content || "";
 }
 
+// OpenAI-compatible endpoint helper (Groq, DeepSeek, xAI all use same schema)
+async function callOpenAICompat(baseUrl: string, model: string, systemPrompt: string, messages: any[], apiKey: string, providerName: string) {
+  if (!apiKey) throw new Error(`مفتاح ${providerName} غير متاح في الإعدادات`);
+  const response = await fetch(`${baseUrl}/chat/completions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
+    body: JSON.stringify({ model, messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+  return data.choices?.[0]?.message?.content || "";
+}
+
 async function callModel(provider: string, model: string, systemPrompt: string, messages: any[], apiKey: string) {
-  if (provider === "openai") return callOpenAI(model, systemPrompt, messages, apiKey);
+  if (provider === "openai")    return callOpenAI(model, systemPrompt, messages, apiKey);
   if (provider === "anthropic") return callAnthropic(model, systemPrompt, messages, apiKey);
-  if (provider === "google") return callGoogle(model, systemPrompt, messages, apiKey);
-  if (provider === "manus") return callManus(model, systemPrompt, messages, apiKey);
+  if (provider === "google")    return callGoogle(model, systemPrompt, messages, apiKey);
+  if (provider === "manus")     return callManus(model, systemPrompt, messages, apiKey);
+  if (provider === "groq")      return callOpenAICompat("https://api.groq.com/openai/v1", model || "llama-3.3-70b-versatile", systemPrompt, messages, apiKey, "Groq");
+  if (provider === "deepseek")  return callOpenAICompat("https://api.deepseek.com/v1", model || "deepseek-chat", systemPrompt, messages, apiKey, "DeepSeek");
+  if (provider === "xai")       return callOpenAICompat("https://api.x.ai/v1", model || "grok-3", systemPrompt, messages, apiKey, "xAI");
   throw new Error("مزود غير معروف: " + provider);
 }
 
@@ -206,18 +223,21 @@ export async function POST(req: NextRequest) {
       .select("provider, api_key_encrypted")
       .eq("is_active", true);
       
-    // Helper to get key from DB first, then fallback to Env variable
-    const getProviderKey = (prov: string) => {
+    // Helper: يقرأ المفتاح من DB (مع فك التشفير) ثم يرجع لمتغيرات البيئة
+    const getProviderKey = async (prov: string): Promise<string> => {
       const dbKey = (dbKeys || []).find(k => k.provider === prov)?.api_key_encrypted;
-      if (dbKey) return dbKey; // in reality, decrypt it if encoded, assuming stored direct for MVP
-      if (prov === "openai") return process.env.OPENAI_API_KEY || "";
+      if (dbKey) return await safeDecrypt(dbKey);
+      if (prov === "openai")    return process.env.OPENAI_API_KEY    || "";
       if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
-      if (prov === "google") return process.env.GOOGLE_API_KEY || "";
-      if (prov === "manus") return process.env.MANUS_API_KEY || "";
+      if (prov === "google")    return process.env.GOOGLE_API_KEY    || "";
+      if (prov === "manus")     return process.env.MANUS_API_KEY     || "";
+      if (prov === "groq")      return process.env.GROQ_API_KEY      || "";
+      if (prov === "deepseek")  return process.env.DEEPSEEK_API_KEY  || "";
+      if (prov === "xai")       return process.env.XAI_API_KEY       || "";
       return "";
     };
 
-    const apiKey1 = getProviderKey(p);
+    const apiKey1 = await getProviderKey(p);
     if (!apiKey1) return NextResponse.json({ error: `مفتاح ${p} غير موجود — يرجى ربطه في مركز الذكاء الاصطناعي` }, { status: 400 });
 
     const chatMessages = messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
@@ -235,7 +255,7 @@ export async function POST(req: NextRequest) {
     if (mode === "chain") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      const apiKey2 = getProviderKey(p2);
+      const apiKey2 = await getProviderKey(p2);
       if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج المراجع` }, { status: 400 });
 
       const draft = await callModel(p, m, systemPrompt, chatMessages, apiKey1);
@@ -248,7 +268,7 @@ export async function POST(req: NextRequest) {
     if (mode === "compare") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      const apiKey2 = getProviderKey(p2);
+      const apiKey2 = await getProviderKey(p2);
       if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج الثاني` }, { status: 400 });
 
       const [result1, result2] = await Promise.all([

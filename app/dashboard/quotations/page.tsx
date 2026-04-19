@@ -2,7 +2,7 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
-  FileText, Plus, X, Check, Edit3, Trash2, Send, Clock,
+  FileText, Plus, X, Check, Edit3, Trash2, Send, Clock, Printer,
   CheckCircle, XCircle, ArrowLeft, Eye,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -256,6 +256,12 @@ export default function QuotationsPage() {
                       </button>
                     </>
                   )}
+                  <button
+                    onClick={() => window.open(`/api/pdf?type=quotation&id=${q.id}`, "_blank")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                    style={{ background: "rgba(96,165,250,0.06)", color: "#60A5FA", border: "1px solid rgba(96,165,250,0.15)", cursor: "pointer" }}>
+                    <Printer size={11} /> PDF
+                  </button>
                   <button onClick={() => deleteQuotation(q.id)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
                     style={{ background: "rgba(248,113,113,0.04)", color: "#F87171", border: "1px solid rgba(248,113,113,0.1)", cursor: "pointer", marginRight: "auto" }}>

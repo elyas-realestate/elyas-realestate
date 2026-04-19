@@ -304,6 +304,82 @@ export default function PropertyDetails() {
                     </div>
                   </div>
                 )}
+
+                {/* ── Price position bar ── */}
+                {property.price && marketStats.min !== marketStats.max && (
+                  <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(198,145,76,0.06)" }}>
+                    <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 10 }}>موقع سعرك على نطاق السوق</p>
+                    <div style={{ position: "relative", height: 8, borderRadius: 999, background: "rgba(255,255,255,0.06)" }}>
+                      {/* gradient bar */}
+                      <div style={{ position: "absolute", inset: 0, borderRadius: 999, background: "linear-gradient(90deg, #4ADE80, #FACC15, #F87171)" }} />
+                      {/* marker */}
+                      {(() => {
+                        const pct = Math.min(100, Math.max(0, ((property.price - marketStats.min) / (marketStats.max - marketStats.min)) * 100));
+                        return (
+                          <div style={{ position: "absolute", top: "50%", left: `${pct}%`, transform: "translate(-50%, -50%)", width: 16, height: 16, borderRadius: "50%", background: "#0A0A0C", border: "2.5px solid #C6914C", boxShadow: "0 0 0 3px rgba(198,145,76,0.25)" }} />
+                        );
+                      })()}
+                    </div>
+                    <div className="flex justify-between mt-2" style={{ fontSize: 10, color: "#5A5A62" }}>
+                      <span>الأقل: {fmtPrice(marketStats.min)}</span>
+                      <span>الأعلى: {fmtPrice(marketStats.max)}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Pricing recommendation ── */}
+                {(() => {
+                  if (!property.price || Math.abs(marketStats.diff) < 5) return null;
+                  const overpriced  = marketStats.diff > 20;
+                  const underpriced = marketStats.diff < -20;
+                  if (!overpriced && !underpriced) return null;
+                  const suggested = Math.round(marketStats.avg * 0.97 / 1000) * 1000;
+                  return (
+                    <div className="mt-4 rounded-xl p-4" style={{
+                      background: overpriced ? "rgba(248,113,113,0.05)" : "rgba(74,222,128,0.05)",
+                      border: `1px solid ${overpriced ? "rgba(248,113,113,0.18)" : "rgba(74,222,128,0.18)"}`,
+                    }}>
+                      <p style={{ fontSize: 12, fontWeight: 700, color: overpriced ? "#F87171" : "#4ADE80", marginBottom: 4 }}>
+                        {overpriced ? "💡 قد يكون السعر مرتفعاً نسبياً" : "💡 السعر تنافسي جداً"}
+                      </p>
+                      <p style={{ fontSize: 11, color: "#9A9AA0", lineHeight: 1.7 }}>
+                        {overpriced
+                          ? `السعر أعلى من متوسط السوق بـ ${Math.round(marketStats.diff)}%. سعر مقترح للتنافسية: ${suggested.toLocaleString()} ﷼`
+                          : `السعر أقل من متوسط السوق بـ ${Math.abs(Math.round(marketStats.diff))}%. يمكن رفعه مع الحفاظ على تنافسيته.`
+                        }
+                      </p>
+                    </div>
+                  );
+                })()}
+
+                {/* ── Comparables list ── */}
+                {comparables.length > 0 && (
+                  <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(198,145,76,0.06)" }}>
+                    <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 10 }}>عقارات مشابهة ({comparables.length})</p>
+                    <div className="space-y-2">
+                      {comparables.slice(0, 5).map((c, i) => {
+                        const ppm = c.price && c.land_area ? Math.round(c.price / c.land_area) : null;
+                        const diff = property.price && c.price ? Math.round(((c.price - property.price) / property.price) * 100) : null;
+                        return (
+                          <div key={i} className="flex items-center justify-between gap-2 p-2.5 rounded-xl" style={{ background: "#1C1C22" }}>
+                            <div className="flex-1 min-w-0">
+                              <p className="truncate" style={{ fontSize: 12, color: "#E5E5E5" }}>{c.title}</p>
+                              <p style={{ fontSize: 10, color: "#5A5A62" }}>{c.district}{ppm ? ` · ${ppm.toLocaleString()} ﷼/م²` : ""}</p>
+                            </div>
+                            <div className="text-left flex-shrink-0">
+                              <p className="font-cairo font-bold" style={{ fontSize: 13, color: "#C6914C" }}>{fmtPrice(c.price)}</p>
+                              {diff !== null && (
+                                <p style={{ fontSize: 10, color: diff > 0 ? "#F87171" : diff < 0 ? "#4ADE80" : "#5A5A62", textAlign: "left" }}>
+                                  {diff > 0 ? `+${diff}%` : `${diff}%`}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>

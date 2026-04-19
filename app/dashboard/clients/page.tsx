@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Plus, Search, X, Phone, MapPin, StickyNote, Pencil, Trash2,
-  Users, TrendingUp, ChevronLeft, MessageCircle,
+  Users, TrendingUp, ChevronLeft, MessageCircle, Flame, Thermometer, Snowflake,
 } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -40,6 +40,26 @@ function scoreColor(s: number) {
   return "#F87171";
 }
 
+// ── Sentiment ───────────────────────────────────────────────────────────
+type SentimentKey = "hot" | "warm" | "cold";
+
+const SENTIMENT_CFG: Record<SentimentKey, { label: string; color: string; bg: string; icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }> = {
+  hot:  { label: "ساخن",  color: "#F87171", bg: "rgba(248,113,113,0.1)", icon: Flame       },
+  warm: { label: "دافئ",  color: "#FACC15", bg: "rgba(250,204,21,0.1)",  icon: Thermometer },
+  cold: { label: "بارد",  color: "#60A5FA", bg: "rgba(96,165,250,0.1)",  icon: Snowflake   },
+};
+
+function sentimentAuto(score: number): SentimentKey {
+  if (score >= 70) return "hot";
+  if (score >= 40) return "warm";
+  return "cold";
+}
+
+function effectiveSentiment(c: any): SentimentKey {
+  if (c.sentiment === "hot" || c.sentiment === "warm" || c.sentiment === "cold") return c.sentiment;
+  return sentimentAuto(leadScore(c));
+}
+
 // ── WhatsApp icon ────────────────────────────────────────────────────────
 function WAIcon() {
   return (
@@ -58,11 +78,14 @@ export default function Clients() {
   const [form, setForm]         = useState({ ...emptyForm });
   const [activeTab, setActiveTab] = useState("الكل");
 
+  const [sentimentFilter, setSentimentFilter] = useState<SentimentKey | "الكل">("الكل");
+
   // drawer
-  const [selected, setSelected] = useState<any>(null);
-  const [editMode, setEditMode] = useState(false);
-  const [editForm, setEditForm] = useState({ ...emptyForm });
-  const [saving, setSaving]     = useState(false);
+  const [selected, setSelected]   = useState<any>(null);
+  const [editMode, setEditMode]   = useState(false);
+  const [editForm, setEditForm]   = useState({ ...emptyForm });
+  const [saving, setSaving]       = useState(false);
+  const [updatingSentiment, setUpdatingSentiment] = useState(false);
 
   useEffect(() => { loadClients(); }, []);
 
@@ -80,6 +103,16 @@ export default function Clients() {
     setForm({ ...emptyForm });
     setShowAdd(false);
     loadClients();
+  }
+
+  async function updateSentiment(sentiment: SentimentKey | null) {
+    if (!selected) return;
+    setUpdatingSentiment(true);
+    await supabase.from("clients").update({ sentiment }).eq("id", selected.id);
+    const updated = { ...selected, sentiment };
+    setSelected(updated);
+    setClients(prev => prev.map(c => c.id === selected.id ? updated : c));
+    setUpdatingSentiment(false);
   }
 
   async function handleSaveEdit() {
@@ -122,14 +155,22 @@ export default function Clients() {
 
   const tabs = ["الكل", ...Object.keys(CAT_CFG).filter(k => catCounts[k])];
 
+  // ── Sentiment counts ───────────────────────────────────────────────
+  const sentimentCounts = useMemo(() => ({
+    hot:  clients.filter(c => effectiveSentiment(c) === "hot").length,
+    warm: clients.filter(c => effectiveSentiment(c) === "warm").length,
+    cold: clients.filter(c => effectiveSentiment(c) === "cold").length,
+  }), [clients]);
+
   // ── Filtered list ───────────────────────────────────────────────────
   const filtered = useMemo(() =>
     clients.filter(c => {
-      const matchSearch = !search || c.full_name?.includes(search) || c.phone?.includes(search);
-      const matchTab    = activeTab === "الكل" || c.category === activeTab;
-      return matchSearch && matchTab;
+      const matchSearch    = !search || c.full_name?.includes(search) || c.phone?.includes(search);
+      const matchTab       = activeTab === "الكل" || c.category === activeTab;
+      const matchSentiment = sentimentFilter === "الكل" || effectiveSentiment(c) === sentimentFilter;
+      return matchSearch && matchTab && matchSentiment;
     }),
-    [clients, search, activeTab]
+    [clients, search, activeTab, sentimentFilter]
   );
 
   // ── Sort by score ───────────────────────────────────────────────────
@@ -172,10 +213,10 @@ export default function Clients() {
       {/* ── Stats row ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "إجمالي العملاء",   value: clients.length,                                                  color: "#C6914C", icon: Users      },
-          { label: "مشترين ومستثمرين", value: (catCounts["مشتري"] || 0) + (catCounts["مستثمر"] || 0),          color: "#4ADE80", icon: TrendingUp  },
-          { label: "لديهم ميزانية",    value: clients.filter(c => c.budget).length,                           color: "#A78BFA", icon: TrendingUp  },
-          { label: "درجة عالية (75+)", value: clients.filter(c => leadScore(c) >= 75).length,                 color: "#FACC15", icon: Users       },
+          { label: "إجمالي العملاء",   value: clients.length,           color: "#C6914C" },
+          { label: "🔥 ساخنون",        value: sentimentCounts.hot,      color: "#F87171" },
+          { label: "🌡️ دافئون",        value: sentimentCounts.warm,     color: "#FACC15" },
+          { label: "❄️ باردون",         value: sentimentCounts.cold,     color: "#60A5FA" },
         ].map(s => (
           <div key={s.label} className="card-luxury p-4">
             <div className="font-cairo font-bold" style={{ fontSize: 22, color: s.color }}>{s.value}</div>
@@ -263,6 +304,34 @@ export default function Clients() {
         ))}
       </div>
 
+      {/* ── Sentiment filter ── */}
+      <div className="flex gap-2 mb-5 flex-wrap">
+        {([
+          { key: "الكل", label: "الكل", color: "#9A9AA0", bg: "rgba(90,90,98,0.1)" },
+          { key: "hot",  label: "🔥 ساخن", color: "#F87171", bg: "rgba(248,113,113,0.08)" },
+          { key: "warm", label: "🌡️ دافئ", color: "#FACC15", bg: "rgba(250,204,21,0.08)"  },
+          { key: "cold", label: "❄️ بارد",  color: "#60A5FA", bg: "rgba(96,165,250,0.08)"  },
+        ] as const).map(({ key, label, color, bg }) => {
+          const isActive = sentimentFilter === key;
+          const count = key === "الكل" ? clients.length : sentimentCounts[key as SentimentKey];
+          return (
+            <button
+              key={key}
+              onClick={() => setSentimentFilter(key)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition flex-shrink-0"
+              style={{
+                background: isActive ? bg : "rgba(255,255,255,0.02)",
+                color: isActive ? color : "#5A5A62",
+                border: `1px solid ${isActive ? color + "44" : "rgba(198,145,76,0.06)"}`,
+              }}
+            >
+              {label}
+              <span style={{ fontSize: 10, opacity: 0.75 }}>({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* ── Grid ── */}
       {sorted.length === 0 ? (
         <div className="text-center py-20">
@@ -273,12 +342,17 @@ export default function Clients() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {sorted.map(client => {
-            const score = leadScore(client);
-            const cfg   = CAT_CFG[client.category];
+            const score     = leadScore(client);
+            const cfg       = CAT_CFG[client.category];
+            const sentiment = effectiveSentiment(client);
+            const sentCfg   = SENTIMENT_CFG[sentiment];
+            const SentIcon  = sentCfg.icon;
+            const isManual  = client.sentiment === "hot" || client.sentiment === "warm" || client.sentiment === "cold";
             return (
               <div
                 key={client.id}
                 className="card-luxury p-5 cursor-pointer group"
+                style={{ borderColor: sentCfg.color + "22" }}
                 onClick={() => openDrawer(client)}
               >
                 {/* Top row */}
@@ -296,15 +370,14 @@ export default function Clients() {
                       {client.code && <p style={{ fontSize: 10, color: "#5A5A62" }}>{client.code}</p>}
                     </div>
                   </div>
-                  {/* Lead score badge */}
-                  <div className="flex flex-col items-center flex-shrink-0">
-                    <div
-                      className="font-cairo font-bold"
-                      style={{ fontSize: 16, color: scoreColor(score), lineHeight: 1 }}
-                    >
-                      {score}
-                    </div>
-                    <div style={{ fontSize: 9, color: "#5A5A62", marginTop: 1 }}>نقطة</div>
+                  {/* Sentiment badge */}
+                  <div
+                    className="flex items-center gap-1.5 flex-shrink-0 px-2.5 py-1.5 rounded-lg"
+                    style={{ background: sentCfg.bg, border: `1px solid ${sentCfg.color}33` }}
+                  >
+                    <SentIcon size={13} style={{ color: sentCfg.color }} />
+                    <span style={{ fontSize: 12, color: sentCfg.color, fontWeight: 700 }}>{sentCfg.label}</span>
+                    {isManual && <span style={{ fontSize: 9, color: sentCfg.color, opacity: 0.6 }}>●</span>}
                   </div>
                 </div>
 
@@ -312,8 +385,9 @@ export default function Clients() {
                 <div style={{ height: 3, borderRadius: 999, background: "rgba(255,255,255,0.05)", marginBottom: 12 }}>
                   <div style={{
                     height: "100%", borderRadius: 999,
-                    background: scoreColor(score),
+                    background: sentCfg.color,
                     width: score + "%",
+                    opacity: 0.7,
                   }} />
                 </div>
 
@@ -428,6 +502,58 @@ export default function Clients() {
                       <div style={{ fontSize: 9, color: "#5A5A62" }}>Lead Score</div>
                     </div>
                   </div>
+
+                  {/* ── Sentiment selector ── */}
+                  {(() => {
+                    const cur = effectiveSentiment(selected);
+                    const isManual = selected.sentiment === "hot" || selected.sentiment === "warm" || selected.sentiment === "cold";
+                    return (
+                      <div className="p-4 rounded-xl" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.08)" }}>
+                        <div className="flex items-center justify-between mb-3">
+                          <span style={{ fontSize: 12, color: "#5A5A62", fontWeight: 600 }}>مستوى الاهتمام</span>
+                          {isManual && (
+                            <button
+                              onClick={() => updateSentiment(null)}
+                              disabled={updatingSentiment}
+                              style={{ fontSize: 10, color: "#5A5A62", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+                            >
+                              تلقائي
+                            </button>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          {(["hot", "warm", "cold"] as SentimentKey[]).map(key => {
+                            const sc = SENTIMENT_CFG[key];
+                            const Icon = sc.icon;
+                            const isActive = cur === key;
+                            return (
+                              <button
+                                key={key}
+                                onClick={() => updateSentiment(key)}
+                                disabled={updatingSentiment}
+                                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl font-bold text-xs transition"
+                                style={{
+                                  background: isActive ? sc.bg : "rgba(255,255,255,0.02)",
+                                  color: isActive ? sc.color : "#5A5A62",
+                                  border: `1.5px solid ${isActive ? sc.color + "55" : "rgba(255,255,255,0.05)"}`,
+                                  cursor: updatingSentiment ? "not-allowed" : "pointer",
+                                  opacity: updatingSentiment ? 0.6 : 1,
+                                }}
+                              >
+                                <Icon size={13} />
+                                {sc.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {!isManual && (
+                          <p style={{ fontSize: 10, color: "#3A3A42", marginTop: 8, textAlign: "center" }}>
+                            تلقائي من درجة الاهتمام ({leadScore(selected)} نقطة)
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {/* Info */}
                   {selected.phone && (
