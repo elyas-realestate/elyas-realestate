@@ -1,7 +1,8 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { Check, X, Zap, Crown, Gift, Loader2 } from "lucide-react";
+import { Check, X, Zap, Crown, Gift, Loader2, CreditCard, Lock } from "lucide-react";
+import { PLAN_PRICES } from "@/lib/moyasar";
 import { toast } from "sonner";
 
 
@@ -84,6 +85,11 @@ export default function SubscriptionPage() {
   const [loading, setLoading]         = useState(true);
   const [upgrading, setUpgrading]     = useState<string | null>(null);
 
+  // Payment modal
+  const [payModal, setPayModal] = useState<{ plan: string; billing: "monthly" | "yearly" } | null>(null);
+  const [payForm, setPayForm]   = useState({ card_name: "", card_number: "", card_cvc: "", card_month: "", card_year: "" });
+  const [paying, setPaying]     = useState(false);
+
   useEffect(() => { loadData(); }, []);
 
   async function loadData() {
@@ -133,23 +139,45 @@ export default function SubscriptionPage() {
 
   async function handleUpgrade(planId: string) {
     if (planId === currentPlan) return;
-    if (!settingsId) { toast.error("خطأ في الإعدادات"); return; }
-
-    setUpgrading(planId);
-    const { error } = await supabase
-      .from("site_settings")
-      .update({ plan: planId })
-      .eq("id", settingsId);
-
-    if (error) {
-      // عمود plan غير موجود — أخبر المستخدم
-      toast.error("يجب إضافة عمود plan في جدول site_settings في Supabase");
-    } else {
+    if (planId === "free") {
+      if (!settingsId) { toast.error("خطأ في الإعدادات"); return; }
+      setUpgrading(planId);
+      await supabase.from("site_settings").update({ plan: planId }).eq("id", settingsId);
       setCurrentPlan(planId);
-      const planName = PLANS.find(p => p.id === planId)?.name || planId;
-      toast.success(`تم الترقية للخطة ${planName} ✓`);
+      toast.success("تم التحويل للخطة المجانية");
+      setUpgrading(null);
+      return;
     }
-    setUpgrading(null);
+    setPayModal({ plan: planId, billing: "monthly" });
+  }
+
+  async function handlePay() {
+    if (!payModal) return;
+    const { card_name, card_number, card_cvc, card_month, card_year } = payForm;
+    if (!card_name || !card_number || !card_cvc || !card_month || !card_year) {
+      toast.error("أكمل بيانات البطاقة"); return;
+    }
+    setPaying(true);
+    try {
+      const res = await fetch("/api/payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payModal, ...payForm }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "فشل الدفع");
+      if (data.status === "paid" || data.status === "authorized") {
+        setCurrentPlan(payModal.plan);
+        toast.success(`✅ تم الدفع بنجاح! تم تفعيل خطة ${PLAN_PRICES[payModal.plan]?.label}`);
+        setPayModal(null);
+        setPayForm({ card_name: "", card_number: "", card_cvc: "", card_month: "", card_year: "" });
+      } else {
+        toast.error(`حالة الدفع: ${data.status}`);
+      }
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "خطأ في الدفع");
+    }
+    setPaying(false);
   }
 
   const activePlan = PLANS.find(p => p.id === currentPlan) || PLANS[0];
@@ -353,10 +381,83 @@ export default function SubscriptionPage() {
       <div className="rounded-xl p-4" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.1)" }}>
         <p style={{ fontSize: 13, color: "#5A5A62", lineHeight: 1.7 }}>
           <span style={{ color: "#C6914C", fontWeight: 600 }}>ملاحظة:</span>{" "}
-          الدفع الإلكتروني قيد التطوير — يمكنك تغيير الخطة الآن وسيتم تفعيل بوابة الدفع قريباً.
-          للترقية الفورية تواصل معنا عبر واتساب.
+          الدفع عبر بوابة Moyasar — تأكد من إضافة <code style={{ background: "rgba(198,145,76,0.1)", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>MOYASAR_SECRET_KEY</code> في متغيرات البيئة.
         </p>
       </div>
+
+      {/* ══ Payment Modal ══ */}
+      {payModal && (
+        <>
+          <div className="fixed inset-0 z-50" style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }} onClick={() => !paying && setPayModal(null)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-2xl p-6" style={{ background: "#111114", border: "1px solid rgba(198,145,76,0.2)" }} onClick={e => e.stopPropagation()}>
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2">
+                  <CreditCard size={18} style={{ color: "#C6914C" }} />
+                  <h3 className="font-bold" style={{ fontSize: 16, color: "#F5F5F5" }}>
+                    ادفع واشترك — {PLAN_PRICES[payModal.plan]?.label}
+                  </h3>
+                </div>
+                <button onClick={() => setPayModal(null)} style={{ background: "none", border: "none", color: "#5A5A62", cursor: "pointer" }}>
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Billing toggle */}
+              <div className="flex gap-2 mb-5 p-1 rounded-xl" style={{ background: "#1C1C22" }}>
+                {(["monthly", "yearly"] as const).map(b => (
+                  <button key={b} onClick={() => setPayModal(m => m ? { ...m, billing: b } : null)}
+                    className="flex-1 py-2 rounded-lg text-sm font-bold transition"
+                    style={{ background: payModal.billing === b ? "rgba(198,145,76,0.15)" : "transparent", color: payModal.billing === b ? "#C6914C" : "#5A5A62", border: "none", cursor: "pointer" }}>
+                    {b === "monthly"
+                      ? `شهري — ${PLAN_PRICES[payModal.plan]?.monthly} ريال`
+                      : `سنوي — ${PLAN_PRICES[payModal.plan]?.yearly} ريال`}
+                  </button>
+                ))}
+              </div>
+
+              {/* Card fields */}
+              {[
+                { key: "card_name",   label: "اسم حامل البطاقة", placeholder: "AHMED AL-OTAIBI", dir: "ltr" as const },
+                { key: "card_number", label: "رقم البطاقة",      placeholder: "4111 1111 1111 1111", dir: "ltr" as const },
+              ].map(f => (
+                <div key={f.key} className="mb-3">
+                  <label style={{ display: "block", fontSize: 11, color: "#9A9AA0", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
+                  <input value={(payForm as any)[f.key]} onChange={e => setPayForm(p => ({ ...p, [f.key]: e.target.value }))}
+                    placeholder={f.placeholder} dir={f.dir}
+                    className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition"
+                    style={{ background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", color: "#F5F5F5" }} />
+                </div>
+              ))}
+              <div className="grid grid-cols-3 gap-3 mb-5">
+                {[
+                  { key: "card_cvc",   label: "CVV",    placeholder: "123" },
+                  { key: "card_month", label: "الشهر",  placeholder: "12"  },
+                  { key: "card_year",  label: "السنة",  placeholder: "2027" },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label style={{ display: "block", fontSize: 11, color: "#9A9AA0", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
+                    <input value={(payForm as any)[f.key]} onChange={e => setPayForm(p => ({ ...p, [f.key]: e.target.value }))}
+                      placeholder={f.placeholder} dir="ltr"
+                      className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none transition"
+                      style={{ background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", color: "#F5F5F5" }} />
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={handlePay} disabled={paying}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition"
+                style={{ background: paying ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", border: "none", cursor: paying ? "not-allowed" : "pointer" }}>
+                {paying ? <><Loader2 size={15} className="animate-spin" /> جارٍ الدفع...</> : <><Lock size={14} /> ادفع بأمان الآن</>}
+              </button>
+              <p style={{ fontSize: 11, color: "#3A3A42", textAlign: "center", marginTop: 10 }}>
+                مُؤمَّن بواسطة Moyasar · SSL
+              </p>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
