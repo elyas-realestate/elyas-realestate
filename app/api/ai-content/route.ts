@@ -136,11 +136,27 @@ async function callManus(model: string, systemPrompt: string, messages: any[], a
   return data.choices?.[0]?.message?.content || "";
 }
 
+// OpenAI-compatible endpoint helper (Groq, DeepSeek, xAI all use same schema)
+async function callOpenAICompat(baseUrl: string, model: string, systemPrompt: string, messages: any[], apiKey: string, providerName: string) {
+  if (!apiKey) throw new Error(`مفتاح ${providerName} غير متاح في الإعدادات`);
+  const response = await fetch(`${baseUrl}/chat/completions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
+    body: JSON.stringify({ model, messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+  return data.choices?.[0]?.message?.content || "";
+}
+
 async function callModel(provider: string, model: string, systemPrompt: string, messages: any[], apiKey: string) {
-  if (provider === "openai") return callOpenAI(model, systemPrompt, messages, apiKey);
+  if (provider === "openai")    return callOpenAI(model, systemPrompt, messages, apiKey);
   if (provider === "anthropic") return callAnthropic(model, systemPrompt, messages, apiKey);
-  if (provider === "google") return callGoogle(model, systemPrompt, messages, apiKey);
-  if (provider === "manus") return callManus(model, systemPrompt, messages, apiKey);
+  if (provider === "google")    return callGoogle(model, systemPrompt, messages, apiKey);
+  if (provider === "manus")     return callManus(model, systemPrompt, messages, apiKey);
+  if (provider === "groq")      return callOpenAICompat("https://api.groq.com/openai/v1", model || "llama-3.3-70b-versatile", systemPrompt, messages, apiKey, "Groq");
+  if (provider === "deepseek")  return callOpenAICompat("https://api.deepseek.com/v1", model || "deepseek-chat", systemPrompt, messages, apiKey, "DeepSeek");
+  if (provider === "xai")       return callOpenAICompat("https://api.x.ai/v1", model || "grok-3", systemPrompt, messages, apiKey, "xAI");
   throw new Error("مزود غير معروف: " + provider);
 }
 
