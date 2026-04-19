@@ -40,8 +40,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { chatText } = body;
 
-    if (!chatText || chatText.length < 10) {
+    if (!chatText || typeof chatText !== "string") {
+      return NextResponse.json({ error: "النص المرفوع غير صالح" }, { status: 400 });
+    }
+    if (chatText.length < 10) {
       return NextResponse.json({ error: "النص المرفوع قصير جداً لفحصه" }, { status: 400 });
+    }
+    // ── الحد الأقصى: 200 ألف حرف (~150KB) ──
+    if (chatText.length > 200_000) {
+      return NextResponse.json({ error: "النص كبير جداً — الحد الأقصى 200,000 حرف" }, { status: 413 });
     }
 
     // بناء التوجيه الخاص بنا لتحليل بيانات الواتساب

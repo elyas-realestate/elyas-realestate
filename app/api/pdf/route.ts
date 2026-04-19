@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 
 function money(n: number | null | undefined) {
   if (!n) return "0";
@@ -12,6 +13,15 @@ function formatDate(d: string | null | undefined) {
 }
 
 export async function GET(req: NextRequest) {
+  // ── التحقق من هوية المستخدم ──
+  const authClient = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+  );
+  const { data: { user } } = await authClient.auth.getUser();
+  if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
+
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type"); // "invoice" | "quotation"
   const id   = searchParams.get("id");
@@ -25,7 +35,13 @@ export async function GET(req: NextRequest) {
   );
 
   const table = type === "invoice" ? "invoices" : "quotations";
-  const { data: doc, error } = await supabase.from(table).select("*").eq("id", id).single();
+  // ── التحقق أن الوثيقة تعود للمستخدم الحالي (IDOR protection) ──
+  const { data: doc, error } = await supabase
+    .from(table)
+    .select("*")
+    .eq("id", id)
+    .eq("tenant_id", user.id)
+    .single();
   if (error || !doc) return NextResponse.json({ error: "not found" }, { status: 404 });
 
   const { data: identity } = await supabase.from("broker_identity").select("broker_name, fal_license, phone").limit(1).single();

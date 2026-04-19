@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 import { createPayment, getPayment, PLAN_PRICES } from "@/lib/moyasar";
 
 export async function POST(req: NextRequest) {
   try {
+    // ── التحقق من هوية المستخدم ──
+    const authClient = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    );
+    const { data: { user } } = await authClient.auth.getUser();
+    if (!user) return NextResponse.json({ error: "غير مصرح — يرجى تسجيل الدخول" }, { status: 401 });
+
     const body = await req.json();
     const { plan, billing, card_name, card_number, card_cvc, card_month, card_year } = body;
 
