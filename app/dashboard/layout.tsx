@@ -233,7 +233,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, height: "100%", minHeight: 0 }}>
       {/* Logo */}
       <div style={{ padding: "20px 16px 16px" }}>
         <div className="flex items-center gap-3">
@@ -278,7 +278,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Main Nav */}
-      <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto" }}>
+      <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto", minHeight: 0 }}>
         {menuGroups.map((group, i) => (
           <div key={group.title} style={{ marginBottom: 12 }}>
             <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 700, color: "#5A5A62", letterSpacing: "1.2px", borderTop: i > 0 ? "1px solid rgba(198,145,76,0.08)" : "none", paddingTop: i > 0 ? 12 : 0 }}>
@@ -503,11 +503,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           className={"dash-sidebar fixed right-0 bottom-0 z-30" + (sidebarOpen ? " open" : "")}
           style={{
             top: renewalDaysLeft !== null ? 98 : 60,
-          }}
-          style={{
             width: 240,
             background: "#0D0D10",
             borderLeft: "1px solid rgba(198,145,76,0.07)",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
         >
           <SidebarContent />
