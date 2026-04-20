@@ -1,8 +1,8 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
-
+import { validateSlug } from "@/lib/slug-validation";
 
 function toSlug(value: string) {
   return value
@@ -21,6 +21,9 @@ export default function Register() {
   const [fal, setFal]           = useState("");
   const [slug, setSlug]         = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
+  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const [slugMsg, setSlugMsg]   = useState("");
+  const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState("");
@@ -36,8 +39,13 @@ export default function Register() {
     }
 
     const finalSlug = slug || toSlug(email.split("@")[0]);
-    if (!finalSlug) {
-      setError("رابط الملف الشخصي غير صالح — استخدم أحرفاً إنجليزية وأرقاماً");
+    const slugCheck = validateSlug(finalSlug);
+    if (!slugCheck.valid) {
+      setError(slugCheck.error);
+      return;
+    }
+    if (slugStatus === "taken") {
+      setError("هذا الرابط محجوز — اختر رابطاً آخر");
       return;
     }
 
@@ -105,6 +113,27 @@ export default function Register() {
     setStep("verify");
     setLoading(false);
   }
+
+  async function handleSlugInput(val: string) {
+    const cleaned = toSlug(val);
+    setSlug(cleaned);
+    setSlugTouched(true);
+    setSlugStatus("idle");
+    if (slugTimer.current) clearTimeout(slugTimer.current);
+    if (!cleaned) return;
+    const v = validateSlug(cleaned);
+    if (!v.valid) { setSlugStatus("invalid"); setSlugMsg(v.error); return; }
+    slugTimer.current = setTimeout(async () => {
+      setSlugStatus("checking");
+      const res = await fetch(`/api/slug/check?slug=${cleaned}`);
+      const data = await res.json();
+      if (data.error) { setSlugStatus("invalid"); setSlugMsg(data.error); }
+      else if (data.available) { setSlugStatus("available"); setSlugMsg("متاح ✓"); }
+      else { setSlugStatus("taken"); setSlugMsg("محجوز — جرّب اسماً آخر"); }
+    }, 600);
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("https://", "") || "waseet-pro.com";
 
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "#0A0A0C", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif", padding: "24px" }}>
@@ -226,28 +255,41 @@ export default function Register() {
               {/* رابط الملف الشخصي */}
               <div>
                 <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>
-                  رابط الملف الشخصي
-                  <span style={{ color: "#3A3A42", fontWeight: 400, marginRight: 6 }}>(يظهر في /broker/...)</span>
+                  رابط صفحتك الشخصية
+                  <span style={{ color: "#3A3A42", fontWeight: 400, marginRight: 6 }}>(يراه عملاؤك)</span>
                 </label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="text"
                     value={slug}
-                    onChange={e => { setSlug(toSlug(e.target.value)); setSlugTouched(true); }}
-                    onBlur={() => { if (!slugTouched && !slug) setSlug(toSlug(email.split("@")[0])); }}
+                    onChange={e => handleSlugInput(e.target.value)}
+                    onBlur={() => { if (!slugTouched && !slug && email) handleSlugInput(email.split("@")[0]); }}
                     className="reg-input"
                     placeholder="elyas-aldakheel"
                     dir="ltr"
-                    style={{ paddingLeft: 110 }}
+                    style={{ paddingLeft: 44, paddingRight: 130 }}
                   />
-                  <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#5A5A62", pointerEvents: "none", whiteSpace: "nowrap" }}>
-                    /broker/
+                  <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#5A5A62", pointerEvents: "none", whiteSpace: "nowrap" }}>
+                    {siteUrl}/
                   </span>
+                  {/* مؤشر الحالة */}
+                  {slugStatus === "checking" && (
+                    <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, border: "2px solid rgba(198,145,76,0.3)", borderTopColor: "#C6914C", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                  )}
+                  {slugStatus === "available" && (
+                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#4ADE80", fontSize: 16 }}>✓</span>
+                  )}
+                  {(slugStatus === "taken" || slugStatus === "invalid") && (
+                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#F87171", fontSize: 16 }}>✕</span>
+                  )}
                 </div>
-                {slug && (
-                  <p style={{ fontSize: 11, color: "#4ADE80", marginTop: 5 }}>
-                    رابطك: وسيط-برو.com/broker/{slug}
+                {slug && slugStatus !== "idle" && (
+                  <p style={{ fontSize: 11, marginTop: 5, color: slugStatus === "available" ? "#4ADE80" : slugStatus === "checking" ? "#9A9AA0" : "#F87171" }}>
+                    {slugStatus === "checking" ? "جاري الفحص..." : slugStatus === "available" ? `رابطك: ${siteUrl}/${slug}` : slugMsg}
                   </p>
+                )}
+                {slug && slugStatus === "idle" && (
+                  <p style={{ fontSize: 11, marginTop: 5, color: "#5A5A62" }}>{siteUrl}/{slug}</p>
                 )}
               </div>
 
