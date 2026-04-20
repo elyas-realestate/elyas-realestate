@@ -82,6 +82,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "حدث خطأ، حاول مرة أخرى" }, { status: 500 });
     }
 
+    // ── إشعار البريد الإلكتروني للوسيط (fire & forget) ──
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    fetch(`${siteUrl}/api/notify-broker`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tenantId: tenant_id,
+        type: "request",
+        data: {
+          "الاسم":       name,
+          "الجوال":      phone,
+          "نوع الطلب":   request_type,
+          "التصنيف":     main_category || "—",
+          "الميزانية":   budget_min || budget_max ? `${budget_min?.toLocaleString() || "—"} - ${budget_max?.toLocaleString() || "—"} ر.س` : "—",
+          "ملاحظات":     notes || "",
+        },
+      }),
+    }).catch(() => {}); // لا نوقف الرد على فشل الإيميل
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "طلب غير صحيح" }, { status: 400 });

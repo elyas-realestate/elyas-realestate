@@ -107,8 +107,26 @@ export default function PropertyDetail() {
     property.floors     && { icon: <Layers size={18} />,    label: "الأدوار",      value: property.floors },
   ].filter(Boolean) as any[];
 
+  // ── JSON-LD لتحسين ظهور العقار في نتائج جوجل ──
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waseet-pro.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.title,
+    "description": property.description || `${property.main_category || ""} ${property.sub_category || ""} للـ${property.offer_type || "بيع"} في ${property.city || ""} ${property.district || ""}`.trim(),
+    "url": `${baseUrl}/properties/${property.id}`,
+    "image": images[0] || undefined,
+    ...(property.price ? { "offers": { "@type": "Offer", "price": property.price, "priceCurrency": "SAR" } } : {}),
+    ...(property.city ? { "address": { "@type": "PostalAddress", "addressLocality": property.city, "addressRegion": property.district || "", "addressCountry": "SA" } } : {}),
+    ...(settings?.broker_name ? { "agent": { "@type": "RealEstateAgent", "name": settings.broker_name } } : {}),
+  };
+
   return (
     <div dir="rtl" style={{ fontFamily: "'Tajawal', sans-serif" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <style>{`
         @keyframes spin    { to { transform: rotate(360deg); } }
         @keyframes fadeIn  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }

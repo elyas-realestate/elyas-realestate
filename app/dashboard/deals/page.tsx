@@ -196,8 +196,24 @@ export default function Deals() {
               <input type="number" className={inp} dir="ltr" value={form.target_value} onChange={e => setForm(f => ({...f, target_value: e.target.value}))} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">العمولة المتوقعة (ر.س)</label>
-              <input type="number" className={inp} dir="ltr" value={form.expected_commission} onChange={e => setForm(f => ({...f, expected_commission: e.target.value}))} />
+              <label className="block text-sm text-[#9A9AA0] mb-2" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span>العمولة المتوقعة (ر.س)</span>
+                {form.target_value && (
+                  <div style={{ display: "flex", gap: 4 }}>
+                    {[2, 2.5, 3].map(pct => (
+                      <button
+                        key={pct}
+                        type="button"
+                        onClick={() => setForm(f => ({ ...f, expected_commission: String(Math.round(Number(f.target_value) * pct / 100)) }))}
+                        style={{ fontSize: 10, padding: "2px 7px", borderRadius: 5, background: "rgba(198,145,76,0.1)", border: "1px solid rgba(198,145,76,0.2)", color: "#C6914C", cursor: "pointer" }}
+                      >
+                        {pct}%
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </label>
+              <input type="number" className={inp} dir="ltr" value={form.expected_commission} onChange={e => setForm(f => ({...f, expected_commission: e.target.value}))} placeholder="أو اختر نسبة أعلاه" />
             </div>
             <div>
               <label className="block text-sm text-[#9A9AA0] mb-2">تاريخ الإغلاق المتوقع</label>
