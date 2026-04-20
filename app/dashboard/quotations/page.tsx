@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -156,7 +157,7 @@ export default function QuotationsPage() {
                 <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className={inp} placeholder="مثال: عرض فيلا النخيل" />
               </div>
               <div>
-                <label className={lbl}>المبلغ (ريال)</label>
+                <label className={lbl}>المبلغ (ر.س)</label>
                 <input type="number" dir="ltr" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} className={inp} placeholder="0" />
               </div>
             </div>

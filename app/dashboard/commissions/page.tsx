@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -371,7 +372,7 @@ export default function CommissionsPage() {
           {
             label: "إجمالي المحصّل",
             value: fmtNum(kpis.totalPaid),
-            sub:   "ريال سعودي",
+            sub:   "ر.س",
             icon:  Banknote,
             color: "#4ADE80",
             bg:    "rgba(74,222,128,0.08)",
@@ -379,7 +380,7 @@ export default function CommissionsPage() {
           {
             label: "عمولات معلقة",
             value: fmtNum(kpis.totalPending),
-            sub:   "ريال سعودي",
+            sub:   "ر.س",
             icon:  Clock,
             color: "#FACC15",
             bg:    "rgba(250,204,21,0.08)",
@@ -401,7 +402,7 @@ export default function CommissionsPage() {
                 acc[k] = (acc[k] || 0) + (d.commission_paid || 0);
                 return acc;
               }, {}) as Record<string, number>)
-            )) : 0) + " ريال",
+            )) : 0) + " ر.س",
             icon:  Star,
             color: "#A78BFA",
             bg:    "rgba(167,139,250,0.08)",

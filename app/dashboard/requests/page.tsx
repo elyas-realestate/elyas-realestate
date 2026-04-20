@@ -364,11 +364,11 @@ export default function RequestsPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية من (ريال)</label>
+                  <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية من (ر.س)</label>
                   <input type="number" value={form.budget_min} onChange={e => setForm({ ...form, budget_min: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
                 <div>
-                  <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية إلى (ريال)</label>
+                  <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية إلى (ر.س)</label>
                   <input type="number" value={form.budget_max} onChange={e => setForm({ ...form, budget_max: e.target.value })} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" dir="ltr" />
                 </div>
               </div>

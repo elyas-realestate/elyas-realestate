@@ -43,7 +43,7 @@ export default function SARIcon({
         userSelect: "none",
         ...style,
       }}
-      aria-label="ريال سعودي"
+      aria-label="ر.س"
     >
       ر.س
     </span>

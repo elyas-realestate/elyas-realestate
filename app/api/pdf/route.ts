@@ -149,7 +149,7 @@ export async function GET(req: NextRequest) {
     <thead>
       <tr>
         <th>الوصف</th>
-        <th style="text-align:left;width:140px;">المبلغ (ريال)</th>
+        <th style="text-align:left;width:140px;">المبلغ (ر.س)</th>
       </tr>
     </thead>
     <tbody>
@@ -163,12 +163,12 @@ export async function GET(req: NextRequest) {
   <div class="totals">
     <div class="total-row">
       <span class="total-label">المجموع قبل الضريبة:</span>
-      <span class="total-value">${money(total)} ريال</span>
+      <span class="total-value">${money(total)} ر.س</span>
     </div>
-    ${vat > 0 ? `<div class="total-row"><span class="total-label">ضريبة القيمة المضافة (15%):</span><span class="total-value">${money(vat)} ريال</span></div>` : ""}
+    ${vat > 0 ? `<div class="total-row"><span class="total-label">ضريبة القيمة المضافة (15%):</span><span class="total-value">${money(vat)} ر.س</span></div>` : ""}
     <div class="total-row grand">
       <span class="total-label">الإجمالي:</span>
-      <span class="total-value">${money(grandTotal)} ريال</span>
+      <span class="total-value">${money(grandTotal)} ر.س</span>
     </div>
   </div>
 

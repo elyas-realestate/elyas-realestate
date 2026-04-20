@@ -363,7 +363,7 @@ export default function SmartAddProperty() {
                   { key: "built_area", label: "مسطح البناء م²" },
                   { key: "rooms", label: "الغرف" },
                   { key: "bathrooms", label: "دورات المياه" },
-                  { key: "price", label: "السعر (ريال)" },
+                  { key: "price", label: "السعر (ر.س)" },
                 ].map(f => (
                   <div key={f.key}>
                     <label className={lbl}>{f.label}</label>

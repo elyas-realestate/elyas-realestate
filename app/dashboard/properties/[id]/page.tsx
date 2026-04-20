@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -86,7 +87,7 @@ export default function PropertyDetails() {
       "💼 نوع العرض: " + property.offer_type,
       "📍 الموقع: " + property.district + " — " + property.city,
       "📐 المساحة: " + (property.land_area || "—") + " م²",
-      "💰 السعر: " + (property.price ? property.price.toLocaleString() : "—") + " ريال",
+      "💰 السعر: " + (property.price ? property.price.toLocaleString() : "—") + " ر.س",
       "", "📝 " + (property.description || ""),
     ];
     if (property.location_url) lines.push("📌 " + property.location_url);

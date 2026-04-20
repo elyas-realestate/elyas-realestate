@@ -209,7 +209,7 @@ export default function MortgagePage() {
                 onChange={e => setPrice(e.target.value.replace(/,/g,"").replace(/[^\d]/g,""))}
                 placeholder="1,000,000" className={inp} dir="ltr"
               />
-              <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 6 }}>ريال سعودي</p>
+              <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 6 }}>ر.س</p>
             </div>
 
             {/* الدفعة الأولى */}

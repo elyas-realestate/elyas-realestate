@@ -143,11 +143,11 @@ export default function Deals() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">قيمة الصفقة (ريال)</label>
+              <label className="block text-sm text-[#9A9AA0] mb-2">قيمة الصفقة (ر.س)</label>
               <input name="target_value" value={form.target_value} onChange={handleChange} type="number" className={inp} style={{ color:'#F5F5F5' }} dir="ltr" />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">العمولة المتوقعة (ريال)</label>
+              <label className="block text-sm text-[#9A9AA0] mb-2">العمولة المتوقعة (ر.س)</label>
               <input name="expected_commission" value={form.expected_commission} onChange={handleChange} type="number" className={inp} style={{ color:'#F5F5F5' }} dir="ltr" />
             </div>
             <div>

@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -231,7 +232,7 @@ function CampaignsTab() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
-                <label className={lbl}>الميزانية (ريال)</label>
+                <label className={lbl}>الميزانية (ر.س)</label>
                 <input type="number" value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))} className={inp} placeholder="0" dir="ltr" />
               </div>
               <div>
@@ -407,7 +408,7 @@ const COMPARE_FIELDS: { key: string; label: string; format?: (v: any) => string 
   { key: "sub_category",  label: "النوع" },
   { key: "city",          label: "المدينة" },
   { key: "district",      label: "الحي" },
-  { key: "price",         label: "السعر (ريال)", format: v => v ? Number(v).toLocaleString("ar-SA") : "—" },
+  { key: "price",         label: "السعر (ر.س)", format: v => v ? Number(v).toLocaleString("ar-SA") : "—" },
   { key: "land_area",     label: "مساحة الأرض م²", format: v => v ? v + " م²" : "—" },
   { key: "built_area",    label: "مسطح البناء م²", format: v => v ? v + " م²" : "—" },
   { key: "rooms",         label: "الغرف", format: v => v ?? "—" },

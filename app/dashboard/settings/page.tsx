@@ -1,7 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useRef } from "react";
-import { User, Users, Building, Camera, Loader2 } from "lucide-react";
+import { User, Users, Building, Camera, Loader2, Link2, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -17,6 +17,13 @@ export default function Settings() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [slug, setSlug] = useState("");
+  const [slugInput, setSlugInput] = useState("");
+  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const [slugMsg, setSlugMsg] = useState("");
+  const [savingSlug, setSavingSlug] = useState(false);
+  const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [profile, setProfile] = useState({
     name: "إلياس الدخيل", email: "", phone: "", gender: "male", photo_url: "",
   });
@@ -28,7 +35,48 @@ export default function Settings() {
     freelance_doc: "",
   });
 
-  useEffect(() => { loadProfile(); }, []);
+  useEffect(() => { loadProfile(); loadSlug(); }, []);
+
+  async function loadSlug() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data } = await supabase.from("tenants").select("slug").eq("owner_id", user.id).limit(1).single();
+    if (data?.slug) { setSlug(data.slug); setSlugInput(data.slug); }
+  }
+
+  async function handleSlugChange(val: string) {
+    const cleaned = val.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    setSlugInput(cleaned);
+    setSlugStatus("idle");
+    if (slugTimer.current) clearTimeout(slugTimer.current);
+    if (!cleaned || cleaned === slug) return;
+    slugTimer.current = setTimeout(async () => {
+      setSlugStatus("checking");
+      const res = await fetch(`/api/slug/check?slug=${cleaned}`);
+      const data = await res.json();
+      if (data.error) { setSlugStatus("invalid"); setSlugMsg(data.error); }
+      else if (data.available) { setSlugStatus("available"); setSlugMsg("متاح ✓"); }
+      else { setSlugStatus("taken"); setSlugMsg("محجوز من حساب آخر"); }
+    }, 600);
+  }
+
+  async function handleSaveSlug() {
+    if (!slugInput || slugInput === slug) return;
+    setSavingSlug(true);
+    try {
+      const res = await fetch("/api/slug/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: slugInput }),
+      });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error || "حدث خطأ"); return; }
+      setSlug(slugInput);
+      setSlugStatus("idle");
+      toast.success("تم تحديث الرابط بنجاح!");
+    } catch { toast.error("حدث خطأ أثناء الحفظ"); }
+    finally { setSavingSlug(false); }
+  }
 
   async function loadProfile() {
     const { data: identity } = await supabase
@@ -260,6 +308,66 @@ export default function Settings() {
       {/* ═══ الحساب ═══ */}
       {activeTab === "account" && (
         <div className="max-w-2xl space-y-6">
+
+          {/* ── رابطك الشخصي ── */}
+          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.2)] rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-1">
+              <Link2 size={18} className="text-[#C6914C]" />
+              <h3 className="font-bold text-lg">رابطك الشخصي</h3>
+            </div>
+            <p className="text-[#5A5A62] text-sm mb-5">
+              هذا هو رابط صفحتك التي يراها عملاؤك — يجب أن يكون فريداً وباللغة الإنجليزية
+            </p>
+
+            {/* عرض الرابط الحالي */}
+            {slug && (
+              <a
+                href={`/${slug}`} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 mb-4 text-sm no-underline"
+                style={{ color: "#C6914C" }}
+              >
+                <span className="text-[#5A5A62]">waseet-pro.com/</span>
+                <span className="font-bold">{slug}</span>
+                <span style={{ fontSize: 11, background: "rgba(198,145,76,0.1)", border: "1px solid rgba(198,145,76,0.2)", padding: "2px 8px", borderRadius: 6 }}>فتح ↗</span>
+              </a>
+            )}
+
+            <div className="flex gap-2 items-center">
+              <div className="flex-1 relative">
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A5A62] text-sm select-none pointer-events-none">waseet-pro.com/</span>
+                <input
+                  value={slugInput}
+                  onChange={e => handleSlugChange(e.target.value)}
+                  placeholder="your-slug"
+                  dir="ltr"
+                  className={inputClass + " pr-32"}
+                  style={{ paddingRight: "8.5rem" }}
+                />
+              </div>
+              <button
+                onClick={handleSaveSlug}
+                disabled={savingSlug || slugStatus !== "available" || slugInput === slug}
+                className="px-4 py-3 rounded-lg text-sm font-medium transition disabled:opacity-40"
+                style={{ background: "rgba(198,145,76,0.15)", border: "1px solid rgba(198,145,76,0.25)", color: "#C6914C", whiteSpace: "nowrap" }}
+              >
+                {savingSlug ? <Loader2 size={16} className="animate-spin" /> : "حفظ"}
+              </button>
+            </div>
+
+            {/* حالة الفحص */}
+            {slugStatus !== "idle" && slugInput !== slug && (
+              <div className={`flex items-center gap-2 mt-2 text-sm ${slugStatus === "available" ? "text-emerald-400" : slugStatus === "checking" ? "text-[#9A9AA0]" : "text-red-400"}`}>
+                {slugStatus === "checking" && <Loader2 size={13} className="animate-spin" />}
+                {slugStatus === "available" && <CheckCircle2 size={13} />}
+                {(slugStatus === "taken" || slugStatus === "invalid") && <XCircle size={13} />}
+                <span>
+                  {slugStatus === "checking" ? "جاري الفحص..." : slugMsg}
+                </span>
+              </div>
+            )}
+            <p className="text-[#5A5A62] text-xs mt-3">أحرف إنجليزية صغيرة وأرقام وشرطة (-) فقط — 3 إلى 40 حرفاً</p>
+          </div>
+
           <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
             <h3 className="font-bold text-lg mb-6">معلومات الحساب</h3>
             <div className="space-y-4">

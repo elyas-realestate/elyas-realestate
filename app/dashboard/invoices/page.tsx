@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -163,11 +164,11 @@ export default function InvoicesPage() {
                 <input value={form.invoice_number} onChange={e => setForm(f => ({ ...f, invoice_number: e.target.value }))} className={inp} placeholder="تلقائي" dir="ltr" />
               </div>
               <div>
-                <label className={lbl}>المبلغ (ريال)</label>
+                <label className={lbl}>المبلغ (ر.س)</label>
                 <input type="number" dir="ltr" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} className={inp} />
               </div>
               <div>
-                <label className={lbl}>الضريبة (ريال)</label>
+                <label className={lbl}>الضريبة (ر.س)</label>
                 <input type="number" dir="ltr" value={form.vat_amount} onChange={e => setForm(f => ({ ...f, vat_amount: e.target.value }))} className={inp} />
               </div>
               <div>

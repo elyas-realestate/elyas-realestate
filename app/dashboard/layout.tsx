@@ -132,6 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [authorized, setAuthorized] = useState(false);
   const [newRequests, setNewRequests] = useState(0);
   const [brokerName, setBrokerName] = useState("إلياس الدخيل");
+  const [brokerSlug, setBrokerSlug] = useState("");
   const [notifCount, setNotifCount] = useState(0);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
@@ -148,12 +149,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (error || !user) { window.location.href = "/login"; return; }
     setAuthorized(true);
 
-    const [{ count }, { data: identity }] = await Promise.all([
+    const [{ count }, { data: identity }, { data: tenant }] = await Promise.all([
       supabase.from("property_requests").select("id", { count: "exact", head: true }).eq("status", "جديد"),
       supabase.from("broker_identity").select("broker_name").limit(1).single(),
+      supabase.from("tenants").select("slug").eq("owner_id", user.id).limit(1).single(),
     ]);
     setNewRequests(count || 0);
     if (identity?.broker_name) setBrokerName(identity.broker_name);
+    if (tenant?.slug) setBrokerSlug(tenant.slug);
 
     // ── Realtime subscriptions ──
     const channel = supabase
@@ -407,15 +410,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <ExternalLink size={13} />
             <span>التمويل</span>
           </Link>
-          <Link
-            href="/"
-            target="_blank"
-            className="hidden sm:flex items-center gap-1.5 no-underline transition"
-            style={{ color: "#5A5A62", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}
-          >
-            <ExternalLink size={13} />
-            <span>الموقع</span>
-          </Link>
+          {brokerSlug && (
+            <Link
+              href={`/${brokerSlug}`}
+              target="_blank"
+              className="hidden sm:flex items-center gap-1.5 no-underline transition"
+              style={{ color: "#C6914C", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", fontWeight: 600 }}
+            >
+              <ExternalLink size={13} />
+              <span>/{brokerSlug}</span>
+            </Link>
+          )}
         </div>
       </header>
 

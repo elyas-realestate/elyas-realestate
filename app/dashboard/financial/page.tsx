@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -444,7 +445,7 @@ function PnLTab({ deals }: { deals: Deal[] }) {
                 </select>
               </div>
               <div>
-                <label className={lbl}>المبلغ (ريال)</label>
+                <label className={lbl}>المبلغ (ر.س)</label>
                 <input type="number" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} className={inp} placeholder="0" dir="ltr" />
               </div>
             </div>
