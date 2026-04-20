@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
-  LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
+  LogOut, ExternalLink, Building2, LayoutDashboard,
   Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
@@ -69,12 +69,10 @@ const menuGroups: NavGroup[] = [
 ];
 
 const settingsMenu: NavItemData[] = [
-  { label: "الاشتراك",        href: "/dashboard/subscription",     icon: CreditCard },
-  { label: "تأسيس AI",      href: "/dashboard/ai-foundation",   icon: Brain      },
-  { label: "سجل التدقيق",    href: "/dashboard/audit",            icon: Shield     },
-  { label: "الإعدادات",      href: "/dashboard/settings",      icon: Settings   },
-  { label: "إعدادات الموقع", href: "/dashboard/site-settings", icon: Globe      },
-  { label: "المحرر البصري",  href: "/dashboard/visual-editor", icon: Palette    },
+  { label: "الاشتراك",     href: "/dashboard/subscription",   icon: CreditCard },
+  { label: "تأسيس AI",   href: "/dashboard/ai-foundation", icon: Brain      },
+  { label: "سجل التدقيق", href: "/dashboard/audit",          icon: Shield     },
+  { label: "الإعدادات",   href: "/dashboard/settings",       icon: Settings   },
 ];
 
 function NavItem({
@@ -233,109 +231,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     </div>
   );
 
-  const SidebarContent = () => (
-    <div style={{ display: "flex", flexDirection: "column", flex: 1, height: "100%", minHeight: 0 }}>
-      {/* Logo */}
-      <div style={{ padding: "20px 16px 16px" }}>
-        <div className="flex items-center gap-3">
-          <div
-            className="flex items-center justify-center font-cairo font-black"
-            style={{
-              width: 38, height: 38, borderRadius: 11,
-              background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
-              color: "#0A0A0C", fontSize: 17, flexShrink: 0,
-              boxShadow: "0 4px 12px rgba(198,145,76,0.3)",
-            }}
-          >
-            و
-          </div>
-          <div>
-            <div className="font-cairo font-bold" style={{ fontSize: 14, color: "#F5F5F5", lineHeight: 1.2 }}>
-              وسيط برو
-            </div>
-            <div style={{ fontSize: 10, color: "#C6914C", fontWeight: 500 }}>لوحة التحكم</div>
-          </div>
-        </div>
-      </div>
-
-      {/* New Property CTA */}
-      <div style={{ padding: "0 12px 14px" }}>
-        <Link
-          href="/dashboard/properties"
-          className="flex items-center justify-center gap-2 no-underline transition-all"
-          style={{
-            padding: "9px 12px",
-            borderRadius: 10,
-            background: "linear-gradient(135deg, rgba(198,145,76,0.18), rgba(198,145,76,0.08))",
-            border: "1px solid rgba(198,145,76,0.25)",
-            color: "#C6914C",
-            fontSize: 13,
-            fontWeight: 600,
-          }}
-        >
-          <Plus size={15} />
-          إضافة عقار
-        </Link>
-      </div>
-
-      {/* Main Nav */}
-      <nav style={{ flex: 1, padding: "0 8px", overflowY: "auto", minHeight: 0 }}>
-        {menuGroups.map((group, i) => (
-          <div key={group.title} style={{ marginBottom: 12 }}>
-            <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 700, color: "#5A5A62", letterSpacing: "1.2px", borderTop: i > 0 ? "1px solid rgba(198,145,76,0.08)" : "none", paddingTop: i > 0 ? 12 : 0 }}>
-              {group.title}
-            </div>
-            {group.items.map((item) => {
-              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-              return (
-                <NavItem
-                  key={item.href}
-                  item={item}
-                  isActive={isActive}
-                  badge={item.href === "/dashboard/requests" ? newRequests : undefined}
-                />
-              );
-            })}
-          </div>
-        ))}
-
-        <div style={{ margin: "14px 0 12px" }}>
-          <div style={{ marginBottom: 4, padding: "0 6px 6px", fontSize: 10, fontWeight: 700, color: "#5A5A62", letterSpacing: "1.2px", borderTop: "1px solid rgba(198,145,76,0.08)", paddingTop: 12 }}>
-            الإعدادات
-          </div>
-          {settingsMenu.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href);
-            return <NavItem key={item.href} item={item} isActive={isActive} />;
-          })}
-        </div>
-      </nav>
-
-      {/* Bottom Profile */}
-      <div style={{ padding: "12px 12px 16px", borderTop: "1px solid rgba(198,145,76,0.08)" }}>
-        <div className="flex items-center gap-3" style={{ padding: "10px 10px", borderRadius: 12, background: "rgba(198,145,76,0.04)" }}>
-          <div
-            className="flex items-center justify-center font-cairo font-black flex-shrink-0"
-            style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg, #C6914C, #8A5F2E)", color: "#0A0A0C", fontSize: 14 }}
-          >
-            {brokerName.charAt(0)}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div className="truncate" style={{ fontSize: 12.5, fontWeight: 600, color: "#E5E5E5", lineHeight: 1.3 }}>{brokerName}</div>
-            <div style={{ fontSize: 10, color: "#5A5A62" }}>وسيط عقاري</div>
-          </div>
-          <button
-            onClick={handleLogout}
-            title="تسجيل خروج"
-            style={{ background: "none", border: "none", cursor: "pointer", color: "#5A5A62", padding: 4, borderRadius: 6, transition: "color 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#F87171")}
-            onMouseLeave={e => (e.currentTarget.style.color = "#5A5A62")}
-          >
-            <LogOut size={15} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen" dir="rtl" style={{ background: "#0A0A0C", color: "#F5F5F5" }}>
@@ -512,7 +407,79 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             overflow: "hidden",
           }}
         >
-          <SidebarContent />
+          {/* ── Sidebar inline (no wrapper component — prevents scroll reset on navigation) ── */}
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, height: "100%", minHeight: 0 }}>
+            {/* Logo */}
+            <div style={{ padding: "20px 16px 16px" }}>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center font-cairo font-black"
+                  style={{ width:38, height:38, borderRadius:11, background:"linear-gradient(135deg,#C6914C,#8A5F2E)", color:"#0A0A0C", fontSize:17, flexShrink:0, boxShadow:"0 4px 12px rgba(198,145,76,0.3)" }}>
+                  و
+                </div>
+                <div>
+                  <div className="font-cairo font-bold" style={{ fontSize:14, color:"#F5F5F5", lineHeight:1.2 }}>وسيط برو</div>
+                  <div style={{ fontSize:10, color:"#C6914C", fontWeight:500 }}>لوحة التحكم</div>
+                </div>
+              </div>
+            </div>
+
+            {/* New Property CTA */}
+            <div style={{ padding:"0 12px 14px" }}>
+              <Link href="/dashboard/properties" className="flex items-center justify-center gap-2 no-underline transition-all"
+                style={{ padding:"9px 12px", borderRadius:10, background:"linear-gradient(135deg,rgba(198,145,76,0.18),rgba(198,145,76,0.08))", border:"1px solid rgba(198,145,76,0.25)", color:"#C6914C", fontSize:13, fontWeight:600 }}>
+                <Plus size={15} />
+                إضافة عقار
+              </Link>
+            </div>
+
+            {/* Main Nav */}
+            <nav style={{ flex:1, padding:"0 8px", overflowY:"auto", minHeight:0 }}>
+              {menuGroups.map((group, i) => (
+                <div key={group.title} style={{ marginBottom:12 }}>
+                  <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"#5A5A62", letterSpacing:"1.2px", borderTop: i>0?"1px solid rgba(198,145,76,0.08)":"none", paddingTop: i>0?12:0 }}>
+                    {group.title}
+                  </div>
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                    return (
+                      <NavItem key={item.href} item={item} isActive={isActive}
+                        badge={item.href === "/dashboard/requests" ? newRequests : undefined} />
+                    );
+                  })}
+                </div>
+              ))}
+
+              <div style={{ margin:"14px 0 12px" }}>
+                <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"#5A5A62", letterSpacing:"1.2px", borderTop:"1px solid rgba(198,145,76,0.08)", paddingTop:12 }}>
+                  الإعدادات
+                </div>
+                {settingsMenu.map((item) => {
+                  const isActive = pathname === item.href || pathname.startsWith(item.href);
+                  return <NavItem key={item.href} item={item} isActive={isActive} />;
+                })}
+              </div>
+            </nav>
+
+            {/* Bottom Profile */}
+            <div style={{ padding:"12px 12px 16px", borderTop:"1px solid rgba(198,145,76,0.08)" }}>
+              <div className="flex items-center gap-3" style={{ padding:"10px 10px", borderRadius:12, background:"rgba(198,145,76,0.04)" }}>
+                <div className="flex items-center justify-center font-cairo font-black flex-shrink-0"
+                  style={{ width:34, height:34, borderRadius:9, background:"linear-gradient(135deg,#C6914C,#8A5F2E)", color:"#0A0A0C", fontSize:14 }}>
+                  {brokerName.charAt(0)}
+                </div>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div className="truncate" style={{ fontSize:12.5, fontWeight:600, color:"#E5E5E5", lineHeight:1.3 }}>{brokerName}</div>
+                  <div style={{ fontSize:10, color:"#5A5A62" }}>وسيط عقاري</div>
+                </div>
+                <button onClick={handleLogout} title="تسجيل خروج"
+                  style={{ background:"none", border:"none", cursor:"pointer", color:"#5A5A62", padding:4, borderRadius:6, transition:"color 0.2s" }}
+                  onMouseEnter={e=>(e.currentTarget.style.color="#F87171")}
+                  onMouseLeave={e=>(e.currentTarget.style.color="#5A5A62")}>
+                  <LogOut size={15}/>
+                </button>
+              </div>
+            </div>
+          </div>
         </aside>
 
         {/* ═══════ MAIN ═══════ */}
