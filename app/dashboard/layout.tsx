@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, Globe, ExternalLink, Building2, LayoutDashboard, Palette,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle, KeyRound,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle, KeyRound, AlertTriangle,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -134,6 +134,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [brokerName, setBrokerName] = useState("إلياس الدخيل");
   const [brokerSlug, setBrokerSlug] = useState("");
   const [notifCount, setNotifCount] = useState(0);
+  const [renewalDaysLeft, setRenewalDaysLeft] = useState<number | null>(null);
+  const [renewalPlan, setRenewalPlan] = useState("");
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   useEffect(() => { checkAuth(); }, []);
@@ -149,14 +151,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (error || !user) { window.location.href = "/login"; return; }
     setAuthorized(true);
 
-    const [{ count }, { data: identity }, { data: tenant }] = await Promise.all([
+    const [{ count }, { data: identity }, { data: tenant }, { data: siteSettings }] = await Promise.all([
       supabase.from("property_requests").select("id", { count: "exact", head: true }).eq("status", "جديد"),
       supabase.from("broker_identity").select("broker_name").limit(1).single(),
       supabase.from("tenants").select("slug").eq("owner_id", user.id).limit(1).single(),
+      supabase.from("site_settings").select("plan, plan_expires_at").limit(1).single(),
     ]);
     setNewRequests(count || 0);
     if (identity?.broker_name) setBrokerName(identity.broker_name);
     if (tenant?.slug) setBrokerSlug(tenant.slug);
+
+    // ── تحقق من انتهاء الاشتراك ──
+    if (siteSettings?.plan_expires_at && siteSettings.plan !== "free") {
+      const expiresAt = new Date(siteSettings.plan_expires_at);
+      const now       = new Date();
+      const diffMs    = expiresAt.getTime() - now.getTime();
+      const diffDays  = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      if (diffDays <= 7 && diffDays > 0) {
+        setRenewalDaysLeft(diffDays);
+        setRenewalPlan(siteSettings.plan || "");
+      } else if (diffDays <= 0) {
+        setRenewalDaysLeft(0);
+        setRenewalPlan(siteSettings.plan || "");
+      }
+    }
 
     // ── Realtime subscriptions ──
     const channel = supabase
@@ -424,7 +442,52 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
-      <div className="flex" style={{ paddingTop: 60 }}>
+      {/* ═══════ RENEWAL BANNER ═══════ */}
+      {renewalDaysLeft !== null && (
+        <div
+          style={{
+            position: "fixed", top: 60, left: 0, right: 0, zIndex: 39,
+            background: renewalDaysLeft === 0
+              ? "linear-gradient(90deg, rgba(239,68,68,0.95), rgba(185,28,28,0.95))"
+              : "linear-gradient(90deg, rgba(234,179,8,0.95), rgba(161,98,7,0.95))",
+            backdropFilter: "blur(12px)",
+            padding: "9px 20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            fontSize: 13,
+            fontWeight: 600,
+            color: renewalDaysLeft === 0 ? "#fff" : "#0A0A0C",
+          }}
+        >
+          <AlertTriangle size={15} />
+          <span>
+            {renewalDaysLeft === 0
+              ? `انتهى اشتراكك (${renewalPlan}) — جدّد الآن للحفاظ على وصولك الكامل`
+              : `اشتراكك (${renewalPlan}) ينتهي خلال ${renewalDaysLeft} ${renewalDaysLeft === 1 ? "يوم" : "أيام"} — جدّد قبل الانتهاء`
+            }
+          </span>
+          <Link
+            href="/dashboard/subscription"
+            style={{
+              padding: "4px 14px",
+              borderRadius: 7,
+              background: renewalDaysLeft === 0 ? "rgba(255,255,255,0.2)" : "rgba(10,10,12,0.18)",
+              border: `1px solid ${renewalDaysLeft === 0 ? "rgba(255,255,255,0.3)" : "rgba(10,10,12,0.25)"}`,
+              color: renewalDaysLeft === 0 ? "#fff" : "#0A0A0C",
+              fontSize: 12,
+              fontWeight: 700,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            تجديد الاشتراك
+          </Link>
+        </div>
+      )}
+
+      <div className="flex" style={{ paddingTop: renewalDaysLeft !== null ? 98 : 60 }}>
 
         {/* Overlay — mobile */}
         {sidebarOpen && (
@@ -437,7 +500,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* ═══════ SIDEBAR ═══════ */}
         <aside
-          className={"dash-sidebar fixed top-[60px] right-0 bottom-0 z-30" + (sidebarOpen ? " open" : "")}
+          className={"dash-sidebar fixed right-0 bottom-0 z-30" + (sidebarOpen ? " open" : "")}
+          style={{
+            top: renewalDaysLeft !== null ? 98 : 60,
+          }}
           style={{
             width: 240,
             background: "#0D0D10",

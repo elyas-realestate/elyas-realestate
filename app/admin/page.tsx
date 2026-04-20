@@ -1,262 +1,169 @@
 "use client";
-import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import {
-  Building2, Users, TrendingUp, FileText, CheckSquare, Megaphone,
-  Scale, BarChart3, RefreshCw, Crown, Zap, Gift, AlertCircle, ChevronDown,
+  Users, TrendingUp, Gift, Zap, Crown,
+  RefreshCw, ArrowUpRight, AlertCircle,
 } from "lucide-react";
-import { toast } from "sonner";
 
-
-const PLANS = [
-  { id: "free",  name: "مجاني",     icon: Gift,  color: "#71717A" },
-  { id: "basic", name: "أساسي",     icon: Zap,   color: "#C6914C" },
-  { id: "pro",   name: "احترافي",   icon: Crown, color: "#E8B86D" },
-];
-
-type Stats = {
-  properties: number;
-  clients: number;
-  deals: number;
-  requests: number;
-  tasks: number;
-  content: number;
-  documents: number;
-  financial: number;
-};
-
-type Settings = {
+type Tenant = {
   id: string;
+  slug: string;
   plan: string;
+  is_active: boolean;
+  created_at: string;
   broker_name: string;
-  updated_at: string;
 };
 
-const STAT_CARDS = [
-  { key: "properties", label: "العقارات",      icon: Building2,  color: "#C6914C" },
-  { key: "clients",    label: "العملاء",       icon: Users,      color: "#3B82F6" },
-  { key: "deals",      label: "الصفقات",       icon: TrendingUp, color: "#10B981" },
-  { key: "requests",   label: "الطلبات",       icon: FileText,   color: "#8B5CF6" },
-  { key: "tasks",      label: "المهام",        icon: CheckSquare,color: "#F59E0B" },
-  { key: "content",    label: "المحتوى",       icon: Megaphone,  color: "#EC4899" },
-  { key: "documents",  label: "الوثائق القانونية", icon: Scale,  color: "#06B6D4" },
-  { key: "financial",  label: "تحليلات مالية", icon: BarChart3,  color: "#14B8A6" },
-];
+type ApiData = {
+  tenants: Tenant[];
+  total: number;
+  planCounts: Record<string, number>;
+};
+
+const PLAN_META: Record<string, { label: string; color: string; bg: string; Icon: typeof Gift }> = {
+  free:  { label: "مجاني",   color: "#71717A", bg: "rgba(113,113,122,0.08)", Icon: Gift  },
+  basic: { label: "أساسي",   color: "#C6914C", bg: "rgba(198,145,76,0.08)",  Icon: Zap   },
+  pro:   { label: "احترافي", color: "#E8B86D", bg: "rgba(232,184,109,0.08)", Icon: Crown },
+};
 
 export default function AdminPage() {
-  const [stats, setStats]         = useState<Stats | null>(null);
-  const [settings, setSettings]   = useState<Settings | null>(null);
-  const [loading, setLoading]     = useState(true);
-  const [planOpen, setPlanOpen]   = useState(false);
-  const [changingPlan, setChangingPlan] = useState(false);
+  const [data, setData]       = useState<ApiData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState("");
 
-  useEffect(() => { loadAll(); }, []);
+  useEffect(() => { load(); }, []);
 
-  async function loadAll() {
+  async function load() {
     setLoading(true);
-    const [
-      propsRes, clientsRes, dealsRes, reqRes,
-      tasksRes, contentRes, docsRes, finRes, settingsRes,
-    ] = await Promise.all([
-      supabase.from("properties").select("id", { count: "exact", head: true }),
-      supabase.from("clients").select("id", { count: "exact", head: true }),
-      supabase.from("deals").select("id", { count: "exact", head: true }),
-      supabase.from("requests").select("id", { count: "exact", head: true }),
-      supabase.from("tasks").select("id", { count: "exact", head: true }),
-      supabase.from("content").select("id", { count: "exact", head: true }),
-      supabase.from("legal_documents").select("id", { count: "exact", head: true }),
-      supabase.from("financial_analyses").select("id", { count: "exact", head: true }),
-      supabase.from("site_settings").select("id, plan, broker_name, updated_at").limit(1).single(),
-    ]);
-
-    setStats({
-      properties: propsRes.count || 0,
-      clients:    clientsRes.count || 0,
-      deals:      dealsRes.count || 0,
-      requests:   reqRes.count || 0,
-      tasks:      tasksRes.count || 0,
-      content:    contentRes.count || 0,
-      documents:  docsRes.count || 0,
-      financial:  finRes.count || 0,
-    });
-
-    if (settingsRes.data) setSettings(settingsRes.data);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/tenants");
+      if (!res.ok) throw new Error(await res.text());
+      setData(await res.json());
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "خطأ غير معروف");
+    }
     setLoading(false);
   }
 
-  async function changePlan(planId: string) {
-    if (!settings?.id) return;
-    setChangingPlan(true);
-    const { error } = await supabase
-      .from("site_settings")
-      .update({ plan: planId })
-      .eq("id", settings.id);
-
-    if (error) {
-      toast.error("فشل تغيير الخطة — تأكد من وجود عمود plan في site_settings");
-    } else {
-      setSettings(prev => prev ? { ...prev, plan: planId } : prev);
-      const planName = PLANS.find(p => p.id === planId)?.name || planId;
-      toast.success(`تم تغيير الخطة إلى ${planName}`);
-    }
-    setChangingPlan(false);
-    setPlanOpen(false);
-  }
-
-  const activePlan = PLANS.find(p => p.id === (settings?.plan || "free")) || PLANS[0];
+  const recentTenants = (data?.tenants || []).slice(0, 5);
+  const totalActive   = (data?.tenants || []).filter(t => t.is_active).length;
 
   return (
     <div>
       {/* ── Header ── */}
-      <div style={{ marginBottom: 32, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+      <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4 }}>نظرة عامة</h1>
-          <p style={{ fontSize: 13, color: "#52525B" }}>إحصائيات المنصة وإدارة الاشتراك</p>
+          <p style={{ fontSize: 13, color: "#52525B" }}>إحصائيات المنصة ومراقبة الوسطاء</p>
         </div>
         <button
-          onClick={loadAll}
+          onClick={load}
           disabled={loading}
           style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.18)", color: "#A78BFA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}
         >
           <RefreshCw size={14} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
           تحديث
         </button>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } } @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
       </div>
 
-      {/* ── Stats Grid ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 14, marginBottom: 28 }}>
-        {STAT_CARDS.map(card => {
-          const value = stats ? stats[card.key as keyof Stats] : 0;
-          const Icon = card.icon;
-          return (
-            <div
-              key={card.key}
-              style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "18px 16px", display: "flex", flexDirection: "column", gap: 10 }}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: `${card.color}14`, border: `1px solid ${card.color}28`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Icon size={17} style={{ color: card.color }} />
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: 26, fontWeight: 800, color: "#F4F4F5", lineHeight: 1 }}>
-                  {loading ? <span style={{ display: "inline-block", width: 40, height: 24, background: "#1C1C1E", borderRadius: 6, animation: "pulse 1.5s ease-in-out infinite" }} /> : value}
-                </div>
-                <div style={{ fontSize: 12, color: "#52525B", marginTop: 5 }}>{card.label}</div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
+      {error && (
+        <div style={{ marginBottom: 20, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
+          <AlertCircle size={14} style={{ color: "#F87171", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+        </div>
+      )}
 
-      {/* ── Two Columns ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-
-        {/* ── الاشتراك الحالي ── */}
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 20 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA", marginBottom: 16 }}>الاشتراك الحالي</h2>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: `${activePlan.color}14`, border: `1px solid ${activePlan.color}28`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <activePlan.icon size={20} style={{ color: activePlan.color }} />
-            </div>
-            <div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: activePlan.color }}>{activePlan.name}</div>
-              <div style={{ fontSize: 11, color: "#52525B" }}>
-                {settings ? `آخر تحديث: ${new Date(settings.updated_at).toLocaleDateString("ar-SA")}` : "—"}
+      {/* ── KPI Cards ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14, marginBottom: 24 }}>
+        {[
+          { label: "إجمالي الوسطاء",   value: data?.total ?? 0,                     icon: Users,       color: "#A78BFA", bg: "rgba(124,58,237,0.08)" },
+          { label: "حسابات نشطة",      value: loading ? 0 : totalActive,            icon: TrendingUp,  color: "#4ADE80", bg: "rgba(74,222,128,0.08)"  },
+          { label: "خطة مجانية",       value: data?.planCounts.free  ?? 0,           icon: Gift,        color: "#71717A", bg: "rgba(113,113,122,0.08)" },
+          { label: "خطة أساسي + احترافي", value: (data?.planCounts.basic ?? 0) + (data?.planCounts.pro ?? 0), icon: Crown, color: "#E8B86D", bg: "rgba(232,184,109,0.08)" },
+        ].map(({ label, value, icon: Icon, color, bg }) => (
+          <div key={label} style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: "18px 16px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 9, background: bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Icon size={17} style={{ color }} />
               </div>
             </div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#F4F4F5", lineHeight: 1 }}>
+              {loading ? <span style={{ display: "inline-block", width: 40, height: 26, background: "#1C1C1E", borderRadius: 6, animation: "pulse 1.5s ease-in-out infinite" }} /> : value}
+            </div>
+            <div style={{ fontSize: 12, color: "#52525B", marginTop: 6 }}>{label}</div>
           </div>
+        ))}
+      </div>
 
-          {/* Plan Switcher */}
-          <div style={{ position: "relative" }}>
-            <button
-              onClick={() => setPlanOpen(v => !v)}
-              style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: 9, background: "#18181B", border: "1px solid rgba(124,58,237,0.2)", color: "#A78BFA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}
-            >
-              <span>تغيير الخطة يدوياً</span>
-              <ChevronDown size={15} style={{ transition: "transform 0.2s", transform: planOpen ? "rotate(180deg)" : "rotate(0)" }} />
-            </button>
+      {/* ── Plan Distribution ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
 
-            {planOpen && (
-              <div style={{ position: "absolute", top: "calc(100% + 6px)", right: 0, left: 0, background: "#18181B", border: "1px solid rgba(124,58,237,0.2)", borderRadius: 10, zIndex: 50, overflow: "hidden" }}>
-                {PLANS.map(plan => (
-                  <button
-                    key={plan.id}
-                    onClick={() => changePlan(plan.id)}
-                    disabled={changingPlan || plan.id === settings?.plan}
-                    style={{
-                      width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "11px 14px",
-                      background: plan.id === settings?.plan ? `${plan.color}0A` : "transparent",
-                      border: "none", color: plan.id === settings?.plan ? plan.color : "#A1A1AA",
-                      fontSize: 13, cursor: plan.id === settings?.plan ? "default" : "pointer",
-                      fontFamily: "'Tajawal', sans-serif", textAlign: "right",
-                      opacity: changingPlan ? 0.6 : 1,
-                    }}
-                  >
-                    <plan.icon size={15} style={{ color: plan.color, flexShrink: 0 }} />
-                    <span>{plan.name}</span>
-                    {plan.id === settings?.plan && <span style={{ marginRight: "auto", fontSize: 10, color: plan.color }}>الحالية</span>}
-                  </button>
-                ))}
-              </div>
-            )}
+        {/* توزيع الخطط */}
+        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 20 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA", marginBottom: 16 }}>توزيع الخطط</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {Object.entries(PLAN_META).map(([id, meta]) => {
+              const count = data?.planCounts[id] ?? 0;
+              const total = data?.total || 1;
+              const pct   = Math.round((count / total) * 100);
+              return (
+                <div key={id}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                      <meta.Icon size={13} style={{ color: meta.color }} />
+                      <span style={{ fontSize: 13, color: "#D4D4D8" }}>{meta.label}</span>
+                    </div>
+                    <span style={{ fontSize: 12, color: "#52525B" }}>{loading ? "—" : `${count} (${pct}%)`}</span>
+                  </div>
+                  <div style={{ height: 5, borderRadius: 3, background: "#1C1C1E", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: loading ? "0%" : `${pct}%`, background: meta.color, borderRadius: 3, transition: "width 0.6s ease" }} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* ── الوسيط ── */}
+        {/* آخر المسجّلين */}
         <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 20 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA", marginBottom: 16 }}>معلومات الوسيط</h2>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA" }}>آخر المسجّلين</h2>
+            <a href="/admin/users" style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#7C3AED", textDecoration: "none" }}>
+              عرض الكل <ArrowUpRight size={12} />
+            </a>
+          </div>
 
-          {settings ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <Row label="الاسم"     value={settings.broker_name || "—"} />
-              <Row label="ID الإعدادات" value={settings.id.slice(0, 8) + "..."} mono />
+          {loading ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[1,2,3].map(i => (
+                <div key={i} style={{ height: 42, borderRadius: 8, background: "#1C1C1E", animation: "pulse 1.5s ease-in-out infinite" }} />
+              ))}
             </div>
+          ) : recentTenants.length === 0 ? (
+            <p style={{ fontSize: 13, color: "#52525B", textAlign: "center", padding: "16px 0" }}>لا يوجد مستخدمون بعد</p>
           ) : (
-            <p style={{ fontSize: 13, color: "#52525B" }}>لا توجد بيانات</p>
-          )}
-
-          <div style={{ marginTop: 20, padding: "12px 14px", borderRadius: 9, background: "rgba(234,179,8,0.05)", border: "1px solid rgba(234,179,8,0.12)" }}>
-            <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-              <AlertCircle size={14} style={{ color: "#CA8A04", flexShrink: 0, marginTop: 1 }} />
-              <p style={{ fontSize: 12, color: "#A16207", lineHeight: 1.6 }}>
-                المستخدمون المتعددون سيظهرون هنا بعد إضافة جدول <span style={{ fontFamily: "monospace", background: "rgba(234,179,8,0.1)", padding: "1px 5px", borderRadius: 3 }}>tenants</span>
-              </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {recentTenants.map(t => {
+                const meta = PLAN_META[t.plan] || PLAN_META.free;
+                return (
+                  <div key={t.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, background: "#18181B" }}>
+                    <div>
+                      <div style={{ fontSize: 13, color: "#D4D4D8", fontWeight: 500 }}>{t.broker_name || t.slug}</div>
+                      <div style={{ fontSize: 10, color: "#52525B", direction: "ltr" }}>/{t.slug}</div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                      <span style={{ fontSize: 10, color: meta.color, background: meta.bg, padding: "2px 7px", borderRadius: 5, fontWeight: 600 }}>{meta.label}</span>
+                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: t.is_active ? "#4ADE80" : "#F87171", flexShrink: 0 }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          </div>
+          )}
         </div>
       </div>
-
-      {/* ── المستخدمون (Placeholder) ── */}
-      <div style={{ marginTop: 16, background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA" }}>المستخدمون المسجّلون</h2>
-          <span style={{ fontSize: 11, color: "#52525B", background: "#18181B", border: "1px solid #27272A", borderRadius: 100, padding: "3px 10px" }}>قريباً</span>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "32px 16px", gap: 10 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Users size={22} style={{ color: "#7C3AED", opacity: 0.5 }} />
-          </div>
-          <p style={{ fontSize: 13, color: "#52525B", textAlign: "center", lineHeight: 1.7, maxWidth: 360 }}>
-            قائمة المستخدمين المسجّلين ستظهر هنا عند إضافة{" "}
-            <span style={{ fontFamily: "monospace", background: "rgba(124,58,237,0.06)", padding: "1px 6px", borderRadius: 4, color: "#A78BFA" }}>SUPABASE_SERVICE_ROLE_KEY</span>{" "}
-            في متغيرات البيئة وتفعيل جدول tenants.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Row({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-      <span style={{ fontSize: 12, color: "#52525B" }}>{label}</span>
-      <span style={{ fontSize: 13, color: "#D4D4D8", fontFamily: mono ? "monospace" : "inherit" }}>{value}</span>
     </div>
   );
 }

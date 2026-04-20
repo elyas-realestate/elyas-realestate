@@ -1,7 +1,6 @@
 "use client";
-import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { Users, Crown, Zap, Gift, RefreshCw, CheckCircle, XCircle } from "lucide-react";
+import { Users, Crown, Zap, Gift, RefreshCw, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -17,60 +16,65 @@ type Tenant = {
   plan: string;
   is_active: boolean;
   created_at: string;
+  broker_name: string;
 };
 
 export default function AdminUsersPage() {
   const [tenants, setTenants]   = useState<Tenant[]>([]);
   const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState("");
   const [changing, setChanging] = useState<string | null>(null);
 
   useEffect(() => { loadTenants(); }, []);
 
   async function loadTenants() {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("tenants")
-      .select("id, slug, plan, is_active, created_at")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      toast.error("تأكد من تشغيل SQL migration أولاً");
-    } else {
-      setTenants(data || []);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/tenants");
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      setTenants(data.tenants || []);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "خطأ غير معروف");
     }
     setLoading(false);
   }
 
-  async function toggleActive(tenant: Tenant) {
-    setChanging(tenant.id);
-    const { error } = await supabase
-      .from("tenants")
-      .update({ is_active: !tenant.is_active })
-      .eq("id", tenant.id);
-
-    if (error) {
-      toast.error("فشل التحديث");
-    } else {
-      setTenants(prev => prev.map(t => t.id === tenant.id ? { ...t, is_active: !t.is_active } : t));
-      toast.success(tenant.is_active ? "تم إيقاف الحساب" : "تم تفعيل الحساب");
+  async function patchTenant(tenantId: string, updates: Record<string, unknown>, successMsg: string) {
+    setChanging(tenantId);
+    try {
+      const res = await fetch("/api/admin/tenants", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tenantId, updates }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error || "فشل التحديث");
+      setTenants(prev => prev.map(t => t.id === tenantId ? { ...t, ...updates } : t));
+      toast.success(successMsg);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "فشل التحديث");
     }
     setChanging(null);
   }
 
-  async function changePlan(tenantId: string, plan: string) {
-    setChanging(tenantId);
-    const { error } = await supabase
-      .from("tenants")
-      .update({ plan })
-      .eq("id", tenantId);
+  async function toggleActive(tenant: Tenant) {
+    await patchTenant(
+      tenant.id,
+      { is_active: !tenant.is_active },
+      tenant.is_active ? "تم إيقاف الحساب" : "تم تفعيل الحساب"
+    );
+  }
 
-    if (error) {
-      toast.error("فشل تغيير الخطة");
-    } else {
-      setTenants(prev => prev.map(t => t.id === tenantId ? { ...t, plan } : t));
-      toast.success(`تم تغيير الخطة إلى ${PLAN_META[plan]?.label || plan}`);
-    }
-    setChanging(null);
+  async function changePlan(tenantId: string, plan: string) {
+    await patchTenant(
+      tenantId,
+      { plan },
+      `تم تغيير الخطة إلى ${PLAN_META[plan]?.label || plan}`
+    );
   }
 
   return (
@@ -93,6 +97,13 @@ export default function AdminUsersPage() {
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
 
+      {error && (
+        <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
+          <AlertCircle size={14} style={{ color: "#F87171", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+        </div>
+      )}
+
       <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden" }}>
         {loading ? (
           <div style={{ padding: 40, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#52525B", fontSize: 13 }}>
@@ -102,15 +113,13 @@ export default function AdminUsersPage() {
         ) : tenants.length === 0 ? (
           <div style={{ padding: "48px 32px", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
             <Users size={32} style={{ color: "#27272A" }} />
-            <p style={{ fontSize: 13, color: "#52525B" }}>
-              لا يوجد مستخدمون — تأكد من تشغيل SQL migration في Supabase
-            </p>
+            <p style={{ fontSize: 13, color: "#52525B" }}>لا يوجد مستخدمون مسجّلون بعد</p>
           </div>
         ) : (
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                {["الوسيط (Slug)", "الخطة", "الحالة", "تاريخ التسجيل", "إجراءات"].map(h => (
+                {["الوسيط", "الرابط", "الخطة", "الحالة", "تاريخ التسجيل", "إجراءات"].map(h => (
                   <th key={h} style={{ padding: "12px 16px", textAlign: "right", fontSize: 11, color: "#52525B", fontWeight: 600, letterSpacing: "0.05em" }}>{h}</th>
                 ))}
               </tr>
@@ -125,11 +134,23 @@ export default function AdminUsersPage() {
                     key={t.id}
                     style={{ borderBottom: i < tenants.length - 1 ? "1px solid rgba(255,255,255,0.03)" : "none", opacity: isChanging ? 0.6 : 1, transition: "opacity 0.2s" }}
                   >
+                    {/* Name */}
+                    <td style={{ padding: "14px 16px" }}>
+                      <span style={{ fontSize: 13, color: "#E4E4E7", fontWeight: 500 }}>
+                        {t.broker_name || "—"}
+                      </span>
+                    </td>
+
                     {/* Slug */}
                     <td style={{ padding: "14px 16px" }}>
-                      <code style={{ fontSize: 13, color: "#A78BFA", background: "rgba(124,58,237,0.08)", padding: "3px 8px", borderRadius: 5 }}>
-                        /broker/{t.slug}
-                      </code>
+                      <a
+                        href={`/${t.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: 12, color: "#A78BFA", background: "rgba(124,58,237,0.08)", padding: "3px 8px", borderRadius: 5, textDecoration: "none", fontFamily: "monospace" }}
+                      >
+                        /{t.slug}
+                      </a>
                     </td>
 
                     {/* Plan */}
