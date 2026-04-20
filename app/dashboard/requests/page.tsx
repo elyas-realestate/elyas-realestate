@@ -1,10 +1,11 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { FileText, Plus, Search, Filter, Eye, Pencil, Trash2, X, Save, Check, Clock, AlertCircle, CheckCircle } from "lucide-react";
+import { FileText, Plus, Search, Eye, Pencil, Trash2, X, Save, Clock, AlertCircle, CheckCircle, Sparkles, Building2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
+import { formatSAR } from "@/lib/format";
 
 
 const requestTypes = ["شراء", "إيجار", "بيع", "استثمار", "أخرى"];
@@ -31,7 +32,8 @@ const urgencyColors: Record<string, string> = {
 
 export default function RequestsPage() {
   const [requests, setRequests] = useState<any[]>([]);
-  const [clients, setClients] = useState<any[]>([]);
+  const [clients, setClients]   = useState<any[]>([]);
+  const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -48,13 +50,57 @@ export default function RequestsPage() {
   useEffect(() => { loadData(); }, []);
 
   async function loadData() {
-    const [reqRes, clientRes] = await Promise.all([
+    const [reqRes, clientRes, propRes] = await Promise.all([
       supabase.from("property_requests").select("*").order("created_at", { ascending: false }),
       supabase.from("clients").select("id, full_name, phone"),
+      supabase.from("properties").select("id, title, main_category, sub_category, offer_type, city, district, price, land_area, rooms, is_published").eq("is_published", true),
     ]);
     setRequests(reqRes.data || []);
     setClients(clientRes.data || []);
+    setProperties(propRes.data || []);
     setLoading(false);
+  }
+
+  // ── خوارزمية التطابق الذكي ──
+  function matchProperties(req: any): Array<{ property: any; score: number; reasons: string[] }> {
+    return properties.map(prop => {
+      let score = 0;
+      const reasons: string[] = [];
+
+      // تطابق التصنيف (40 نقطة)
+      if (req.main_category && prop.main_category === req.main_category) {
+        score += 40; reasons.push(`تصنيف: ${prop.main_category}`);
+      }
+      // تطابق التصنيف الفرعي (15 نقطة إضافية)
+      if (req.sub_category && prop.sub_category === req.sub_category) {
+        score += 15; reasons.push(prop.sub_category);
+      }
+      // تطابق المدينة (20 نقطة)
+      if (req.city && prop.city && prop.city === req.city) {
+        score += 20; reasons.push(`مدينة: ${prop.city}`);
+      }
+      // تطابق الحي (10 نقطة)
+      if (req.district && prop.district && prop.district === req.district) {
+        score += 10; reasons.push(`حي: ${prop.district}`);
+      }
+      // ضمن الميزانية (25 نقطة)
+      if (prop.price && (req.budget_min || req.budget_max)) {
+        const inRange = (!req.budget_min || prop.price >= Number(req.budget_min)) &&
+                        (!req.budget_max || prop.price <= Number(req.budget_max));
+        if (inRange) { score += 25; reasons.push("ضمن الميزانية"); }
+      }
+      // ضمن المساحة (10 نقطة)
+      if (prop.land_area && (req.area_min || req.area_max)) {
+        const inRange = (!req.area_min || prop.land_area >= Number(req.area_min)) &&
+                        (!req.area_max || prop.land_area <= Number(req.area_max));
+        if (inRange) { score += 10; reasons.push("ضمن المساحة المطلوبة"); }
+      }
+
+      return { property: prop, score, reasons };
+    })
+    .filter(m => m.score >= 40)          // فقط التطابقات المعقولة
+    .sort((a, b) => b.score - a.score)   // الأعلى تطابقاً أولاً
+    .slice(0, 8);                        // أفضل 8 نتائج
   }
 
   function getClientName(id: string) {
@@ -256,50 +302,105 @@ export default function RequestsPage() {
         </div>
       )}
 
-      {/* نافذة التفاصيل */}
-      {selectedRequest && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setSelectedRequest(null)}>
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" dir="rtl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-lg">تفاصيل الطلب</h3>
-              <button onClick={() => setSelectedRequest(null)} className="text-[#5A5A62] hover:text-white"><X size={18} /></button>
-            </div>
-            <div className="space-y-4">
-              {[
-                ["الكود", selectedRequest.code],
-                ["العميل", getClientName(selectedRequest.client_file_id)],
-                ["نوع الطلب", selectedRequest.request_type],
-                ["التصنيف", selectedRequest.main_category + (selectedRequest.sub_category ? " / " + selectedRequest.sub_category : "")],
-                ["المدينة", selectedRequest.city],
-                ["الحي", selectedRequest.district],
-                ["المساحة", (selectedRequest.area_min || "—") + " - " + (selectedRequest.area_max || "—") + " م²"],
-                ["المميزات المطلوبة", selectedRequest.required_features],
-                ["الأولوية", selectedRequest.urgency_level],
-                ["الحالة", selectedRequest.status],
-                ["تاريخ الإنشاء", selectedRequest.created_at ? new Date(selectedRequest.created_at).toLocaleDateString("ar-SA") : "—"],
-              ].map(([label, value], i) => (
-                <div key={i} className="flex justify-between items-start">
-                  <span className="text-[#5A5A62] text-sm">{label}</span>
-                  <span className="text-sm font-medium text-left" style={{ maxWidth: '60%' }}>{value || "—"}</span>
+      {/* نافذة التفاصيل + التطابق الذكي */}
+      {selectedRequest && (() => {
+        const matches = matchProperties(selectedRequest);
+        return (
+          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setSelectedRequest(null)}>
+            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-2xl w-full max-h-[88vh] overflow-y-auto p-6" style={{ maxWidth: 700 }} dir="rtl" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="font-bold text-lg">تفاصيل الطلب</h3>
+                <button onClick={() => setSelectedRequest(null)} className="text-[#5A5A62] hover:text-white"><X size={18} /></button>
+              </div>
+
+              {/* ── بيانات الطلب ── */}
+              <div className="space-y-3 mb-6">
+                {[
+                  ["الكود", selectedRequest.code],
+                  ["العميل", getClientName(selectedRequest.client_file_id)],
+                  ["نوع الطلب", selectedRequest.request_type],
+                  ["التصنيف", selectedRequest.main_category + (selectedRequest.sub_category ? " / " + selectedRequest.sub_category : "")],
+                  ["المدينة", selectedRequest.city],
+                  ["الحي", selectedRequest.district],
+                  ["المساحة", (selectedRequest.area_min || "—") + " - " + (selectedRequest.area_max || "—") + " م²"],
+                  ["المميزات المطلوبة", selectedRequest.required_features],
+                  ["الأولوية", selectedRequest.urgency_level],
+                  ["الحالة", selectedRequest.status],
+                ].map(([label, value], i) => value ? (
+                  <div key={i} className="flex justify-between items-start">
+                    <span className="text-[#5A5A62] text-sm">{label}</span>
+                    <span className="text-sm font-medium" style={{ maxWidth: "60%", textAlign: "left" }}>{value}</span>
+                  </div>
+                ) : null)}
+                <div className="flex justify-between items-start">
+                  <span className="text-[#5A5A62] text-sm">الميزانية</span>
+                  <span className="text-sm font-medium flex items-center gap-1">
+                    {selectedRequest.budget_min ? Number(selectedRequest.budget_min).toLocaleString() : "—"}
+                    {" - "}
+                    {selectedRequest.budget_max ? Number(selectedRequest.budget_max).toLocaleString() : "—"}
+                    <SARIcon size={12} color="secondary" />
+                  </span>
                 </div>
-              ))}
-              <div className="flex justify-between items-start">
-                <span className="text-[#5A5A62] text-sm">الميزانية</span>
-                <span className="text-sm font-medium flex items-center gap-1">
-                  {selectedRequest.budget_min ? Number(selectedRequest.budget_min).toLocaleString() : "—"}
-                  {" - "}
-                  {selectedRequest.budget_max ? Number(selectedRequest.budget_max).toLocaleString() : "—"}
-                  <SARIcon size={12} color="secondary" />
-                </span>
+              </div>
+
+              {/* ── التطابق الذكي ── */}
+              <div style={{ borderTop: "1px solid rgba(198,145,76,0.12)", paddingTop: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(198,145,76,0.1)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Sparkles size={14} style={{ color: "#C6914C" }} />
+                  </div>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#F5F5F5" }}>عقارات مقترحة</span>
+                  <span style={{ fontSize: 11, color: "#5A5A62", background: "#1C1C22", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 99, padding: "2px 8px" }}>
+                    {matches.length > 0 ? `${matches.length} نتيجة` : "لا تطابق"}
+                  </span>
+                </div>
+
+                {matches.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "20px 0", color: "#3A3A42", fontSize: 13 }}>
+                    <Building2 size={32} style={{ margin: "0 auto 8px", opacity: 0.3 }} />
+                    <p>لا توجد عقارات منشورة تطابق معايير هذا الطلب</p>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {matches.map(({ property: p, score, reasons }) => (
+                      <div key={p.id} style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10, padding: "12px 14px", display: "flex", alignItems: "center", gap: 12 }}>
+                        {/* Score ring */}
+                        <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", border: `3px solid ${score >= 90 ? "#4ADE80" : score >= 70 ? "#C6914C" : "#EAB308"}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800, color: score >= 90 ? "#4ADE80" : score >= 70 ? "#C6914C" : "#EAB308" }}>
+                          {score}%
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: "#E4E4E7", marginBottom: 3 }}>{p.title}</div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                            {reasons.map((r, i) => (
+                              <span key={i} style={{ fontSize: 10, color: "#9A9AA0", background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 4 }}>{r}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "left", flexShrink: 0 }}>
+                          {p.price && <div style={{ fontSize: 12, fontWeight: 700, color: "#4ADE80", marginBottom: 3 }}>{formatSAR(p.price, { short: true })}</div>}
+                          <a
+                            href={`/dashboard/properties/${p.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ fontSize: 10, color: "#C6914C", display: "flex", alignItems: "center", gap: 3, textDecoration: "none" }}
+                          >
+                            عرض <ExternalLink size={10} />
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 mt-5">
+                <button onClick={() => { openEdit(selectedRequest); setSelectedRequest(null); }} className="flex-1 bg-[#C6914C] hover:bg-[#A6743A] py-2 rounded-lg text-sm font-bold transition">تعديل</button>
+                <button onClick={() => handleDelete(selectedRequest.id)} className="bg-red-900/30 hover:bg-red-900/50 text-red-400 px-4 py-2 rounded-lg text-sm transition">حذف</button>
               </div>
             </div>
-            <div className="flex gap-2 mt-6">
-              <button onClick={() => { openEdit(selectedRequest); setSelectedRequest(null); }} className="flex-1 bg-[#C6914C] hover:bg-[#A6743A] py-2 rounded-lg text-sm font-bold transition">تعديل</button>
-              <button onClick={() => { handleDelete(selectedRequest.id); }} className="bg-red-900/30 hover:bg-red-900/50 text-red-400 px-4 py-2 rounded-lg text-sm transition">حذف</button>
-            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* نموذج الإضافة/التعديل */}
       {showForm && (

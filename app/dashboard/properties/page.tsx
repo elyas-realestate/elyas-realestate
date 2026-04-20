@@ -2,10 +2,11 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Eye, EyeOff, Sparkles, AlertTriangle } from "lucide-react";
+import { Plus, Search, MapPin, Eye, EyeOff, Sparkles, AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
+import { exportToCSV, PROPERTIES_EXPORT_HEADERS } from "@/lib/export";
 
 
 export default function Properties() {
@@ -65,7 +66,17 @@ export default function Properties() {
       <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "العقارات" }]} />
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <h2 className="text-2xl font-bold">العقارات</h2>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => exportToCSV(filtered, PROPERTIES_EXPORT_HEADERS, "عقارات")}
+            disabled={filtered.length === 0}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition text-sm"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#9A9AA0" }}
+            title="تصدير إلى Excel / CSV"
+          >
+            <Download size={14} />
+            تصدير
+          </button>
           <Link href="/dashboard/properties/smart-add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, rgba(198,145,76,0.15), rgba(168,93,255,0.08))', color:'#C6914C', border: '1px solid rgba(198,145,76,0.25)' }}>
             <Sparkles size={15} />
             إضافة ذكية AI

@@ -4,10 +4,11 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Plus, Search, X, Phone, MapPin, StickyNote, Pencil, Trash2,
-  Users, TrendingUp, ChevronLeft, MessageCircle, Flame, Thermometer, Snowflake,
+  Users, TrendingUp, ChevronLeft, MessageCircle, Flame, Thermometer, Snowflake, Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
+import { exportToCSV, CLIENTS_EXPORT_HEADERS } from "@/lib/export";
 
 
 const emptyForm = { full_name: "", phone: "", category: "", city: "", district: "", notes: "", budget: "" };
@@ -197,17 +198,29 @@ export default function Clients() {
             {clients.length} عميل — مرتّبون حسب درجة الاهتمام
           </p>
         </div>
-        <button
-          onClick={() => setShowAdd(v => !v)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-sm"
-          style={{
-            background: showAdd ? "#1C1C22" : "linear-gradient(135deg, #C6914C, #A6743A)",
-            color: showAdd ? "#9A9AA0" : "#0A0A0C",
-            border: showAdd ? "1px solid rgba(198,145,76,0.15)" : "none",
-          }}
-        >
-          {showAdd ? <><X size={16} /> إلغاء</> : <><Plus size={16} /> إضافة عميل</>}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => exportToCSV(sorted, CLIENTS_EXPORT_HEADERS, "عملاء")}
+            disabled={sorted.length === 0}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition text-sm"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#9A9AA0" }}
+            title="تصدير إلى Excel / CSV"
+          >
+            <Download size={14} />
+            تصدير
+          </button>
+          <button
+            onClick={() => setShowAdd(v => !v)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-sm"
+            style={{
+              background: showAdd ? "#1C1C22" : "linear-gradient(135deg, #C6914C, #A6743A)",
+              color: showAdd ? "#9A9AA0" : "#0A0A0C",
+              border: showAdd ? "1px solid rgba(198,145,76,0.15)" : "none",
+            }}
+          >
+            {showAdd ? <><X size={16} /> إلغاء</> : <><Plus size={16} /> إضافة عميل</>}
+          </button>
+        </div>
       </div>
 
       {/* ── Stats row ── */}

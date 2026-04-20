@@ -1,15 +1,84 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { MessageCircle, UploadCloud, FileText, CheckCircle2, ChevronLeft, Bot, AlertCircle } from "lucide-react";
+import { MessageCircle, UploadCloud, FileText, CheckCircle2, Bot, AlertCircle, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
+
+// ── قوالب الرسائل ──
+const MESSAGE_TEMPLATES = [
+  {
+    category: "متابعة العملاء",
+    color: "#C6914C",
+    templates: [
+      {
+        title: "متابعة طلب أولي",
+        text: `السلام عليكم {اسم العميل} 👋\nتواصلت معنا بخصوص طلب عقاري — هل ما زلت تبحث؟\nيسعدنا مساعدتك في إيجاد العقار المناسب 🏠\nفريق وسيط برو`,
+      },
+      {
+        title: "تذكير بعد الصمت",
+        text: `أهلاً {اسم العميل}،\nنأمل أن تكون بخير! لاحظنا عدم تواصلك منذ فترة.\nلدينا عقارات جديدة قد تناسب احتياجاتك تماماً.\nهل يمكنني مشاركك بعض الخيارات؟ 😊`,
+      },
+    ],
+  },
+  {
+    category: "عرض العقارات",
+    color: "#3B82F6",
+    templates: [
+      {
+        title: "إرسال عقار جديد",
+        text: `وجدت عقاراً يطابق طلبك تماماً يا {اسم العميل} 🏡\n\n✅ النوع: {نوع العقار}\n📍 الموقع: {الحي}، {المدينة}\n💰 السعر: {السعر} ر.س\n📐 المساحة: {المساحة} م²\n\nهل تودّ تحديد موعد معاينة؟`,
+      },
+      {
+        title: "عرض متعدد العقارات",
+        text: `أهلاً {اسم العميل}،\nبناءً على طلبك، إليك أفضل الخيارات المتاحة:\n\n1️⃣ {عقار 1} — {سعر 1} ر.س\n2️⃣ {عقار 2} — {سعر 2} ر.س\n3️⃣ {عقار 3} — {سعر 3} ر.س\n\nأيّها يستأثر باهتمامك أكثر؟`,
+      },
+    ],
+  },
+  {
+    category: "المعاينة والصفقة",
+    color: "#10B981",
+    templates: [
+      {
+        title: "تأكيد موعد المعاينة",
+        text: `تأكيد موعدك يا {اسم العميل} ✅\n\n📅 اليوم: {اليوم}\n⏰ الوقت: {الوقت}\n📍 العنوان: {العنوان}\n\nسأكون بانتظارك. إذا احتجت أي تعديل على الموعد أبلغني. 🙏`,
+      },
+      {
+        title: "إغلاق الصفقة",
+        text: `تهانينا {اسم العميل}! 🎉🏠\nيسعدنا إتمام صفقتك بنجاح.\n\nنتمنى لك حياةً سعيدة في منزلك الجديد.\nلا تتردد في التواصل معنا لأي خدمة مستقبلية. ⭐\n\nفريق وسيط برو`,
+      },
+    ],
+  },
+  {
+    category: "خدمة ما بعد البيع",
+    color: "#8B5CF6",
+    templates: [
+      {
+        title: "طلب تقييم الخدمة",
+        text: `أهلاً {اسم العميل}،\nشكراً لثقتك بنا! 🙏\nنودّ الاطمئنان على رضاك عن الخدمة.\nهل يمكنك تقييم تجربتك معنا من 1 إلى 5؟ ⭐\n\nملاحظتك تساعدنا على التحسن المستمر.`,
+      },
+      {
+        title: "عرض خدمات إضافية",
+        text: `مرحباً {اسم العميل}،\nنتمنى أن تكون بخير في مسكنك الجديد! 🏡\n\nنقدم لك خدمات إضافية:\n🔧 صيانة وترميم\n📋 إدارة العقار للإيجار\n💼 خدمات قانونية\n\nهل تحتاج أياً منها؟`,
+      },
+    ],
+  },
+];
 
 export default function WhatsAppPage() {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [results, setResults] = useState<any | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [expandedCat, setExpandedCat] = useState<string | null>("متابعة العملاء");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function copyTemplate(text: string, id: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  }
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -202,6 +271,71 @@ export default function WhatsAppPage() {
            </div>
         </div>
 
+      </div>
+
+      {/* ══════════ قوالب الرسائل ══════════ */}
+      <div style={{ marginTop: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <MessageCircle size={16} style={{ color: "#25D366" }} />
+          </div>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: "#F5F5F5" }}>قوالب الرسائل الجاهزة</h3>
+          <span style={{ fontSize: 11, color: "#5A5A62", background: "#1C1C22", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 99, padding: "2px 10px" }}>
+            {MESSAGE_TEMPLATES.reduce((n, c) => n + c.templates.length, 0)} قالب
+          </span>
+        </div>
+        <p style={{ fontSize: 12, color: "#5A5A62", marginBottom: 20 }}>
+          انسخ القالب بضغطة واحدة — عدّل المتغيرات بين الأقواس بالمعلومات الفعلية قبل الإرسال
+        </p>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
+          {MESSAGE_TEMPLATES.map(cat => {
+            const isOpen = expandedCat === cat.category;
+            return (
+              <div key={cat.category} style={{ background: "#16161A", border: `1px solid ${cat.color}18`, borderRadius: 14, overflow: "hidden" }}>
+                {/* Category header */}
+                <button
+                  onClick={() => setExpandedCat(isOpen ? null : cat.category)}
+                  style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "none", border: "none", cursor: "pointer", borderBottom: isOpen ? `1px solid ${cat.color}14` : "none" }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: cat.color }} />
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#E4E4E7" }}>{cat.category}</span>
+                    <span style={{ fontSize: 10, color: "#52525B" }}>{cat.templates.length} قوالب</span>
+                  </div>
+                  {isOpen ? <ChevronUp size={14} style={{ color: "#52525B" }} /> : <ChevronDown size={14} style={{ color: "#52525B" }} />}
+                </button>
+
+                {/* Templates */}
+                {isOpen && (
+                  <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 8 }}>
+                    {cat.templates.map((tpl, idx) => {
+                      const id = `${cat.category}-${idx}`;
+                      const copied = copiedId === id;
+                      return (
+                        <div key={idx} style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10, overflow: "hidden" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                            <span style={{ fontSize: 12, fontWeight: 600, color: cat.color }}>{tpl.title}</span>
+                            <button
+                              onClick={() => copyTemplate(tpl.text, id)}
+                              style={{ display: "flex", alignItems: "center", gap: 5, padding: "4px 10px", borderRadius: 7, background: copied ? "rgba(74,222,128,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${copied ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`, color: copied ? "#4ADE80" : "#9A9AA0", fontSize: 11, cursor: "pointer", transition: "all 0.2s" }}
+                            >
+                              {copied ? <Check size={11} /> : <Copy size={11} />}
+                              {copied ? "تم النسخ!" : "نسخ"}
+                            </button>
+                          </div>
+                          <pre style={{ margin: 0, padding: "10px 12px", fontSize: 12, color: "#9A9AA0", whiteSpace: "pre-wrap", lineHeight: 1.7, fontFamily: "inherit" }}>
+                            {tpl.text}
+                          </pre>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
