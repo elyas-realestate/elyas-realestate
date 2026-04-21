@@ -12,9 +12,9 @@ import {
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function fmtPrice(n: number) {
   if (!n) return null;
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2).replace(/\.?0+$/, "") + "م ﷼";
-  if (n >= 1_000)     return (n / 1_000).toFixed(0) + "ألف ﷼";
-  return n.toLocaleString("ar-SA") + " ﷼";
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2).replace(/\.?0+$/, "") + "م ر.س";
+  if (n >= 1_000)     return (n / 1_000).toFixed(0) + "ألف ر.س";
+  return n.toLocaleString("ar-SA") + " ر.س";
 }
 
 const OFFER_TYPES   = ["الكل","بيع","إيجار","استثمار","تطوير بالشراكة"];

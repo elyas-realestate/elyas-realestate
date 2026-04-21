@@ -278,7 +278,7 @@ export default function RequestsPage() {
                   <td className="px-4 py-3 text-sm text-[#9A9AA0]">{req.district || "—"}</td>
                   <td className="px-4 py-3 text-sm text-[#9A9AA0]">
                     {req.budget_min || req.budget_max ? (
-                      <span>{req.budget_min ? Number(req.budget_min).toLocaleString() : "—"} - {req.budget_max ? Number(req.budget_max).toLocaleString() : "—"}</span>
+                      <span>{req.budget_min ? Number(req.budget_min).toLocaleString("ar-SA") : "—"} - {req.budget_max ? Number(req.budget_max).toLocaleString("ar-SA") : "—"} ر.س</span>
                     ) : "—"}
                   </td>
                   <td className="px-4 py-3">

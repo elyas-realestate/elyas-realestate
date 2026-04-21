@@ -320,7 +320,7 @@ export default function SubscriptionPage() {
                 ) : (
                   <div className="flex items-end gap-1">
                     <span className="font-bold" style={{ fontSize: 28, color: plan.color }}>{plan.price}</span>
-                    <span style={{ fontSize: 13, color: "#5A5A62", marginBottom: 4 }}>ريال / شهر</span>
+                    <span style={{ fontSize: 13, color: "#5A5A62", marginBottom: 4 }}>ر.س / شهر</span>
                   </div>
                 )}
               </div>
@@ -419,8 +419,8 @@ export default function SubscriptionPage() {
                     className="flex-1 py-2 rounded-lg text-sm font-bold transition"
                     style={{ background: payModal.billing === b ? "rgba(198,145,76,0.15)" : "transparent", color: payModal.billing === b ? "#C6914C" : "#5A5A62", border: "none", cursor: "pointer" }}>
                     {b === "monthly"
-                      ? `شهري — ${PLAN_PRICES[payModal.plan]?.monthly} ريال`
-                      : `سنوي — ${PLAN_PRICES[payModal.plan]?.yearly} ريال`}
+                      ? `شهري — ${PLAN_PRICES[payModal.plan]?.monthly} ر.س`
+                      : `سنوي — ${PLAN_PRICES[payModal.plan]?.yearly} ر.س`}
                   </button>
                 ))}
               </div>

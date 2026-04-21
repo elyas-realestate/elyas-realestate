@@ -148,7 +148,7 @@ function OverviewTab({ deals }: { deals: Deal[] }) {
                 <p className="font-cairo font-bold flex items-center justify-center gap-1.5" style={{ fontSize: 22, color: "#C6914C" }}>
                   {fmtFull(Math.round(calcResult))} <SARIcon color="accent" size={18} />
                 </p>
-                <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 4 }}>شامل ضريبة القيمة المضافة: {fmtFull(Math.round(calcResult * 1.15))} ﷼</p>
+                <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 4 }}>شامل ضريبة القيمة المضافة: {fmtFull(Math.round(calcResult * 1.15))} ر.س</p>
               </div>
             )}
           </div>
@@ -243,16 +243,16 @@ function OverviewTab({ deals }: { deals: Deal[] }) {
                         <span style={{ fontSize: 11, padding: "3px 8px", borderRadius: 999, background: col + "18", color: col, fontWeight: 600 }}>{d.current_stage || "—"}</span>
                       </td>
                       <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5" }}>
-                        {val ? fmtFull(val) + " ﷼" : "—"}
+                        {val ? fmtFull(val) + " ر.س" : "—"}
                       </td>
                       <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#4ADE80" }}>
-                        {comm ? fmtFull(comm) + " ﷼" : "—"}
+                        {comm ? fmtFull(comm) + " ر.س" : "—"}
                       </td>
                       <td className="px-4 py-3" style={{ fontSize: 13, color: "#FACC15" }}>
-                        {comm ? fmtFull(vat) + " ﷼" : "—"}
+                        {comm ? fmtFull(vat) + " ر.س" : "—"}
                       </td>
                       <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#C6914C" }}>
-                        {comm ? fmtFull(comm + vat) + " ﷼" : "—"}
+                        {comm ? fmtFull(comm + vat) + " ر.س" : "—"}
                       </td>
                     </tr>
                   );
@@ -359,7 +359,7 @@ function PnLTab({ deals }: { deals: Deal[] }) {
               <k.icon size={15} style={{ color: k.color }} />
               <p style={{ fontSize: 11, color: "#5A5A62" }}>{k.label}</p>
             </div>
-            <p className="font-cairo font-bold" style={{ fontSize: 20, color: k.color }}>{fmtFull(k.val)} <span style={{ fontSize: 13 }}>﷼</span></p>
+            <p className="font-cairo font-bold" style={{ fontSize: 20, color: k.color }}>{fmtFull(k.val)} <span style={{ fontSize: 13 }}>ر.س</span></p>
           </div>
         ))}
       </div>
@@ -412,9 +412,9 @@ function PnLTab({ deals }: { deals: Deal[] }) {
                 return (
                   <tr key={i} style={{ borderBottom: "1px solid rgba(198,145,76,0.04)" }}>
                     <td className="px-4 py-3" style={{ fontSize: 13, color: "#E5E5E5", fontWeight: 600 }}>{arabicMonth(r.month)}</td>
-                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#4ADE80", fontWeight: 700 }}>{r.income ? fmtFull(r.income) + " ﷼" : "—"}</td>
-                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#F87171", fontWeight: 700 }}>{r.expenses ? fmtFull(r.expenses) + " ﷼" : "—"}</td>
-                    <td className="px-4 py-3" style={{ fontSize: 13, color: profitColor, fontWeight: 700 }}>{(r.income || r.expenses) ? fmtFull(r.profit) + " ﷼" : "—"}</td>
+                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#4ADE80", fontWeight: 700 }}>{r.income ? fmtFull(r.income) + " ر.س" : "—"}</td>
+                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#F87171", fontWeight: 700 }}>{r.expenses ? fmtFull(r.expenses) + " ر.س" : "—"}</td>
+                    <td className="px-4 py-3" style={{ fontSize: 13, color: profitColor, fontWeight: 700 }}>{(r.income || r.expenses) ? fmtFull(r.profit) + " ر.س" : "—"}</td>
                     <td className="px-4 py-3" style={{ fontSize: 13, color: "#C6914C" }}>{margin !== "—" ? margin + "%" : "—"}</td>
                   </tr>
                 );
@@ -490,7 +490,7 @@ function PnLTab({ deals }: { deals: Deal[] }) {
                   <span style={{ fontSize: 11, color: "#3A3A44" }}>{new Date(e.expense_date).toLocaleDateString("ar-SA")}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span style={{ fontSize: 14, fontWeight: 700, color: "#F87171" }}>{fmtFull(e.amount)} ﷼</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#F87171" }}>{fmtFull(e.amount)} ر.س</span>
                   <button onClick={() => deleteExpense(e.id)}
                     style={{ background: "none", border: "none", color: "#3A3A44", cursor: "pointer", padding: 4 }}>
                     <Trash2 size={13} />
@@ -536,7 +536,7 @@ function VATTab({ deals }: { deals: Deal[] }) {
         ].map((k, i) => (
           <div key={i} className="rounded-2xl p-5 text-center" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
             <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 8 }}>{k.label}</p>
-            <p className="font-cairo font-bold" style={{ fontSize: 22, color: k.color }}>{k.val} <span style={{ fontSize: 14 }}>﷼</span></p>
+            <p className="font-cairo font-bold" style={{ fontSize: 22, color: k.color }}>{k.val} <span style={{ fontSize: 14 }}>ر.س</span></p>
           </div>
         ))}
       </div>
@@ -582,7 +582,7 @@ function VATTab({ deals }: { deals: Deal[] }) {
             ].map((r, i) => (
               <div key={i} className="rounded-xl p-4 text-center" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.1)" }}>
                 <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 6 }}>{r.label}</p>
-                <p className="font-cairo font-bold" style={{ fontSize: 18, color: r.color }}>{r.val} ﷼</p>
+                <p className="font-cairo font-bold" style={{ fontSize: 18, color: r.color }}>{r.val} ر.س</p>
               </div>
             ))}
           </div>
@@ -610,18 +610,18 @@ function VATTab({ deals }: { deals: Deal[] }) {
                 return (
                   <tr key={d.id} style={{ borderBottom: "1px solid rgba(198,145,76,0.04)" }}>
                     <td className="px-4 py-3" style={{ fontSize: 13, color: "#E5E5E5" }}>{d.title || "—"}</td>
-                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#C6914C", fontWeight: 700 }}>{fmtFull(comm)} ﷼</td>
-                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#FACC15", fontWeight: 700 }}>{fmtFull(vat)} ﷼</td>
-                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#4ADE80", fontWeight: 700 }}>{fmtFull(comm + vat)} ﷼</td>
+                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#C6914C", fontWeight: 700 }}>{fmtFull(comm)} ر.س</td>
+                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#FACC15", fontWeight: 700 }}>{fmtFull(vat)} ر.س</td>
+                    <td className="px-4 py-3" style={{ fontSize: 13, color: "#4ADE80", fontWeight: 700 }}>{fmtFull(comm + vat)} ر.س</td>
                   </tr>
                 );
               })}
               {/* Total row */}
               <tr style={{ background: "rgba(198,145,76,0.04)" }}>
                 <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#E5E5E5" }}>الإجمالي</td>
-                <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#C6914C" }}>{fmtFull(Math.round(totalComm))} ﷼</td>
-                <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#FACC15" }}>{fmtFull(Math.round(totalVAT))} ﷼</td>
-                <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#4ADE80" }}>{fmtFull(Math.round(totalComm + totalVAT))} ﷼</td>
+                <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#C6914C" }}>{fmtFull(Math.round(totalComm))} ر.س</td>
+                <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#FACC15" }}>{fmtFull(Math.round(totalVAT))} ر.س</td>
+                <td className="px-4 py-3" style={{ fontSize: 13, fontWeight: 700, color: "#4ADE80" }}>{fmtFull(Math.round(totalComm + totalVAT))} ر.س</td>
               </tr>
             </tbody>
           </table>
@@ -683,7 +683,7 @@ function ROITab({ deals }: { deals: Deal[] }) {
                       <div>
                         <p style={{ fontSize: 13, fontWeight: 600, color: "#E5E5E5" }}>{d.title || "—"}</p>
                         <p style={{ fontSize: 11, color: "#5A5A62" }}>
-                          قيمة: {fmtFull(Number(d.target_value))} ﷼ · عمولة: {fmtFull(Number(d.expected_commission))} ﷼
+                          قيمة: {fmtFull(Number(d.target_value))} ر.س · عمولة: {fmtFull(Number(d.expected_commission))} ر.س
                         </p>
                       </div>
                     </div>
@@ -756,9 +756,9 @@ function CashFlowTab({ deals }: { deals: Deal[] }) {
       {/* KPIs */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "إجمالي الدخل (6 أشهر)", val: fmt(totalIncome) + " ﷼", color: "#4ADE80" },
-          { label: "إجمالي المصروفات", val: fmt(totalExpense) + " ﷼", color: "#F87171" },
-          { label: "صافي التدفق", val: fmt(netCash) + " ﷼", color: netCash >= 0 ? "#4ADE80" : "#F87171" },
+          { label: "إجمالي الدخل (6 أشهر)", val: fmt(totalIncome) + " ر.س", color: "#4ADE80" },
+          { label: "إجمالي المصروفات", val: fmt(totalExpense) + " ر.س", color: "#F87171" },
+          { label: "صافي التدفق", val: fmt(netCash) + " ر.س", color: netCash >= 0 ? "#4ADE80" : "#F87171" },
         ].map((k, i) => (
           <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
             <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6 }}>{k.label}</p>
@@ -818,10 +818,10 @@ function CashFlowTab({ deals }: { deals: Deal[] }) {
                   {m.forecast && <span style={{ fontSize: 9, padding: "1px 6px", borderRadius: 4, background: "rgba(198,145,76,0.1)", color: "#C6914C" }}>توقع</span>}
                 </div>
                 <div className="flex gap-6">
-                  <span style={{ color: "#4ADE80" }}>+{fmtFull(m.income)} ﷼</span>
-                  <span style={{ color: "#F87171" }}>-{fmtFull(m.expense)} ﷼</span>
+                  <span style={{ color: "#4ADE80" }}>+{fmtFull(m.income)} ر.س</span>
+                  <span style={{ color: "#F87171" }}>-{fmtFull(m.expense)} ر.س</span>
                   <span style={{ color: m.income - m.expense >= 0 ? "#E5E5E5" : "#F87171", fontWeight: 700 }}>
-                    {fmtFull(m.income - m.expense)} ﷼
+                    {fmtFull(m.income - m.expense)} ر.س
                   </span>
                 </div>
               </div>

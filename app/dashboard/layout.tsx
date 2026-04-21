@@ -183,7 +183,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         setNewRequests(n => n + 1);
         setNotifCount(n => n + 1);
         toast("🏠 طلب عقار جديد", {
-          description: `${r.request_type || "طلب"} · ${r.main_category || ""} · ميزانية ${r.budget_min ? Number(r.budget_min).toLocaleString() + " ﷼" : "غير محددة"}`,
+          description: `${r.request_type || "طلب"} · ${r.main_category || ""} · ميزانية ${r.budget_min ? Number(r.budget_min).toLocaleString() + " ر.س" : "غير محددة"}`,
           action: { label: "عرض", onClick: () => { window.location.href = "/dashboard/requests"; } },
           duration: 7000,
         });

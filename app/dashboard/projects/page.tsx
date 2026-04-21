@@ -99,7 +99,7 @@ function UnitRow({ unit, onUpdated, onDeleted }: { unit: any; onUpdated: () => v
         <span style={{ fontSize: 12, color: "#5A5A62" }}>{unit.unit_type || "—"}</span>
         <span style={{ fontSize: 12, color: "#5A5A62" }}>{unit.floor ? `دور ${unit.floor}` : "—"}</span>
         <span style={{ fontSize: 12, color: "#9A9AA0" }}>{unit.area ? unit.area + " م²" : "—"}</span>
-        <span style={{ fontSize: 12, fontWeight: 600, color: "#C6914C" }}>{unit.price ? fmtNum(unit.price) + " ﷼" : "—"}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: "#C6914C" }}>{unit.price ? fmtNum(unit.price) + " ر.س" : "—"}</span>
         <span className="flex items-center gap-1.5 rounded-full px-2.5 py-0.5" style={{ background: cfg.bg, color: cfg.color, fontSize: 11, fontWeight: 600, width: "fit-content" }}>
           {unit.status}
           {unit.client_name && <span style={{ fontSize: 10, color: cfg.color, opacity: 0.7 }}>· {unit.client_name}</span>}

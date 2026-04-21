@@ -206,7 +206,7 @@ export default function PropertyDetails() {
               </p>
               {property.land_area && property.price && (
                 <p style={{ fontSize: 11, color: "#5A5A62" }}>
-                  {Math.round(property.price / property.land_area).toLocaleString()} ﷼/م²
+                  {Math.round(property.price / property.land_area).toLocaleString("ar-SA")} ر.س/م²
                 </p>
               )}
             </div>
@@ -297,11 +297,11 @@ export default function PropertyDetails() {
                   <div className="flex items-center justify-between mt-4 pt-4" style={{ borderTop: "1px solid rgba(198,145,76,0.06)" }}>
                     <div>
                       <p style={{ fontSize: 11, color: "#5A5A62" }}>سعر المتر — عقارك</p>
-                      <p className="font-cairo font-bold" style={{ fontSize: 15, color: "#C6914C" }}>{Math.round(marketStats.myPPM).toLocaleString()} ﷼/م²</p>
+                      <p className="font-cairo font-bold" style={{ fontSize: 15, color: "#C6914C" }}>{Math.round(marketStats.myPPM).toLocaleString("ar-SA")} ر.س/م²</p>
                     </div>
                     <div className="text-left">
                       <p style={{ fontSize: 11, color: "#5A5A62" }}>متوسط سعر المتر</p>
-                      <p className="font-cairo font-bold" style={{ fontSize: 15, color: "#60A5FA" }}>{Math.round(marketStats.avgPPM).toLocaleString()} ﷼/م²</p>
+                      <p className="font-cairo font-bold" style={{ fontSize: 15, color: "#60A5FA" }}>{Math.round(marketStats.avgPPM).toLocaleString("ar-SA")} ر.س/م²</p>
                     </div>
                   </div>
                 )}
@@ -345,7 +345,7 @@ export default function PropertyDetails() {
                       </p>
                       <p style={{ fontSize: 11, color: "#9A9AA0", lineHeight: 1.7 }}>
                         {overpriced
-                          ? `السعر أعلى من متوسط السوق بـ ${Math.round(marketStats.diff)}%. سعر مقترح للتنافسية: ${suggested.toLocaleString()} ﷼`
+                          ? `السعر أعلى من متوسط السوق بـ ${Math.round(marketStats.diff)}%. سعر مقترح للتنافسية: ${suggested.toLocaleString("ar-SA")} ر.س`
                           : `السعر أقل من متوسط السوق بـ ${Math.abs(Math.round(marketStats.diff))}%. يمكن رفعه مع الحفاظ على تنافسيته.`
                         }
                       </p>
@@ -365,7 +365,7 @@ export default function PropertyDetails() {
                           <div key={i} className="flex items-center justify-between gap-2 p-2.5 rounded-xl" style={{ background: "#1C1C22" }}>
                             <div className="flex-1 min-w-0">
                               <p className="truncate" style={{ fontSize: 12, color: "#E5E5E5" }}>{c.title}</p>
-                              <p style={{ fontSize: 10, color: "#5A5A62" }}>{c.district}{ppm ? ` · ${ppm.toLocaleString()} ﷼/م²` : ""}</p>
+                              <p style={{ fontSize: 10, color: "#5A5A62" }}>{c.district}{ppm ? ` · ${ppm.toLocaleString("ar-SA")} ر.س/م²` : ""}</p>
                             </div>
                             <div className="text-left flex-shrink-0">
                               <p className="font-cairo font-bold" style={{ fontSize: 13, color: "#C6914C" }}>{fmtPrice(c.price)}</p>

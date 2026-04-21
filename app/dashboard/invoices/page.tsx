@@ -130,8 +130,8 @@ export default function InvoicesPage() {
         {[
           { label: "إجمالي الفواتير", val: kpis.total, color: "#C6914C" },
           { label: "غير مدفوعة", val: kpis.unpaidCount, color: "#F87171" },
-          { label: "مبالغ مستحقة", val: fmtNum(kpis.unpaidAmount) + " ﷼", color: "#FACC15" },
-          { label: "إجمالي المحصّل", val: fmtNum(kpis.paidAmount) + " ﷼", color: "#4ADE80" },
+          { label: "مبالغ مستحقة", val: fmtNum(kpis.unpaidAmount) + " ر.س", color: "#FACC15" },
+          { label: "إجمالي المحصّل", val: fmtNum(kpis.paidAmount) + " ر.س", color: "#4ADE80" },
         ].map((k, i) => (
           <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
             <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6 }}>{k.label}</p>
@@ -216,12 +216,12 @@ export default function InvoicesPage() {
                     <div className="flex gap-4 flex-wrap" style={{ fontSize: 12, color: "#5A5A62" }}>
                       {inv.client_name && <span>👤 {inv.client_name}</span>}
                       {inv.due_date && <span>📅 {new Date(inv.due_date).toLocaleDateString("ar-SA")}</span>}
-                      {inv.vat_amount > 0 && <span>🧾 ضريبة: {fmtNum(inv.vat_amount)} ﷼</span>}
+                      {inv.vat_amount > 0 && <span>🧾 ضريبة: {fmtNum(inv.vat_amount)} ر.س</span>}
                     </div>
                   </div>
                   <div className="text-left">
                     <p className="font-cairo font-bold" style={{ fontSize: 20, color: inv.status === "مدفوعة" ? "#4ADE80" : "#C6914C" }}>
-                      {fmtNum(total)} <span style={{ fontSize: 12 }}>﷼</span>
+                      {fmtNum(total)} <span style={{ fontSize: 12 }}>ر.س</span>
                     </p>
                   </div>
                 </div>

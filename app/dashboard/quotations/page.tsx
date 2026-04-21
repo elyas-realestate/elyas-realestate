@@ -129,7 +129,7 @@ export default function QuotationsPage() {
           { label: "إجمالي العروض", val: kpis.total, icon: FileText, color: "#C6914C" },
           { label: "بانتظار الرد", val: kpis.pending, icon: Send, color: "#60A5FA" },
           { label: "مقبولة", val: kpis.accepted, icon: CheckCircle, color: "#4ADE80" },
-          { label: "قيمة المقبولة", val: fmtNum(kpis.totalAmount) + " ﷼", icon: SARIcon, color: "#C6914C", isSar: true },
+          { label: "قيمة المقبولة", val: fmtNum(kpis.totalAmount) + " ر.س", icon: SARIcon, color: "#C6914C", isSar: true },
         ].map((k, i) => (
           <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
             <div className="flex items-center justify-between mb-2">
@@ -229,7 +229,7 @@ export default function QuotationsPage() {
                   </div>
                   <div className="text-left">
                     <p className="font-cairo font-bold" style={{ fontSize: 18, color: "#C6914C" }}>
-                      {fmtNum(q.amount || 0)} <span style={{ fontSize: 12 }}>﷼</span>
+                      {fmtNum(q.amount || 0)} <span style={{ fontSize: 12 }}>ر.س</span>
                     </p>
                   </div>
                 </div>

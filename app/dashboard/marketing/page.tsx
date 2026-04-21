@@ -175,7 +175,7 @@ function CampaignsTab() {
           { label: "إجمالي الحملات", value: kpi.total,          icon: Megaphone,  color: "#C6914C" },
           { label: "حملات نشطة",     value: kpi.active,         icon: Play,        color: "#4ADE80" },
           { label: "إجمالي العملاء", value: fmtNum(kpi.leads),  icon: Users,       color: "#A78BFA" },
-          { label: "الميزانية النشطة", value: fmtNum(kpi.budget) + " ﷼", icon: DollarSign, color: "#FACC15" },
+          { label: "الميزانية النشطة", value: fmtNum(kpi.budget) + " ر.س", icon: DollarSign, color: "#FACC15" },
         ].map((k, i) => (
           <div key={i} className="rounded-2xl p-4" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
             <div className="flex items-center justify-between mb-2">
@@ -494,7 +494,7 @@ function ComparisonTab() {
                 </div>
                 {p.price && (
                   <span style={{ fontSize: 12, color: "#C6914C", fontWeight: 700, flexShrink: 0 }}>
-                    {Number(p.price).toLocaleString("ar-SA")} ﷼
+                    {Number(p.price).toLocaleString("ar-SA")} ر.س
                   </span>
                 )}
               </button>

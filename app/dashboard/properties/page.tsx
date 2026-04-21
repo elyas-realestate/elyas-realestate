@@ -236,7 +236,7 @@ export default function Properties() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="font-bold flex items-center gap-1" style={{ color:'#C6914C', fontSize: 15 }}>
-                      {property.price?.toLocaleString()} <SARIcon size={12} color="accent" />
+                      {property.price?.toLocaleString("ar-SA")} <SARIcon size={12} color="accent" />
                     </span>
                     <span className="text-xs" style={{ color:'#5A5A62' }}>{property.main_category}</span>
                   </div>

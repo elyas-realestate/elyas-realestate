@@ -77,10 +77,10 @@ function AmortizationTable({ loan, annualRate, years }: { loan: number; annualRa
               {rows.map(r => (
                 <tr key={r.month} style={{ borderBottom: "1px solid rgba(198,145,76,0.04)" }}>
                   <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#9A9AA0" }}>{r.month}</td>
-                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#E5E5E5", fontWeight: 600 }}>{fmtFull(r.payment)} ﷼</td>
-                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#4ADE80" }}>{fmtFull(r.principal)} ﷼</td>
-                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#F87171" }}>{fmtFull(r.interest)} ﷼</td>
-                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#C6914C" }}>{fmtFull(r.balance)} ﷼</td>
+                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#E5E5E5", fontWeight: 600 }}>{fmtFull(r.payment)} ر.س</td>
+                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#4ADE80" }}>{fmtFull(r.principal)} ر.س</td>
+                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#F87171" }}>{fmtFull(r.interest)} ر.س</td>
+                  <td className="px-4 py-2.5" style={{ fontSize: 12, color: "#C6914C" }}>{fmtFull(r.balance)} ر.س</td>
                 </tr>
               ))}
             </tbody>
@@ -228,7 +228,7 @@ export default function MortgagePage() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, color: "#5A5A62", display: "block", marginBottom: 5 }}>المبلغ ﷼</label>
+                  <label style={{ fontSize: 11, color: "#5A5A62", display: "block", marginBottom: 5 }}>المبلغ ر.س</label>
                   <input
                     type="number" min={0} value={downAmt}
                     onChange={e => onDownAmtChange(Number(e.target.value))}
@@ -304,7 +304,7 @@ export default function MortgagePage() {
                 <p className="font-cairo font-black" style={{ fontSize: 42, color: "#C6914C", lineHeight: 1 }}>
                   {fmtFull(monthly)}
                 </p>
-                <span style={{ fontSize: 20, color: "#8A5F2E", fontWeight: 700 }}>﷼</span>
+                <span style={{ fontSize: 20, color: "#8A5F2E", fontWeight: 700 }}>ر.س</span>
               </div>
               <p style={{ fontSize: 12, color: "#5A5A62" }}>لمدة {years} سنة ({years * 12} شهراً)</p>
 
@@ -319,7 +319,7 @@ export default function MortgagePage() {
                 ].map((r, i) => (
                   <div key={i}>
                     <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 3 }}>{r.label}</p>
-                    <p style={{ fontSize: 16, fontWeight: 700, color: r.color }}>{r.val} <span style={{ fontSize: 12 }}>﷼</span></p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: r.color }}>{r.val} <span style={{ fontSize: 12 }}>ر.س</span></p>
                   </div>
                 ))}
               </div>
@@ -370,10 +370,10 @@ export default function MortgagePage() {
                         <p style={{ fontSize: 11, color: "#5A5A62" }}>{bank.rate}% سنوياً</p>
                       </div>
                       <div className="text-left">
-                        <p style={{ fontSize: 16, fontWeight: 700, color: bank.color }}>{fmtFull(m)} <span style={{ fontSize: 11 }}>﷼/شهر</span></p>
+                        <p style={{ fontSize: 16, fontWeight: 700, color: bank.color }}>{fmtFull(m)} <span style={{ fontSize: 11 }}>ر.س/شهر</span></p>
                         {!isSelected && diff !== 0 && (
                           <p style={{ fontSize: 11, color: diff > 0 ? "#F87171" : "#4ADE80" }}>
-                            {diff > 0 ? "+" : ""}{fmtFull(diff)} ﷼
+                            {diff > 0 ? "+" : ""}{fmtFull(diff)} ر.س
                           </p>
                         )}
                         {isSelected && <p style={{ fontSize: 10, color: "#C6914C" }}>✓ محدد</p>}
