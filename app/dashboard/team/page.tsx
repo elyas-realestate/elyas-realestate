@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import {
   Users, UserPlus, Trash2, Crown, Shield, User, Eye,
-  Mail, Clock, CheckCircle2, X,
+  Mail, Clock, CheckCircle2, X, Copy,
 } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -118,6 +118,13 @@ export default function TeamPage() {
       loadAll();
     }
     setSubmitting(false);
+  }
+
+  function copyInviteMessage(m: Member) {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const roleLabel = ROLE_CONFIG[m.role]?.label || m.role;
+    const msg = `السلام عليكم ${m.full_name || ""}\n\nتم دعوتك للانضمام لفريقنا في منصة وسيط برو بصلاحية: ${roleLabel}.\n\nسجّل باستخدام هذا البريد:\n${m.email}\n\nرابط التسجيل:\n${origin}/login\n\nبعد التسجيل، ستصبح عضواً نشطاً في الفريق تلقائياً.`;
+    navigator.clipboard.writeText(msg).then(() => toast.success("تم نسخ رسالة الدعوة"));
   }
 
   async function handleDelete(member: Member) {
@@ -237,6 +244,15 @@ export default function TeamPage() {
                     {m.activated_at && <div>نشّط: {fmtDate(m.activated_at)}</div>}
                   </div>
 
+                  {canManage && m.status === "invited" && (
+                    <button
+                      onClick={() => copyInviteMessage(m)}
+                      className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg transition"
+                      title="نسخ رسالة الدعوة"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  )}
                   {canManage && m.role !== "owner" && (
                     <button
                       onClick={() => handleDelete(m)}
