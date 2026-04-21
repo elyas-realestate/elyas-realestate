@@ -69,6 +69,7 @@ const menuGroups: NavGroup[] = [
 ];
 
 const settingsMenu: NavItemData[] = [
+  { label: "الفريق",       href: "/dashboard/team",           icon: Users      },
   { label: "الاشتراك",     href: "/dashboard/subscription",   icon: CreditCard },
   { label: "تأسيس AI",   href: "/dashboard/ai-foundation", icon: Brain      },
   { label: "سجل التدقيق", href: "/dashboard/audit",          icon: Shield     },
@@ -150,15 +151,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (error || !user) { window.location.href = "/login"; return; }
     setAuthorized(true);
 
-    const [{ count }, { data: identity }, { data: tenant }, { data: siteSettings }] = await Promise.all([
+    const [{ count }, { data: identity }, { data: ownedTenant }, { data: siteSettings }, { data: membership }] = await Promise.all([
       supabase.from("property_requests").select("id", { count: "exact", head: true }).eq("status", "جديد"),
-      supabase.from("broker_identity").select("broker_name").limit(1).single(),
-      supabase.from("tenants").select("slug").eq("owner_id", user.id).limit(1).single(),
-      supabase.from("site_settings").select("plan, plan_expires_at").limit(1).single(),
+      supabase.from("broker_identity").select("broker_name").limit(1).maybeSingle(),
+      supabase.from("tenants").select("slug").eq("owner_id", user.id).maybeSingle(),
+      supabase.from("site_settings").select("plan, plan_expires_at").limit(1).maybeSingle(),
+      supabase.from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle(),
     ]);
     setNewRequests(count || 0);
     if (identity?.broker_name) setBrokerName(identity.broker_name);
-    if (tenant?.slug) setBrokerSlug(tenant.slug);
+    // resolve slug: owner first, else fetch by membership tenant_id
+    if (ownedTenant?.slug) {
+      setBrokerSlug(ownedTenant.slug);
+    } else if (membership?.tenant_id) {
+      const { data: memberTenant } = await supabase
+        .from("tenants").select("slug").eq("id", membership.tenant_id).maybeSingle();
+      if (memberTenant?.slug) setBrokerSlug(memberTenant.slug);
+    }
 
     // ── تحقق من انتهاء الاشتراك ──
     if (siteSettings?.plan_expires_at && siteSettings.plan !== "free") {
