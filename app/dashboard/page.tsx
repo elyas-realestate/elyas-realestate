@@ -1,5 +1,6 @@
 "use client";
 
+import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -78,8 +79,6 @@ export default function DashboardPage() {
     }
   }
 
-  const formatCurrency = (val: number) => new Intl.NumberFormat("ar-SA", { maximumFractionDigits: 0 }).format(val);
-
   return (
     <div className="space-y-6 pb-12" dir="rtl">
       
@@ -133,7 +132,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "إجمالي العقارات", value: stats.properties, icon: Building2, color: "#C6914C", trend: "+12%" },
-          { label: "حجم المبيعات المؤكدة", value: formatCurrency(stats.revenue) + " ر.س", icon: CircleDollarSign, color: "#4ADE80", trend: "+8.4%" },
+          { label: "حجم المبيعات المؤكدة", value: formatSAR(stats.revenue), icon: CircleDollarSign, color: "#4ADE80", trend: "+8.4%" },
           { label: "العملاء النشطين", value: stats.clients, icon: Users, color: "#38BDF8", trend: "+24%" },
           { label: "الصفقات الجارية", value: stats.deals, icon: TrendingUp, color: "#FACC15", trend: "-2.1%" },
         ].map((kpi, i) => (

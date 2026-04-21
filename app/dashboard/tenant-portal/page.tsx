@@ -1,4 +1,5 @@
 "use client";
+import { formatSAR } from "@/lib/format";
 import { useEffect, useState, useCallback } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 import {
@@ -45,10 +46,7 @@ const MAINTENANCE_STATUS: Record<string, { label: string; color: string }> = {
 
 // ── helpers ────────────────────────────────────────────────────────────────
 
-function fmt(n: number | undefined | null) {
-  if (!n) return "—";
-  return n.toLocaleString("ar-SA") + " ر.س";
-}
+const fmt = (n: number | undefined | null) => formatSAR(n);
 
 function fmtDate(d: string | undefined | null) {
   if (!d) return "—";
