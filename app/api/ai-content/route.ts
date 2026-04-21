@@ -81,7 +81,11 @@ function sanitizeError(err: any): string {
   if (msg.includes("rate limit") || msg.includes("429")) return "عدد الطلبات كبير — انتظر قليلاً ثم حاول مجدداً";
   if (msg.includes("timeout") || msg.includes("ECONNREFUSED")) return "تعذّر الاتصال بخدمة AI — حاول لاحقاً";
   if (msg.includes("content_policy") || msg.includes("safety")) return "المحتوى مرفوض بسبب سياسة الأمان";
-  if (msg.includes("model")) return "النموذج المحدد غير متاح حالياً";
+  if (msg.includes("model")) {
+    // نكشف اسم الموديل اللي فشل + اختصار السبب — يساعد في التشخيص دون تسريب أسرار
+    const shortMsg = msg.slice(0, 200).replace(/[^\x20-\x7E\u0600-\u06FF\s]/g, "");
+    return `النموذج المحدد غير متاح — جرّب موديلاً آخر. التفاصيل: ${shortMsg}`;
+  }
   if (msg.includes("insufficient_quota")) return "رصيد API منتهي — تواصل مع مدير المنصة";
 
   // رسائل غير معروفة — أعد رسالة عامة
