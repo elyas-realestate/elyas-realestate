@@ -14,7 +14,7 @@ const lbl = "block text-xs font-semibold text-[#9A9AA0] mb-2 tracking-wide";
 const PROVIDERS = [
   { id: "openai",    name: "OpenAI (ChatGPT)",    envKey: "OPENAI_API_KEY",    color: "#4ADE80", models: ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"] },
   { id: "anthropic", name: "Anthropic (Claude)",   envKey: "ANTHROPIC_API_KEY", color: "#A78BFA", models: ["claude-sonnet-4-6", "claude-opus-4-7", "claude-haiku-4-5-20251001"] },
-  { id: "google",    name: "Google (Gemini)",      envKey: "GOOGLE_API_KEY",    color: "#60A5FA", models: ["gemini-2.0-flash", "gemini-1.5-pro"] },
+  { id: "google",    name: "Google (Gemini)",      envKey: "GOOGLE_API_KEY",    color: "#60A5FA", models: ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"] },
   { id: "groq",      name: "Groq (سريع مجاناً)",  envKey: "GROQ_API_KEY",      color: "#F97316", models: ["llama-3.3-70b-versatile", "mixtral-8x7b-32768"] },
   { id: "deepseek",  name: "DeepSeek",             envKey: "DEEPSEEK_API_KEY",  color: "#38BDF8", models: ["deepseek-chat", "deepseek-reasoner"] },
   { id: "xai",       name: "xAI (Grok)",           envKey: "XAI_API_KEY",       color: "#EC4899", models: ["grok-3", "grok-3-mini"] },

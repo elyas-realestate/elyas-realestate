@@ -40,7 +40,7 @@ export default function ContentRoomTab({ onDraftSaved }: { onDraftSaved: () => v
   const [models, setModels]     = useState<RoomModel[]>([
     { provider: "openai",    model: "gpt-4o" },
     { provider: "anthropic", model: "claude-sonnet-4-20250514" },
-    { provider: "google",    model: "gemini-2.0-flash" },
+    { provider: "google",    model: "gemini-2.5-flash" },
   ]);
   const [turns, setTurns]       = useState<Turn[]>([]);
   const [finalContent, setFinal]= useState("");

@@ -62,9 +62,10 @@ export const providers: AIProvider[] = [
     name: "Google",
     desc: "صانعة Gemini — قوي في المحتوى متعدد اللغات",
     models: [
-      { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash", desc: "مستقر وسريع — مجاني" },
-      { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", desc: "قوي ومستقر" },
-      { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash", desc: "سريع واقتصادي" },
+      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", desc: "الأحدث — سريع ومجاني tier" },
+      { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", desc: "الأقوى لمحتوى عالي الجودة" },
+      { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash", desc: "مستقر وسريع" },
+      { id: "gemini-2.0-flash-lite", name: "Gemini 2.0 Flash Lite", desc: "الأسرع — اقتصادي جداً" },
     ],
   },
   {

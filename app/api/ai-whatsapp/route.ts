@@ -98,7 +98,7 @@ async function extractWithFallback(text: string, keys: Record<string, string>): 
   // Google Gemini
   if (keys.google) {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${keys.google}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${keys.google}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
