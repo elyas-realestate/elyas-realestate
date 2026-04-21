@@ -7,7 +7,7 @@ import Link from "next/link";
 import {
   Building2, Users, TrendingUp, ArrowUpRight, ArrowDownRight,
   CheckCircle, Sparkles, Brain, BellRing, Target, CircleDollarSign,
-  CreditCard
+  CreditCard, Flame, AlertTriangle,
 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -46,6 +46,8 @@ export default function DashboardPage() {
     revenue: 0,
   });
   const [subs, setSubs] = useState<any[]>([]);
+  const [hotClients, setHotClients] = useState<{ id: string; name: string | null }[]>([]);
+  const [staleProps, setStaleProps] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -56,11 +58,16 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const [propRes, clientRes, dealRes, subRes] = await Promise.all([
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+      const [propRes, clientRes, dealRes, subRes, hotRes, staleRes] = await Promise.all([
         supabase.from("properties").select("id", { count: "exact" }),
         supabase.from("clients").select("id", { count: "exact" }),
         supabase.from("deals").select("id", { count: "exact" }),
-        supabase.from("external_subscriptions").select("*").eq("tenant_id", user.id).limit(3)
+        supabase.from("external_subscriptions").select("*").eq("tenant_id", user.id).limit(3),
+        supabase.from("clients").select("id, name").eq("sentiment", "hot").limit(5),
+        supabase.from("properties").select("id", { count: "exact", head: true })
+          .or(`last_availability_check.is.null,last_availability_check.lt.${weekAgo}`),
       ]);
 
       setStats({
@@ -69,10 +76,10 @@ export default function DashboardPage() {
         deals: dealRes.count || 42,
         revenue: 1250400,
       });
-      
-      if (subRes.data) {
-        setSubs(subRes.data);
-      }
+
+      if (subRes.data) setSubs(subRes.data);
+      if (hotRes.data) setHotClients(hotRes.data);
+      setStaleProps(staleRes.count || 0);
 
     } catch (error) {
       console.error(error);
@@ -127,6 +134,52 @@ export default function DashboardPage() {
           </p>
         </div>
       </div>
+
+      {/* SMART ALERTS ROW */}
+      {(hotClients.length > 0 || staleProps > 0) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {hotClients.length > 0 && (
+            <Link
+              href="/dashboard/clients?sentiment=hot"
+              className="flex items-center gap-3 bg-gradient-to-l from-red-950/40 to-red-900/10 border border-red-500/30 rounded-xl p-4 hover:border-red-500/60 transition no-underline"
+            >
+              <div className="w-10 h-10 bg-red-500/20 border border-red-500/40 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Flame size={20} className="text-red-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-red-300">
+                  {hotClients.length} عميل ساخن 🔥 يحتاج متابعة
+                </div>
+                <div className="text-xs text-red-200/70 truncate mt-0.5">
+                  {hotClients.map(c => c.name || "عميل").slice(0, 3).join(" • ")}
+                  {hotClients.length > 3 && " ..."}
+                </div>
+              </div>
+              <ArrowUpRight size={18} className="text-red-400 flex-shrink-0" />
+            </Link>
+          )}
+
+          {staleProps > 0 && (
+            <Link
+              href="/dashboard/properties?filter=stale"
+              className="flex items-center gap-3 bg-gradient-to-l from-amber-950/40 to-amber-900/10 border border-amber-500/30 rounded-xl p-4 hover:border-amber-500/60 transition no-underline"
+            >
+              <div className="w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-lg flex items-center justify-center flex-shrink-0">
+                <AlertTriangle size={20} className="text-amber-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-amber-300">
+                  {staleProps} عقار يحتاج تحديث إتاحة
+                </div>
+                <div className="text-xs text-amber-200/70 truncate mt-0.5">
+                  لم يتم التحقق من المالك منذ أكثر من أسبوع
+                </div>
+              </div>
+              <ArrowUpRight size={18} className="text-amber-400 flex-shrink-0" />
+            </Link>
+          )}
+        </div>
+      )}
 
       {/* TOP STATS - BENTO GRID START */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
