@@ -11,6 +11,7 @@ import {
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
 import LangToggle from "@/components/LangToggle";
+import { useMyRole, ROLE_LABELS, PERMS } from "@/lib/use-my-role";
 import type { LucideIcon } from "lucide-react";
 import type { PropertyRequest, Client, Deal } from "@/types/database";
 
@@ -137,6 +138,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [renewalDaysLeft, setRenewalDaysLeft] = useState<number | null>(null);
   const [renewalPlan, setRenewalPlan] = useState("");
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const { role } = useMyRole();
 
   useEffect(() => { checkAuth(); }, []);
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
@@ -462,10 +464,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"#5A5A62", letterSpacing:"1.2px", borderTop:"1px solid rgba(198,145,76,0.08)", paddingTop:12 }}>
                   الإعدادات
                 </div>
-                {settingsMenu.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href);
-                  return <NavItem key={item.href} item={item} isActive={isActive} />;
-                })}
+                {settingsMenu
+                  .filter((item) => {
+                    // إخفاء حسب الدور
+                    if (item.href === "/dashboard/subscription" && !PERMS.canManageBilling(role)) return false;
+                    if (item.href === "/dashboard/team"         && !PERMS.canManageTeam(role))    return false;
+                    if (item.href === "/dashboard/audit"        && !PERMS.canViewAuditLog(role))  return false;
+                    if (item.href === "/dashboard/settings"     && !PERMS.canManageSettings(role))return false;
+                    return true;
+                  })
+                  .map((item) => {
+                    const isActive = pathname === item.href || pathname.startsWith(item.href);
+                    return <NavItem key={item.href} item={item} isActive={isActive} />;
+                  })}
               </div>
             </nav>
 
@@ -478,7 +489,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
                 <div style={{ flex:1, minWidth:0 }}>
                   <div className="truncate" style={{ fontSize:12.5, fontWeight:600, color:"#E5E5E5", lineHeight:1.3 }}>{brokerName}</div>
-                  <div style={{ fontSize:10, color:"#5A5A62" }}>وسيط عقاري</div>
+                  <div style={{ fontSize:10, color:"#5A5A62", display:"flex", alignItems:"center", gap:4 }}>
+                    <span>وسيط عقاري</span>
+                    {role !== "none" && (
+                      <span style={{
+                        padding:"1px 6px", borderRadius:4, fontSize:9, fontWeight:700,
+                        background: role === "owner" ? "rgba(250,204,21,0.15)"
+                                  : role === "admin" ? "rgba(56,189,248,0.15)"
+                                  : role === "viewer" ? "rgba(148,163,184,0.15)"
+                                  : "rgba(74,222,128,0.15)",
+                        color: role === "owner" ? "#FACC15"
+                             : role === "admin" ? "#38BDF8"
+                             : role === "viewer" ? "#94A3B8"
+                             : "#4ADE80",
+                      }}>
+                        {ROLE_LABELS[role]}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <button onClick={handleLogout} title="تسجيل خروج"
                   style={{ background:"none", border:"none", cursor:"pointer", color:"#5A5A62", padding:4, borderRadius:6, transition:"color 0.2s" }}

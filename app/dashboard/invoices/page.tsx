@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
   Receipt, Plus, X, Check, Edit3, Trash2, CreditCard, Printer,
-  CheckCircle, Clock, AlertCircle, DollarSign,
+  CheckCircle, Clock, AlertCircle, DollarSign, MessageCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
@@ -44,6 +44,46 @@ export default function InvoicesPage() {
     if (error?.message?.includes("does not exist")) { setMissingTable(true); setLoading(false); return; }
     setInvoices(data || []);
     setLoading(false);
+  }
+
+  async function sendWhatsappReminder(inv: any) {
+    // حاول تجيب رقم العميل
+    let phone: string | null = null;
+    if (inv.client_id) {
+      const { data: c } = await supabase
+        .from("clients").select("phone").eq("id", inv.client_id).maybeSingle();
+      phone = c?.phone || null;
+    }
+    if (!phone) {
+      const name = inv.client_name || "";
+      if (name) {
+        const { data: c } = await supabase
+          .from("clients").select("phone").ilike("name", name).maybeSingle();
+        phone = c?.phone || null;
+      }
+    }
+    if (!phone) {
+      toast.error("لا يوجد رقم جوال للعميل — أضف الرقم في سجل العميل أولاً");
+      return;
+    }
+
+    const total = (inv.amount || 0) + (inv.vat_amount || 0);
+    const dueStr = inv.due_date
+      ? new Date(inv.due_date).toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" })
+      : "غير محدد";
+
+    const msg = `السلام عليكم ${inv.client_name || ""}\n\nتذكير ودّي بفاتورة رقم ${inv.invoice_number || "—"}:\n📄 ${inv.title}\n💰 المبلغ: ${total.toLocaleString("ar-SA")} ر.س\n📅 تاريخ الاستحقاق: ${dueStr}\n\nنرجو منكم سداد المستحقات في أقرب وقت. شكراً لتعاونكم 🌹`;
+
+    // تنظيف الرقم: إزالة أي أحرف غير رقمية، تأكد البداية +966 أو مفتاح دولي
+    let clean = String(phone).replace(/[^\d+]/g, "");
+    if (clean.startsWith("00")) clean = "+" + clean.slice(2);
+    if (clean.startsWith("05")) clean = "+966" + clean.slice(1);
+    if (clean.startsWith("5") && clean.length === 9) clean = "+966" + clean;
+    if (!clean.startsWith("+")) clean = "+" + clean;
+
+    const url = `https://wa.me/${clean.replace(/\+/g, "")}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+    toast.success("فتح واتساب لإرسال التذكير");
   }
 
   async function addInvoice() {
@@ -231,6 +271,14 @@ export default function InvoicesPage() {
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
                       style={{ background: "rgba(74,222,128,0.08)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.2)", cursor: "pointer" }}>
                       <CreditCard size={11} /> تسجيل دفع
+                    </button>
+                  )}
+                  {inv.status === "غير مدفوعة" && (
+                    <button onClick={() => sendWhatsappReminder(inv)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                      style={{ background: overdue ? "rgba(74,222,128,0.12)" : "rgba(74,222,128,0.05)", color: "#25D366", border: "1px solid rgba(74,222,128,0.2)", cursor: "pointer" }}
+                      title={overdue ? "إرسال تذكير واتساب — فاتورة متأخرة" : "إرسال تذكير واتساب"}>
+                      <MessageCircle size={11} /> {overdue ? "تذكير متأخرة" : "تذكير واتساب"}
                     </button>
                   )}
                   <button
