@@ -54,8 +54,17 @@ export async function GET(req: NextRequest) {
     .single();
   if (error || !doc) return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  const { data: identity } = await supabase.from("broker_identity").select("broker_name, fal_license, phone").limit(1).single();
-  const { data: settings } = await supabase.from("site_settings").select("site_name, phone, email, site_logo").limit(1).single();
+  // ── جلب هوية الوسيط وإعدادات الموقع — مفلترة بحساب المستخدم الحالي (منع تسريب بيانات بين الحسابات) ──
+  const { data: identity } = await supabase
+    .from("broker_identity")
+    .select("broker_name, fal_license, phone")
+    .eq("tenant_id", user.id)
+    .maybeSingle();
+  const { data: settings } = await supabase
+    .from("site_settings")
+    .select("site_name, phone, email, site_logo")
+    .eq("tenant_id", user.id)
+    .maybeSingle();
 
   const brokerName = identity?.broker_name || settings?.site_name || "وسيط برو";
   const falLicense = identity?.fal_license || "";
