@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -42,6 +42,8 @@ const menuGroups: NavGroup[] = [
       { label: "المشاريع",       href: "/dashboard/projects",         icon: Building2  },
       { label: "الطلبات",        href: "/dashboard/requests",         icon: FileText   },
       { label: "بوابة المستأجر", href: "/dashboard/tenant-portal",    icon: KeyRound   },
+      { label: "أوامر العمل",    href: "/dashboard/work-orders",      icon: Wrench     },
+      { label: "الأصول",         href: "/dashboard/assets",           icon: Package    },
     ]
   },
   {
@@ -63,6 +65,9 @@ const menuGroups: NavGroup[] = [
   {
     title: "أدوات أخرى",
     items: [
+      { label: "توزيع العقارات", href: "/dashboard/distribute", icon: Share2         },
+      { label: "التقارير",       href: "/dashboard/reports",   icon: FileText        },
+      { label: "استيراد CSV",   href: "/dashboard/import",    icon: Upload          },
       { label: "اشتراكات التطبيقات", href: "/dashboard/external-subscriptions", icon: CreditCard },
       { label: "الوثائق",        href: "/dashboard/documents", icon: Scale           },
     ]
@@ -74,6 +79,7 @@ const settingsMenu: NavItemData[] = [
   { label: "الاشتراك",     href: "/dashboard/subscription",   icon: CreditCard },
   { label: "تأسيس AI",   href: "/dashboard/ai-foundation", icon: Brain      },
   { label: "سجل التدقيق", href: "/dashboard/audit",          icon: Shield     },
+  { label: "الأمان (2FA)", href: "/dashboard/security",      icon: ShieldCheck },
   { label: "الإعدادات",   href: "/dashboard/settings",       icon: Settings   },
 ];
 
