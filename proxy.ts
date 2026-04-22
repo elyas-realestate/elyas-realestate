@@ -44,6 +44,28 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
       }
 
+      // ── فرض 2FA على /dashboard (إن كان مفعّلاً على الحساب) ──
+      if (
+        pathname.startsWith("/dashboard") &&
+        request.cookies.get("2fa_passed")?.value !== "1"
+      ) {
+        try {
+          const { data: twofa } = await supabase
+            .from("user_2fa_secrets")
+            .select("is_enabled")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          if (twofa?.is_enabled) {
+            const url = request.nextUrl.clone();
+            url.pathname = "/login/2fa";
+            return NextResponse.redirect(url);
+          }
+        } catch {
+          // fail-open: في حالة فشل فحص 2FA لا نُغلق الوصول
+        }
+      }
+
       // ── حماية Admin — السماح فقط للمالك ──
       if (pathname.startsWith("/admin")) {
         const { data: tenant } = await supabase
