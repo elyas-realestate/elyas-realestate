@@ -21,9 +21,18 @@ export default function Login() {
     if (error) {
       setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       setLoading(false);
-    } else {
-      window.location.href = "/dashboard";
+      return;
     }
+    // ── فحص المصادقة الثنائية ──
+    try {
+      const res = await fetch("/api/2fa/challenge");
+      const data = await res.json();
+      if (data.requiresChallenge) {
+        window.location.href = "/login/2fa";
+        return;
+      }
+    } catch { /* تجاهل — نكمل للوحة التحكم */ }
+    window.location.href = "/dashboard";
   }
 
   return (
