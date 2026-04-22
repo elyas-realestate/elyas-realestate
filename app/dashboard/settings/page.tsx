@@ -101,7 +101,7 @@ export default function Settings() {
     name: "", email: "", contact_email: "", photo_url: "", gender: "male",
   });
   const [settings, setSettings]   = useState<any>(null);
-  const [licenses, setLicenses]   = useState({ commercial_register: "", freelance_doc: "" });
+  const [licenses, setLicenses]   = useState({ commercial_register: "", freelance_doc: "", vat_number: "", zatca_enabled: false });
   const [slug, setSlug]           = useState("");
   const [slugInput, setSlugInput] = useState("");
 
@@ -124,7 +124,7 @@ export default function Settings() {
   // ─── Load ─────────────────────────────────────────────────────────────────
   async function loadAll() {
     const [identityRes, userRes, siteRes, tenantRes] = await Promise.all([
-      supabase.from("broker_identity").select("broker_name, photo_url").limit(1).single(),
+      supabase.from("broker_identity").select("broker_name, photo_url, commercial_register, freelance_doc, vat_number, zatca_enabled").limit(1).single(),
       supabase.auth.getUser(),
       supabase.from("site_settings").select("*").limit(1).single(),
       supabase.from("tenants").select("slug").limit(1).single(),
@@ -142,6 +142,12 @@ export default function Settings() {
       photo_url:     identity?.photo_url         || "",
       contact_email: site?.contact_email         || "",
     }));
+    setLicenses({
+      commercial_register: identity?.commercial_register || "",
+      freelance_doc:       identity?.freelance_doc       || "",
+      vat_number:          identity?.vat_number          || "",
+      zatca_enabled:       identity?.zatca_enabled       || false,
+    });
     if (site)    setSettings(site);
     if (tenant?.slug) { setSlug(tenant.slug); setSlugInput(tenant.slug); }
     setLoading(false);
@@ -176,11 +182,18 @@ export default function Settings() {
   }
 
   async function handleSaveLicenses() {
+    // validate VAT if provided
+    if (licenses.vat_number && !/^3\d{13}3$/.test(licenses.vat_number.trim())) {
+      toast.error("الرقم الضريبي غير صالح — يجب 15 رقم يبدأ وينتهي بـ 3");
+      return;
+    }
     setSaving(true);
     try {
       await supabase.from("broker_identity").update({
         commercial_register: licenses.commercial_register || null,
         freelance_doc:       licenses.freelance_doc       || null,
+        vat_number:          licenses.vat_number          || null,
+        zatca_enabled:       licenses.zatca_enabled,
       }).not("id", "is", null);
       toast.success("تم حفظ الشهادات");
       flash();
@@ -1032,6 +1045,42 @@ export default function Settings() {
               <label className="block text-sm text-[#9A9AA0] mb-2">رقم وثيقة العمل الحر</label>
               <input value={licenses.freelance_doc} onChange={e=>setLicenses(l=>({...l,freelance_doc:e.target.value}))} className={inputClass} placeholder="أدخل رقم وثيقة العمل الحر" dir="ltr"/>
             </div>
+
+            {/* ── ZATCA Compliance ── */}
+            <div className="pt-4 border-t border-[rgba(198,145,76,0.12)]">
+              <div className="flex items-center gap-2 mb-3">
+                <h4 className="font-bold text-sm text-emerald-400">امتثال فاتورة ZATCA</h4>
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">إلزامي للشركات المُسجّلة بضريبة القيمة المضافة</span>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm text-[#9A9AA0] mb-2">الرقم الضريبي (15 رقم)</label>
+                  <input
+                    value={licenses.vat_number}
+                    onChange={e=>setLicenses(l=>({...l,vat_number:e.target.value.replace(/\D/g,'').slice(0,15)}))}
+                    className={inputClass}
+                    placeholder="مثال: 310123456700003"
+                    maxLength={15}
+                    dir="ltr"
+                    inputMode="numeric"
+                  />
+                  <p className="text-[#5A5A62] text-xs mt-1">
+                    {licenses.vat_number && (/^3\d{13}3$/.test(licenses.vat_number) ? "✅ صيغة صحيحة" : "⚠️ يجب أن يبدأ وينتهي بـ 3 ويكون 15 رقم")}
+                    {!licenses.vat_number && "يظهر في رأس الفواتير + رمز QR ZATCA"}
+                  </p>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={licenses.zatca_enabled}
+                    onChange={e=>setLicenses(l=>({...l,zatca_enabled:e.target.checked}))}
+                    className="w-4 h-4 accent-emerald-500"
+                  />
+                  <span className="text-sm text-[#9A9AA0]">تفعيل QR ZATCA وتصدير XML في الفواتير</span>
+                </label>
+              </div>
+            </div>
+
             <SaveBtn onClick={handleSaveLicenses} />
           </div>
 

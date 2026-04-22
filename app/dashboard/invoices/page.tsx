@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
   Receipt, Plus, X, Check, Edit3, Trash2, CreditCard, Printer,
-  CheckCircle, Clock, AlertCircle, DollarSign, MessageCircle,
+  CheckCircle, Clock, AlertCircle, DollarSign, MessageCircle, FileCode,
 } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
@@ -286,6 +286,13 @@ export default function InvoicesPage() {
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
                     style={{ background: "rgba(96,165,250,0.06)", color: "#60A5FA", border: "1px solid rgba(96,165,250,0.15)", cursor: "pointer" }}>
                     <Printer size={11} /> PDF
+                  </button>
+                  <button
+                    onClick={() => window.open(`/api/zatca-xml?id=${inv.id}`, "_blank")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                    style={{ background: "rgba(52,211,153,0.06)", color: "#34D399", border: "1px solid rgba(52,211,153,0.15)", cursor: "pointer" }}
+                    title="تصدير XML متوافق مع ZATCA Phase 2">
+                    <FileCode size={11} /> XML
                   </button>
                   <button onClick={() => deleteInvoice(inv.id)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
+import { buildZatcaQr } from "@/lib/zatca";
 
 function money(n: number | null | undefined) {
   if (!n) return "0";
@@ -44,26 +45,35 @@ export async function GET(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   );
 
+  // ── استخراج tenant_id الفعلي للمستخدم الحالي (tenants.id ≠ auth.uid()) ──
+  const { data: tenantRow } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+  const tenantId = tenantRow?.id;
+  if (!tenantId) return NextResponse.json({ error: "لا يوجد حساب مرتبط" }, { status: 403 });
+
   const table = type === "invoice" ? "invoices" : "quotations";
-  // ── التحقق أن الوثيقة تعود للمستخدم الحالي (IDOR protection) ──
+  // ── التحقق أن الوثيقة تعود لنفس المستأجر (IDOR protection) ──
   const { data: doc, error } = await supabase
     .from(table)
     .select("*")
     .eq("id", id)
-    .eq("tenant_id", user.id)
+    .eq("tenant_id", tenantId)
     .single();
   if (error || !doc) return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  // ── جلب هوية الوسيط وإعدادات الموقع — مفلترة بحساب المستخدم الحالي (منع تسريب بيانات بين الحسابات) ──
+  // ── جلب هوية الوسيط وإعدادات الموقع — مفلترة بـ tenant_id الصحيح (منع تسريب بيانات بين الحسابات) ──
   const { data: identity } = await supabase
     .from("broker_identity")
-    .select("broker_name, fal_license, phone")
-    .eq("tenant_id", user.id)
+    .select("broker_name, fal_license, phone, vat_number, zatca_enabled")
+    .eq("tenant_id", tenantId)
     .maybeSingle();
   const { data: settings } = await supabase
     .from("site_settings")
     .select("site_name, phone, email, site_logo")
-    .eq("tenant_id", user.id)
+    .eq("tenant_id", tenantId)
     .maybeSingle();
 
   const brokerName = identity?.broker_name || settings?.site_name || "وسيط برو";
@@ -78,6 +88,22 @@ export async function GET(req: NextRequest) {
   const total     = Number(doc.amount || 0);
   const vat       = Number(doc.vat_amount || 0);
   const grandTotal = total + vat;
+
+  // ── ZATCA Phase 1 QR Code (يظهر في الفواتير فقط إذا الرقم الضريبي موجود) ──
+  const vatNumber = identity?.vat_number || "";
+  const showZatcaQr = isInvoice && vatNumber;
+  let qrImgUrl = "";
+  if (showZatcaQr) {
+    const qrBase64 = buildZatcaQr({
+      sellerName:   brokerName,
+      vatNumber,
+      timestamp:    doc.created_at || new Date(),
+      totalWithVat: grandTotal,
+      vatAmount:    vat,
+    });
+    // نستخدم QR Server API — مجاني بدون authentication
+    qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrBase64)}`;
+  }
 
   const html = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -128,6 +154,7 @@ export async function GET(req: NextRequest) {
       <div>
         <div class="brand-name">${h(brokerName)}</div>
         <div class="brand-sub">${falLicense ? `رخصة فال: ${h(falLicense)}` : "وسيط عقاري مرخّص"}</div>
+        ${vatNumber ? `<div class="brand-sub">الرقم الضريبي: ${h(vatNumber)}</div>` : ""}
         ${phone ? `<div class="brand-sub">${h(phone)}</div>` : ""}
         ${email ? `<div class="brand-sub">${h(email)}</div>` : ""}
       </div>
@@ -182,6 +209,13 @@ export async function GET(req: NextRequest) {
   </div>
 
   ${doc.notes ? `<div class="notes-box"><div class="notes-label">ملاحظات</div><div class="notes-text">${h(doc.notes)}</div></div>` : ""}
+
+  ${showZatcaQr ? `
+  <div style="display:flex;flex-direction:column;align-items:center;padding:20px;background:#fafafa;border-radius:12px;margin-bottom:24px;">
+    <img src="${qrImgUrl}" alt="ZATCA QR" style="width:180px;height:180px;" crossorigin="anonymous">
+    <div style="font-size:11px;color:#888;margin-top:8px;font-weight:600;">امسح الرمز للتحقق من الفاتورة — متوافق مع ZATCA</div>
+  </div>
+  ` : ""}
 
   <div class="footer">
     <span>مُولَّد بواسطة وسيط برو</span>
