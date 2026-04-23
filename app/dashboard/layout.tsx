@@ -143,6 +143,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [notifCount, setNotifCount] = useState(0);
   const [renewalDaysLeft, setRenewalDaysLeft] = useState<number | null>(null);
   const [renewalPlan, setRenewalPlan] = useState("");
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const { role } = useMyRole();
 
@@ -159,13 +160,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (error || !user) { window.location.href = "/login"; return; }
     setAuthorized(true);
 
-    const [{ count }, { data: identity }, { data: ownedTenant }, { data: siteSettings }, { data: membership }] = await Promise.all([
+    const [{ count }, { data: identity }, { data: ownedTenant }, { data: siteSettings }, { data: membership }, { data: superAdminCheck }] = await Promise.all([
       supabase.from("property_requests").select("id", { count: "exact", head: true }).eq("status", "جديد"),
       supabase.from("broker_identity").select("broker_name").limit(1).maybeSingle(),
       supabase.from("tenants").select("slug").eq("owner_id", user.id).maybeSingle(),
       supabase.from("site_settings").select("plan, plan_expires_at").limit(1).maybeSingle(),
       supabase.from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle(),
+      supabase.rpc("is_super_admin"),
     ]);
+    setIsSuperAdmin(!!superAdminCheck);
     setNewRequests(count || 0);
     if (identity?.broker_name) setBrokerName(identity.broker_name);
     // resolve slug: owner first, else fetch by membership tenant_id
@@ -485,6 +488,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   })}
               </div>
             </nav>
+
+            {/* Super Admin Panel Link — يظهر فقط لمالك المنصة */}
+            {isSuperAdmin && (
+              <div style={{ padding:"8px 12px 0" }}>
+                <Link href="/admin"
+                  style={{
+                    display:"flex", alignItems:"center", gap:9, padding:"10px 12px",
+                    borderRadius:10,
+                    background:"linear-gradient(135deg, rgba(124,58,237,0.14), rgba(124,58,237,0.06))",
+                    border:"1px solid rgba(124,58,237,0.30)",
+                    color:"#C4B5FD", fontSize:12.5, fontWeight:600,
+                    textDecoration:"none", transition:"all 0.2s",
+                  }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background="rgba(124,58,237,0.22)"; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background="linear-gradient(135deg, rgba(124,58,237,0.14), rgba(124,58,237,0.06))"; }}>
+                  <Shield size={14} />
+                  <span style={{ flex:1 }}>لوحة إدارة المنصّة</span>
+                  <span style={{ fontSize:9, padding:"2px 6px", borderRadius:4, background:"rgba(124,58,237,0.25)", color:"#A78BFA" }}>مالك</span>
+                </Link>
+              </div>
+            )}
 
             {/* Bottom Profile */}
             <div style={{ padding:"12px 12px 16px", borderTop:"1px solid rgba(198,145,76,0.08)" }}>
