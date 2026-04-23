@@ -33,6 +33,17 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة E — Security Hardening (2026-04-23)
+**أُصلحت 29 ثغرة من أصل 30 من Supabase Advisor** (الباقي إعداد Auth يحتاج تفعيل يدوي):
+1. **Migration 027** — حذف سياسات RLS الفضفاضة `USING (true)` على role=anon من 10 جداول حساسة (كانت تخرق multi-tenancy!)
+2. **تفعيل RLS على 12 جدول** كانت بلا حماية:
+   - مرجعية (قراءة عامة): `property_categories`, `property_features_ref`
+   - مرتبطة بـ tenant عبر FK (via subquery): `client_files`, `deal_followups`, `matches`, `content_platforms`, `property_features_entries`, `partners`
+   - يتيمة غير مستخدمة (إغلاق كامل): `users`, `documents`, `events`, `event_clients`
+3. **تحصين search_path** على 9 دوال (`set_goals_tenant_id`, `update_updated_at`, إلخ)
+4. **إعادة إنشاء view** `property_distribution_summary` بـ `security_invoker=true` بدل SECURITY DEFINER
+5. **تقييد Storage bucket** `assets` — إزالة السياسات الفضفاضة، إبقاء الـ public URLs فقط للملفات الفردية (بدون listing)
+
 ### المرحلة D — AI Employees (2026-04-23)
 1. **SQL migration 026** — جداول: `ai_employee_settings`, `ai_conversations`, `marketing_queue`, `followup_queue`, `weekly_insights` + RLS + `ensure_ai_employee_settings()` helper
 2. **lib/ai-call.ts** — مُوحِّد لطلبات AI (6 مزودين: OpenAI, Anthropic, Google, Groq, DeepSeek, xAI)
