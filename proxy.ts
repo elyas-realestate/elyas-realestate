@@ -66,16 +66,11 @@ export async function proxy(request: NextRequest) {
         }
       }
 
-      // ── حماية Admin — السماح فقط للمالك ──
+      // ── حماية Admin — السماح فقط لـ super_admins ──
       if (pathname.startsWith("/admin")) {
-        const { data: tenant } = await supabase
-          .from("tenants")
-          .select("owner_id")
-          .eq("owner_id", user.id)
-          .limit(1)
-          .single();
+        const { data: isSuperAdmin, error: rpcErr } = await supabase.rpc("is_super_admin");
 
-        if (!tenant) {
+        if (rpcErr || !isSuperAdmin) {
           return NextResponse.redirect(new URL("/dashboard", request.url));
         }
       }

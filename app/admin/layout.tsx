@@ -2,19 +2,20 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard, Users, CreditCard, Settings, LogOut, ShieldCheck, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Settings, LogOut, ShieldCheck, ExternalLink, Building2, Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
 
 
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
-
 const navItems = [
-  { label: "نظرة عامة",   href: "/admin",          icon: LayoutDashboard },
-  { label: "المستخدمون",  href: "/admin/users",     icon: Users           },
-  { label: "الاشتراكات",  href: "/admin/plans",     icon: CreditCard      },
-  { label: "الإعدادات",   href: "/admin/settings",  icon: Settings        },
+  { label: "نظرة عامة",    href: "/admin",               icon: LayoutDashboard },
+  { label: "المستأجرون",   href: "/admin/tenants",       icon: Building2       },
+  { label: "الاشتراكات",   href: "/admin/subscriptions", icon: CreditCard      },
+  { label: "سجل التدقيق",  href: "/admin/audit",         icon: Shield          },
+  { label: "المستخدمون",   href: "/admin/users",         icon: Users           },
+  { label: "الخطط",        href: "/admin/plans",         icon: CreditCard      },
+  { label: "الإعدادات",    href: "/admin/settings",      icon: Settings        },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -29,15 +30,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { router.replace("/login"); return; }
 
-    const userEmail = session.user.email || "";
-
-    // If ADMIN_EMAIL is set, enforce it. Otherwise any authenticated user can access.
-    if (ADMIN_EMAIL && userEmail !== ADMIN_EMAIL) {
+    // فحص super_admin عبر RPC (الـ proxy يفحص أيضاً، لكن نكرّر على جانب الكلاينت)
+    const { data: isSa, error } = await supabase.rpc("is_super_admin");
+    if (error || !isSa) {
       router.replace("/dashboard");
       return;
     }
 
-    setEmail(userEmail);
+    setEmail(session.user.email || "");
     setReady(true);
   }
 

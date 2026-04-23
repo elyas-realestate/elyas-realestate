@@ -1,103 +1,80 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { requireSuperAdmin } from "@/lib/admin-auth";
 
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
-
+// ── GET: قائمة المستأجرين الكاملة مع إحصائيات (لمالك المنصّة فقط) ──
 export async function GET(req: NextRequest) {
-  // ── Auth: only admin ──
-  const authClient = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
-  );
-  const { data: { user } } = await authClient.auth.getUser();
-  if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
-  if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) {
-    return NextResponse.json({ error: "غير مصرح" }, { status: 403 });
-  }
+  const check = await requireSuperAdmin(req);
+  if (check instanceof NextResponse) return check;
+  const { supabase } = check;
 
-  // ── Service role: bypass RLS ──
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  const { data: tenants, error } = await supabase
-    .from("tenants")
-    .select("id, slug, plan, is_active, created_at, owner_id")
-    .order("created_at", { ascending: false });
-
+  const { data: rows, error } = await supabase.rpc("admin_list_tenants");
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // ── جلب broker_name لكل tenant ──
-  const tenantIds = (tenants || []).map(t => t.id);
-  let nameMap: Record<string, string> = {};
+  const tenants = (rows || []) as Array<{
+    id: string;
+    slug: string;
+    owner_id: string;
+    owner_email: string | null;
+    broker_name: string | null;
+    plan: string;
+    is_active: boolean;
+    created_at: string;
+    property_count: number;
+    client_count: number;
+    deal_count: number;
+    last_activity: string | null;
+  }>;
 
-  if (tenantIds.length > 0) {
-    const { data: settings } = await supabase
-      .from("site_settings")
-      .select("tenant_id, broker_name")
-      .in("tenant_id", tenantIds);
-
-    (settings || []).forEach(s => {
-      if (s.tenant_id) nameMap[s.tenant_id] = s.broker_name || "";
-    });
-  }
-
-  const enriched = (tenants || []).map(t => ({
-    ...t,
-    broker_name: nameMap[t.id] || "",
-  }));
-
-  // ── إحصائيات الخطط ──
-  const planCounts = { free: 0, basic: 0, pro: 0 } as Record<string, number>;
-  enriched.forEach(t => {
+  const planCounts: Record<string, number> = { free: 0, basic: 0, pro: 0 };
+  tenants.forEach((t) => {
     const p = t.plan || "free";
     planCounts[p] = (planCounts[p] || 0) + 1;
   });
 
   return NextResponse.json({
-    tenants: enriched,
-    total: enriched.length,
+    tenants,
+    total: tenants.length,
     planCounts,
   });
 }
 
+// ── PATCH: تعديل plan أو is_active لمستأجر معيّن ──
 export async function PATCH(req: NextRequest) {
-  // ── Auth: only admin ──
-  const authClient = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
-  );
-  const { data: { user } } = await authClient.auth.getUser();
-  if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
-  if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) {
-    return NextResponse.json({ error: "غير مصرح" }, { status: 403 });
-  }
+  const check = await requireSuperAdmin(req);
+  if (check instanceof NextResponse) return check;
+  const { supabase } = check;
 
   const body = await req.json();
-  const { tenantId, updates } = body as { tenantId: string; updates: Record<string, unknown> };
+  const { tenantId, updates } = body as {
+    tenantId: string;
+    updates: Record<string, unknown>;
+  };
 
   if (!tenantId || !updates) {
     return NextResponse.json({ error: "بيانات ناقصة" }, { status: 400 });
   }
 
-  // Allow only safe fields
-  const allowed = ["plan", "is_active"];
-  const safe: Record<string, unknown> = {};
-  for (const k of allowed) {
-    if (k in updates) safe[k] = updates[k];
+  // ── حقول آمنة فقط ──
+  if ("is_active" in updates) {
+    const suspend = !updates.is_active;
+    const { error } = await supabase.rpc("admin_suspend_tenant", {
+      tid: tenantId,
+      suspend,
+    });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  const { error } = await supabase.from("tenants").update(safe).eq("id", tenantId);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if ("plan" in updates) {
+    const newPlan = String(updates.plan);
+    if (!["free", "basic", "pro"].includes(newPlan)) {
+      return NextResponse.json({ error: "خطة غير صالحة" }, { status: 400 });
+    }
+    const { error } = await supabase.rpc("admin_set_tenant_plan", {
+      tid: tenantId,
+      new_plan: newPlan,
+    });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }
