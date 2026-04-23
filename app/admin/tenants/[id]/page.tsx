@@ -20,7 +20,7 @@ type TenantDetail = {
   };
   owner_email: string | null;
   site_settings: Record<string, unknown> | null;
-  broker_identity: Record<string, unknown> | null;
+  broker_identity: { broker_name?: string; [k: string]: unknown } | null;
   stats: {
     properties: number;
     clients: number;
@@ -38,7 +38,7 @@ type TenantDetail = {
   recent_invoices: Array<{
     id: string;
     invoice_number?: string;
-    total_amount?: number;
+    total?: number;
     status?: string;
     created_at: string;
   }>;
@@ -149,7 +149,7 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
       <div style={{ marginBottom: 24, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4 }}>
-            {(detail.site_settings?.broker_name as string) || detail.tenant.slug}
+            {detail.broker_identity?.broker_name || (detail.site_settings?.site_name as string) || detail.tenant.slug}
           </h1>
           <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#52525B", fontSize: 12, flexWrap: "wrap" }}>
             <span style={{ direction: "ltr" }}>/{detail.tenant.slug}</span>
@@ -264,7 +264,7 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
                     <div style={{ fontSize: 10, color: "#52525B", marginTop: 2 }}>{new Date(inv.created_at).toLocaleDateString("ar-SA")}</div>
                   </div>
                   <div style={{ textAlign: "left" }}>
-                    <div style={{ fontSize: 12, color: "#E4E4E7" }}>{Number(inv.total_amount || 0).toLocaleString("en-US")} ر.س</div>
+                    <div style={{ fontSize: 12, color: "#E4E4E7" }}>{Number(inv.total || 0).toLocaleString("en-US")} ر.س</div>
                     <div style={{ fontSize: 10, color: "#52525B", marginTop: 2 }}>{inv.status}</div>
                   </div>
                 </div>

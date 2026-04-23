@@ -71,7 +71,7 @@ AS $$
     (SELECT count(*) FROM public.clients),
     (SELECT count(*) FROM public.deals),
     (SELECT count(*) FROM public.invoices),
-    COALESCE((SELECT sum(total_amount) FROM public.invoices WHERE status = 'مدفوع'), 0),
+    COALESCE((SELECT sum(total) FROM public.invoices WHERE status = 'مدفوعة'), 0),
     (SELECT count(*) FROM public.tenants WHERE created_at > now() - interval '30 days')
   WHERE public.is_super_admin();
 $$;
@@ -104,7 +104,7 @@ AS $$
     t.slug,
     t.owner_id,
     u.email::text,
-    ss.broker_name,
+    COALESCE(bi.broker_name, ss.site_name),
     t.plan,
     t.is_active,
     t.created_at,
@@ -118,7 +118,8 @@ AS $$
     )
   FROM public.tenants t
   LEFT JOIN auth.users u ON u.id = t.owner_id
-  LEFT JOIN public.site_settings ss ON ss.tenant_id = t.id
+  LEFT JOIN public.broker_identity bi ON bi.tenant_id = t.id
+  LEFT JOIN public.site_settings   ss ON ss.tenant_id = t.id
   WHERE public.is_super_admin()
   ORDER BY t.created_at DESC;
 $$;
@@ -150,17 +151,18 @@ BEGIN
       'clients',     (SELECT count(*) FROM public.clients   c WHERE c.tenant_id = t.id),
       'deals',       (SELECT count(*) FROM public.deals     d WHERE d.tenant_id = t.id),
       'invoices',    (SELECT count(*) FROM public.invoices  i WHERE i.tenant_id = t.id),
-      'paid_total',  COALESCE((SELECT sum(total_amount) FROM public.invoices WHERE tenant_id = t.id AND status = 'مدفوع'), 0)
+      'paid_total',  COALESCE((SELECT sum(total) FROM public.invoices WHERE tenant_id = t.id AND status = 'مدفوعة'), 0)
     ),
     'members', COALESCE((
       SELECT jsonb_agg(jsonb_build_object(
-        'user_id', tm.user_id,
-        'role', tm.role,
-        'email', u.email,
-        'status', tm.status,
-        'joined_at', tm.joined_at
+        'user_id',   tm.user_id,
+        'role',      tm.role,
+        'email',     COALESCE(u.email, tm.email),
+        'full_name', tm.full_name,
+        'status',    tm.status,
+        'joined_at', tm.activated_at
       ))
-      FROM public.team_members tm
+      FROM public.tenant_members tm
       LEFT JOIN auth.users u ON u.id = tm.user_id
       WHERE tm.tenant_id = t.id
     ), '[]'::jsonb),
@@ -273,7 +275,7 @@ AS $$
   SELECT
     t.id,
     t.slug,
-    ss.broker_name,
+    COALESCE(bi.broker_name, ss.site_name),
     t.plan,
     t.is_active,
     CASE t.plan
@@ -284,7 +286,8 @@ AS $$
     END,
     t.created_at
   FROM public.tenants t
-  LEFT JOIN public.site_settings ss ON ss.tenant_id = t.id
+  LEFT JOIN public.broker_identity bi ON bi.tenant_id = t.id
+  LEFT JOIN public.site_settings   ss ON ss.tenant_id = t.id
   WHERE public.is_super_admin()
   ORDER BY
     CASE t.plan WHEN 'pro' THEN 1 WHEN 'basic' THEN 2 ELSE 3 END,
@@ -340,12 +343,12 @@ DECLARE
 BEGIN
   SELECT id INTO owner_id
   FROM auth.users
-  WHERE email = 'ggm4h4wkxw@privaterelay.appleid.com'
+  WHERE email = 'vip.elyas@gmail.com'
   LIMIT 1;
 
   IF owner_id IS NOT NULL THEN
     INSERT INTO public.super_admins (user_id, notes)
-    VALUES (owner_id, 'Platform owner — seeded by migration 025')
+    VALUES (owner_id, 'Platform owner — Elyas Al-Dakheel')
     ON CONFLICT (user_id) DO NOTHING;
   END IF;
 END $$;
