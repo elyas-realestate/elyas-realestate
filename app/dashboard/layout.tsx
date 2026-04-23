@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -75,12 +75,13 @@ const menuGroups: NavGroup[] = [
 ];
 
 const settingsMenu: NavItemData[] = [
-  { label: "الفريق",       href: "/dashboard/team",           icon: Users      },
-  { label: "الاشتراك",     href: "/dashboard/subscription",   icon: CreditCard },
-  { label: "تأسيس AI",   href: "/dashboard/ai-foundation", icon: Brain      },
-  { label: "سجل التدقيق", href: "/dashboard/audit",          icon: Shield     },
-  { label: "الأمان (2FA)", href: "/dashboard/security",      icon: ShieldCheck },
-  { label: "الإعدادات",   href: "/dashboard/settings",       icon: Settings   },
+  { label: "الفريق",        href: "/dashboard/team",           icon: Users      },
+  { label: "الاشتراك",      href: "/dashboard/subscription",   icon: CreditCard },
+  { label: "تأسيس AI",      href: "/dashboard/ai-foundation",  icon: Brain      },
+  { label: "موظفو AI",      href: "/dashboard/ai-employees",   icon: Bot        },
+  { label: "سجل التدقيق",   href: "/dashboard/audit",          icon: Shield     },
+  { label: "الأمان (2FA)",  href: "/dashboard/security",       icon: ShieldCheck },
+  { label: "الإعدادات",     href: "/dashboard/settings",       icon: Settings   },
 ];
 
 function NavItem({

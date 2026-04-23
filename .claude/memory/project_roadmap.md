@@ -33,11 +33,21 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة D — AI Employees (2026-04-23)
+1. **SQL migration 026** — جداول: `ai_employee_settings`, `ai_conversations`, `marketing_queue`, `followup_queue`, `weekly_insights` + RLS + `ensure_ai_employee_settings()` helper
+2. **lib/ai-call.ts** — مُوحِّد لطلبات AI (6 مزودين: OpenAI, Anthropic, Google, Groq, DeepSeek, xAI)
+3. **موظف التسويق** — `/api/cron/ai-marketing` (يومياً 7 UTC = 10ص السعودية) → يولِّد 3 منشورات لكل عقار جديد في 3 قنوات
+4. **موظف المتابعة** — `/api/cron/ai-followup` (يومياً 15 UTC = 6م) → رسائل واتساب للعملاء الباردين
+5. **محلل البيانات** — `/api/cron/ai-analyst` (أحد 6 UTC = 9ص) → تقرير أسبوعي (ملخص + توصيات)
+6. **UI** — `/dashboard/ai-employees` — toggle لكل موظف، اختيار مزود/نموذج، إعدادات
+7. **Vercel crons** — 4 مجدولات في `vercel.json` (reminders + 3 AI)
+8. **موظف الاستقبال (receiver)** — الجدول جاهز، لكن تفعيله يحتاج Meta Business API يدوياً (قادم)
+
 ---
 
 ## 🚧 المتبقي (Pending) — حسب الأولوية
 
-### 2️⃣ طبقة الموظفين الذكيين (AI Employees) — الأولوية التالية
+### تكميل AI Employees
 - **موظف الاستقبال** — WhatsApp Auto-Reply عبر Edge Function
   - يستقبل webhook من Meta Business API / Twilio
   - يرد بصوت الوسيط (broker_identity.voice_description)
