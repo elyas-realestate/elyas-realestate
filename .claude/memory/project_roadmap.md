@@ -50,7 +50,49 @@
 ### تحديث 2026-04-25: المدراء الخمسة → Gemini 2.5 Flash
 تم تحويل افتراضي المدراء من `claude-sonnet-4-6` إلى `gemini-2.5-flash` لتقليل تكلفة التجربة من $12/شهر إلى ~$1.40/شهر (٩x أرخص).
 
-### المرحلة K-4 — محرّك الاقتراحات التلقائية (2026-04-25)
+### تحديث 2026-04-25: توسيع قسم التسويق
+أُضيف ٣ موظفين تحت مدير التسويق ليصبح القسم متكاملاً لإدارة السوشل ميديا:
+- **`social_publisher`** (DeepSeek, cron_hourly) — ينشر المعتمد + يجدول
+- **`community_manager`** (DeepSeek, webhook) — يرد على تعليقات/DMs، يصعّد leads
+- **`visual_director`** (Gemini Pro, on_event) — يحلل صور، يكتب سكربتات Reels
+
+**حالة التشغيل:**
+- visual_director: ✅ يعمل فوراً (Gemini Pro يدعم vision)
+- social_publisher: 🔵 يولّد drafts الآن، يحتاج APIs للنشر التلقائي (X $0/free, IG/FB Meta, TikTok)
+- community_manager: 🔵 ينتظر webhooks من المنصّات
+
+**نمط التشغيل قبل تكامل APIs:**
+- المسوّدات تظهر في `marketing_queue` بـ status='pending' وحقل scheduled_at
+- المستخدم ينقر "افتح + انشر" يدوياً (السلوك الحالي)
+
+### المرحلة K-5 — تفعيل المنظومة كاملة (2026-04-25)
+1. **`lib/ai-org-context.ts`** — المحرّك القلب:
+   - `buildEmployeeContext(tenantId, employeeCode)` — يقرأ ويبني system prompt ديناميكي من:
+     - الموظف ومديره + tenant overrides
+     - هوية العلامة (broker_identity)
+     - توجيهات المدير (موروثة) + توجيهات الموظف (custom + accepted)
+     - KB المدير + KB الموظف
+   - `logEmployeeActivity()` — تسجيل في org_activity_log
+   - `escalateToCEO()` — رفع قرار للـ CEO
+2. **ربط الـ crons القديمة بالنظام الجديد:**
+   - `ai-marketing` → يستخدم context من `content_creator`
+   - `ai-followup` → context من `leasing_agent`
+   - `ai-analyst` → context من `financial_analyst`
+   - `whatsapp/webhook` → context من `whatsapp_qualifier` (مع fallback)
+   - كل cron الآن يسجّل النشاط في `org_activity_log` مع تفاصيل (عدد التوجيهات المطبَّقة، KB المحمَّلة، إلخ)
+3. **توسيع الفريق (٢ موظفين جدد):**
+   - `collections_specialist` — تحت المدير المالي (يلاحق الفواتير المتأخرة)
+   - `vacancy_filler` — تحت مدير الأملاك (يسوّق الوحدات الفارغة)
+4. **`/dashboard/ceo`** — لوحة CEO:
+   - KPIs: مدراء نشطون، توجيهات نشطة، اقتراحات تنتظرك، escalations
+   - **Pending Escalations** بأولوية عالية مع زر اعتماد/رفض
+   - شبكة بطاقات للأقسام
+   - feed آخر ١٥ نشاط من المنظومة (بترجمة عربية)
+5. nav الداشبورد: "لوحة CEO" في القسم الرئيسي
+
+**النتيجة:** الآن كل cron يقرأ توجيهاتك المخصّصة من DB ويطبّقها. أي تعديل تكتبه في `/dashboard/organization` ينعكس في الاستدعاء التالي للـ AI بدون أي deploy.
+
+### تحديث 2026-04-25: توسيع قسم التسويق
 1. **`/api/org/suggest-directives`** — POST endpoint:
    - body: `{ manager_id, employee_ids?, replace_existing? }`
    - يقرأ توجيهات + KB المدير + هوية الوسيط

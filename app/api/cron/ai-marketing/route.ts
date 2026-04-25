@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { generateText, type AIProvider } from "@/lib/ai-call";
+import { generateText } from "@/lib/ai-call";
+import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-marketing — موظف التسويق
@@ -97,12 +98,12 @@ export async function GET(req: NextRequest) {
         .from("tenants").select("is_active").eq("id", t.tenant_id).single();
       if (!tenantRow?.is_active) continue;
 
-      // 3) هوية الوسيط — للتوجيه الأسلوبي
-      const { data: identity } = await admin
-        .from("broker_identity")
-        .select("broker_name, specialization, writing_tone, brand_keywords, coverage_areas")
-        .eq("tenant_id", t.tenant_id)
-        .maybeSingle();
+      // 3) ✨ بناء context الموظف من التوجيهات + KB (المحرّك الجديد K-5)
+      const ctx = await buildEmployeeContext(t.tenant_id, "content_creator");
+      if (!ctx) {
+        // الموظف معطّل أو غير مهيَّأ
+        continue;
+      }
 
       // 4) أحدث 3 عقارات منشورة في آخر 7 أيام
       const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
@@ -121,20 +122,6 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
-      // 5) لكل عقار — توليد 3 منشورات
-      const brand = [
-        identity?.broker_name && `اسم الوسيط: ${identity.broker_name}`,
-        identity?.specialization && `التخصص: ${identity.specialization}`,
-        identity?.writing_tone && `نبرة الكتابة المفضلة: ${identity.writing_tone}`,
-        identity?.brand_keywords && `كلمات مفتاحية: ${Array.isArray(identity.brand_keywords) ? identity.brand_keywords.join(", ") : identity.brand_keywords}`,
-      ].filter(Boolean).join("\n");
-
-      const systemPrompt = `أنت موظف تسويق عقاري محترف في السوق السعودي.
-${brand}
-اكتب بالعربية الفصحى، اجعل المحتوى يجذب المشترين المحتملين، وركّز على فائدة واضحة.
-لا تضع معلومات غير واردة في بيانات العقار.
-لا تستخدم كلمات مثل "للبيع حصري" إلا إذا كانت فعلاً كذلك.`;
-
       let insertedForTenant = 0;
 
       for (const p of props) {
@@ -150,9 +137,9 @@ ${propertyBrief(p)}
           let content: string;
           try {
             content = await generateText({
-              provider: (t.ai_provider || "openai") as AIProvider,
-              model: t.ai_model || undefined,
-              systemPrompt,
+              provider: ctx.employee.ai_provider,
+              model: ctx.employee.ai_model,
+              systemPrompt: ctx.systemPrompt,
               userPrompt,
               temperature: 0.85,
               maxTokens: 600,
@@ -178,12 +165,26 @@ ${propertyBrief(p)}
               content,
               hashtags,
               status: "pending",
-              generated_by_model: `${t.ai_provider || "openai"}:${t.ai_model || "default"}`,
+              generated_by_model: `${ctx.employee.ai_provider}:${ctx.employee.ai_model}`,
             });
 
           if (!insErr) insertedForTenant++;
         }
       }
+
+      // ✨ تسجيل النشاط في سجل المنظومة
+      await logEmployeeActivity({
+        tenantId: t.tenant_id,
+        employeeId: ctx.employee.id,
+        action: "generated_marketing_posts",
+        details: {
+          properties: props.length,
+          channels: CHANNELS.length,
+          inserted: insertedForTenant,
+          directives_applied: ctx.directiveCount,
+          kb_items_loaded: ctx.kbCount,
+        },
+      });
 
       results.push({ tenant_id: t.tenant_id, ok: true, inserted: insertedForTenant });
     } catch (e) {

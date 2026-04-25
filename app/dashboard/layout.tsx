@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network, Crown,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -23,6 +23,7 @@ const menuGroups: NavGroup[] = [
     title: "الرئيسية",
     items: [
       { label: "لوحة التحكم",    href: "/dashboard",           icon: LayoutDashboard },
+      { label: "لوحة CEO",       href: "/dashboard/ceo",       icon: Crown           },
       { label: "المهام",         href: "/dashboard/tasks",     icon: CheckSquare     },
     ]
   },

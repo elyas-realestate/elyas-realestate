@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { generateText, type AIProvider } from "@/lib/ai-call";
+import { generateText } from "@/lib/ai-call";
+import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-followup — موظف المتابعة
@@ -116,10 +117,9 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
-      const systemPrompt = `أنت موظف متابعة عقاري محترف يعمل مع ${identity?.broker_name || "الوسيط"}.
-${identity?.specialization ? `التخصص: ${identity.specialization}.` : ""}
-اكتب رسالة واتساب قصيرة (40-70 كلمة)، بالعربية، نبرة دافئة مهنية غير ملحة، بدون emojis كثيرة، بدون هاشتاقات، تُشعر العميل بالاهتمام وتفتح باب المحادثة من جديد.
-لا تقل في الرسالة "نظرنا في سجلّك" ولا تذكر الذكاء الاصطناعي.`;
+      // ✨ بناء context الموظف من التوجيهات + KB
+      const ctx = await buildEmployeeContext(t.tenant_id, "leasing_agent");
+      if (!ctx) continue;
 
       let insertedForTenant = 0;
 
@@ -141,9 +141,9 @@ ${identity?.specialization ? `التخصص: ${identity.specialization}.` : ""}
         let message: string;
         try {
           message = await generateText({
-            provider: (t.ai_provider || "openai") as AIProvider,
-            model: t.ai_model || undefined,
-            systemPrompt,
+            provider: ctx.employee.ai_provider,
+            model: ctx.employee.ai_model,
+            systemPrompt: ctx.systemPrompt,
             userPrompt,
             temperature: 0.8,
             maxTokens: 400,
@@ -162,11 +162,24 @@ ${identity?.specialization ? `التخصص: ${identity.specialization}.` : ""}
           message,
           reason: `عميل بارد منذ ${coldDays} يومًا دون نشاط`,
           status: "pending",
-          generated_by_model: `${t.ai_provider || "openai"}:${t.ai_model || "default"}`,
+          generated_by_model: `${ctx.employee.ai_provider}:${ctx.employee.ai_model}`,
         });
 
         if (!insErr) insertedForTenant++;
       }
+
+      // ✨ تسجيل النشاط
+      await logEmployeeActivity({
+        tenantId: t.tenant_id,
+        employeeId: ctx.employee.id,
+        action: "generated_followup_messages",
+        details: {
+          candidates: candidates.length,
+          inserted: insertedForTenant,
+          directives_applied: ctx.directiveCount,
+          kb_items_loaded: ctx.kbCount,
+        },
+      });
 
       results.push({ tenant_id: t.tenant_id, ok: true, candidates: candidates.length, inserted: insertedForTenant });
     } catch (e) {

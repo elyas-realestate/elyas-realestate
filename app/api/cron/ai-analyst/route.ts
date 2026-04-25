@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { generateText, type AIProvider } from "@/lib/ai-call";
+import { generateText } from "@/lib/ai-call";
+import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-analyst — محلّل البيانات
@@ -120,39 +121,34 @@ export async function GET(req: NextRequest) {
         period_end: periodEnd,
       };
 
-      // توليد التحليل والتوصيات عبر AI
-      const systemPrompt = `أنت محلل بيانات عقاري محترف. تتلقى إحصائيات أسبوع واحد وتحولها إلى:
-1. ملخص تنفيذي واضح (4-6 جمل).
-2. توصيات عملية محدَّدة (3-5 نقاط) قابلة للتنفيذ في الأسبوع القادم.
+      // ✨ بناء context الموظف
+      const ctx = await buildEmployeeContext(t.tenant_id, "financial_analyst");
+      if (!ctx) continue;
 
-الأسلوب: عربي فصيح، مباشر، بدون حشو. ركّز على الإشارات الحقيقية (الأرقام الكبيرة، الفجوات، الفرص) وليس على وصف البيانات.
-لا تفترض معلومات غير مذكورة.
-لا تستخدم emojis.`;
+      // الـ system prompt يأتي من ctx، فقط نضيف توجيه التنسيق المطلوب لهذا التقرير
+      const taskInstructions = `\n\n=== مهمتك الحالية ===
+حلّل مقاييس الأسبوع وأنتج:
+1. ملخص تنفيذي واضح (4-6 جمل)
+2. توصيات عملية (3-5 نقاط)
 
-      const userPrompt = `الوسيط: ${identity?.broker_name || tenantRow.slug}
-${identity?.specialization ? `التخصص: ${identity.specialization}` : ""}
-${identity?.coverage_areas ? `نطاق التغطية: ${Array.isArray(identity.coverage_areas) ? identity.coverage_areas.join(", ") : identity.coverage_areas}` : ""}
-
-مقاييس الأسبوع (${weekAgo.toLocaleDateString("ar-SA")} إلى ${now.toLocaleDateString("ar-SA")}):
-${JSON.stringify(rawMetrics, null, 2)}
-
-اكتب الرد بالتنسيق التالي بالضبط:
-
+التنسيق المطلوب بالضبط:
 ## الملخص التنفيذي
 [4-6 جمل]
 
 ## التوصيات العملية
 1. [توصية محددة]
 2. [توصية محددة]
-3. [توصية محددة]
 ...`;
+
+      const userPrompt = `مقاييس الأسبوع (${weekAgo.toLocaleDateString("ar-SA")} إلى ${now.toLocaleDateString("ar-SA")}):
+${JSON.stringify(rawMetrics, null, 2)}`;
 
       let reportText = "";
       try {
         reportText = await generateText({
-          provider: (t.ai_provider || "openai") as AIProvider,
-          model: t.ai_model || undefined,
-          systemPrompt,
+          provider: ctx.employee.ai_provider,
+          model: ctx.employee.ai_model,
+          systemPrompt: ctx.systemPrompt + taskInstructions,
           userPrompt,
           temperature: 0.6,
           maxTokens: 1500,
@@ -182,10 +178,23 @@ ${JSON.stringify(rawMetrics, null, 2)}
           summary_text: summary,
           recommendations,
           email_to: emailTo,
-          generated_by_model: `${t.ai_provider || "openai"}:${t.ai_model || "default"}`,
+          generated_by_model: `${ctx.employee.ai_provider}:${ctx.employee.ai_model}`,
         })
         .select("id")
         .single();
+
+      // ✨ تسجيل النشاط
+      await logEmployeeActivity({
+        tenantId: t.tenant_id,
+        employeeId: ctx.employee.id,
+        action: "generated_weekly_insight",
+        details: {
+          insight_id: inserted?.id,
+          metrics_summary: rawMetrics,
+          directives_applied: ctx.directiveCount,
+          kb_items_loaded: ctx.kbCount,
+        },
+      });
 
       if (insErr) {
         results.push({ tenant_id: t.tenant_id, ok: false, error: insErr.message });
