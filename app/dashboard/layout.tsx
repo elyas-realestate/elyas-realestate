@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -47,12 +47,13 @@ const menuGroups: NavGroup[] = [
     ]
   },
   {
-    title: "المالية",
+    title: "المالية والتعاقد",
     items: [
-      { label: "عروض الأسعار",   href: "/dashboard/quotations",icon: FileText        },
-      { label: "الفواتير",       href: "/dashboard/invoices",  icon: CreditCard      },
+      { label: "عروض الأسعار",   href: "/dashboard/quotations", icon: FileText       },
+      { label: "العقود",         href: "/dashboard/contracts",  icon: FileSignature  },
+      { label: "الفواتير",       href: "/dashboard/invoices",   icon: CreditCard     },
       { label: "العمولات",       href: "/dashboard/commissions",icon: Banknote       },
-      { label: "التحليل المالي", href: "/dashboard/financial", icon: BarChart3       },
+      { label: "التحليل المالي", href: "/dashboard/financial",  icon: BarChart3      },
     ]
   },
   {
