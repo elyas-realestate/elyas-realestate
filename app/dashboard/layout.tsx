@@ -76,13 +76,14 @@ const menuGroups: NavGroup[] = [
 ];
 
 const settingsMenu: NavItemData[] = [
-  { label: "الفريق",        href: "/dashboard/team",           icon: Users      },
-  { label: "الاشتراك",      href: "/dashboard/subscription",   icon: CreditCard },
-  { label: "تأسيس AI",      href: "/dashboard/ai-foundation",  icon: Brain      },
-  { label: "موظفو AI",      href: "/dashboard/ai-employees",   icon: Bot        },
-  { label: "سجل التدقيق",   href: "/dashboard/audit",          icon: Shield     },
-  { label: "الأمان (2FA)",  href: "/dashboard/security",       icon: ShieldCheck },
-  { label: "الإعدادات",     href: "/dashboard/settings",       icon: Settings   },
+  { label: "الفريق",         href: "/dashboard/team",                    icon: Users      },
+  { label: "الاشتراك",       href: "/dashboard/subscription",            icon: CreditCard },
+  { label: "تأسيس AI",       href: "/dashboard/ai-foundation",           icon: Brain      },
+  { label: "موظفو AI",       href: "/dashboard/ai-employees",            icon: Bot        },
+  { label: "التطبيق والإشعارات", href: "/dashboard/settings/notifications", icon: Bell       },
+  { label: "سجل التدقيق",    href: "/dashboard/audit",                   icon: Shield     },
+  { label: "الأمان (2FA)",   href: "/dashboard/security",                icon: ShieldCheck },
+  { label: "الإعدادات",      href: "/dashboard/settings",                icon: Settings   },
 ];
 
 function NavItem({

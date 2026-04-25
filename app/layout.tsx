@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Kufi_Arabic, Tajawal, Cairo } from "next/font/google";
 import "./globals.css";
 import AnalyticsTracker from "./components/AnalyticsTracker";
@@ -26,8 +26,32 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "إلياس الدخيل — وسيط عقاري",
-  description: "منصة إدارة عقارية متكاملة",
+  title: "وسيط برو — المنصة العقارية الذكية",
+  description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين",
+  applicationName: "وسيط برو",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "وسيط برو",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#C6914C",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -44,6 +68,20 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AnalyticsTracker />
         <I18nProvider>{children}</I18nProvider>
+        {/* PWA: register service worker on load */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                  });
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

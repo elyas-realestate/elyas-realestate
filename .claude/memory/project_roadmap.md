@@ -33,6 +33,24 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة G — PWA (2026-04-25)
+1. **SQL migration 029** — `push_subscriptions` table + RLS + `my_push_subscriptions()` helper (جاهز للاستخدام لما VAPID يُضبط)
+2. **`public/icons/`** — 6 أيقونات (96, 144, 192, 512, maskable-512, apple-touch-180) بتدرّج ذهبي وحرف "VR"
+3. **`app/manifest.ts`** — محدَّث بالأيقونات الجديدة + 4 shortcuts (عقارات، عملاء، عقود، صفقات)
+4. **`public/sw.js`** — Service Worker:
+   - cache-first للأصول الثابتة
+   - network-first للـ API + HTML pages
+   - تجاوز Supabase realtime + AI providers
+   - معالج push notifications جاهز (يعمل لما VAPID يُضبط)
+5. **`app/layout.tsx`** — إضافة Metadata.icons + appleWebApp + Viewport.themeColor + تسجيل SW
+6. **`/dashboard/settings/notifications`** — صفحة:
+   - تثبيت التطبيق (beforeinstallprompt + تعليمات يدوية لـ iOS/Android)
+   - تفعيل push (يخفي الزر إذا VAPID غير مضبوط)
+   - قائمة الأجهزة المسجَّلة + إيقاف لكل منها
+7. رابط "التطبيق والإشعارات" في nav الإعدادات
+
+**ملاحظة:** push notifications الفعلية تحتاج خطوة واحدة لاحقاً — توليد VAPID keys وإضافتها لـ Vercel env (`NEXT_PUBLIC_VAPID_PUBLIC_KEY` + `VAPID_PRIVATE_KEY` + `VAPID_SUBJECT`). كل البنية التحتية جاهزة.
+
 ### المرحلة F — العقود الإلكترونية (2026-04-25)
 1. **SQL migration 028** — `e_contract_templates`, `e_contracts`, `e_contract_signatures`, `e_contract_audit` (بادئة `e_` لتجنّب التعارض مع جدول `contracts` القديم في tenant-portal)
 2. **4 قوالب نظام seed**: إيجار سكني، إيجار تجاري، عقد بيع، عقد حصر تسويق (بمتغيرات مرنة عبر JSONB)
