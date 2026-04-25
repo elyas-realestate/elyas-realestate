@@ -20,8 +20,23 @@ interface ProviderResult {
   error?: string;
   balance_usd?: number;
   test_model?: string;
+  rate_limit_remaining?: number;
+  rate_limit_reset?: string;
+  team_status?: string;
+  billing_url?: string;
   tested_at: string;
 }
+
+// روابط مباشرة لصفحات الفواتير لكل مزوّد
+const BILLING_URLS: Record<string, string> = {
+  openai:    "https://platform.openai.com/settings/organization/billing/overview",
+  anthropic: "https://console.anthropic.com/settings/billing",
+  google:    "https://console.cloud.google.com/billing",
+  groq:      "https://console.groq.com/settings/billing",
+  deepseek:  "https://platform.deepseek.com/usage",
+  xai:       "https://console.x.ai",
+  manus:     "https://manus.ai",
+};
 
 const TIMEOUT_MS = 15000;
 
@@ -59,9 +74,33 @@ async function testOpenAI(apiKey: string): Promise<Partial<ProviderResult>> {
       }),
     });
     const latency_ms = Date.now() - start;
-    if (res.ok) return { status: "ok", latency_ms, test_model: "gpt-4o-mini" };
-    const body = await res.text().catch(() => "");
-    return { status: classifyError(res.status, body), latency_ms, error: body.slice(0, 200) };
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      return { status: classifyError(res.status, body), latency_ms, error: body.slice(0, 200) };
+    }
+
+    // محاولة جلب رصيد عبر endpoint قديم — يعمل لبعض الحسابات الترايل
+    let balance_usd: number | undefined;
+    try {
+      const balRes = await fetchWithTimeout("https://api.openai.com/dashboard/billing/credit_grants", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${apiKey}` },
+      }, 4000);
+      if (balRes.ok) {
+        const balData = await balRes.json();
+        if (typeof balData.total_available === "number") balance_usd = balData.total_available;
+      }
+    } catch { /* ignore */ }
+
+    // rate limit headers
+    const rateLimitRemaining = res.headers.get("x-ratelimit-remaining-tokens");
+    return {
+      status: "ok",
+      latency_ms,
+      test_model: "gpt-4o-mini",
+      balance_usd,
+      rate_limit_remaining: rateLimitRemaining ? parseInt(rateLimitRemaining, 10) : undefined,
+    };
   } catch (e) {
     return { status: "network", error: e instanceof Error ? e.message : "unknown" };
   }
@@ -135,9 +174,20 @@ async function testGroq(apiKey: string): Promise<Partial<ProviderResult>> {
       }),
     });
     const latency_ms = Date.now() - start;
-    if (res.ok) return { status: "ok", latency_ms, test_model: "llama-3.3-70b" };
-    const body = await res.text().catch(() => "");
-    return { status: classifyError(res.status, body), latency_ms, error: body.slice(0, 200) };
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      return { status: classifyError(res.status, body), latency_ms, error: body.slice(0, 200) };
+    }
+    // Groq يدعم rate limit headers
+    const remaining = res.headers.get("x-ratelimit-remaining-tokens");
+    const reset = res.headers.get("x-ratelimit-reset-tokens");
+    return {
+      status: "ok",
+      latency_ms,
+      test_model: "llama-3.3-70b",
+      rate_limit_remaining: remaining ? parseInt(remaining, 10) : undefined,
+      rate_limit_reset: reset || undefined,
+    };
   } catch (e) {
     return { status: "network", error: e instanceof Error ? e.message : "unknown" };
   }
@@ -201,9 +251,27 @@ async function testXAI(apiKey: string): Promise<Partial<ProviderResult>> {
       }),
     });
     const latency_ms = Date.now() - start;
-    if (res.ok) return { status: "ok", latency_ms, test_model: "grok-3" };
-    const body = await res.text().catch(() => "");
-    return { status: classifyError(res.status, body), latency_ms, error: body.slice(0, 200) };
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      // إذا فيه team بدون credits، نعرف من الـ error نفسه
+      const status = classifyError(res.status, body);
+      return { status, latency_ms, error: body.slice(0, 200) };
+    }
+
+    // اجلب معلومات key
+    let team_status: string | undefined;
+    try {
+      const keyRes = await fetchWithTimeout("https://api.x.ai/v1/api-key", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${apiKey}` },
+      }, 4000);
+      if (keyRes.ok) {
+        const keyData = await keyRes.json();
+        team_status = keyData.team_blocked ? "محظور" : keyData.api_key_blocked ? "مفتاح محظور" : "نشط";
+      }
+    } catch { /* ignore */ }
+
+    return { status: "ok", latency_ms, test_model: "grok-3", team_status };
   } catch (e) {
     return { status: "network", error: e instanceof Error ? e.message : "unknown" };
   }
@@ -260,12 +328,14 @@ export async function GET(req: NextRequest) {
   const results: ProviderResult[] = await Promise.all(
     providers.map(async (p) => {
       const has_key = !!p.apiKey;
+      const billing_url = BILLING_URLS[p.provider];
       if (!has_key) {
         return {
           provider: p.provider,
           label: p.label,
           has_key,
           status: "no_key" as const,
+          billing_url,
           tested_at,
         };
       }
@@ -279,6 +349,10 @@ export async function GET(req: NextRequest) {
         error: r.error,
         balance_usd: r.balance_usd,
         test_model: r.test_model,
+        rate_limit_remaining: r.rate_limit_remaining,
+        rate_limit_reset: r.rate_limit_reset,
+        team_status: r.team_status,
+        billing_url,
         tested_at,
       };
     })

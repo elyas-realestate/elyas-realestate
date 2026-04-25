@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Cpu, RefreshCw, CheckCircle2, XCircle, AlertTriangle, Key,
-  Wifi, Zap, Wallet, Loader2, Clock,
+  Wifi, Zap, Wallet, Loader2, Clock, ExternalLink, Activity, Users,
 } from "lucide-react";
 
 type ProviderStatus = "ok" | "invalid_key" | "rate_limited" | "network" | "unknown" | "no_key";
@@ -16,6 +16,10 @@ type ProviderResult = {
   error?: string;
   balance_usd?: number;
   test_model?: string;
+  rate_limit_remaining?: number;
+  rate_limit_reset?: string;
+  team_status?: string;
+  billing_url?: string;
   tested_at: string;
 };
 
@@ -177,6 +181,16 @@ export default function AIProvidersPage() {
                     value={`$${result.balance_usd.toFixed(2)}`}
                     valueColor={result.balance_usd < 1 ? "#F87171" : result.balance_usd < 5 ? "#E8B86D" : "#4ADE80"} />
                 )}
+                {typeof result.rate_limit_remaining === "number" && (
+                  <Row icon={Activity} label="متبقي (هذه الدقيقة)"
+                    value={result.rate_limit_remaining.toLocaleString("en-US") + " tokens"}
+                    valueColor="#4ADE80" small />
+                )}
+                {result.team_status && (
+                  <Row icon={Users} label="حالة الفريق"
+                    value={result.team_status}
+                    valueColor={result.team_status === "نشط" ? "#4ADE80" : "#F87171"} />
+                )}
                 <Row icon={Cpu} label="التكلفة التقريبية" value={PRICING_HINTS[result.provider] || "—"} small />
                 {result.error && (
                   <div style={{
@@ -195,10 +209,34 @@ export default function AIProvidersPage() {
                     أضف <code style={{ color: "#E8B86D", direction: "ltr", display: "inline-block" }}>{envVarName(result.provider)}</code> في Vercel Environment Variables
                   </div>
                 )}
+
+                {/* Billing dashboard link */}
+                {result.billing_url && (
+                  <a href={result.billing_url} target="_blank" rel="noreferrer"
+                    style={{
+                      marginTop: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                      padding: "8px 12px", borderRadius: 8,
+                      background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.18)",
+                      color: "#60A5FA", fontSize: 12, fontWeight: 600, textDecoration: "none",
+                    }}>
+                    <ExternalLink size={12} /> افتح Dashboard المزوّد
+                  </a>
+                )}
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* تنبيه: لماذا بعض الأرصدة لا تظهر */}
+      <div style={{ marginTop: 22, padding: 14, background: "rgba(124,58,237,0.04)", border: "1px solid rgba(124,58,237,0.15)", borderRadius: 10, fontSize: 12, color: "#A1A1AA", lineHeight: 1.8 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#A78BFA", marginBottom: 6 }}>
+          ℹ️ لماذا لا يظهر الرصيد لكل المزوّدين؟
+        </div>
+        عرض الرصيد رقمياً يعتمد على المزوّد نفسه:
+        <br />• <strong>DeepSeek</strong> فقط يدعم API عام للرصيد ✓
+        <br />• <strong>OpenAI</strong> ألغى endpoint الرصيد (أحياناً يعمل للحسابات الترايل)
+        <br />• <strong>Anthropic + Google + Groq + xAI</strong>: لا يوفّرون API للرصيد — استخدم زر "افتح Dashboard" لمراجعة الرصيد عند المزوّد مباشرة
       </div>
 
       {/* Recommendations */}
