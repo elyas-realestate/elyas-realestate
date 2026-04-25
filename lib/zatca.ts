@@ -128,7 +128,7 @@ export async function hashInvoice(xmlOrPayload: string): Promise<string> {
     }
   }
   // WebCrypto (Edge / Browser)
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const digest = await crypto.subtle.digest("SHA-256", bytes as unknown as BufferSource);
   return toBase64(new Uint8Array(digest));
 }
 

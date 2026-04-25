@@ -33,6 +33,30 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة J — تحسينات تشغيلية + Push Notifications (2026-04-25)
+1. **إصلاح TypeScript errors قديمة:**
+   - `app/api/cron/reminders/route.ts` — تحويل supabase admin إلى `any` لتجاوز schema typing
+   - `lib/zatca.ts` — `Uint8Array → BufferSource` cast
+   - `app/api/ai-content/route.ts` — حذف query على أعمدة غير موجودة في `ai_config` (provider, api_key_encrypted, is_active)، الاعتماد فقط على env vars
+2. **VAPID Keys موَّلدة (لإعدادها في Vercel):**
+   ```
+   VAPID_PUBLIC_KEY (راجع روابط: قبل push)
+   VAPID_PRIVATE_KEY
+   VAPID_SUBJECT=mailto:vip.elyas@gmail.com
+   ```
+3. **`web-push@^3.6.7`** مضاف لـ package.json (Vercel يثبّته تلقائياً)
+4. **`lib/push.ts`** — مُوحِّد:
+   - `sendPushToUser(userId, payload)` — لكل أجهزة المستخدم، يحذف expired (410)
+   - `sendPushToTenant(tenantId, payload)` — لكل أعضاء الفريق
+5. **`/api/push/notify`** — endpoint اختبار (يرسل لنفسك)
+6. **زر "أرسل اختبار"** في `/dashboard/settings/notifications` (يظهر بعد ضبط VAPID)
+7. **Triggers مفعَّلة:**
+   - `cron/reminders` يرسل push عند فاتورة متأخرة/مستحقة
+   - `whatsapp/webhook` يرسل push للوسيط عند رسالة جديدة من عميل
+
+**مطلوب من المستخدم خطوة واحدة:**  
+إضافة 3 متغيرات بيئة في Vercel (Settings → Environment Variables): `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` — القيم محفوظة في الذاكرة أعلاه.
+
 ### المرحلة I — تجهيز الإطلاق التجاري (2026-04-25)
 1. **`/dashboard/marketing/queue`** — مراجعة منشورات AI (filters: pending/approved/rejected/published، اعتماد، رفض، نسخ، نشر مباشر)
 2. **`/dashboard/clients/followups`** — مراجعة رسائل المتابعة AI، تحرير، إرسال (يستخدم `/api/whatsapp/send` تلقائياً)

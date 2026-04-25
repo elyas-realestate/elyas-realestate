@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { logIncomingMessage, sendText } from "@/lib/whatsapp";
 import { generateText, type AIProvider } from "@/lib/ai-call";
+import { sendPushToTenant } from "@/lib/push";
 
 // ══════════════════════════════════════════════════════════════
 // /api/whatsapp/webhook — Meta Cloud API receiver
@@ -146,6 +147,14 @@ async function processWebhook(body: MetaWebhookPayload) {
           messageType,
           metaMessageId: msg.id,
         });
+
+        // ── Push للوسيط بأن فيه رسالة جديدة ──
+        sendPushToTenant(tenantId, {
+          title: `💬 رسالة جديدة — ${contactName || msg.from}`,
+          body: bodyText.slice(0, 100),
+          url: "/dashboard/whatsapp/inbox",
+          tag: `wa-${msg.from}`,
+        }).catch((e) => console.warn("[whatsapp/webhook] push failed:", e));
 
         // ── Auto-reply (إذا مفعَّل) ──
         if (msg.type === "text" && bodyText) {

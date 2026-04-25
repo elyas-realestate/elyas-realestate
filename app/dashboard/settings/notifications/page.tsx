@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import {
   ArrowRight, Smartphone, Bell, BellOff, Download, CheckCircle2,
-  AlertCircle, Apple, Loader2, Trash2, Globe,
+  AlertCircle, Apple, Loader2, Trash2, Globe, Send,
 } from "lucide-react";
 
 type Subscription = {
@@ -250,6 +250,45 @@ export default function NotificationsSettings() {
           </div>
         )}
       </Card>
+
+      {/* اختبار Push */}
+      {subs.length > 0 && vapidConfigured && (
+        <Card title="اختبار الإشعارات" icon={Send}>
+          <p style={{ fontSize: 13, color: "#A1A1AA", marginBottom: 12 }}>
+            أرسل إشعاراً تجريبياً لكل أجهزتك المسجَّلة للتأكد من أن النظام يعمل.
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                const res = await fetch("/api/push/notify", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    title: "وسيط برو — اختبار",
+                    body: "Push notifications تعمل! 🎉",
+                  }),
+                });
+                const json = await res.json();
+                if (json.sent > 0) {
+                  toast.success(`تم إرسال إشعار تجريبي (${json.sent} جهاز)`);
+                } else {
+                  toast.error("لم يُرسَل أي إشعار — تحقق من تفعيل الإشعارات في الجهاز");
+                }
+              } catch (e) {
+                toast.error(e instanceof Error ? e.message : "فشل الإرسال");
+              }
+            }}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "10px 16px",
+              background: "rgba(96,165,250,0.1)", color: "#60A5FA",
+              border: "1px solid rgba(96,165,250,0.3)", borderRadius: 9,
+              fontSize: 13, fontWeight: 600, cursor: "pointer",
+              fontFamily: "'Tajawal', sans-serif",
+            }}>
+            <Send size={14} /> أرسل إشعار اختباري
+          </button>
+        </Card>
+      )}
 
       {/* القسم 3: الأجهزة المسجَّلة */}
       {subs.length > 0 && (

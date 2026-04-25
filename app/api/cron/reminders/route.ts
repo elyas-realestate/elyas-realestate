@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendPushToTenant } from "@/lib/push";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/reminders — يُشغّل يومياً (Vercel Cron أو خارجي)
@@ -16,7 +17,8 @@ function daysBetween(a: Date, b: Date): number {
   return Math.floor(ms / 86400000);
 }
 
-async function processInvoiceReminders(admin: ReturnType<typeof createClient>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function processInvoiceReminders(admin: any) {
   const now = new Date();
   // الفواتير غير المدفوعة (المتأخرة أو قاربت الاستحقاق خلال 3 أيام)
   const cutoff = new Date();
@@ -67,20 +69,26 @@ async function processInvoiceReminders(admin: ReturnType<typeof createClient>) {
       .maybeSingle();
     if (existing) continue;
 
+    const bodyText = `المبلغ: ${Number(inv.amount) + Number(inv.vat_amount || 0)} ر.س — رقم ${inv.invoice_number || inv.id.slice(0,8)}`;
     await admin.from("notifications").insert({
       tenant_id:    inv.tenant_id,
       kind,
       title,
-      body:         `المبلغ: ${Number(inv.amount) + Number(inv.vat_amount || 0)} ر.س — رقم ${inv.invoice_number || inv.id.slice(0,8)}`,
+      body:         bodyText,
       reference_id: inv.id,
       reference_type: "invoice",
     });
+    // Push notification (لو VAPID مضبوط)
+    sendPushToTenant(inv.tenant_id, {
+      title, body: bodyText, url: "/dashboard/invoices", tag: kind,
+    }).catch((e) => console.warn("[cron/reminders] push failed:", e));
     notificationsCreated++;
   }
   return { processed: invoices.length, notifications: notificationsCreated };
 }
 
-async function processContractReminders(admin: ReturnType<typeof createClient>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function processContractReminders(admin: any) {
   // عقود الإيجار في property_requests بتاريخ end_date قريب
   // نعتمد على جدول contracts لو موجود — وإلا نتخطّى
   const now = new Date();
@@ -128,7 +136,8 @@ async function processContractReminders(admin: ReturnType<typeof createClient>) 
   return { processed: contracts.length, notifications: notificationsCreated };
 }
 
-async function processStaleProperties(admin: ReturnType<typeof createClient>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function processStaleProperties(admin: any) {
   // عقارات ما تم التحقق من توفرها خلال آخر 7 أيام
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 7);
@@ -142,7 +151,7 @@ async function processStaleProperties(admin: ReturnType<typeof createClient>) {
   if (error || !props) return { processed: 0 };
 
   const stale = props.filter(
-    (p) => !p.last_availability_check || new Date(p.last_availability_check) < cutoff,
+    (p: { last_availability_check?: string | null }) => !p.last_availability_check || new Date(p.last_availability_check) < cutoff,
   );
 
   // نلخّص في تنبيه واحد لكل tenant — مو تنبيه لكل عقار

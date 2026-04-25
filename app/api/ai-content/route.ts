@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { checkLimit } from "@/lib/plan-limits";
-import { safeDecrypt } from "@/lib/crypto";
+// safeDecrypt removed — kept for future migration when ai_config gains api_key_encrypted column
 import {
   checkRateLimit,
   AI_RATE_LIMIT,
@@ -221,16 +221,11 @@ export async function POST(req: NextRequest) {
     const p = provider || "openai";
     const m = model || "gpt-3.5-turbo";
 
-    // ── Fetch AI Configuration Keys Dynamically ──
-    const { data: dbKeys } = await supabase
-      .from("ai_config")
-      .select("provider, api_key_encrypted")
-      .eq("is_active", true);
-      
-    // Helper: يقرأ المفتاح من DB (مع فك التشفير) ثم يرجع لمتغيرات البيئة
-    const getProviderKey = async (prov: string): Promise<string> => {
-      const dbKey = (dbKeys || []).find(k => k.provider === prov)?.api_key_encrypted;
-      if (dbKey) return await safeDecrypt(dbKey);
+    // ── Provider keys: من متغيرات البيئة (Vercel env vars) ──
+    // ملاحظة: جدول ai_config لا يحتوي على أعمدة (provider, api_key_encrypted)
+    // فاعتمدنا على env vars بشكل كامل. لو أردت تخصيص لكل مستأجر مستقبلاً،
+    // أضف الأعمدة عبر migration ثم استعد القراءة من DB.
+    const getProviderKey = (prov: string): string => {
       if (prov === "openai")    return process.env.OPENAI_API_KEY    || "";
       if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
       if (prov === "google")    return process.env.GOOGLE_API_KEY    || "";
@@ -241,7 +236,7 @@ export async function POST(req: NextRequest) {
       return "";
     };
 
-    const apiKey1 = await getProviderKey(p);
+    const apiKey1 = getProviderKey(p);
     if (!apiKey1) return NextResponse.json({ error: `مفتاح ${p} غير موجود — يرجى ربطه في مركز الذكاء الاصطناعي` }, { status: 400 });
 
     const chatMessages = messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
@@ -259,7 +254,7 @@ export async function POST(req: NextRequest) {
     if (mode === "chain") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      const apiKey2 = await getProviderKey(p2);
+      const apiKey2 = getProviderKey(p2);
       if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج المراجع` }, { status: 400 });
 
       const draft = await callModel(p, m, systemPrompt, chatMessages, apiKey1);
@@ -272,7 +267,7 @@ export async function POST(req: NextRequest) {
     if (mode === "compare") {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
-      const apiKey2 = await getProviderKey(p2);
+      const apiKey2 = getProviderKey(p2);
       if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج الثاني` }, { status: 400 });
 
       const [result1, result2] = await Promise.all([
