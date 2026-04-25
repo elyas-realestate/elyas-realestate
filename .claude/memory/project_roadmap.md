@@ -33,6 +33,44 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### 💰 سلّم ترقية النماذج (للمراجعة في كل مرحلة من نمو المنصّة)
+
+| المرحلة | المدراء | الموظفون | تكلفة/وسيط/شهر | متى ترقّي |
+|---|---|---|---|---|
+| ✅ **التجربة (الآن)** | Gemini 2.5 Flash | DeepSeek + Gemini Flash | **~$1.40** | (الإعداد الحالي) |
+| 🚀 أول ٥-١٠ مشتركين | Claude Haiku 4.5 | DeepSeek + Gemini Flash | ~$5 | عند MRR > $500 |
+| 🏢 ٥٠-١٠٠ مشترك | Haiku + Sonnet لـ critical فقط + **Prompt Caching** | DeepSeek + Gemini Flash | ~$1-2 (cached) | عند MRR > $5K |
+| 🌍 التوسّع التجاري الكبير | Fine-tuning + **RAG** عبر pgvector | كما هي | حسب الاستخدام | عند MRR > $20K |
+
+**Concepts المهمة:**
+- **Prompt Caching ≠ Self-Learning.** Caching = توفير تقني ٨٠-٩٠٪ على input المتكرر (التوجيهات + KB). النموذج لا يتعلّم.
+- **Self-Learning الحقيقي = RAG** (بحث دلالي في KB عبر embeddings + pgvector في Supabase) أو **Fine-tuning** (تدريب نموذج مخصّص — متقدم).
+- **التعلّم الآن:** متاح عبر RAG في K-7 لاحقاً، يستخدم نفس KB التي يضيفها المستخدم في K-3.
+
+### تحديث 2026-04-25: المدراء الخمسة → Gemini 2.5 Flash
+تم تحويل افتراضي المدراء من `claude-sonnet-4-6` إلى `gemini-2.5-flash` لتقليل تكلفة التجربة من $12/شهر إلى ~$1.40/شهر (٩x أرخص).
+
+### المرحلة K-3 — واجهات إدارة الهيكل التنظيمي (2026-04-25)
+1. **`lib/org-constants.ts`** — ثوابت مشتركة (department metadata, provider labels, KB categories, source meta, trigger labels)
+2. **`/dashboard/organization`** — نظرة عامة:
+   - بطاقة CEO فوق
+   - شبكة بطاقات للمدراء الـ ٥ مع stats (employees + directives + pending suggestions + KB items)
+   - Summary stats (مدراء، موظفون، توجيهات، اقتراحات، KB)
+   - Tip card يشرح كيف يعمل النظام
+3. **`/dashboard/organization/manager/[id]`** — ٤ تابات:
+   - **التوجيهات:** قائمة + Add/Edit/Delete (modal)
+   - **قاعدة المعرفة:** قائمة + Add/Edit/Delete (modal مع category)
+   - **الفريق:** بطاقات الموظفين تحت المدير (link to detail)
+   - **النشاط:** سجل org_activity_log للمدير
+4. **`/dashboard/organization/employee/[id]`** — ٣ تابات:
+   - **التوجيهات:** ٣ أقسام:
+     - اقتراحات تنتظر مراجعة (مع زر اعتماد/رفض) — يظهر فوق إذا فيه
+     - موروث من المدير (read-only)
+     - مخصّص (custom + accepted suggestions) — مع Add/Edit/Delete
+   - **قاعدة المعرفة:** خاصة بالموظف
+   - **النشاط:** placeholder حالياً (يعمل لما triggers تشتغل في K-5)
+5. **nav الداشبورد:** إضافة "الهيكل التنظيمي AI" في قائمة الإعدادات
+
 ### المرحلة K-2 — قاعدة بيانات الهيكل التنظيمي (2026-04-25)
 1. **SQL migration 031** — ٧ جداول:
    - `ai_managers` (system-wide) — ٥ مدراء
