@@ -31,8 +31,9 @@ const menuGroups: NavGroup[] = [
     items: [
       { label: "العملاء",        href: "/dashboard/clients",   icon: Users           },
       { label: "الصفقات",        href: "/dashboard/deals",     icon: TrendingUp      },
-      { label: "الأهداف",        href: "/dashboard/goals",     icon: Trophy          },
-      { label: "الواتساب",       href: "/dashboard/whatsapp",  icon: MessageCircle   },
+      { label: "الأهداف",        href: "/dashboard/goals",          icon: Trophy        },
+      { label: "محادثات WhatsApp", href: "/dashboard/whatsapp/inbox", icon: MessageCircle },
+      { label: "قوالب واتساب",     href: "/dashboard/whatsapp",       icon: FileText      },
     ]
   },
   {

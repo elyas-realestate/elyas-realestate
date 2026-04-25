@@ -33,6 +33,32 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة H — WhatsApp Business API (2026-04-25)
+1. **SQL migration 030** — `whatsapp_config` (مفاتيح Meta لكل مستأجر)، `whatsapp_templates`، `whatsapp_messages` (سجل المحادثات الكامل) + `tenant_by_whatsapp_phone_id()` helper
+2. **lib/whatsapp.ts** — مُوحِّد إرسال:
+   - `sendText` و `sendTemplate` يكتشفان تلقائياً إذا Meta مُعدَّ → يرسلان عبر API، وإلا → wa.me url
+   - `normalizePhone` (يحوّل 0501234567 → 9665xxxxxxxx)
+   - `logIncomingMessage` للـ webhook
+   - يستخدم `safeDecrypt` لفك تشفير access_token
+3. **/api/whatsapp/webhook** — Meta Cloud API receiver:
+   - GET → التحقق من challenge (uses META_WEBHOOK_VERIFY_TOKEN env)
+   - POST → يستقبل الرسائل، يصنّف intent (greeting/property_search/price)، يبحث في properties، يولّد رد ذكي عبر `lib/ai-call`، يرسل + يُسجّل
+4. **/api/whatsapp/send** — endpoint للإرسال من الداشبورد
+5. **/api/whatsapp/encrypt-token** — endpoint لتشفير access_token قبل حفظه
+6. **/dashboard/whatsapp/inbox** — واجهة محادثات بثلاث أعمدة:
+   - قائمة المحادثات (مجمَّعة برقم العميل)
+   - thread view (incoming/outgoing مع timestamps + قراءة)
+   - composer للإرسال (Enter للإرسال، Shift+Enter لسطر جديد)
+7. **/dashboard/whatsapp/settings** — إعدادات Meta:
+   - Phone Number ID + Business Account ID + Access Token (مشفَّر)
+   - Webhook URL (نسخ بزر) + Verify Token (مولَّد عشوائياً)
+   - Auto-reply toggle + اختيار AI provider/model
+   - Active toggle
+8. **META_SETUP.md** — دليل عربي شامل (9 خطوات + استكشاف أخطاء + تكلفة)
+9. nav الداشبورد: "محادثات WhatsApp" (الجديد) + "قوالب واتساب" (القديم)
+
+**ملاحظة:** الإرسال الفعلي يحتاج إعداد Meta من جهة المستخدم (1-3 أيام مع موافقات Meta). الكود يعمل بـ wa.me كـ fallback تلقائياً، فالمنصة تعمل الآن بدون Meta. بعد إعداد Meta، النظام يتحوّل تلقائياً للإرسال عبر API.
+
 ### المرحلة G — PWA (2026-04-25)
 1. **SQL migration 029** — `push_subscriptions` table + RLS + `my_push_subscriptions()` helper (جاهز للاستخدام لما VAPID يُضبط)
 2. **`public/icons/`** — 6 أيقونات (96, 144, 192, 512, maskable-512, apple-touch-180) بتدرّج ذهبي وحرف "VR"
@@ -108,18 +134,21 @@
 - `/dashboard/settings/notifications`
 - **SQL migration 029** — `push_subscriptions`
 
-### 4️⃣ موظف الاستقبال (WhatsApp Auto-Reply) — يحتاج Meta setup يدوي
-- يستقبل webhook من Meta Business API
-- يرد بصوت الوسيط (`broker_identity.writing_tone`)
-- يبحث في `properties` ويرسل 3 مطابقات
-- يسجل في `ai_conversations` (الجدول جاهز من migration 026)
-- **يحتاج منك أولاً:** إنشاء حساب Meta Business + توثيق رقم WhatsApp + قوالب رسائل معتمدة
+### 4️⃣ تفعيل Push Notifications (يحتاج VAPID keys)
+- توليد VAPID keys (5 دقائق): `npx web-push generate-vapid-keys`
+- إضافة 3 متغيرات بيئة في Vercel: `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`
+- بناء `/api/push/notify` لإرسال إشعارات (تحتاج `web-push` npm package)
+- ربط trigger من crons: عميل ساخن، توقيع عقد، عقار جديد
 
-### 5️⃣ WhatsApp Business API رسمي (يبدأ مع #4)
-- استبدال `wa.me` بـ Meta Business API للإرسال الفعلي
-- `lib/whatsapp.ts` — `sendTemplate(to, template, vars)`
-- زرّ "إرسال" في `followup_queue` و`marketing_queue` (whatsapp channel)
-- `/dashboard/whatsapp` — عرض المحادثات والقوالب
+### 5️⃣ تفعيل Meta WhatsApp Business (يحتاج خطوات Meta من المستخدم)
+- اتباع `META_SETUP.md` (9 خطوات)
+- لما يكتمل، الكود يتحوّل تلقائياً من wa.me إلى Meta API بدون أي تعديل برمجي
+
+### 6️⃣ تحسينات لاحقة
+- إصلاح TypeScript errors في `cron/reminders` و `lib/zatca.ts` و `ai-content` (في "ملاحظات معلَّقة")
+- إضافة zatca-saudi onboarding wizard (تجهيز شهادات ZATCA)
+- ربط Nafath (تحقق هوية الطرف الثاني في العقود)
+- داشبورد للقوائم (followup_queue/marketing_queue) لمراجعة وإرسال جماعي
 
 ---
 
