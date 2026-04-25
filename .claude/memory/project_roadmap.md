@@ -33,6 +33,25 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة K-2 — قاعدة بيانات الهيكل التنظيمي (2026-04-25)
+1. **SQL migration 031** — ٧ جداول:
+   - `ai_managers` (system-wide) — ٥ مدراء
+   - `ai_employees` (system-wide) — ١٠ موظفين تحت المدراء
+   - `tenant_ai_config` — تخصيص لكل tenant (provider override + enabled)
+   - `directives` (polymorphic: target_kind manager/employee + source custom/inherited/suggested)
+   - `knowledge_base` (polymorphic + categories: faq/brand/policy/property_data/...)
+   - `org_escalations` (قرارات تنتظر CEO، severity + status)
+   - `org_activity_log` (سجل تتبّع كامل)
+2. **Helper functions:** `get_directives_for_target`, `get_kb_for_target`, `org_structure_for_tenant`
+3. **Seeded data:**
+   - **CS Manager** (Claude Sonnet) → whatsapp_qualifier (DeepSeek) + lead_scorer (DeepSeek)
+   - **Marketing Manager** (Claude Sonnet) → content_creator (Gemini) + trend_scout (Grok)
+   - **Asset Manager** (Claude Sonnet) → leasing_agent (DeepSeek) + maintenance_coordinator (GPT-4o-mini)
+   - **Financial Manager** (Gemini Pro) → bookkeeper (DeepSeek) + financial_analyst (Gemini Pro)
+   - **Dev/BizDev Manager** (Claude Sonnet) → bizdev_scout (Grok) + dev_lead (Claude Sonnet)
+
+**التالي K-3:** بناء واجهات `/dashboard/organization` + `manager/[id]` + `employee/[id]` لإدارة التوجيهات وKB.
+
 ### المرحلة K-1 — مركز صحة مزوّدي AI (2026-04-25)
 1. **`/api/admin/ai-providers/test`** — endpoint يختبر ٧ مزوّدين (OpenAI, Anthropic, Google, Groq, DeepSeek, xAI, Manus) بطلب صغير لكل مزوّد + رصيد DeepSeek
 2. **`/admin/ai-providers`** — صفحة super-admin:
