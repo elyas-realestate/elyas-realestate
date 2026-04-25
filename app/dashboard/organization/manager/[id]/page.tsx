@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { DEPARTMENT_META, PROVIDER_LABELS, KB_CATEGORIES, TRIGGER_LABELS } from "@/lib/org-constants";
 import {
   ArrowRight, Sparkles, BookOpen, Users, Activity, Plus, Edit3, Trash2,
-  Save, X, ChevronLeft, Loader2, AlertCircle, Bot, Cpu, Clock,
+  Save, X, ChevronLeft, Loader2, AlertCircle, Bot, Cpu, Clock, Wand2,
 } from "lucide-react";
 
 type Manager = {
@@ -138,6 +138,11 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
+      {/* Generate Suggestions for Team — banner */}
+      {directives.length > 0 && employees.length > 0 && (
+        <SuggestionsBanner managerId={id} managerName={manager.name} employeeCount={employees.length} />
+      )}
+
       {/* Tabs */}
       <div style={{ display: "flex", gap: 4, marginBottom: 18, borderBottom: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
         <TabButton active={tab === "directives"} onClick={() => setTab("directives")} icon={Sparkles} label="التوجيهات" badge={directives.length} />
@@ -250,6 +255,66 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
           onSave={() => { setShowKBModal(false); load(); }}
         />
       )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Suggestions Banner — يوفّر زر توليد اقتراحات لكل الفريق
+// ─────────────────────────────────────────────────────────────
+function SuggestionsBanner({ managerId, managerName, employeeCount }: { managerId: string; managerName: string; employeeCount: number }) {
+  const [busy, setBusy] = useState(false);
+  const [replaceExisting, setReplaceExisting] = useState(false);
+
+  async function generate() {
+    if (!confirm(`توليد اقتراحات توجيهات لـ ${employeeCount} موظفين تحت ${managerName}؟ يستغرق ${employeeCount * 5}-${employeeCount * 10} ثانية.`)) return;
+    setBusy(true);
+    try {
+      const res = await fetch("/api/org/suggest-directives", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ manager_id: managerId, replace_existing: replaceExisting }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "فشل التوليد");
+      toast.success(`تم توليد ${json.total_suggestions} اقتراح لـ ${json.employees_processed} موظفين. اضغط على أي موظف لمراجعة الاقتراحات.`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
+    }
+    setBusy(false);
+  }
+
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, rgba(232,184,109,0.08), rgba(198,145,76,0.04))",
+      border: "1px solid rgba(232,184,109,0.25)",
+      borderRadius: 12, padding: 14, marginBottom: 18,
+      display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+    }}>
+      <Wand2 size={20} style={{ color: "#E8B86D", flexShrink: 0 }} />
+      <div style={{ flex: 1, minWidth: 200 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#E8B86D" }}>
+          توليد اقتراحات للفريق ({employeeCount} موظفين)
+        </div>
+        <div style={{ fontSize: 11, color: "#A1A1AA", marginTop: 3 }}>
+          AI يحوّل توجيهات هذا المدير إلى ٣-٥ توجيهات تشغيلية لكل موظف، تظهر في صفحاتهم بحالة "بانتظار مراجعتك".
+        </div>
+      </div>
+      <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#A1A1AA", cursor: "pointer" }}>
+        <input type="checkbox" checked={replaceExisting} onChange={e => setReplaceExisting(e.target.checked)}
+          style={{ accentColor: "#E8B86D" }} />
+        استبدال الاقتراحات السابقة
+      </label>
+      <button onClick={generate} disabled={busy}
+        style={{
+          display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 8,
+          background: "linear-gradient(135deg, #E8B86D, #C6914C)",
+          color: "#0A0A0C", border: "none", fontSize: 13, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
+          fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
+        }}>
+        {busy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Wand2 size={13} />}
+        {busy ? "جاري التوليد..." : "ولّد الاقتراحات"}
+      </button>
     </div>
   );
 }

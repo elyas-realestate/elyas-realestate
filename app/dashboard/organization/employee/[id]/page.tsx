@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { DEPARTMENT_META, PROVIDER_LABELS, KB_CATEGORIES, TRIGGER_LABELS, DIRECTIVE_SOURCE_META } from "@/lib/org-constants";
 import {
   ArrowRight, Sparkles, BookOpen, Activity, Plus, Edit3, Trash2,
-  Save, X, Loader2, AlertCircle, Bot, Cpu, Clock, Check, ChevronUp, ChevronDown,
+  Save, X, Loader2, AlertCircle, Bot, Cpu, Clock, Check, ChevronUp, ChevronDown, Wand2,
 } from "lucide-react";
 
 type Employee = {
@@ -139,6 +139,17 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
       {/* Directives Tab — 3 sections */}
       {tab === "directives" && tenantId && (
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          {/* Generate Suggestions Button — يظهر دائماً */}
+          {managerDirectives.length > 0 && (
+            <GenerateSuggestionsButton
+              employeeId={id}
+              managerId={employee.manager_id}
+              employeeName={employee.name}
+              hasPending={suggestedDirectives.length > 0}
+              onDone={load}
+            />
+          )}
+
           {/* Pending Suggestions — أعلى أولوية */}
           {suggestedDirectives.length > 0 && (
             <Section title={`${suggestedDirectives.length} اقتراح بانتظار مراجعتك`} sub="AI ولّد هذه التوجيهات تلقائياً بناءً على توجيهات المدير" color="#E8B86D" highlight>
@@ -259,6 +270,56 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           onSave={() => { setShowKBModal(false); load(); }}
         />
       )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Generate Suggestions button
+// ─────────────────────────────────────────────────────────────
+function GenerateSuggestionsButton({ employeeId, managerId, employeeName, hasPending, onDone }: {
+  employeeId: string; managerId: string; employeeName: string; hasPending: boolean; onDone: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  async function generate() {
+    if (hasPending && !confirm("يوجد اقتراحات سابقة بانتظار مراجعتك. توليد جديدة سيستبدلها. متابعة؟")) return;
+    setBusy(true);
+    try {
+      const res = await fetch("/api/org/suggest-directives", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ manager_id: managerId, employee_ids: [employeeId], replace_existing: hasPending }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "فشل التوليد");
+      const inserted = json.results?.[0]?.inserted ?? 0;
+      toast.success(`تم توليد ${inserted} اقتراح لـ ${employeeName}`);
+      onDone();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
+    }
+    setBusy(false);
+  }
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap",
+      padding: 12, background: "rgba(232,184,109,0.05)", border: "1px solid rgba(232,184,109,0.18)",
+      borderRadius: 10,
+    }}>
+      <div style={{ fontSize: 12, color: "#A1A1AA", display: "flex", alignItems: "center", gap: 6 }}>
+        <Wand2 size={13} style={{ color: "#E8B86D" }} />
+        ولّد اقتراحات توجيهات تشغيلية بناءً على توجيهات المدير
+      </div>
+      <button onClick={generate} disabled={busy}
+        style={{
+          display: "flex", alignItems: "center", gap: 5, padding: "7px 14px", borderRadius: 7,
+          background: "linear-gradient(135deg, #E8B86D, #C6914C)",
+          color: "#0A0A0C", border: "none", fontSize: 12, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
+          fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
+        }}>
+        {busy ? <Loader2 size={11} style={{ animation: "spin 1s linear infinite" }} /> : <Wand2 size={11} />}
+        {busy ? "..." : hasPending ? "ولّد جديدة" : "ولّد اقتراحات"}
+      </button>
     </div>
   );
 }
