@@ -33,6 +33,15 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة I — تجهيز الإطلاق التجاري (2026-04-25)
+1. **`/dashboard/marketing/queue`** — مراجعة منشورات AI (filters: pending/approved/rejected/published، اعتماد، رفض، نسخ، نشر مباشر)
+2. **`/dashboard/clients/followups`** — مراجعة رسائل المتابعة AI، تحرير، إرسال (يستخدم `/api/whatsapp/send` تلقائياً)
+3. **`/dashboard/insights`** — تقارير المحلل الأسبوعي (KPIs، ملخص، توصيات، Top lists، طباعة PDF)
+4. **تحديث `app/page.tsx`** — features الـ ٩ تشمل الميزات الجديدة، pricing محدَّث (199/499)، hero subtitle يبرز موظفي AI
+5. **`/onboarding`** — wizard 3 خطوات (هوية + خطة + تفعيل موظفي AI) مع pre-fill من بيانات التسجيل
+6. تحديث nav الداشبورد بـ ٣ روابط جديدة (متابعات AI، قائمة منشورات AI، إلخ)
+7. `/register` يحوّل الآن لـ `/onboarding` بدل `/dashboard` بعد التسجيل
+
 ### المرحلة H — WhatsApp Business API (2026-04-25)
 1. **SQL migration 030** — `whatsapp_config` (مفاتيح Meta لكل مستأجر)، `whatsapp_templates`، `whatsapp_messages` (سجل المحادثات الكامل) + `tenant_by_whatsapp_phone_id()` helper
 2. **lib/whatsapp.ts** — مُوحِّد إرسال:

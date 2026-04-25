@@ -31,9 +31,10 @@ const menuGroups: NavGroup[] = [
     items: [
       { label: "العملاء",        href: "/dashboard/clients",   icon: Users           },
       { label: "الصفقات",        href: "/dashboard/deals",     icon: TrendingUp      },
-      { label: "الأهداف",        href: "/dashboard/goals",          icon: Trophy        },
-      { label: "محادثات WhatsApp", href: "/dashboard/whatsapp/inbox", icon: MessageCircle },
-      { label: "قوالب واتساب",     href: "/dashboard/whatsapp",       icon: FileText      },
+      { label: "الأهداف",          href: "/dashboard/goals",             icon: Trophy        },
+      { label: "متابعات AI",        href: "/dashboard/clients/followups", icon: Bot           },
+      { label: "محادثات WhatsApp",  href: "/dashboard/whatsapp/inbox",    icon: MessageCircle },
+      { label: "قوالب واتساب",      href: "/dashboard/whatsapp",          icon: FileText      },
     ]
   },
   {
@@ -60,8 +61,9 @@ const menuGroups: NavGroup[] = [
   {
     title: "التسويق والمحتوى",
     items: [
-      { label: "المحتوى",        href: "/dashboard/content",   icon: Megaphone       },
-      { label: "التسويق",        href: "/dashboard/marketing", icon: Target          },
+      { label: "المحتوى",         href: "/dashboard/content",         icon: Megaphone },
+      { label: "التسويق",         href: "/dashboard/marketing",       icon: Target    },
+      { label: "قائمة منشورات AI", href: "/dashboard/marketing/queue", icon: Bot       },
     ]
   },
   {

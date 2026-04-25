@@ -103,9 +103,9 @@ export default function Register() {
       }
     }
 
-    // إذا الجلسة موجودة مباشرة (email confirmation معطّل) — انتقل للداشبورد
+    // إذا الجلسة موجودة مباشرة (email confirmation معطّل) — ابدأ الـ onboarding
     if (data.session) {
-      window.location.href = "/dashboard";
+      window.location.href = "/onboarding";
       return;
     }
 
