@@ -33,6 +33,23 @@
 5. **lib/admin-auth.ts** — helper `requireSuperAdmin(req)`
 6. **تحديث admin layout nav** — إضافة روابط tenants/subscriptions/audit
 
+### المرحلة K-1 — مركز صحة مزوّدي AI (2026-04-25)
+1. **`/api/admin/ai-providers/test`** — endpoint يختبر ٧ مزوّدين (OpenAI, Anthropic, Google, Groq, DeepSeek, xAI, Manus) بطلب صغير لكل مزوّد + رصيد DeepSeek
+2. **`/admin/ai-providers`** — صفحة super-admin:
+   - بطاقة لكل مزوّد بـ: status, latency, balance (DeepSeek), test_model, error
+   - Summary cards (إجمالي/يعمل/معطّل/بدون مفتاح)
+   - Auto-refresh كل دقيقة
+   - توصيات فورية (مفتاح غير صالح، رصيد منخفض، إلخ)
+3. nav الـ admin محدَّث بـ "صحة مزوّدي AI"
+
+**القيمة:** قبل أي شحن، تعرف بالضبط أي مفتاح يعمل وأي معطل. توصيات تلقائية لكل حالة.
+
+### الخطة الكبيرة — K-2 إلى K-5 (هيكل تنظيمي MAS)
+- **K-2:** SQL — ٧ جداول: `ai_managers`, `ai_employees_v2`, `manager_directives`, `manager_kb`, `employee_directives` (مع inheritance), `employee_kb`, `org_escalations`
+- **K-3:** UI — `/dashboard/organization` + manager/[id] + employee/[id] (3 tabs لكل واحد)
+- **K-4:** محرّك الاقتراحات — لما تعدّل توجيه مدير → AI يولّد ٣-٥ توجيهات للموظفين تحته بحالة pending
+- **K-5:** ربط الـ crons القديمة بالتوجيهات الديناميكية + لوحة CEO + Approval Gates
+
 ### المرحلة J — تحسينات تشغيلية + Push Notifications (2026-04-25)
 1. **إصلاح TypeScript errors قديمة:**
    - `app/api/cron/reminders/route.ts` — تحويل supabase admin إلى `any` لتجاوز schema typing

@@ -2,20 +2,21 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard, Users, CreditCard, Settings, LogOut, ShieldCheck, ExternalLink, Building2, Shield } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, Settings, LogOut, ShieldCheck, ExternalLink, Building2, Shield, Cpu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
 
 
 const navItems = [
-  { label: "نظرة عامة",    href: "/admin",               icon: LayoutDashboard },
-  { label: "المستأجرون",   href: "/admin/tenants",       icon: Building2       },
-  { label: "الاشتراكات",   href: "/admin/subscriptions", icon: CreditCard      },
-  { label: "سجل التدقيق",  href: "/admin/audit",         icon: Shield          },
-  { label: "المستخدمون",   href: "/admin/users",         icon: Users           },
-  { label: "الخطط",        href: "/admin/plans",         icon: CreditCard      },
-  { label: "الإعدادات",    href: "/admin/settings",      icon: Settings        },
+  { label: "نظرة عامة",      href: "/admin",               icon: LayoutDashboard },
+  { label: "المستأجرون",     href: "/admin/tenants",       icon: Building2       },
+  { label: "الاشتراكات",     href: "/admin/subscriptions", icon: CreditCard      },
+  { label: "صحة مزوّدي AI",   href: "/admin/ai-providers",  icon: Cpu             },
+  { label: "سجل التدقيق",    href: "/admin/audit",         icon: Shield          },
+  { label: "المستخدمون",     href: "/admin/users",         icon: Users           },
+  { label: "الخطط",          href: "/admin/plans",         icon: CreditCard      },
+  { label: "الإعدادات",      href: "/admin/settings",      icon: Settings        },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
