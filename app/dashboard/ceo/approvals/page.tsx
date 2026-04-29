@@ -52,6 +52,8 @@ export default function CEOApprovalsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [noteDraft, setNoteDraft] = useState<Record<string, string>>({});
 
+  const [envWarning, setEnvWarning] = useState<string | null>(null);
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
@@ -59,6 +61,13 @@ export default function CEOApprovalsPage() {
       const text = await r.text();
       let j: { items?: unknown[]; error?: string } = {};
       try { j = text ? JSON.parse(text) : {}; } catch { /* ignore parse error */ }
+      if (r.status === 503 && j.error) {
+        // إعدادات الخادم — رسالة إعلامية بدل toast خطأ
+        setEnvWarning(j.error);
+        setItems([]);
+        return;
+      }
+      setEnvWarning(null);
       if (!r.ok) {
         throw new Error(j.error || `الخادم رجع ${r.status}${text ? `: ${text.slice(0, 120)}` : " (استجابة فارغة)"}`);
       }
@@ -170,6 +179,18 @@ export default function CEOApprovalsPage() {
           ))}
         </div>
       </div>
+
+      {/* Env warning banner */}
+      {envWarning && (
+        <div style={{
+          padding: 14, marginBottom: 16, borderRadius: 10,
+          background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.30)",
+          color: "#FBBF24", fontSize: 13, lineHeight: 1.7,
+        }}>
+          <div style={{ fontWeight: 700, marginBottom: 4 }}>إعدادات الخادم ناقصة</div>
+          <div>{envWarning}</div>
+        </div>
+      )}
 
       {/* List */}
       {loading ? (

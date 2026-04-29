@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
 import { generateJSON, type AIProvider } from "@/lib/ai-call";
+import { getAdminClient, MissingServerEnvError, checkServerEnv } from "@/lib/supabase-admin";
 
 // لا نريد timeout قصير — هذا cold AI invocation × N employees
 export const maxDuration = 300;
@@ -40,6 +40,10 @@ export async function POST(req: NextRequest) {
   try {
     return await handleSuggest(req);
   } catch (e) {
+    if (e instanceof MissingServerEnvError) {
+      console.error("[suggest-directives] env missing:", e.message);
+      return NextResponse.json({ error: e.message }, { status: 503 });
+    }
     const msg = e instanceof Error ? e.message : "خطأ غير متوقع في توليد الاقتراحات";
     console.error("[suggest-directives] uncaught:", e);
     return NextResponse.json({ error: msg }, { status: 500 });
@@ -47,6 +51,14 @@ export async function POST(req: NextRequest) {
 }
 
 async function handleSuggest(req: NextRequest) {
+  // ── فحص env vars مبكراً ──
+  const envCheck = checkServerEnv();
+  if (!envCheck.ok) {
+    return NextResponse.json({
+      error: `متغيرات بيئة الخادم ناقصة: ${envCheck.missing.join(", ")}. أضفها في إعدادات Vercel ثم أعد المحاولة.`,
+    }, { status: 503 });
+  }
+
   // ── Auth ──
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -82,10 +94,7 @@ async function handleSuggest(req: NextRequest) {
   if (!managerId) return NextResponse.json({ error: "manager_id مطلوب" }, { status: 400 });
 
   // ── service-role client للقراءة الواسعة ──
-  const admin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const admin = getAdminClient();
 
   // ── معلومات المدير ──
   const { data: managerData, error: mErr } = await admin
@@ -161,12 +170,13 @@ async function handleSuggest(req: NextRequest) {
     error?: string;
   }> = [];
 
-  const directivesText = mgrDirectives
-    .map((d, i) => `${i + 1}. ${d.title}\n   ${d.content}`)
+  const directivesText = (mgrDirectives as Array<{ title: string; content: string }>)
+    .map((d, i: number) => `${i + 1}. ${d.title}\n   ${d.content}`)
     .join("\n\n");
 
   const kbText = mgrKB && mgrKB.length > 0
-    ? mgrKB.map(k => `[${k.category}] ${k.title}: ${k.content}`).join("\n")
+    ? (mgrKB as Array<{ title: string; content: string; category: string }>)
+        .map((k) => `[${k.category}] ${k.title}: ${k.content}`).join("\n")
     : "(لا توجد قاعدة معرفة بعد)";
 
   const brandContext = [

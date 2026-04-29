@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { getAdminClient, MissingServerEnvError, checkServerEnv } from "@/lib/supabase-admin";
 
 // ══════════════════════════════════════════════════════════════
 // GET /api/org/approvals
@@ -15,6 +15,10 @@ export async function GET(req: NextRequest) {
   try {
     return await handleGet(req);
   } catch (e) {
+    if (e instanceof MissingServerEnvError) {
+      console.error("[approvals/route] env missing:", e.message);
+      return NextResponse.json({ error: e.message }, { status: 503 });
+    }
     console.error("[approvals/route] uncaught:", e);
     const msg = e instanceof Error ? e.message : "خطأ غير متوقع في تحميل الموافقات";
     return NextResponse.json({ error: msg }, { status: 500 });
@@ -22,6 +26,15 @@ export async function GET(req: NextRequest) {
 }
 
 async function handleGet(req: NextRequest) {
+  // فحص env vars مبكراً
+  const envCheck = checkServerEnv();
+  if (!envCheck.ok) {
+    return NextResponse.json({
+      error: `متغيرات بيئة الخادم ناقصة: ${envCheck.missing.join(", ")}. أضفها في إعدادات Vercel ثم أعد المحاولة.`,
+      items: [],
+    }, { status: 503 });
+  }
+
   // Auth
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,10 +63,7 @@ async function handleGet(req: NextRequest) {
   const status = searchParams.get("status") || "pending";
   const limitNum = Math.min(parseInt(searchParams.get("limit") || "50", 10), 200);
 
-  const admin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const admin = getAdminClient();
 
   let q = admin
     .from("org_escalations")

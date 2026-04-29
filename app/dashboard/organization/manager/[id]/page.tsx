@@ -314,9 +314,16 @@ function SuggestionsBanner({ managerId, managerName, employeeCount }: { managerI
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ manager_id: managerId, replace_existing: replaceExisting }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "فشل التوليد");
-      toast.success(`تم توليد ${json.total_suggestions} اقتراح لـ ${json.employees_processed} موظفين. اضغط على أي موظف لمراجعة الاقتراحات.`);
+      const text = await res.text();
+      let json: { error?: string; total_suggestions?: number; employees_processed?: number } = {};
+      try { json = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
+      if (!res.ok) {
+        const msg = json.error || (res.status === 503
+          ? "إعدادات الخادم ناقصة — تحقق من Vercel env vars"
+          : `الخادم رجع ${res.status}`);
+        throw new Error(msg);
+      }
+      toast.success(`تم توليد ${json.total_suggestions ?? 0} اقتراح لـ ${json.employees_processed ?? 0} موظفين. اضغط على أي موظف لمراجعة الاقتراحات.`);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "خطأ");
     }

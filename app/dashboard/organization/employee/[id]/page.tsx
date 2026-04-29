@@ -307,8 +307,15 @@ function GenerateSuggestionsButton({ employeeId, managerId, employeeName, hasPen
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ manager_id: managerId, employee_ids: [employeeId], replace_existing: hasPending }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "فشل التوليد");
+      const text = await res.text();
+      let json: { error?: string; results?: Array<{ inserted?: number }> } = {};
+      try { json = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
+      if (!res.ok) {
+        const msg = json.error || (res.status === 503
+          ? "إعدادات الخادم ناقصة — تحقق من Vercel env vars"
+          : `الخادم رجع ${res.status}`);
+        throw new Error(msg);
+      }
       const inserted = json.results?.[0]?.inserted ?? 0;
       toast.success(`تم توليد ${inserted} اقتراح لـ ${employeeName}`);
       onDone();
