@@ -41,6 +41,7 @@
 - **K-4:** `/api/org/suggest-directives` — محرّك يحوّل استراتيجية المدير إلى توجيهات تشغيلية مقترحة لكل موظف
 - **K-5:** `lib/ai-org-context.ts` — قلب النظام، يبني system prompt ديناميكي من DB. كل cron الآن يستخدم التوجيهات + KB. + لوحة `/dashboard/ceo`
 - **K-7** (migration 032): **بوابات الموافقة** — `lib/approval-gates.ts` + `approval_rules` على ai_employees + `/api/org/approvals` + `/dashboard/ceo/approvals` + ربط webhook واتساب: قبل أي رد يحتوي سعر/التزام قانوني/جوال مالك، يتوقّف ويصعّد للـ CEO ويرسل رد آمن مؤقت
+- **K-8** (migration 033): **Manager Loop — التعلّم التنظيمي** — جدول `manager_reviews` + cron `/api/cron/manager-loop` يومياً ٨م. كل مدير يقرأ نشاط فريقه آخر ٢٤س + تصعيدات + توجيهات، ويولّد JSON: `{summary, highlights, concerns, suggestions}`. الاقتراحات تُحفظ كـ directives بحالة pending. concerns حرجة تصعَّد للـ CEO تلقائياً. بطاقة "آخر مراجعة" في صفحة المدير
 
 ---
 
@@ -106,12 +107,6 @@
 - بدل تحميل كل الـ KB في system prompt، نختار أهم ٥-١٠ بناءً على الاستفسار
 - يقفز جودة الردود + يقلّل تكلفة input بنسبة ٧٠٪
 
-#### 3. خيار K-8: Manager Loop (تعلّم تنظيمي)
-- كل مدير عنده cron مستقل ينشط بعد موظفيه
-- يقرأ تقاريرهم اليومية من `org_activity_log`
-- يحلل الشذوذ، يولّد directives جديدة
-- يصعّد للـ CEO عند تجاوز عتبات
-
 ### 🟡 أولوية متوسطة (تحتاج خطوات خارجية)
 
 #### 5. تفعيل Push Notifications الفعلي
@@ -164,14 +159,14 @@
 
 ### Supabase
 - **Project ID:** `apmdwautyqoqjlabxysz`
-- **Migrations مُطبَّقة:** 019 → 032 (٢٣ migration)
+- **Migrations مُطبَّقة:** 019 → 033 (٢٤ migration)
 - **Owner user_id (super_admin):** `d5162dae-e3bf-48fa-91a6-b0e0c2c5c43a` (`vip.elyas@gmail.com`)
 - **Plan:** Free (الترقية لـ Pro تفعّل Leaked Password Protection)
 
 ### Vercel
 - **Project ID:** `prj_OUZaoGOj0PJqCM1Z6hRJGP6ZZSa9`
 - **Org:** `team_ZsF4MPBHFOGtB2pSe4jZJFoJ`
-- **Crons (4):** reminders 8ص + ai-marketing 10ص + ai-followup 6م + ai-analyst أحد 9ص
+- **Crons (5):** reminders 8ص + ai-marketing 10ص + ai-followup 6م + ai-analyst أحد 9ص + manager-loop 11م
 
 ### مزوّدو AI (آخر فحص)
 - ✅ OpenAI ($10) — يعمل

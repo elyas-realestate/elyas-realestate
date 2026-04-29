@@ -33,6 +33,17 @@ type Activity = {
   id: string; action: string; details: Record<string, unknown>; created_at: string;
 };
 
+type ManagerReview = {
+  id: string;
+  summary: string;
+  highlights: { title: string; detail: string }[];
+  concerns: { title: string; severity: "info" | "warning" | "critical"; detail: string }[];
+  suggestions_count: number;
+  metrics: Record<string, unknown>;
+  period_end: string;
+  created_at: string;
+};
+
 type Tab = "directives" | "knowledge" | "team" | "activity";
 
 export default function ManagerDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -42,6 +53,7 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
   const [directives, setDirectives] = useState<Directive[]>([]);
   const [kb, setKB] = useState<KBItem[]>([]);
   const [activity, setActivity] = useState<Activity[]>([]);
+  const [latestReview, setLatestReview] = useState<ManagerReview | null>(null);
   const [tab, setTab] = useState<Tab>("directives");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -67,12 +79,13 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
       if (!tid) throw new Error("لم يُعثر على المستأجر");
       setTenantId(tid);
 
-      const [mgrRes, empRes, dirRes, kbRes, actRes] = await Promise.all([
+      const [mgrRes, empRes, dirRes, kbRes, actRes, revRes] = await Promise.all([
         supabase.from("ai_managers").select("*").eq("id", id).single(),
         supabase.from("ai_employees").select("*").eq("manager_id", id).order("display_order"),
         supabase.from("directives").select("*").eq("target_kind", "manager").eq("target_id", id).order("display_order"),
         supabase.from("knowledge_base").select("*").eq("target_kind", "manager").eq("target_id", id).order("created_at", { ascending: false }),
         supabase.from("org_activity_log").select("*").eq("actor_kind", "manager").eq("actor_id", id).order("created_at", { ascending: false }).limit(50),
+        supabase.from("manager_reviews").select("*").eq("manager_id", id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
       if (mgrRes.error) throw new Error(mgrRes.error.message);
       setManager(mgrRes.data as Manager);
@@ -80,6 +93,7 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
       setDirectives((dirRes.data || []) as Directive[]);
       setKB((kbRes.data || []) as KBItem[]);
       setActivity((actRes.data || []) as Activity[]);
+      setLatestReview((revRes.data as ManagerReview | null) || null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "خطأ");
     }
@@ -141,6 +155,11 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
       {/* Generate Suggestions for Team — banner */}
       {directives.length > 0 && employees.length > 0 && (
         <SuggestionsBanner managerId={id} managerName={manager.name} employeeCount={employees.length} />
+      )}
+
+      {/* Latest Manager Review (K-8) */}
+      {latestReview && (
+        <LatestReviewCard review={latestReview} />
       )}
 
       {/* Tabs */}
@@ -601,4 +620,118 @@ function iconBtn(color: string): React.CSSProperties {
     padding: 6, borderRadius: 6, cursor: "pointer",
     display: "flex", alignItems: "center", justifyContent: "center",
   };
+}
+
+// ─────────────────────────────────────────────────────────────
+// K-8: بطاقة آخر مراجعة من المدير
+// ─────────────────────────────────────────────────────────────
+function LatestReviewCard({ review }: { review: ManagerReview }) {
+  const [expanded, setExpanded] = useState(false);
+  const ageHours = Math.floor((Date.now() - new Date(review.created_at).getTime()) / 3600_000);
+  const hasCritical = (review.concerns || []).some(c => c.severity === "critical");
+  const ageLabel = ageHours < 24 ? `قبل ${ageHours} ساعة` : `قبل ${Math.floor(ageHours / 24)} يوم`;
+
+  return (
+    <div style={{
+      background: hasCritical ? "rgba(248,113,113,0.05)" : "rgba(96,165,250,0.05)",
+      border: `1px solid ${hasCritical ? "rgba(248,113,113,0.25)" : "rgba(96,165,250,0.20)"}`,
+      borderRadius: 12, padding: 14, marginBottom: 16,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+        <Sparkles size={14} style={{ color: hasCritical ? "#F87171" : "#60A5FA" }} />
+        <span style={{ fontSize: 12, fontWeight: 700, color: hasCritical ? "#F87171" : "#60A5FA" }}>
+          آخر مراجعة من المدير
+        </span>
+        <span style={{ fontSize: 10, color: "#71717A" }}>· {ageLabel}</span>
+        {review.suggestions_count > 0 && (
+          <span style={{
+            fontSize: 10, padding: "2px 6px", borderRadius: 4,
+            background: "rgba(232,184,109,0.10)", color: "#E8B86D", fontWeight: 600,
+          }}>
+            {review.suggestions_count} اقتراح جديد
+          </span>
+        )}
+        {hasCritical && (
+          <span style={{
+            fontSize: 10, padding: "2px 6px", borderRadius: 4,
+            background: "rgba(248,113,113,0.15)", color: "#F87171", fontWeight: 700,
+          }}>
+            تنبيه حرج
+          </span>
+        )}
+      </div>
+
+      <p style={{ fontSize: 13, color: "#D4D4D8", margin: "8px 0", lineHeight: 1.7 }}>
+        {review.summary}
+      </p>
+
+      {expanded && (
+        <div style={{ marginTop: 10, display: "grid", gap: 10 }}>
+          {review.highlights && review.highlights.length > 0 && (
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#4ADE80", marginBottom: 4 }}>
+                إنجازات
+              </div>
+              {review.highlights.map((h, i) => (
+                <div key={i} style={{
+                  padding: 8, borderRadius: 6, background: "rgba(74,222,128,0.06)",
+                  border: "1px solid rgba(74,222,128,0.15)", marginBottom: 4,
+                }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#86EFAC" }}>{h.title}</div>
+                  <div style={{ fontSize: 11, color: "#A1A1AA", marginTop: 2 }}>{h.detail}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {review.concerns && review.concerns.length > 0 && (
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#FBBF24", marginBottom: 4 }}>
+                مخاوف
+              </div>
+              {review.concerns.map((c, i) => {
+                const sevColor = c.severity === "critical" ? "#F87171" : c.severity === "warning" ? "#FBBF24" : "#60A5FA";
+                return (
+                  <div key={i} style={{
+                    padding: 8, borderRadius: 6,
+                    background: `${sevColor}10`, border: `1px solid ${sevColor}30`,
+                    marginBottom: 4,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: sevColor }}>{c.title}</span>
+                      <span style={{ fontSize: 9, padding: "1px 5px", borderRadius: 3, background: `${sevColor}20`, color: sevColor, fontWeight: 700 }}>
+                        {c.severity === "critical" ? "حرج" : c.severity === "warning" ? "تحذير" : "معلومة"}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#A1A1AA", marginTop: 2 }}>{c.detail}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {review.suggestions_count > 0 && (
+            <div style={{
+              padding: 8, borderRadius: 6, background: "rgba(232,184,109,0.06)",
+              border: "1px solid rgba(232,184,109,0.18)", fontSize: 11, color: "#E8B86D",
+            }}>
+              ولّد المدير {review.suggestions_count} اقتراح توجيه جديد لفريقك. تجدها في صفحات الموظفين تحت قسم &quot;الاقتراحات&quot;.
+            </div>
+          )}
+        </div>
+      )}
+
+      <button
+        onClick={() => setExpanded(!expanded)}
+        style={{
+          marginTop: 8, padding: "4px 10px", borderRadius: 5,
+          background: "transparent", border: "1px solid rgba(255,255,255,0.08)",
+          color: "#A1A1AA", fontSize: 11, cursor: "pointer",
+          fontFamily: "'Tajawal', sans-serif",
+        }}
+      >
+        {expanded ? "إخفاء التفاصيل" : "عرض التفاصيل"}
+      </button>
+    </div>
+  );
 }
