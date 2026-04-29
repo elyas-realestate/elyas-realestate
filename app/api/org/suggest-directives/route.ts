@@ -241,7 +241,7 @@ ${kbText}
           model,
           systemPrompt,
           userPrompt,
-          maxTokens: 1500,
+          maxTokens: 3000,
           temperature: 0.6,
         });
       } catch (aiErr) {
@@ -251,12 +251,16 @@ ${kbText}
         return;
       }
 
+      console.log(`[suggest-directives] ${emp.code}: AI returned suggestions count =`,
+        Array.isArray(result?.suggestions) ? result!.suggestions.length : "not-array",
+        "raw keys:", result ? Object.keys(result).slice(0, 5) : "null");
+
       if (!result?.suggestions || !Array.isArray(result.suggestions)) {
         results.push({
           employee_id: emp.id,
           employee_name: emp.name,
           inserted: 0,
-          error: "فشل تحليل الرد من AI (لم يرجع JSON صحيح)",
+          error: `فشل تحليل JSON. الإخراج: ${JSON.stringify(result || {}).slice(0, 200)}`,
         });
         return;
       }

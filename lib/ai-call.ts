@@ -126,17 +126,34 @@ async function callGoogle(
   apiKey: string, temperature: number, maxTokens: number
 ): Promise<string> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  // Gemini 2.5 لديها "thinking budget" يستهلك tokens قبل الـ output.
+  // نعطّله لـ 2.5-flash حتى تذهب كل الـ tokens للنص الفعلي.
+  const isGemini25 = /gemini-2\.5/i.test(model);
+  const generationConfig: Record<string, unknown> = {
+    temperature,
+    maxOutputTokens: maxTokens,
+  };
+  if (isGemini25) {
+    generationConfig.thinkingConfig = { thinkingBudget: 0 };
+  }
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       contents: [{ parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }],
-      generationConfig: { temperature, maxOutputTokens: maxTokens },
+      generationConfig,
     }),
   });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+  if (!text) {
+    // Diagnostic: Gemini أحياناً يرجع candidate بدون نص عند MAX_TOKENS أو safety
+    const finishReason = data.candidates?.[0]?.finishReason;
+    const promptFeedback = data.promptFeedback;
+    console.warn("[ai-call/google] empty text, finishReason:", finishReason, "promptFeedback:", JSON.stringify(promptFeedback || {}).slice(0, 200));
+  }
+  return text;
 }
 
 // ─────────────────────────────────────────────────────────────
