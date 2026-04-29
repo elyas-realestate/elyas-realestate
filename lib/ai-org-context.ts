@@ -14,6 +14,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import type { AIProvider } from "@/lib/ai-call";
+import { mergeRules, rulesToPromptText, type ApprovalRules } from "@/lib/approval-gates";
 
 interface DirectiveRow {
   title: string;
@@ -56,6 +57,7 @@ export interface OrgContext {
   systemPrompt: string;       // الـ prompt الجاهز للحقن
   directiveCount: number;
   kbCount: number;
+  approvalRules: ApprovalRules; // القواعد المدمجة (افتراضي + override)
 }
 
 /**
@@ -77,7 +79,7 @@ export async function buildEmployeeContext(
   // ١) جلب الموظف ومديره
   const { data: emp } = await admin
     .from("ai_employees")
-    .select("id, code, name, description, manager_id, default_ai_provider, default_ai_model")
+    .select("id, code, name, description, manager_id, default_ai_provider, default_ai_model, approval_rules")
     .eq("code", employeeCode)
     .eq("is_active", true)
     .single();
@@ -90,10 +92,10 @@ export async function buildEmployeeContext(
     .single();
   if (!mgr) return null;
 
-  // ٢) tenant overrides (provider/model)
+  // ٢) tenant overrides (provider/model + approval)
   const [{ data: empOverride }, { data: mgrOverride }] = await Promise.all([
     admin.from("tenant_ai_config")
-      .select("ai_provider_override, ai_model_override, is_enabled")
+      .select("ai_provider_override, ai_model_override, is_enabled, approval_overrides")
       .eq("tenant_id", tenantId).eq("target_kind", "employee").eq("target_id", emp.id)
       .maybeSingle(),
     admin.from("tenant_ai_config")
@@ -101,6 +103,11 @@ export async function buildEmployeeContext(
       .eq("tenant_id", tenantId).eq("target_kind", "manager").eq("target_id", mgr.id)
       .maybeSingle(),
   ]);
+
+  // قواعد الموافقة المدمجة
+  const tenantOverridesObj = (empOverride?.approval_overrides as Record<string, ApprovalRules> | undefined) || {};
+  const tenantOverrideForCode = tenantOverridesObj[emp.code];
+  const mergedRules: ApprovalRules = mergeRules(emp.approval_rules as ApprovalRules, tenantOverrideForCode);
 
   // إذا الموظف أو مديره معطّل → null
   if (empOverride && empOverride.is_enabled === false) return null;
@@ -223,6 +230,12 @@ export async function buildEmployeeContext(
     }`);
   }
 
+  // ── حدود الصلاحية والموافقات ──
+  const approvalText = rulesToPromptText(mergedRules);
+  if (approvalText) {
+    sections.push(`\n${approvalText}`);
+  }
+
   // ── قواعد عامة ──
   sections.push(`\n=== قواعد عامة ===
 - لا تخترع معلومات غير مذكورة في السياق أعلاه
@@ -243,6 +256,7 @@ export async function buildEmployeeContext(
     systemPrompt: sections.join("\n"),
     directiveCount: mgrDirArr.length + empDirArr.length,
     kbCount: mgrKBArr.length + empKBArr.length,
+    approvalRules: mergedRules,
   };
 }
 

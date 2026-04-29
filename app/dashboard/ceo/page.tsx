@@ -92,10 +92,16 @@ export default function CEODashboardPage() {
           </h1>
           <p style={{ fontSize: 13, color: "#71717A" }}>نظرة شاملة على نشاط منظومتك التنظيمية + قرارات تنتظر موافقتك</p>
         </div>
-        <button onClick={load} disabled={loading}
-          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(232,184,109,0.08)", border: "1px solid rgba(232,184,109,0.2)", color: "#E8B86D", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
-          <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} /> تحديث
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <Link href="/dashboard/ceo/approvals"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: pendingEscalations.length > 0 ? "rgba(248,113,113,0.10)" : "rgba(167,139,250,0.08)", border: `1px solid ${pendingEscalations.length > 0 ? "rgba(248,113,113,0.30)" : "rgba(167,139,250,0.20)"}`, color: pendingEscalations.length > 0 ? "#F87171" : "#A78BFA", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
+            <AlertTriangle size={13} /> بوابات الموافقة {pendingEscalations.length > 0 ? `(${pendingEscalations.length})` : ""}
+          </Link>
+          <button onClick={load} disabled={loading}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(232,184,109,0.08)", border: "1px solid rgba(232,184,109,0.2)", color: "#E8B86D", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+            <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} /> تحديث
+          </button>
+        </div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
 
