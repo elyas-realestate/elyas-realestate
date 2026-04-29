@@ -12,6 +12,16 @@ import { createClient } from "@supabase/supabase-js";
 // ══════════════════════════════════════════════════════════════
 
 export async function GET(req: NextRequest) {
+  try {
+    return await handleGet(req);
+  } catch (e) {
+    console.error("[approvals/route] uncaught:", e);
+    const msg = e instanceof Error ? e.message : "خطأ غير متوقع في تحميل الموافقات";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+async function handleGet(req: NextRequest) {
   // Auth
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

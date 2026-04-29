@@ -335,7 +335,8 @@ ${escSnippet}
             target_id: targetEmp.id,
             title: sug.title,
             content: sug.content,
-            source: "manager_loop",
+            // check constraint: 'custom' | 'inherited' | 'suggested'
+            source: "suggested",
             parent_directive_id: null,
             status: "pending",
             display_order: 1000,

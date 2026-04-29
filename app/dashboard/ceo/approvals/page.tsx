@@ -56,11 +56,17 @@ export default function CEOApprovalsPage() {
     setLoading(true);
     try {
       const r = await fetch(`/api/org/approvals?status=${filter}&limit=100`);
-      const j = await r.json();
-      if (!r.ok) throw new Error(j.error || "تعذّر التحميل");
-      setItems(j.items || []);
+      const text = await r.text();
+      let j: { items?: unknown[]; error?: string } = {};
+      try { j = text ? JSON.parse(text) : {}; } catch { /* ignore parse error */ }
+      if (!r.ok) {
+        throw new Error(j.error || `الخادم رجع ${r.status}${text ? `: ${text.slice(0, 120)}` : " (استجابة فارغة)"}`);
+      }
+      setItems((j.items || []) as Approval[]);
     } catch (e) {
+      console.warn("[ceo/approvals] load failed:", e);
       toast.error(e instanceof Error ? e.message : "خطأ في التحميل");
+      setItems([]);
     } finally {
       setLoading(false);
     }
@@ -81,8 +87,10 @@ export default function CEOApprovalsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ decision, note }),
       });
-      const j = await r.json();
-      if (!r.ok) throw new Error(j.error || "تعذّر تنفيذ القرار");
+      const text = await r.text();
+      let j: { error?: string } = {};
+      try { j = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
+      if (!r.ok) throw new Error(j.error || `الخادم رجع ${r.status}${text ? `: ${text.slice(0, 120)}` : ""}`);
       toast.success(decision === "approved" ? "تم الاعتماد" : decision === "rejected" ? "تم الرفض" : "تم التعديل");
       setExpandedId(null);
       await load();

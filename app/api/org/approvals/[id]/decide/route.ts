@@ -13,7 +13,20 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  try {
+    return await handleDecide(req, params);
+  } catch (e) {
+    console.error("[approvals/decide] uncaught:", e);
+    const msg = e instanceof Error ? e.message : "خطأ غير متوقع في معالجة القرار";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+async function handleDecide(
+  req: NextRequest,
+  paramsP: Promise<{ id: string }>
+) {
+  const { id } = await paramsP;
   if (!id) return NextResponse.json({ error: "id مطلوب" }, { status: 400 });
 
   // Auth

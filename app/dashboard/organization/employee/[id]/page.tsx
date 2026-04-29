@@ -68,12 +68,29 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
 
       const [mgrRes, mgrDirRes, empDirRes, kbRes] = await Promise.all([
         supabase.from("ai_managers").select("id, code, name").eq("id", emp.manager_id).single(),
-        // directives الموروثة من المدير
-        supabase.from("directives").select("*").eq("target_kind", "manager").eq("target_id", emp.manager_id).eq("status", "active").order("display_order"),
+        // directives الموروثة من المدير — نفلتر بـ tenant_id صراحةً ضماناً
+        supabase.from("directives").select("*")
+          .eq("tenant_id", tid)
+          .eq("target_kind", "manager")
+          .eq("target_id", emp.manager_id)
+          .eq("status", "active")
+          .order("display_order"),
         // directives الموظف نفسه (custom + suggested)
-        supabase.from("directives").select("*").eq("target_kind", "employee").eq("target_id", id).order("display_order"),
-        supabase.from("knowledge_base").select("*").eq("target_kind", "employee").eq("target_id", id).order("created_at", { ascending: false }),
+        supabase.from("directives").select("*")
+          .eq("tenant_id", tid)
+          .eq("target_kind", "employee")
+          .eq("target_id", id)
+          .order("display_order"),
+        supabase.from("knowledge_base").select("*")
+          .eq("tenant_id", tid)
+          .eq("target_kind", "employee")
+          .eq("target_id", id)
+          .order("created_at", { ascending: false }),
       ]);
+      if (mgrRes.error) console.warn("[employee-page] manager fetch error:", mgrRes.error);
+      if (mgrDirRes.error) console.warn("[employee-page] manager directives fetch error:", mgrDirRes.error);
+      if (empDirRes.error) console.warn("[employee-page] employee directives fetch error:", empDirRes.error);
+      if (kbRes.error) console.warn("[employee-page] kb fetch error:", kbRes.error);
       if (mgrRes.data) setManager(mgrRes.data as Manager);
       setManagerDirectives((mgrDirRes.data || []) as Directive[]);
       setEmpDirectives((empDirRes.data || []) as Directive[]);
@@ -257,7 +274,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           targetKind="employee"
           targetId={id}
           onClose={() => setShowDirectiveModal(false)}
-          onSave={() => { setShowDirectiveModal(false); load(); }}
+          onSave={async () => { await load(); setShowDirectiveModal(false); }}
         />
       )}
       {showKBModal && tenantId && (
@@ -267,7 +284,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           targetKind="employee"
           targetId={id}
           onClose={() => setShowKBModal(false)}
-          onSave={() => { setShowKBModal(false); load(); }}
+          onSave={async () => { await load(); setShowKBModal(false); }}
         />
       )}
     </div>

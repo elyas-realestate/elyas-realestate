@@ -82,12 +82,32 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
       const [mgrRes, empRes, dirRes, kbRes, actRes, revRes] = await Promise.all([
         supabase.from("ai_managers").select("*").eq("id", id).single(),
         supabase.from("ai_employees").select("*").eq("manager_id", id).order("display_order"),
-        supabase.from("directives").select("*").eq("target_kind", "manager").eq("target_id", id).order("display_order"),
-        supabase.from("knowledge_base").select("*").eq("target_kind", "manager").eq("target_id", id).order("created_at", { ascending: false }),
-        supabase.from("org_activity_log").select("*").eq("actor_kind", "manager").eq("actor_id", id).order("created_at", { ascending: false }).limit(50),
-        supabase.from("manager_reviews").select("*").eq("manager_id", id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+        supabase.from("directives").select("*")
+          .eq("tenant_id", tid)
+          .eq("target_kind", "manager")
+          .eq("target_id", id)
+          .order("display_order"),
+        supabase.from("knowledge_base").select("*")
+          .eq("tenant_id", tid)
+          .eq("target_kind", "manager")
+          .eq("target_id", id)
+          .order("created_at", { ascending: false }),
+        supabase.from("org_activity_log").select("*")
+          .eq("tenant_id", tid)
+          .eq("actor_kind", "manager")
+          .eq("actor_id", id)
+          .order("created_at", { ascending: false })
+          .limit(50),
+        supabase.from("manager_reviews").select("*")
+          .eq("tenant_id", tid)
+          .eq("manager_id", id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
       ]);
       if (mgrRes.error) throw new Error(mgrRes.error.message);
+      if (dirRes.error) console.warn("[manager-page] directives fetch error:", dirRes.error);
+      if (kbRes.error) console.warn("[manager-page] kb fetch error:", kbRes.error);
       setManager(mgrRes.data as Manager);
       setEmployees((empRes.data || []) as Employee[]);
       setDirectives((dirRes.data || []) as Directive[]);
@@ -259,7 +279,7 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
           targetKind="manager"
           targetId={id}
           onClose={() => setShowDirectiveModal(false)}
-          onSave={() => { setShowDirectiveModal(false); load(); }}
+          onSave={async () => { await load(); setShowDirectiveModal(false); }}
         />
       )}
 
@@ -271,7 +291,7 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
           targetKind="manager"
           targetId={id}
           onClose={() => setShowKBModal(false)}
-          onSave={() => { setShowKBModal(false); load(); }}
+          onSave={async () => { await load(); setShowKBModal(false); }}
         />
       )}
     </div>

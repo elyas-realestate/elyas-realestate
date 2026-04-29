@@ -3,6 +3,10 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { generateJSON, type AIProvider } from "@/lib/ai-call";
 
+// لا نريد timeout قصير — هذا cold AI invocation × N employees
+export const maxDuration = 300;
+export const dynamic = "force-dynamic";
+
 // ══════════════════════════════════════════════════════════════
 // /api/org/suggest-directives
 // محرّك الاقتراحات: يحوّل استراتيجية المدير إلى توجيهات تشغيلية للموظفين
@@ -33,6 +37,16 @@ interface EmployeeRow {
 }
 
 export async function POST(req: NextRequest) {
+  try {
+    return await handleSuggest(req);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "خطأ غير متوقع في توليد الاقتراحات";
+    console.error("[suggest-directives] uncaught:", e);
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+async function handleSuggest(req: NextRequest) {
   // ── Auth ──
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -162,7 +176,8 @@ export async function POST(req: NextRequest) {
     identity?.coverage_areas && `نطاق التغطية: ${Array.isArray(identity.coverage_areas) ? identity.coverage_areas.join(", ") : identity.coverage_areas}`,
   ].filter(Boolean).join("\n") || "(لا توجد معلومات هوية)";
 
-  for (const emp of (employees as EmployeeRow[])) {
+  // ── Process all employees in parallel to avoid Vercel timeout ──
+  await Promise.all((employees as EmployeeRow[]).map(async (emp) => {
     try {
       // إذا replace_existing — احذف الـ pending السابقة
       if (body.replace_existing) {
@@ -176,7 +191,6 @@ export async function POST(req: NextRequest) {
           .eq("status", "pending");
       }
 
-      // System prompt + user prompt
       const systemPrompt = `أنت مدير القسم في شركة عقارية سعودية. مهمّتك تحويل توجيهاتك الاستراتيجية إلى توجيهات تشغيلية محدّدة لموظف معيَّن في فريقك.
 
 دورك كمدير: ${manager.name}
@@ -210,26 +224,33 @@ ${kbText}
   ]
 }`;
 
-      const result = await generateJSON<{ suggestions: SuggestionItem[] }>({
-        provider,
-        model,
-        systemPrompt,
-        userPrompt,
-        maxTokens: 1500,
-        temperature: 0.6,
-      });
+      let result: { suggestions: SuggestionItem[] } | null = null;
+      try {
+        result = await generateJSON<{ suggestions: SuggestionItem[] }>({
+          provider,
+          model,
+          systemPrompt,
+          userPrompt,
+          maxTokens: 1500,
+          temperature: 0.6,
+        });
+      } catch (aiErr) {
+        const msg = aiErr instanceof Error ? aiErr.message : "AI invocation failed";
+        console.warn(`[suggest-directives] AI failed for ${emp.code}:`, msg);
+        results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: `AI: ${msg}` });
+        return;
+      }
 
       if (!result?.suggestions || !Array.isArray(result.suggestions)) {
         results.push({
           employee_id: emp.id,
           employee_name: emp.name,
           inserted: 0,
-          error: "فشل تحليل الرد من AI",
+          error: "فشل تحليل الرد من AI (لم يرجع JSON صحيح)",
         });
-        continue;
+        return;
       }
 
-      // ── insert كـ pending suggestions ──
       const rows = result.suggestions
         .filter(s => s && typeof s.title === "string" && typeof s.content === "string")
         .slice(0, 5)
@@ -247,7 +268,7 @@ ${kbText}
 
       if (rows.length === 0) {
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: "اقتراحات فارغة" });
-        continue;
+        return;
       }
 
       const { error: insErr } = await admin.from("directives").insert(rows);
@@ -257,6 +278,7 @@ ${kbText}
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: rows.length });
       }
     } catch (e) {
+      console.error(`[suggest-directives] employee ${emp.code} failed:`, e);
       results.push({
         employee_id: emp.id,
         employee_name: emp.name,
@@ -264,7 +286,7 @@ ${kbText}
         error: e instanceof Error ? e.message : "خطأ غير معروف",
       });
     }
-  }
+  }));
 
   // ── سجّل النشاط ──
   await admin.from("org_activity_log").insert({
