@@ -301,13 +301,17 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
 // ─────────────────────────────────────────────────────────────
 // Suggestions Banner — يوفّر زر توليد اقتراحات لكل الفريق
 // ─────────────────────────────────────────────────────────────
+type ResultRow = { employee_id: string; employee_name: string; inserted: number; error?: string };
+
 function SuggestionsBanner({ managerId, managerName, employeeCount }: { managerId: string; managerName: string; employeeCount: number }) {
   const [busy, setBusy] = useState(false);
-  const [replaceExisting, setReplaceExisting] = useState(false);
+  const [replaceExisting, setReplaceExisting] = useState(true);
+  const [lastRun, setLastRun] = useState<{ total: number; results: ResultRow[]; error?: string } | null>(null);
 
   async function generate() {
-    if (!confirm(`توليد اقتراحات توجيهات لـ ${employeeCount} موظفين تحت ${managerName}؟ يستغرق ${employeeCount * 5}-${employeeCount * 10} ثانية.`)) return;
+    if (!confirm(`توليد اقتراحات لـ ${employeeCount} موظفين تحت ${managerName}؟ يستغرق ~${employeeCount * 12} ثانية. ${replaceExisting ? "(سيستبدل المعلَّقة السابقة)" : "(سيُضاف للموجود)"}`)) return;
     setBusy(true);
+    setLastRun(null);
     try {
       const res = await fetch("/api/org/suggest-directives", {
         method: "POST",
@@ -315,7 +319,7 @@ function SuggestionsBanner({ managerId, managerName, employeeCount }: { managerI
         body: JSON.stringify({ manager_id: managerId, replace_existing: replaceExisting }),
       });
       const text = await res.text();
-      let json: { error?: string; total_suggestions?: number; employees_processed?: number } = {};
+      let json: { error?: string; total_suggestions?: number; employees_processed?: number; results?: ResultRow[] } = {};
       try { json = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
       if (!res.ok) {
         const msg = json.error || (res.status === 503
@@ -323,9 +327,18 @@ function SuggestionsBanner({ managerId, managerName, employeeCount }: { managerI
           : `الخادم رجع ${res.status}`);
         throw new Error(msg);
       }
-      toast.success(`تم توليد ${json.total_suggestions ?? 0} اقتراح لـ ${json.employees_processed ?? 0} موظفين. اضغط على أي موظف لمراجعة الاقتراحات.`);
+      const total = json.total_suggestions ?? 0;
+      const rows = json.results ?? [];
+      setLastRun({ total, results: rows });
+      if (total > 0) {
+        toast.success(`تم توليد ${total} اقتراح. راجعها في صفحات الموظفين.`);
+      } else {
+        toast.error("لم يتم توليد أي اقتراحات. شاهد التفاصيل أدناه.");
+      }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "خطأ");
+      const msg = e instanceof Error ? e.message : "خطأ";
+      toast.error(msg);
+      setLastRun({ total: 0, results: [], error: msg });
     }
     setBusy(false);
   }
@@ -335,32 +348,70 @@ function SuggestionsBanner({ managerId, managerName, employeeCount }: { managerI
       background: "linear-gradient(135deg, rgba(232,184,109,0.08), rgba(198,145,76,0.04))",
       border: "1px solid rgba(232,184,109,0.25)",
       borderRadius: 12, padding: 14, marginBottom: 18,
-      display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
     }}>
-      <Wand2 size={20} style={{ color: "#E8B86D", flexShrink: 0 }} />
-      <div style={{ flex: 1, minWidth: 200 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#E8B86D" }}>
-          توليد اقتراحات للفريق ({employeeCount} موظفين)
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <Wand2 size={20} style={{ color: "#E8B86D", flexShrink: 0 }} />
+        <div style={{ flex: 1, minWidth: 200 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#E8B86D" }}>
+            توليد اقتراحات للفريق ({employeeCount} موظفين)
+          </div>
+          <div style={{ fontSize: 11, color: "#A1A1AA", marginTop: 3 }}>
+            AI يحوّل توجيهات هذا المدير إلى ٣-٥ توجيهات تشغيلية لكل موظف، تظهر في صفحاتهم بحالة &quot;بانتظار مراجعتك&quot;.
+          </div>
         </div>
-        <div style={{ fontSize: 11, color: "#A1A1AA", marginTop: 3 }}>
-          AI يحوّل توجيهات هذا المدير إلى ٣-٥ توجيهات تشغيلية لكل موظف، تظهر في صفحاتهم بحالة "بانتظار مراجعتك".
-        </div>
+        <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#A1A1AA", cursor: "pointer" }}>
+          <input type="checkbox" checked={replaceExisting} onChange={e => setReplaceExisting(e.target.checked)}
+            style={{ accentColor: "#E8B86D" }} />
+          استبدال الاقتراحات السابقة
+        </label>
+        <button onClick={generate} disabled={busy}
+          style={{
+            display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 8,
+            background: "linear-gradient(135deg, #E8B86D, #C6914C)",
+            color: "#0A0A0C", border: "none", fontSize: 13, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
+            fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
+          }}>
+          {busy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Wand2 size={13} />}
+          {busy ? "جاري التوليد..." : "ولّد الاقتراحات"}
+        </button>
       </div>
-      <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#A1A1AA", cursor: "pointer" }}>
-        <input type="checkbox" checked={replaceExisting} onChange={e => setReplaceExisting(e.target.checked)}
-          style={{ accentColor: "#E8B86D" }} />
-        استبدال الاقتراحات السابقة
-      </label>
-      <button onClick={generate} disabled={busy}
-        style={{
-          display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 8,
-          background: "linear-gradient(135deg, #E8B86D, #C6914C)",
-          color: "#0A0A0C", border: "none", fontSize: 13, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
-          fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
+
+      {/* Inline result panel */}
+      {lastRun && !busy && (
+        <div style={{
+          marginTop: 12, paddingTop: 12, borderTop: "1px solid rgba(232,184,109,0.20)",
+          fontSize: 12, color: "#D4D4D8",
         }}>
-        {busy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Wand2 size={13} />}
-        {busy ? "جاري التوليد..." : "ولّد الاقتراحات"}
-      </button>
+          {lastRun.error ? (
+            <div style={{ color: "#F87171" }}>
+              <strong>فشل التوليد:</strong> {lastRun.error}
+            </div>
+          ) : (
+            <>
+              <div style={{ marginBottom: 6, color: lastRun.total > 0 ? "#86EFAC" : "#FBBF24", fontWeight: 700 }}>
+                نتيجة آخر تشغيل: {lastRun.total} اقتراح إجمالاً
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {lastRun.results.map(r => (
+                  <div key={r.employee_id} style={{
+                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                    padding: "6px 10px", borderRadius: 5,
+                    background: r.error ? "rgba(248,113,113,0.05)" : "rgba(74,222,128,0.05)",
+                    border: `1px solid ${r.error ? "rgba(248,113,113,0.20)" : "rgba(74,222,128,0.15)"}`,
+                  }}>
+                    <span style={{ fontWeight: 600, color: r.error ? "#F87171" : "#86EFAC" }}>
+                      {r.employee_name}
+                    </span>
+                    <span style={{ fontSize: 11, color: r.error ? "#F87171" : "#A1A1AA" }}>
+                      {r.error ? `❌ ${r.error.slice(0, 80)}` : `✓ ${r.inserted} اقتراح`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

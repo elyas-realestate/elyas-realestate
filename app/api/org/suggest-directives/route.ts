@@ -186,11 +186,12 @@ async function handleSuggest(req: NextRequest) {
     identity?.coverage_areas && `نطاق التغطية: ${Array.isArray(identity.coverage_areas) ? identity.coverage_areas.join(", ") : identity.coverage_areas}`,
   ].filter(Boolean).join("\n") || "(لا توجد معلومات هوية)";
 
-  // ── Process all employees in parallel to avoid Vercel timeout ──
-  await Promise.all((employees as EmployeeRow[]).map(async (emp) => {
+  // ── Process employees serially to respect provider rate limits (Gemini free tier = 5 RPM) ──
+  // Vercel maxDuration=300 يكفي. كل استدعاء ~10-15s، فـ 5 موظفين = 50-75s.
+  for (const emp of (employees as EmployeeRow[])) {
     try {
       // إذا replace_existing — احذف الـ pending السابقة
-      if (body.replace_existing) {
+      if (body.replace_existing !== false) {  // default = true (replace by default)
         await admin
           .from("directives")
           .delete()
@@ -248,7 +249,7 @@ ${kbText}
         const msg = aiErr instanceof Error ? aiErr.message : "AI invocation failed";
         console.warn(`[suggest-directives] AI failed for ${emp.code}:`, msg);
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: `AI: ${msg}` });
-        return;
+        continue;
       }
 
       console.log(`[suggest-directives] ${emp.code}: AI returned suggestions count =`,
@@ -262,7 +263,7 @@ ${kbText}
           inserted: 0,
           error: `فشل تحليل JSON. الإخراج: ${JSON.stringify(result || {}).slice(0, 200)}`,
         });
-        return;
+        continue;
       }
 
       const rows = result.suggestions
@@ -282,7 +283,7 @@ ${kbText}
 
       if (rows.length === 0) {
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: "اقتراحات فارغة" });
-        return;
+        continue;
       }
 
       const { error: insErr } = await admin.from("directives").insert(rows);
@@ -300,7 +301,9 @@ ${kbText}
         error: e instanceof Error ? e.message : "خطأ غير معروف",
       });
     }
-  }));
+    // Delay قصير بين الاستدعاءات لتفادي rate limit (Gemini free 5 RPM)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  }
 
   // ── سجّل النشاط ──
   await admin.from("org_activity_log").insert({
