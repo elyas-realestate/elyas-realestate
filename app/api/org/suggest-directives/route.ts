@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { generateJSON, type AIProvider } from "@/lib/ai-call";
+import { generateJSONWithFallback, type AIProvider } from "@/lib/ai-call";
 import { getAdminClient, MissingServerEnvError, checkServerEnv } from "@/lib/supabase-admin";
 
 // لا نريد timeout قصير — هذا cold AI invocation × N employees
@@ -236,8 +236,10 @@ ${kbText}
 }`;
 
       let result: { suggestions: SuggestionItem[] } | null = null;
+      let usedProvider = provider;
+      let fallbackReason: string | undefined;
       try {
-        result = await generateJSON<{ suggestions: SuggestionItem[] }>({
+        const r = await generateJSONWithFallback<{ suggestions: SuggestionItem[] }>({
           provider,
           model,
           systemPrompt,
@@ -245,16 +247,18 @@ ${kbText}
           maxTokens: 3000,
           temperature: 0.6,
         });
+        result = r.result;
+        usedProvider = r.usedProvider;
+        fallbackReason = r.fallbackReason;
       } catch (aiErr) {
         const msg = aiErr instanceof Error ? aiErr.message : "AI invocation failed";
-        console.warn(`[suggest-directives] AI failed for ${emp.code}:`, msg);
+        console.warn(`[suggest-directives] AI failed for ${emp.code} (even after fallback):`, msg);
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: `AI: ${msg}` });
         continue;
       }
 
-      console.log(`[suggest-directives] ${emp.code}: AI returned suggestions count =`,
-        Array.isArray(result?.suggestions) ? result!.suggestions.length : "not-array",
-        "raw keys:", result ? Object.keys(result).slice(0, 5) : "null");
+      console.log(`[suggest-directives] ${emp.code}: provider=${usedProvider}${fallbackReason ? ` (fallback: ${fallbackReason})` : ""}, suggestions =`,
+        Array.isArray(result?.suggestions) ? result!.suggestions.length : "not-array");
 
       if (!result?.suggestions || !Array.isArray(result.suggestions)) {
         results.push({

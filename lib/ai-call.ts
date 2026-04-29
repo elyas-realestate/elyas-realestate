@@ -157,8 +157,57 @@ async function callGoogle(
 }
 
 // ─────────────────────────────────────────────────────────────
+// كشف أخطاء rate limit / quota
+// ─────────────────────────────────────────────────────────────
+export function isQuotaError(err: unknown): boolean {
+  const msg = (err instanceof Error ? err.message : String(err || "")).toLowerCase();
+  return msg.includes("quota") ||
+         msg.includes("rate limit") ||
+         msg.includes("rate_limit") ||
+         msg.includes("429") ||
+         msg.includes("exceeded");
+}
+
+// ─────────────────────────────────────────────────────────────
 // JSON output helper — أحياناً نريد JSON strict من النموذج
 // ─────────────────────────────────────────────────────────────
+/**
+ * يولّد JSON. إن فشل provider الأساسي بـ quota error،
+ * يحاول fallback لـ DeepSeek (المشحون والمستقر).
+ */
+export async function generateJSONWithFallback<T = unknown>(
+  opts: AICallOptions
+): Promise<{ result: T | null; usedProvider: AIProvider; usedModel: string; fallbackReason?: string }> {
+  const primary: AIProvider = opts.provider || "openai";
+  // جرّب الأساسي
+  try {
+    const r = await generateJSON<T>(opts);
+    if (r !== null) {
+      return { result: r, usedProvider: primary, usedModel: opts.model || "" };
+    }
+    // null = parse failed — جرّب fallback
+    if (primary !== "deepseek" && process.env.DEEPSEEK_API_KEY) {
+      const r2 = await generateJSON<T>({ ...opts, provider: "deepseek", model: "deepseek-chat" });
+      return { result: r2, usedProvider: "deepseek", usedModel: "deepseek-chat", fallbackReason: "primary returned invalid JSON" };
+    }
+    return { result: null, usedProvider: primary, usedModel: opts.model || "" };
+  } catch (e) {
+    // فشل كامل (quota, network, etc) — جرّب DeepSeek
+    if (opts.provider !== "deepseek" && process.env.DEEPSEEK_API_KEY) {
+      const reason = isQuotaError(e) ? "quota exceeded on primary" : (e instanceof Error ? e.message.slice(0, 100) : "unknown");
+      console.warn(`[ai-call] fallback to DeepSeek: ${reason}`);
+      try {
+        const r2 = await generateJSON<T>({ ...opts, provider: "deepseek", model: "deepseek-chat" });
+        return { result: r2, usedProvider: "deepseek", usedModel: "deepseek-chat", fallbackReason: reason };
+      } catch (e2) {
+        // حتى DeepSeek فشل
+        throw e2;
+      }
+    }
+    throw e;
+  }
+}
+
 export async function generateJSON<T = unknown>(opts: AICallOptions): Promise<T | null> {
   const raw = await generateText({
     ...opts,
