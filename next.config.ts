@@ -58,7 +58,16 @@ const nextConfig: NextConfig = {
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
     ];
     return [
-      // CSP أوسع لـ Landing Page (Claude Design bundle يحتاج blob: scripts + Google Fonts)
+      // (١) CSP صارم لكل المسارات ما عدا الصفحة الرئيسية و landing.html
+      // negative lookahead يستثني / و /landing.html
+      {
+        source: "/((?!landing\\.html$).+)",
+        headers: [
+          { key: "Content-Security-Policy", value: cspHeader },
+          ...sharedSecurityHeaders,
+        ],
+      },
+      // (٢) CSP موسّع للـ Landing Page (Claude Design bundle يحتاج blob:)
       {
         source: "/landing.html",
         headers: [
@@ -66,18 +75,11 @@ const nextConfig: NextConfig = {
           ...sharedSecurityHeaders,
         ],
       },
+      // (٣) CSP موسّع للصفحة الرئيسية (بسبب الـ rewrite إلى landing.html)
       {
         source: "/",
         headers: [
           { key: "Content-Security-Policy", value: landingCspHeader },
-          ...sharedSecurityHeaders,
-        ],
-      },
-      // CSP صارم لباقي المنصّة
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "Content-Security-Policy", value: cspHeader },
           ...sharedSecurityHeaders,
         ],
       },
