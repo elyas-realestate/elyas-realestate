@@ -20,6 +20,17 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        // الصفحة الرئيسية تعرض الـ landing الجديد من Claude Design
+        // beforeFiles يطغى على filesystem routing (app/page.tsx)
+        { source: "/", destination: "/landing.html" },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
   async headers() {
     return [
       {

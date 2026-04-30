@@ -92,20 +92,23 @@
 
 ## 🚧 المتبقي (Pending) — مرتَّب حسب القيمة
 
+### ✅ المنظومة مُعبَّأة بمحتوى حقيقي (٢٩ أبريل ٢٠٢٦)
+- **١٧ توجيه استراتيجي** على ٥ مدراء + **٥٥ توجيه تشغيلي** على ١٢ موظف
+- اختبار شامل عبر Claude in Chrome مرتين، K-4 شغّال، الجودة 96%
+
 ### 🔥 أولوية عالية (يستحق التنفيذ قريباً)
 
-#### 1. اختبار شخصي للمنظومة (يوم-يومين)
-- اكتب توجيهات حقيقية على المدراء الـ ٥
-- ولّد اقتراحات → اعتمد ما يناسبك
-- شاهد cron يومي 10ص ينتج محتوى ملتزم بتوجيهاتك
-- اكتشف bugs، نصلحها
-
-#### 2. خيار K-6: RAG + pgvector
+#### 1. خيار K-6: RAG + pgvector
 لما KB تكبر (50+ عنصر)، نضيف بحث دلالي:
 - تفعيل `pgvector` في Supabase
 - توليد embeddings عند إدخال KB
 - بدل تحميل كل الـ KB في system prompt، نختار أهم ٥-١٠ بناءً على الاستفسار
 - يقفز جودة الردود + يقلّل تكلفة input بنسبة ٧٠٪
+
+#### 2. مراجعة Manager Loop الليلية
+- cron يشتغل ٢٠:٠٠ UTC = ١١م الرياض
+- بعد ١-٢ يوم سيكون عندنا مراجعات يومية فعلية على ٥ مدراء
+- اقتراحات جديدة تتولّد آلياً بدون تدخل
 
 ### 🟡 أولوية متوسطة (تحتاج خطوات خارجية)
 
@@ -276,8 +279,32 @@
 
 ## 📌 ملاحظات للجلسة القادمة
 
-- المنصّة جاهزة تقنياً للإطلاق التجاري الأولي
-- كل المراحل المخطّطة (A → K-5) مكتملة + المراحل الجانبية مدمَجة
-- المرحلة التالية تعتمد على ما يقرّره المستخدم: اختبار/إطلاق/توسّع ميزات
-- VAPID keys مولَّدة وموجودة في الذاكرة — تحتاج إضافة لـ Vercel فقط لتفعيل Push
-- xAI ينتظر $5 لتفعيل trend_scout + bizdev_scout
+### ما اكتمل في جلسة ٢٩ أبريل ٢٠٢٦
+- K-7 Approval Gates + K-8 Manager Loop
+- ١٤ bug fix بعد جولتين اختبار من Claude in Chrome
+- Provider Fallback (Gemini → DeepSeek آلياً عند quota)
+- Gemini 2.5 thinking budget fix
+- ٢٣ اقتراحاً معتمد + ١ مرفوض (٩٦٪ جودة)
+- تعبئة المنظومة: **١٧ توجيه استراتيجي + ٥٥ توجيه تشغيلي**
+- VAPID keys فعلياً موجودة في Vercel
+- SUPABASE_SERVICE_ROLE_KEY مضاف لـ Vercel
+
+### ملفات منتجة محفوظة في المشروع (لم تُدمج بعد)
+- `wasit-pro-landing.html` (344K) — Landing Page احترافي من Claude Design
+  - عربي RTL، ثيم داكن، ٧ أقسام كاملة
+  - يحتاج تحويله لـ Next.js component وربط الأزرار بـ /auth/signup
+  - **خيار ١ موصى به:** استبدال app/page.tsx الحالي
+
+### في الانتظار / لم يكتمل
+- **WhatsApp Cloud API:** Claude in Chrome توقف عند Webhook Verify (احتاج META_WEBHOOK_VERIFY_TOKEN في Vercel)
+  - الكود يستخدم: `META_WEBHOOK_VERIFY_TOKEN` فقط في Vercel
+  - باقي القيم (phone_number_id, business_account_id, access_token, display_phone, display_name) → DB عبر `/dashboard/whatsapp/settings`
+  - App Secret غير مستخدم حالياً
+- **Push Notifications:** Safari iOS يحتاج "Add to Home Screen" أولاً (PWA install). على desktop يعمل مباشرة من /dashboard/settings/notifications
+- **xAI Grok:** يحتاج $5 شحن (Provider Fallback يحلّ مكانه حالياً بنجاح)
+
+### ما الذي يجب البدء به في الجلسة القادمة (مرتّب)
+1. مراجعة Manager Loop reviews من ليلة ٢٩→٣٠ أبريل (إذا اشتغل cron)
+2. دمج wasit-pro-landing.html كصفحة Next.js (~٣٠ دقيقة)
+3. إكمال WhatsApp API (إضافة META_WEBHOOK_VERIFY_TOKEN لـ Vercel + redeploy + إعادة Verify في Meta + إدخال القيم في /dashboard/whatsapp/settings)
+4. ميزات جانبية: KB إضافي، Push على Desktop، xAI شحن
