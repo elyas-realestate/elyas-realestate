@@ -58,24 +58,7 @@ const nextConfig: NextConfig = {
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
     ];
     return [
-      // (١) CSP صارم لكل المسارات ما عدا الصفحة الرئيسية و landing.html
-      // negative lookahead يستثني / و /landing.html
-      {
-        source: "/((?!landing\\.html$).+)",
-        headers: [
-          { key: "Content-Security-Policy", value: cspHeader },
-          ...sharedSecurityHeaders,
-        ],
-      },
-      // (٢) CSP موسّع للـ Landing Page (Claude Design bundle يحتاج blob:)
-      {
-        source: "/landing.html",
-        headers: [
-          { key: "Content-Security-Policy", value: landingCspHeader },
-          ...sharedSecurityHeaders,
-        ],
-      },
-      // (٣) CSP موسّع للصفحة الرئيسية (بسبب الـ rewrite إلى landing.html)
+      // CSP موسّع للصفحة الرئيسية (Claude Design bundle يحتاج blob:)
       {
         source: "/",
         headers: [
@@ -83,6 +66,30 @@ const nextConfig: NextConfig = {
           ...sharedSecurityHeaders,
         ],
       },
+      // CSP موسّع لـ landing.html المباشرة
+      {
+        source: "/landing.html",
+        headers: [
+          { key: "Content-Security-Policy", value: landingCspHeader },
+          ...sharedSecurityHeaders,
+        ],
+      },
+      // CSP صارم لكل المسارات الأخرى — قواعد محددة بدلاً من catch-all
+      // (catch-all كانت تطابق /landing.html و / فيتسبب في CSP مزدوج وانسحاب الموسّع)
+      { source: "/dashboard/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/admin/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/api/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/auth/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/sign/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/broker/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/login", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/signup", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/privacy", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/terms", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/data-processing", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/license", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/search", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      { source: "/mortgage", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
     ];
   },
 };
