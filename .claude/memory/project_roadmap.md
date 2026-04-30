@@ -289,11 +289,17 @@
 - VAPID keys فعلياً موجودة في Vercel
 - SUPABASE_SERVICE_ROLE_KEY مضاف لـ Vercel
 
-### ملفات منتجة محفوظة في المشروع (لم تُدمج بعد)
-- `wasit-pro-landing.html` (344K) — Landing Page احترافي من Claude Design
-  - عربي RTL، ثيم داكن، ٧ أقسام كاملة
-  - يحتاج تحويله لـ Next.js component وربط الأزرار بـ /auth/signup
-  - **خيار ١ موصى به:** استبدال app/page.tsx الحالي
+### Landing Page (Claude Design)
+- ✅ `wasit-pro-landing.html` (344K) — Landing احترافي من Claude Design
+- ✅ `public/landing.html` — نفس الملف، يُخدم على `/landing.html` للمعاينة
+- ✅ `next.config.ts` rewrite: `/` → `/landing.html` (URL يبقى `/`)
+- ⚠️ ملاحظة: app/page.tsx القديمة لا تُعرض بعد الآن (الـ rewrite يطغى)
+
+### الصفحات القانونية الجديدة (مفيدة لـ Meta + حماية قانونية)
+- `/privacy` — سياسة الخصوصية (متوافقة PDPL + REGA + ZATCA)
+- `/terms` — شروط الاستخدام
+- `/data-processing` — اتفاقية معالجة البيانات
+- `/license` — الترخيص الإعلاني (يقرأ تلقائياً من broker_identity)
 
 ### في الانتظار / لم يكتمل
 - **WhatsApp Cloud API:** Claude in Chrome توقف عند Webhook Verify (احتاج META_WEBHOOK_VERIFY_TOKEN في Vercel)
