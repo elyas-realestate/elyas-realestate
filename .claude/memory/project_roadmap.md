@@ -42,6 +42,13 @@
 - **K-5:** `lib/ai-org-context.ts` — قلب النظام، يبني system prompt ديناميكي من DB. كل cron الآن يستخدم التوجيهات + KB. + لوحة `/dashboard/ceo`
 - **K-7** (migration 032): **بوابات الموافقة** — `lib/approval-gates.ts` + `approval_rules` على ai_employees + `/api/org/approvals` + `/dashboard/ceo/approvals` + ربط webhook واتساب: قبل أي رد يحتوي سعر/التزام قانوني/جوال مالك، يتوقّف ويصعّد للـ CEO ويرسل رد آمن مؤقت
 - **K-8** (migration 033): **Manager Loop — التعلّم التنظيمي** — جدول `manager_reviews` + cron `/api/cron/manager-loop` يومياً ٨م. كل مدير يقرأ نشاط فريقه آخر ٢٤س + تصعيدات + توجيهات، ويولّد JSON: `{summary, highlights, concerns, suggestions}`. الاقتراحات تُحفظ كـ directives بحالة pending. concerns حرجة تصعَّد للـ CEO تلقائياً. بطاقة "آخر مراجعة" في صفحة المدير
+- **K-9 المرحلة ١** (migration 034): **CEO Assistant — السكرتير الشخصي عبر WhatsApp**
+  - موظف `ceo_assistant` تحت cs_manager + ٧ توجيهات + ٣ عناصر KB
+  - عمود `tenant_ai_config.ceo_phones` (jsonb) — يحفظ أرقام CEO المسموح بها
+  - أرقام CEO الحالية: `["966598588787", "966539920003"]` (شخصي + عمل)
+  - webhook عُدِّل: `isCEOPhone()` ثم `handleCEOMessage()` لأوامر CEO، باقي الرسائل تذهب لـ whatsapp_qualifier
+  - النية: WhatsApp بوت يصبح **سكرتير CEO شخصي** بدلاً من قناة عملاء — يحل مشكلة Test Number recipient limit
+  - **متبقي:** المرحلة ٢ (tools/استعلامات) + المرحلة ٣ (تنبيهات استباقية)
 
 ---
 
@@ -289,10 +296,12 @@
 - VAPID keys فعلياً موجودة في Vercel
 - SUPABASE_SERVICE_ROLE_KEY مضاف لـ Vercel
 
-### Landing Page (Claude Design)
-- ✅ `wasit-pro-landing.html` (344K) — Landing احترافي من Claude Design
-- ✅ `public/landing.html` — نفس الملف، يُخدم على `/landing.html` للمعاينة
-- ✅ `next.config.ts` rewrite: `/` → `/landing.html` (URL يبقى `/`)
+### Landing Page (Claude Design) ✅ مفعّلة على /
+- `wasit-pro-landing.html` (344K) — نسخة احتياطية في الجذر
+- `public/landing.html` — Landing احترافي يُقدَّم على `/landing.html` و `/`
+- `next.config.ts` rewrite: `/` → `/landing.html` (URL يبقى `/`)
+- **CSP موسّع لـ landing في `vercel.json`** (يحتاج blob: + unsafe-eval لتشغيل bundler runtime)
+  - **مهم:** `next.config.ts` headers لا تطبَّق على static files في public/. لذلك CSP لـ landing موضوعة في `vercel.json` (يطبَّق على Edge قبل Next.js)
 - ⚠️ ملاحظة: app/page.tsx القديمة لا تُعرض بعد الآن (الـ rewrite يطغى)
 
 ### الصفحات القانونية الجديدة (مفيدة لـ Meta + حماية قانونية)

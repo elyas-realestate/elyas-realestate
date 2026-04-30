@@ -173,6 +173,106 @@ async function processWebhook(body: MetaWebhookPayload) {
 type WAConfig = { auto_reply_enabled?: boolean; ai_provider?: string; ai_model?: string };
 type BrokerIdentity = { broker_name?: string; specialization?: string; writing_tone?: string; coverage_areas?: string | string[] };
 
+// ─────────────────────────────────────────────────────────────
+// K-9: CEO Assistant routing — يفحص هل المرسل هو CEO (المالك)
+// ─────────────────────────────────────────────────────────────
+async function isCEOPhone(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any,
+  tenantId: string,
+  phone: string
+): Promise<boolean> {
+  const { data: cfg } = await admin
+    .from("tenant_ai_config")
+    .select("ceo_phones")
+    .eq("tenant_id", tenantId)
+    .eq("target_kind", "employee")
+    .not("ceo_phones", "is", null)
+    .limit(1)
+    .maybeSingle();
+
+  if (!cfg?.ceo_phones || !Array.isArray(cfg.ceo_phones)) return false;
+  return cfg.ceo_phones.includes(phone);
+}
+
+/**
+ * K-9: معالجة رسالة من CEO عبر السكرتير الشخصي (ceo_assistant)
+ */
+async function handleCEOMessage(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any,
+  tenantId: string,
+  fromPhone: string,
+  text: string,
+  contactName: string | undefined,
+  inboundMessageId: string | null
+) {
+  const ctx = await buildEmployeeContext(tenantId, "ceo_assistant");
+  if (!ctx) {
+    await sendText({
+      tenantId,
+      toPhone: fromPhone,
+      text: "السكرتير غير جاهز حالياً. تواصل عبر الداشبورد.",
+      contactName,
+    });
+    return;
+  }
+
+  const userPrompt = `أمر/سؤال من الأستاذ إلياس:
+"${text}"
+
+رد بإيجاز شديد (٣ أسطر كحد أقصى)، بأسلوب سكرتير شخصي مهني، حسب توجيهاتك.`;
+
+  let reply = "";
+  try {
+    reply = await generateText({
+      provider: ctx.employee.ai_provider,
+      model: ctx.employee.ai_model,
+      systemPrompt: ctx.systemPrompt,
+      userPrompt,
+      maxTokens: 500,
+      temperature: 0.5,
+    });
+  } catch (e) {
+    console.warn("[whatsapp/webhook] CEO assistant generation failed:", e);
+    reply = "حدث خلل تقني مؤقت. أعد المحاولة بعد دقيقة.";
+  }
+
+  if (!reply || reply.length < 3) return;
+
+  await sendText({
+    tenantId,
+    toPhone: fromPhone,
+    text: reply,
+    contactName,
+  });
+
+  // تحديث inbound message
+  if (inboundMessageId) {
+    await admin
+      .from("whatsapp_messages")
+      .update({
+        ai_intent: "ceo_command",
+        ai_replied: true,
+      } as never)
+      .eq("id", inboundMessageId);
+  }
+
+  // تسجيل النشاط
+  await logEmployeeActivity({
+    tenantId,
+    employeeId: ctx.employee.id,
+    action: "ceo_assistant_replied",
+    details: {
+      from: fromPhone,
+      text_summary: text.slice(0, 200),
+      reply_length: reply.length,
+      directives_applied: ctx.directiveCount,
+      kb_items_loaded: ctx.kbCount,
+    },
+  });
+}
+
 async function maybeAutoReply(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   admin: any,
@@ -182,6 +282,11 @@ async function maybeAutoReply(
   contactName: string | undefined,
   inboundMessageId: string | null
 ) {
+  // K-9: لو المرسل هو CEO → معالجة عبر السكرتير الشخصي
+  if (await isCEOPhone(admin, tenantId, fromPhone)) {
+    return await handleCEOMessage(admin, tenantId, fromPhone, text, contactName, inboundMessageId);
+  }
+
   // تحقق من تفعيل auto_reply
   const { data: cfgData } = await admin
     .from("whatsapp_config")
