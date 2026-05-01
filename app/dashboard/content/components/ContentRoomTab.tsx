@@ -235,7 +235,7 @@ ${fullDiscussion}
             onKeyDown={(e) => { if (e.key === "Enter" && !running && !done) runDiscussion(); }}
           />
           {!running && turns.length > 0 && (
-            <button onClick={resetRoom} className="px-4 py-3 rounded-lg bg-[var(--bg-surface-3)] text-[var(--text-soft)] hover:text-white text-sm transition flex items-center gap-1">
+            <button onClick={resetRoom} className="px-4 py-3 rounded-lg bg-[var(--bg-surface-3)] text-[var(--text-soft)] hover:text-[var(--text-strong)] text-sm transition flex items-center gap-1">
               <RefreshCw size={14} /> نقاش جديد
             </button>
           )}

@@ -618,7 +618,7 @@ export default function FactoryTab({
                                         نُسخ ✓
                                       </span>
                                     ) : (
-                                      <span className="text-[var(--text-faint)] hover:text-white">
+                                      <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                                         نسخ
                                       </span>
                                     )}
@@ -657,7 +657,7 @@ export default function FactoryTab({
                                         نُسخ ✓
                                       </span>
                                     ) : (
-                                      <span className="text-[var(--text-faint)] hover:text-white">
+                                      <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                                         نسخ
                                       </span>
                                     )}
@@ -704,7 +704,7 @@ export default function FactoryTab({
                                     نُسخ ✓
                                   </span>
                                 ) : (
-                                  <span className="text-[var(--text-faint)] hover:text-white">
+                                  <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                                     نسخ
                                   </span>
                                 )}

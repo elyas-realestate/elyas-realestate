@@ -129,7 +129,7 @@ export default function ExternalSubscriptionsPage() {
         <div className="rounded-2xl p-6 bg-[var(--bg-surface-1)] border border-[var(--success-3)30] animate-fade-in">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-sm font-bold text-[var(--success-3)]">تفاصيل الاشتراك الجديد</h3>
-            <button onClick={() => setShowForm(false)} className="text-[var(--text-ghost)] hover:text-white"><X size={18} /></button>
+            <button onClick={() => setShowForm(false)} className="text-[var(--text-ghost)] hover:text-[var(--text-strong)]"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>

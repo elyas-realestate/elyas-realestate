@@ -272,7 +272,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                 <div className="accent" style={{ fontSize:12, fontWeight:700, letterSpacing:2, marginBottom:14 }}>— القيمة المضافة —</div>
                 <h2 className="font-kufi" style={{ fontSize:fntSection, fontWeight:800, color:clrTextPrimary, lineHeight:1.3 }}>لماذا تختار {name.split(" ")[0]}؟</h2>
               </div>
-              <div className="why-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))", gap:20 }}>
+              <div className="why-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))", gap:20 }}>
                 {whyCards.map((card: any, i: number) => (
                   <div key={i} className="card" style={{ padding:"32px 28px" }}>
                     <div style={{ width:52, height:52, background:`color-mix(in srgb, ${clrAccent} 8%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 14%, transparent)`, borderRadius:13, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, fontSize:22 }}>{card.icon}</div>
@@ -312,7 +312,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                       <h3 className="font-kufi" style={{ fontSize:20, fontWeight:800, color:clrTextPrimary }}>{labels[type].title}</h3>
                       <div style={{ flex:1, height:1, background:`color-mix(in srgb, ${clrAccent} 15%, transparent)` }} />
                     </div>
-                    <div className="prop-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(300px, 1fr))", gap:22 }}>
+                    <div className="prop-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))", gap:22 }}>
                       {filtered.map((p: any) => (
                         <div key={p.id} className="card" style={{ overflow:"hidden", color:clrTextPrimary }}>
                           <div style={{ height:210, overflow:"hidden", position:"relative", background:"var(--bg-surface-2)" }}>
@@ -355,7 +355,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                 <div className="accent" style={{ fontSize:12, fontWeight:700, letterSpacing:2, marginBottom:14 }}>— خدماتي —</div>
                 <h2 className="font-kufi" style={{ fontSize:fntSection, fontWeight:800, color:clrTextPrimary, lineHeight:1.3 }}>خدمات عقارية متكاملة</h2>
               </div>
-              <div className="svc-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px, 1fr))", gap:18 }}>
+              <div className="svc-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))", gap:18 }}>
                 {services.map((svc: any, i: number) => (
                   <div key={i} className="card" style={{ padding:"30px 24px", textAlign:"center" }}>
                     <div style={{ width:58, height:58, margin:"0 auto 18px", background:`color-mix(in srgb, ${clrAccent} 6%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`, borderRadius:16, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26 }}>{svc.icon}</div>

@@ -173,7 +173,7 @@ export default function CalendarTab({
           <p className="text-[var(--text-soft)] text-sm hidden sm:block">خطط لمحتواك على تقويم بصري</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={exportExcel} className="hidden sm:flex items-center gap-2 text-sm bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg text-[var(--text-soft)] hover:text-white transition">📥 تصدير</button>
+          <button onClick={exportExcel} className="hidden sm:flex items-center gap-2 text-sm bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg text-[var(--text-soft)] hover:text-[var(--text-strong)] transition">📥 تصدير</button>
           <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="flex items-center gap-2 text-sm bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-2 rounded-lg text-white transition"><Plus size={14} /> <span>جدولة</span></button>
         </div>
       </div>
@@ -338,7 +338,7 @@ export default function CalendarTab({
                   <option value="مسودة">مسودة</option><option value="جاهز">جاهز</option><option value="منشور">منشور</option>
                 </select>
               </div>
-              <button onClick={() => setSelectedPost(null)} className="text-[var(--text-faint)] hover:text-white"><X size={18} /></button>
+              <button onClick={() => setSelectedPost(null)} className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"><X size={18} /></button>
             </div>
             <div className="text-xs text-[var(--text-faint)] mb-3">{selectedPost.scheduled_date} — {selectedPost.scheduled_time || "بدون وقت"}</div>
             {editingPost?.id === selectedPost.id ? (
@@ -370,7 +370,7 @@ export default function CalendarTab({
           <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl max-w-md w-full p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-bold text-lg">جدولة مسودة</h4>
-              <button onClick={() => setShowAssign(false)} className="text-[var(--text-faint)] hover:text-white"><X size={18} /></button>
+              <button onClick={() => setShowAssign(false)} className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"><X size={18} /></button>
             </div>
             {allDrafts.length === 0 ? (
               <p className="text-[var(--text-faint)] text-center py-8">لا توجد مسودات — أنتج محتوى أولاً من مصنع المحتوى أو خبير المحتوى</p>

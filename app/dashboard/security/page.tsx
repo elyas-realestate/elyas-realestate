@@ -248,7 +248,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
             <button
               onClick={() => { setEnrollment(null); setCode(""); setStage("off"); }}
-              className="text-sm text-[var(--text-soft)] hover:text-white transition"
+              className="text-sm text-[var(--text-soft)] hover:text-[var(--text-strong)] transition"
             >
               إلغاء
             </button>
@@ -334,7 +334,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
                 <ShieldAlert className="h-6 w-6 text-red-400" />
                 <h2 className="text-lg font-bold text-white">تعطيل المصادقة الثنائية</h2>
               </div>
-              <button onClick={() => setShowDisableDialog(false)} className="text-[var(--text-soft)] hover:text-white">
+              <button onClick={() => setShowDisableDialog(false)} className="text-[var(--text-soft)] hover:text-[var(--text-strong)]">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -351,7 +351,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => { setShowDisableDialog(false); setDisableCode(""); }}
-                className="px-4 py-2 text-[var(--text-soft)] hover:text-white text-sm transition"
+                className="px-4 py-2 text-[var(--text-soft)] hover:text-[var(--text-strong)] text-sm transition"
               >
                 إلغاء
               </button>

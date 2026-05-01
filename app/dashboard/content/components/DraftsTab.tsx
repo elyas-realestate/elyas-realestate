@@ -87,7 +87,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
               "px-4 py-2 rounded-lg text-sm transition " +
               (filter === v
                 ? "bg-[var(--gold-2)] text-white"
-                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white")
+                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
             }
           >
             {l} ({sc[v] || 0})
@@ -162,7 +162,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                         {copiedId === d.id ? (
                           <span className="text-green-400">نُسخ ✓</span>
                         ) : (
-                          <span className="text-[var(--text-faint)] hover:text-white">
+                          <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                             نسخ
                           </span>
                         )}

@@ -310,7 +310,7 @@ export default function RequestsPage() {
             <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl w-full max-h-[88vh] overflow-y-auto p-6" style={{ maxWidth: 700 }} dir="rtl" onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between mb-5">
                 <h3 className="font-bold text-lg">تفاصيل الطلب</h3>
-                <button onClick={() => setSelectedRequest(null)} className="text-[var(--text-faint)] hover:text-white"><X size={18} /></button>
+                <button onClick={() => setSelectedRequest(null)} className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"><X size={18} /></button>
               </div>
 
               {/* ── بيانات الطلب ── */}
@@ -408,7 +408,7 @@ export default function RequestsPage() {
           <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6" dir="rtl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">{editingId ? "تعديل الطلب" : "طلب جديد"}</h3>
-              <button onClick={() => { setShowForm(false); resetForm(); }} className="text-[var(--text-faint)] hover:text-white"><X size={18} /></button>
+              <button onClick={() => { setShowForm(false); resetForm(); }} className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"><X size={18} /></button>
             </div>
             <div className="space-y-4">
               <div>

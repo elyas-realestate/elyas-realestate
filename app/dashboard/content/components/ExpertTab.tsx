@@ -189,7 +189,7 @@ export default function ExpertTab({
         {messages.length > 0 && (
           <button
             onClick={() => setMessages([])}
-            className="flex items-center gap-1 text-xs text-[var(--text-soft)] hover:text-white bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg transition flex-shrink-0"
+            className="flex items-center gap-1 text-xs text-[var(--text-soft)] hover:text-[var(--text-strong)] bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg transition flex-shrink-0"
           >
             <RefreshCw size={12} />{" "}
             <span className="hidden sm:inline">جديدة</span>
@@ -226,7 +226,7 @@ export default function ExpertTab({
                   <button
                     key={i}
                     onClick={() => setInput(s)}
-                    className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-white px-3 py-2 rounded-lg transition text-right"
+                    className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-[var(--text-strong)] px-3 py-2 rounded-lg transition text-right"
                   >
                     {s}
                   </button>
@@ -263,7 +263,7 @@ export default function ExpertTab({
                       {copiedIdx === idx ? (
                         <span className="text-green-400">نُسخ ✓</span>
                       ) : (
-                        <span className="text-[var(--text-faint)] hover:text-white">
+                        <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                           نسخ
                         </span>
                       )}
@@ -275,7 +275,7 @@ export default function ExpertTab({
                       {savedIdx === idx ? (
                         <span className="text-green-400">حُفظ ✓</span>
                       ) : (
-                        <span className="text-[var(--text-faint)] hover:text-white">
+                        <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                           حفظ كمسودة
                         </span>
                       )}

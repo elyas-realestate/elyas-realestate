@@ -61,7 +61,7 @@ export default function ModelSelector({
                   "w-full text-right px-3 py-2 rounded-lg text-sm transition " +
                   (mode === m.id
                     ? "bg-[var(--gold-2)]/20 border border-[var(--gold-bg-hover)] text-[var(--gold-2)]"
-                    : "bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-white")
+                    : "bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
                 }
               >
                 <div className="flex items-center justify-between gap-2">

@@ -144,7 +144,7 @@ export default function TrendsTab({
               "flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition whitespace-nowrap " +
               (activeSection === s.id
                 ? "bg-[var(--gold-2)] text-white"
-                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white")
+                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
             }
           >
             <span>{s.icon}</span>
@@ -183,7 +183,7 @@ export default function TrendsTab({
                   "px-3 py-2 rounded-lg text-xs transition whitespace-nowrap " +
                   (selectedMonth === idx + 1
                     ? "bg-[var(--gold-2)] text-white"
-                    : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white")
+                    : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
                 }
               >
                 {m}

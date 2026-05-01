@@ -245,7 +245,7 @@ export default function DistributePage() {
                   </div>
                   <button
                     onClick={loadAll}
-                    className="text-[var(--text-soft)] hover:text-white p-1"
+                    className="text-[var(--text-soft)] hover:text-[var(--text-strong)] p-1"
                     title="تحديث"
                   >
                     <RefreshCw className="h-4 w-4" />
@@ -396,7 +396,7 @@ function MarkPublishedButton({ onMark }: { onMark: (url: string) => void }) {
       </button>
       <button
         onClick={() => { setShow(false); setUrl(""); }}
-        className="px-3 py-1.5 text-[var(--text-soft)] hover:text-white text-sm transition"
+        className="px-3 py-1.5 text-[var(--text-soft)] hover:text-[var(--text-strong)] text-sm transition"
       >
         ×
       </button>

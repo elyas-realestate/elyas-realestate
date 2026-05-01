@@ -245,7 +245,7 @@ export default function ImportPage() {
                 <div className="text-xs text-[var(--text-soft)]">{headers.length} عمود في الملف</div>
               </div>
             </div>
-            <button onClick={resetAll} className="text-[var(--text-soft)] hover:text-white">
+            <button onClick={resetAll} className="text-[var(--text-soft)] hover:text-[var(--text-strong)]">
               <X className="h-5 w-5" />
             </button>
           </div>

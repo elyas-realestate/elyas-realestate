@@ -78,7 +78,7 @@ export default function ContentAI() {
               "flex items-center gap-1.5 rounded-xl font-medium transition whitespace-nowrap text-sm px-4 py-3 " +
               (activeTab === tab.id
                 ? "bg-[var(--gold-2)] text-white"
-                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white hover:border-[var(--gold-bg-hover)]")
+                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)] hover:border-[var(--gold-bg-hover)]")
             }
           >
             <tab.icon size={14} />

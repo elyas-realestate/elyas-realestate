@@ -355,7 +355,7 @@ export default function Settings() {
         {MAIN_TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={"flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap " +
-              (tab === t.id ? "border-[var(--gold-2)] text-white" : "border-transparent text-[var(--text-soft)] hover:text-white")}>
+              (tab === t.id ? "border-[var(--gold-2)] text-[var(--gold-2)]" : "border-transparent text-[var(--text-soft)] hover:text-[var(--gold-1)]")}>
             <t.icon size={15} />{t.label}
           </button>
         ))}
@@ -446,7 +446,7 @@ export default function Settings() {
               {SITE_SECTIONS.map(sec => (
                 <button key={sec.id} onClick={() => { setSiteSection(sec.id); setSelectedPage(""); }}
                   className={"w-full text-right flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition " +
-                    (siteSection === sec.id ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)] hover:text-white hover:bg-[var(--bg-surface-1)]")}>
+                    (siteSection === sec.id ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)] hover:text-[var(--gold-1)] hover:bg-[var(--bg-surface-1)]")}>
                   <sec.icon size={15} />{sec.label}
                 </button>
               ))}
@@ -709,7 +709,7 @@ export default function Settings() {
                 <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
                     <h3 className="font-bold text-[var(--gold-2)]">{STATIC_PAGES.find(p=>p.key===selectedPage)?.label}</h3>
-                    <button onClick={() => setSelectedPage("")} className="text-[var(--text-soft)] hover:text-white text-sm transition">← رجوع</button>
+                    <button onClick={() => setSelectedPage("")} className="text-[var(--text-soft)] hover:text-[var(--gold-1)] text-sm transition">← رجوع</button>
                   </div>
                   <textarea value={s[selectedPage]||""} onChange={e=>sc(selectedPage,e.target.value)} rows={12}
                     className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--gold-2)]"

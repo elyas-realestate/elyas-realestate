@@ -183,7 +183,7 @@ export default function SiteSettingsPage() {
           {sections.map(sec => (
             <button key={sec.id} onClick={() => { setActiveSection(sec.id); setSelectedPage(""); }}
               className={"w-full text-right flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition " +
-                (activeSection === sec.id ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)] hover:text-white hover:bg-[var(--bg-surface-1)]")}>
+                (activeSection === sec.id ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)] hover:text-[var(--text-strong)] hover:bg-[var(--bg-surface-1)]")}>
               <sec.icon size={16} />{sec.label}
             </button>
           ))}
@@ -514,7 +514,7 @@ export default function SiteSettingsPage() {
             <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold text-[var(--gold-2)]">{staticPages.find(p => p.key === selectedPage)?.label}</h3>
-                <button onClick={() => setSelectedPage("")} className="text-[var(--text-soft)] hover:text-white text-sm transition">رجوع</button>
+                <button onClick={() => setSelectedPage("")} className="text-[var(--text-soft)] hover:text-[var(--text-strong)] text-sm transition">رجوع</button>
               </div>
               <textarea
                 value={settings[selectedPage] || ""}
