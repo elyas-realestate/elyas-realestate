@@ -46,9 +46,56 @@
   - موظف `ceo_assistant` تحت cs_manager + ٧ توجيهات + ٣ عناصر KB
   - عمود `tenant_ai_config.ceo_phones` (jsonb) — يحفظ أرقام CEO المسموح بها
   - أرقام CEO الحالية: `["966598588787", "966539920003"]` (شخصي + عمل)
-  - webhook عُدِّل: `isCEOPhone()` ثم `handleCEOMessage()` لأوامر CEO، باقي الرسائل تذهب لـ whatsapp_qualifier
-  - النية: WhatsApp بوت يصبح **سكرتير CEO شخصي** بدلاً من قناة عملاء — يحل مشكلة Test Number recipient limit
-  - **متبقي:** المرحلة ٢ (tools/استعلامات) + المرحلة ٣ (تنبيهات استباقية)
+  - webhook عُدِّل: `isCEOPhone()` ثم `handleCEOMessage()` لأوامر CEO
+  - النية: WhatsApp بوت يصبح **سكرتير CEO شخصي** بدلاً من قناة عملاء
+
+### ⏸️ معلَّق — اختبار WhatsApp Webhook حقيقي
+**الحالة في ٣٠ أبريل ٢٠٢٦ ١١م الرياض:**
+- ✅ Webhook URL مسجَّل في Meta + verified
+- ✅ messages event subscribed على App
+- ✅ Wasit Pro مشترك على WABA (`/subscribed_apps`)
+- ✅ Test Number CONNECTED (TIER_250)
+- ✅ رقم 0539920003 + 0598588787 verified في Recipients
+- ✅ **Test Webhook من Meta يصل لـ Vercel بنجاح (200)** — البنية ١٠٠٪ سليمة
+- ❌ **رسائل WhatsApp الحقيقية لا تصل** — السبب: التطبيق في وضع "غير منشور"
+- ❌ زر "نشر" غير مرئي في الواجهة الجديدة (Use Case mode + BSP classification)
+
+**اكتشافات مهمة:**
+- التطبيق مصنّف داخلياً كـ Business Solution Provider (BSP) — flow نشر مختلف
+- Test Webhook نجح (تم في 00:50 يوم ١ مايو): يثبت أن endpoint Vercel يعمل، Verify Token صحيح، DNS/SSL سليم
+- المشكلة مقصورة على **Meta لا يطلق webhook events للرسائل الحقيقية** في وضع Development
+
+**خطوات التشخيص التالية (لما نعود):**
+1. تجربة المستخدم نقر يدوي على وسم "غير منشور" في `/go_live/`
+2. فحص Display Name للرقم التجريبي في Business Suite — قد يحتاج تعيين قبل تفعيل inbound webhook
+3. التحقق من Admin role للمستخدم في `/roles/roles/`
+4. لو كل ما سبق فشل: استخدام Meta Business Suite > Account Settings كآخر مسار
+
+**معلومات حاسمة:**
+- Phone Number ID: 1088586447672844
+- WABA ID: 1394833282684191
+- App ID: 1469992254871548
+- META_WEBHOOK_VERIFY_TOKEN في Vercel: `WasitPro_vT_9xQ3mK7pR2hL8sF4nB6yJ1dC5wZ`
+- قيم whatsapp_config مدخَلة في DB + is_active=true + auto_reply_enabled=true
+
+### ✅ نظام الثيمات (T-1 → T-4) — مكتمل ٣٠ أبريل ٢٠٢٦
+- `app/globals.css` — CSS variables شامل (٤٠+ متغير) لـ dark + cream
+- Python script حوّل ٩٩ ملف من hex hardcoded → `var(--*)`
+- `app/components/ThemeSwitcher.tsx` — مكوّن تبديل بين الثيمين
+- مدمج في `/dashboard/theme` (في الأعلى)
+- Init script في `app/layout.tsx` `<head>` لتجنّب FOUC
+- التفضيل في `localStorage` بمفتاح `wasit_theme`
+- الذهبي `#E8B86D` و `#C6914C` ثابت في الثيمين (هوية وسيط برو)
+- الثيم الكريمي يستخدم: bg `#FAF7F2` + text `#1A1206` + cards `#FFFFFF` + borders `#E5DFD0`
+
+### الخطط المعلَّقة الأخرى
+- **K-9 المراحل ٢ و٣** — tools/استعلامات + تنبيهات استباقية
+- Push Notifications تفعيل (Desktop)
+- شحن xAI ($5)
+- Manager Loop reviews (يتحقق منه عند الفتح القادم — ليلة ٣٠ أبريل اشتغل cron)
+- Social Media APIs
+- K-6 RAG + pgvector
+- WhatsApp Production (SIM جديد لاحقاً + Business Verification)
 
 ---
 

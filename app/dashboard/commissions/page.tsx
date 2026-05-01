@@ -29,9 +29,9 @@ function toArabicMonth(iso: string) {
 
 // ── Status config ─────────────────────────────────────────────────────────────
 const STATUS_CFG: Record<string, { color: string; bg: string; icon: any; label: string }> = {
-  "مدفوعة": { color: "#4ADE80", bg: "rgba(74,222,128,0.1)",  icon: CheckCircle2, label: "مدفوعة" },
-  "جزئية":  { color: "#FACC15", bg: "rgba(250,204,21,0.1)",  icon: AlertCircle,  label: "جزئية"  },
-  "معلقة":  { color: "#9A9AA0", bg: "rgba(154,154,160,0.08)", icon: Clock,        label: "معلقة"  },
+  "مدفوعة": { color: "var(--success)", bg: "rgba(74,222,128,0.1)",  icon: CheckCircle2, label: "مدفوعة" },
+  "جزئية":  { color: "var(--warning)", bg: "rgba(250,204,21,0.1)",  icon: AlertCircle,  label: "جزئية"  },
+  "معلقة":  { color: "var(--text-soft)", bg: "rgba(154,154,160,0.08)", icon: Clock,        label: "معلقة"  },
 };
 
 // ── CSV Export ─────────────────────────────────────────────────────────────────
@@ -90,8 +90,8 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
     <div
       className="rounded-2xl transition-all"
       style={{
-        background: "#16161A",
-        border: "1px solid rgba(198,145,76,0.09)",
+        background: "var(--bg-surface-1)",
+        border: "1px solid var(--gold-bg-soft)",
         padding: "16px 18px",
         marginBottom: 8,
       }}
@@ -99,15 +99,15 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
       {/* Row header */}
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p className="font-semibold truncate" style={{ fontSize: 14, color: "#E5E5E5" }}>{deal.title || "—"}</p>
+          <p className="font-semibold truncate" style={{ fontSize: 14, color: "var(--text-on-dark)" }}>{deal.title || "—"}</p>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span style={{ fontSize: 11, color: "#5A5A62" }}>
+            <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
               {deal.current_stage || "—"}
             </span>
             {deal.expected_close_date && (
               <>
                 <span style={{ color: "#3A3A44" }}>·</span>
-                <span style={{ fontSize: 11, color: "#5A5A62" }}>
+                <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
                   {new Date(deal.expected_close_date).toLocaleDateString("ar-SA")}
                 </span>
               </>
@@ -131,7 +131,7 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
           <button
             onClick={() => setEditing(true)}
             className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition"
-            style={{ background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.12)", color: "#C6914C", fontSize: 12, flexShrink: 0 }}
+            style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--gold-2)", fontSize: 12, flexShrink: 0 }}
           >
             <Edit3 size={12} /> تعديل
           </button>
@@ -139,12 +139,12 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
           <div className="flex gap-2" style={{ flexShrink: 0 }}>
             <button onClick={save} disabled={saving}
               className="flex items-center gap-1 rounded-xl px-3 py-1.5 transition disabled:opacity-50"
-              style={{ background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.25)", color: "#4ADE80", fontSize: 12 }}>
+              style={{ background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.25)", color: "var(--success)", fontSize: 12 }}>
               {saving ? "..." : <><Check size={12} /> حفظ</>}
             </button>
             <button onClick={cancel}
               className="flex items-center gap-1 rounded-xl px-3 py-1.5 transition"
-              style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "#F87171", fontSize: 12 }}>
+              style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", color: "var(--danger)", fontSize: 12 }}>
               <X size={12} /> إلغاء
             </button>
           </div>
@@ -154,21 +154,21 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
       {/* Numbers */}
       <div className="grid grid-cols-3 gap-3 mt-3">
         <div>
-          <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 3 }}>قيمة الصفقة</p>
+          <p style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 3 }}>قيمة الصفقة</p>
           <div className="flex items-center gap-1">
             <SARIcon size={10} color="secondary" />
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#E5E5E5" }}>{fmtFull(deal.target_value)}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>{fmtFull(deal.target_value)}</span>
           </div>
         </div>
         <div>
-          <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 3 }}>العمولة المتوقعة</p>
+          <p style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 3 }}>العمولة المتوقعة</p>
           <div className="flex items-center gap-1">
             <SARIcon size={10} color="secondary" />
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#C6914C" }}>{fmtFull(expected)}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--gold-2)" }}>{fmtFull(expected)}</span>
           </div>
         </div>
         <div>
-          <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 3 }}>
+          <p style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 3 }}>
             {editing ? "المحصّل (عدّل)" : "المحصّل"}
           </p>
           {editing ? (
@@ -176,14 +176,14 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
               type="number"
               value={paid}
               onChange={e => setPaid(e.target.value)}
-              className="w-full rounded-lg px-2 py-1 text-sm focus:outline-none focus:border-[#C6914C]"
-              style={{ background: "#1C1C22", border: "1px solid rgba(198,145,76,0.25)", color: "#F5F5F5" }}
+              className="w-full rounded-lg px-2 py-1 text-sm focus:outline-none focus:border-[var(--gold-2)]"
+              style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(198,145,76,0.25)", color: "var(--text-strong)" }}
               dir="ltr"
             />
           ) : (
             <div className="flex items-center gap-1">
               <SARIcon size={10} color="secondary" />
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#4ADE80" }}>{fmtFull(paidNum)}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--success)" }}>{fmtFull(paidNum)}</span>
             </div>
           )}
         </div>
@@ -200,8 +200,8 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
               className="flex items-center gap-1.5 rounded-full px-3 py-1 transition"
               style={{
                 background:  status === key ? c.bg  : "rgba(255,255,255,0.02)",
-                border: "1px solid " + (status === key ? c.color : "rgba(198,145,76,0.08)"),
-                color:  status === key ? c.color : "#5A5A62",
+                border: "1px solid " + (status === key ? c.color : "var(--gold-bg-soft)"),
+                color:  status === key ? c.color : "var(--text-faint)",
                 fontSize: 12, fontWeight: 600,
               }}
             >
@@ -214,16 +214,16 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
       {/* Progress bar */}
       {expected > 0 && !editing && (
         <div className="mt-3">
-          <div className="flex justify-between mb-1" style={{ fontSize: 10, color: "#5A5A62" }}>
+          <div className="flex justify-between mb-1" style={{ fontSize: 10, color: "var(--text-faint)" }}>
             <span>نسبة التحصيل</span>
-            <span style={{ color: pct === 100 ? "#4ADE80" : "#C6914C" }}>{pct}%</span>
+            <span style={{ color: pct === 100 ? "var(--success)" : "var(--gold-2)" }}>{pct}%</span>
           </div>
-          <div style={{ height: 4, borderRadius: 2, background: "rgba(198,145,76,0.1)", overflow: "hidden" }}>
+          <div style={{ height: 4, borderRadius: 2, background: "var(--gold-bg)", overflow: "hidden" }}>
             <div style={{
               height: "100%",
               width: pct + "%",
               borderRadius: 2,
-              background: pct === 100 ? "#4ADE80" : "linear-gradient(90deg, #C6914C, #A6743A)",
+              background: pct === 100 ? "var(--success)" : "linear-gradient(90deg, var(--gold-2), var(--gold-3))",
               transition: "width 0.5s ease",
             }} />
           </div>
@@ -333,14 +333,14 @@ export default function CommissionsPage() {
 
   if (missingCol) return (
     <div dir="rtl" style={{ maxWidth: 520, margin: "60px auto", textAlign: "center" }}>
-      <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-        <Banknote size={28} style={{ color: "#C6914C" }} />
+      <div style={{ width: 64, height: 64, borderRadius: 18, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+        <Banknote size={28} style={{ color: "var(--gold-2)" }} />
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 12 }}>يلزم تفعيل جدول العمولات</h2>
-      <p style={{ fontSize: 13, color: "#9A9AA0", lineHeight: 1.8, marginBottom: 20 }}>
-        شغّل ملف <code style={{ background: "#1C1C22", padding: "2px 8px", borderRadius: 6, color: "#C6914C" }}>supabase/003_commissions.sql</code> في Supabase → SQL Editor لإضافة عمودَي تتبع العمولات
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 12 }}>يلزم تفعيل جدول العمولات</h2>
+      <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8, marginBottom: 20 }}>
+        شغّل ملف <code style={{ background: "var(--bg-surface-2)", padding: "2px 8px", borderRadius: 6, color: "var(--gold-2)" }}>supabase/003_commissions.sql</code> في Supabase → SQL Editor لإضافة عمودَي تتبع العمولات
       </p>
-      <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.15)", borderRadius: 12, padding: "14px 18px", textAlign: "left", direction: "ltr", fontSize: 12, color: "#9A9AA0", fontFamily: "monospace" }}>
+      <div style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-hover)", borderRadius: 12, padding: "14px 18px", textAlign: "left", direction: "ltr", fontSize: 12, color: "var(--text-soft)", fontFamily: "monospace" }}>
         ALTER TABLE public.deals<br />
         &nbsp;&nbsp;ADD COLUMN IF NOT EXISTS commission_paid NUMERIC(14,2) DEFAULT 0,<br />
         &nbsp;&nbsp;ADD COLUMN IF NOT EXISTS commission_status TEXT DEFAULT 'معلقة';
@@ -355,12 +355,12 @@ export default function CommissionsPage() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">تتبع العمولات</h2>
-          <p style={{ color: "#5A5A62", fontSize: 13 }}>متابعة العمولات المتوقعة والمحصّلة لكل صفقة</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>متابعة العمولات المتوقعة والمحصّلة لكل صفقة</p>
         </div>
         <button
           onClick={() => exportCSV(deals)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition"
-          style={{ background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.18)", color: "#C6914C", fontSize: 13, fontWeight: 600 }}
+          style={{ background: "var(--gold-bg-soft)", border: "1px solid rgba(198,145,76,0.18)", color: "var(--gold-2)", fontSize: 13, fontWeight: 600 }}
         >
           <Download size={15} /> تصدير CSV
         </button>
@@ -374,7 +374,7 @@ export default function CommissionsPage() {
             value: fmtNum(kpis.totalPaid),
             sub:   "ر.س",
             icon:  Banknote,
-            color: "#4ADE80",
+            color: "var(--success)",
             bg:    "rgba(74,222,128,0.08)",
           },
           {
@@ -382,7 +382,7 @@ export default function CommissionsPage() {
             value: fmtNum(kpis.totalPending),
             sub:   "ر.س",
             icon:  Clock,
-            color: "#FACC15",
+            color: "var(--warning)",
             bg:    "rgba(250,204,21,0.08)",
           },
           {
@@ -390,8 +390,8 @@ export default function CommissionsPage() {
             value: fmtNum(kpis.monthPaid),
             sub:   "محصّل",
             icon:  TrendingUp,
-            color: "#C6914C",
-            bg:    "rgba(198,145,76,0.08)",
+            color: "var(--gold-2)",
+            bg:    "var(--gold-bg-soft)",
           },
           {
             label: "أفضل شهر",
@@ -404,33 +404,33 @@ export default function CommissionsPage() {
               }, {}) as Record<string, number>)
             )) : 0) + " ر.س",
             icon:  Star,
-            color: "#A78BFA",
+            color: "var(--purple-ai)",
             bg:    "rgba(167,139,250,0.08)",
           },
         ].map((card, i) => (
-          <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
+          <div key={i} className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
             <div className="flex items-center justify-between mb-3">
-              <p style={{ fontSize: 12, color: "#5A5A62", fontWeight: 600 }}>{card.label}</p>
+              <p style={{ fontSize: 12, color: "var(--text-faint)", fontWeight: 600 }}>{card.label}</p>
               <div className="flex items-center justify-center rounded-xl"
                 style={{ width: 34, height: 34, background: card.bg }}>
                 <card.icon size={16} style={{ color: card.color }} />
               </div>
             </div>
             <p className="font-cairo font-bold" style={{ fontSize: 22, color: card.color, lineHeight: 1 }}>{card.value}</p>
-            <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 4 }}>{card.sub}</p>
+            <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 4 }}>{card.sub}</p>
           </div>
         ))}
       </div>
 
       {/* ── Monthly Bar Chart ── */}
-      <div className="rounded-2xl p-6" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
-        <h3 style={{ fontSize: 13, fontWeight: 700, color: "#E5E5E5", marginBottom: 20 }}>العمولات المحصّلة — آخر 6 أشهر</h3>
+      <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
+        <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 20 }}>العمولات المحصّلة — آخر 6 أشهر</h3>
         <div className="flex items-end gap-3" style={{ height: 120 }}>
           {kpis.chartMonths.map((m, i) => {
             const barPct = kpis.chartMax > 0 ? (m.paid / kpis.chartMax) * 100 : 0;
             return (
               <div key={i} className="flex flex-col items-center gap-2" style={{ flex: 1 }}>
-                <p style={{ fontSize: 10, color: "#C6914C", fontWeight: 600, minHeight: 14 }}>
+                <p style={{ fontSize: 10, color: "var(--gold-2)", fontWeight: 600, minHeight: 14 }}>
                   {m.paid > 0 ? fmtNum(m.paid) : ""}
                 </p>
                 <div style={{ flex: 1, display: "flex", alignItems: "flex-end", width: "100%" }}>
@@ -440,13 +440,13 @@ export default function CommissionsPage() {
                       height: barPct > 0 ? `${Math.max(barPct, 6)}%` : "4px",
                       borderRadius: "6px 6px 2px 2px",
                       background: barPct > 0
-                        ? "linear-gradient(180deg, #C6914C, #8A5F2E)"
-                        : "rgba(198,145,76,0.1)",
+                        ? "linear-gradient(180deg, var(--gold-2), var(--gold-4))"
+                        : "var(--gold-bg)",
                       transition: "height 0.6s ease",
                     }}
                   />
                 </div>
-                <p style={{ fontSize: 10, color: "#5A5A62" }}>{m.label}</p>
+                <p style={{ fontSize: 10, color: "var(--text-faint)" }}>{m.label}</p>
               </div>
             );
           })}
@@ -464,9 +464,9 @@ export default function CommissionsPage() {
               onClick={() => setFilter(f)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl transition"
               style={{
-                background: isActive ? (cfg ? cfg.bg : "rgba(198,145,76,0.1)") : "#16161A",
-                border: "1px solid " + (isActive ? (cfg ? cfg.color : "#C6914C") : "rgba(198,145,76,0.09)"),
-                color:  isActive ? (cfg ? cfg.color : "#C6914C") : "#5A5A62",
+                background: isActive ? (cfg ? cfg.bg : "var(--gold-bg)") : "var(--bg-surface-1)",
+                border: "1px solid " + (isActive ? (cfg ? cfg.color : "var(--gold-2)") : "var(--gold-bg-soft)"),
+                color:  isActive ? (cfg ? cfg.color : "var(--gold-2)") : "var(--text-faint)",
                 fontSize: 13, fontWeight: 600,
               }}
             >
@@ -475,8 +475,8 @@ export default function CommissionsPage() {
               {counts[f] !== undefined && (
                 <span style={{
                   fontSize: 10, fontWeight: 700,
-                  background: isActive ? (cfg ? cfg.color : "#C6914C") : "rgba(198,145,76,0.15)",
-                  color: isActive ? "#0A0A0C" : "#C6914C",
+                  background: isActive ? (cfg ? cfg.color : "var(--gold-2)") : "var(--gold-bg-hover)",
+                  color: isActive ? "var(--bg-page)" : "var(--gold-2)",
                   borderRadius: 999, padding: "1px 6px",
                 }}>
                   {counts[f] || 0}
@@ -489,9 +489,9 @@ export default function CommissionsPage() {
 
       {/* ── Deals List ── */}
       {filteredDeals.length === 0 ? (
-        <div className="rounded-2xl py-16 text-center" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
+        <div className="rounded-2xl py-16 text-center" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
           <Banknote size={36} style={{ color: "rgba(198,145,76,0.25)", margin: "0 auto 12px" }} />
-          <p style={{ color: "#5A5A62", fontSize: 14 }}>
+          <p style={{ color: "var(--text-faint)", fontSize: 14 }}>
             {filterStatus === "الكل" ? "لا توجد صفقات بعد" : `لا توجد صفقات بحالة "${filterStatus}"`}
           </p>
         </div>
@@ -505,30 +505,30 @@ export default function CommissionsPage() {
 
       {/* ── Summary Footer ── */}
       {filteredDeals.length > 0 && (
-        <div className="rounded-2xl p-5 flex flex-wrap gap-6" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.12)" }}>
+        <div className="rounded-2xl p-5 flex flex-wrap gap-6" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}>
           <div>
-            <p style={{ fontSize: 11, color: "#5A5A62" }}>إجمالي المتوقع ({filteredDeals.length} صفقة)</p>
+            <p style={{ fontSize: 11, color: "var(--text-faint)" }}>إجمالي المتوقع ({filteredDeals.length} صفقة)</p>
             <div className="flex items-center gap-1 mt-1">
               <SARIcon size={12} color="secondary" />
-              <span style={{ fontSize: 16, fontWeight: 700, color: "#C6914C" }}>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "var(--gold-2)" }}>
                 {fmtFull(filteredDeals.reduce((s, d) => s + (d.expected_commission || 0), 0))}
               </span>
             </div>
           </div>
           <div>
-            <p style={{ fontSize: 11, color: "#5A5A62" }}>إجمالي المحصّل</p>
+            <p style={{ fontSize: 11, color: "var(--text-faint)" }}>إجمالي المحصّل</p>
             <div className="flex items-center gap-1 mt-1">
               <SARIcon size={12} color="secondary" />
-              <span style={{ fontSize: 16, fontWeight: 700, color: "#4ADE80" }}>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "var(--success)" }}>
                 {fmtFull(filteredDeals.reduce((s, d) => s + (Number(d.commission_paid) || 0), 0))}
               </span>
             </div>
           </div>
           <div>
-            <p style={{ fontSize: 11, color: "#5A5A62" }}>المتبقي</p>
+            <p style={{ fontSize: 11, color: "var(--text-faint)" }}>المتبقي</p>
             <div className="flex items-center gap-1 mt-1">
               <SARIcon size={12} color="secondary" />
-              <span style={{ fontSize: 16, fontWeight: 700, color: "#FACC15" }}>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "var(--warning)" }}>
                 {fmtFull(filteredDeals.reduce((s, d) => s + Math.max(0, (d.expected_commission || 0) - (Number(d.commission_paid) || 0)), 0))}
               </span>
             </div>

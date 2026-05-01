@@ -22,12 +22,12 @@ type EContract = {
 };
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string; icon: typeof Clock }> = {
-  draft:               { label: "مسودة",        color: "#A1A1AA", bg: "rgba(161,161,170,0.10)", icon: Edit3        },
-  sent_for_signature:  { label: "بانتظار التوقيع", color: "#60A5FA", bg: "rgba(96,165,250,0.10)",  icon: Send         },
-  partially_signed:    { label: "وُقّع جزئياً",    color: "#E8B86D", bg: "rgba(232,184,109,0.10)", icon: Clock        },
-  signed:              { label: "موقَّع",         color: "#4ADE80", bg: "rgba(74,222,128,0.10)",  icon: CheckCircle2 },
-  expired:             { label: "منتهي",          color: "#71717A", bg: "rgba(113,113,122,0.10)", icon: XCircle      },
-  void:                { label: "ملغي",           color: "#F87171", bg: "rgba(239,68,68,0.10)",   icon: XCircle      },
+  draft:               { label: "مسودة",        color: "var(--text-muted)", bg: "rgba(161,161,170,0.10)", icon: Edit3        },
+  sent_for_signature:  { label: "بانتظار التوقيع", color: "var(--info)", bg: "rgba(96,165,250,0.10)",  icon: Send         },
+  partially_signed:    { label: "وُقّع جزئياً",    color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", icon: Clock        },
+  signed:              { label: "موقَّع",         color: "var(--success)", bg: "rgba(74,222,128,0.10)",  icon: CheckCircle2 },
+  expired:             { label: "منتهي",          color: "var(--text-ghost)", bg: "rgba(113,113,122,0.10)", icon: XCircle      },
+  void:                { label: "ملغي",           color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   icon: XCircle      },
 };
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -86,21 +86,21 @@ export default function ContractsPage() {
       {/* Header */}
       <div style={{ marginBottom: 22, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <FileSignature size={20} style={{ color: "#C6914C" }} /> العقود الإلكترونية
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <FileSignature size={20} style={{ color: "var(--gold-2)" }} /> العقود الإلكترونية
           </h1>
-          <p style={{ fontSize: 13, color: "#71717A" }}>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>
             {loading ? "..." : `${filtered.length} من ${contracts.length}`} عقد
           </p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button onClick={load} disabled={loading}
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 14px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#A1A1AA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 14px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-muted)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
             <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
             تحديث
           </button>
           <Link href="/dashboard/contracts/new"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 9, background: "linear-gradient(135deg, #C6914C, #8A5F2E)", color: "#0A0A0C", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 9, background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))", color: "var(--bg-page)", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
             <Plus size={14} /> عقد جديد
           </Link>
         </div>
@@ -115,16 +115,16 @@ export default function ContractsPage() {
           return (
             <button key={key} onClick={() => setStatusFilter(statusFilter === key ? "all" : key)}
               style={{
-                background: statusFilter === key ? m.bg : "#0F0F12",
-                border: `1px solid ${statusFilter === key ? m.color + "55" : "rgba(255,255,255,0.05)"}`,
+                background: statusFilter === key ? m.bg : "var(--bg-deep)",
+                border: `1px solid ${statusFilter === key ? m.color + "55" : "var(--overlay-soft)"}`,
                 borderRadius: 11, padding: "10px 12px", cursor: "pointer", textAlign: "right",
                 fontFamily: "'Tajawal', sans-serif",
               }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
                 <Icon size={13} style={{ color: m.color }} />
-                <span style={{ fontSize: 18, fontWeight: 800, color: "#F4F4F5" }}>{count}</span>
+                <span style={{ fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>{count}</span>
               </div>
-              <div style={{ fontSize: 11, color: "#71717A" }}>{m.label}</div>
+              <div style={{ fontSize: 11, color: "var(--text-ghost)" }}>{m.label}</div>
             </button>
           );
         })}
@@ -133,14 +133,14 @@ export default function ContractsPage() {
       {/* Filters */}
       <div style={{ display: "flex", gap: 10, marginBottom: 18, flexWrap: "wrap" }}>
         <div style={{ position: "relative", flex: "1 1 240px", minWidth: 200 }}>
-          <Search size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "#52525B" }} />
+          <Search size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-disabled)" }} />
           <input
             placeholder="بحث برقم العقد، العنوان، أو اسم الطرف..."
             value={query} onChange={e => setQuery(e.target.value)}
-            style={{ width: "100%", padding: "10px 36px 10px 14px", background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none" }} />
+            style={{ width: "100%", padding: "10px 36px 10px 14px", background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 9, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none" }} />
         </div>
         <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}
-          style={{ padding: "10px 12px", background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", cursor: "pointer" }}>
+          style={{ padding: "10px 12px", background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 9, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", cursor: "pointer" }}>
           <option value="all">كل الفئات</option>
           <option value="rent">إيجار</option>
           <option value="sale">بيع</option>
@@ -150,17 +150,17 @@ export default function ContractsPage() {
 
       {error && (
         <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
-          <AlertCircle size={14} style={{ color: "#F87171" }} />
-          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+          <AlertCircle size={14} style={{ color: "var(--danger)" }} />
+          <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
       {/* Table */}
-      <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden" }}>
+      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, overflow: "hidden" }}>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 800 }}>
             <thead>
-              <tr style={{ background: "#141418", color: "#71717A", textAlign: "right" }}>
+              <tr style={{ background: "#141418", color: "var(--text-ghost)", textAlign: "right" }}>
                 <th style={{ padding: "11px 14px", fontWeight: 600, fontSize: 12 }}>الرقم</th>
                 <th style={{ padding: "11px 14px", fontWeight: 600, fontSize: 12 }}>العقد</th>
                 <th style={{ padding: "11px 14px", fontWeight: 600, fontSize: 12 }}>الفئة</th>
@@ -182,14 +182,14 @@ export default function ContractsPage() {
                 ))
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} style={{ padding: 40, textAlign: "center", color: "#52525B" }}>
+                  <td colSpan={7} style={{ padding: 40, textAlign: "center", color: "var(--text-disabled)" }}>
                     {contracts.length === 0 ? (
                       <div>
-                        <FileSignature size={32} style={{ color: "#3F3F46", marginBottom: 10 }} />
-                        <div style={{ fontSize: 14, color: "#A1A1AA", marginBottom: 4 }}>لا توجد عقود بعد</div>
+                        <FileSignature size={32} style={{ color: "var(--border-1)", marginBottom: 10 }} />
+                        <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 4 }}>لا توجد عقود بعد</div>
                         <div style={{ fontSize: 12, marginBottom: 14 }}>ابدأ بعقد جديد من قالب جاهز</div>
                         <Link href="/dashboard/contracts/new"
-                          style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 8, background: "rgba(198,145,76,0.1)", border: "1px solid rgba(198,145,76,0.3)", color: "#C6914C", fontSize: 13, textDecoration: "none" }}>
+                          style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 8, background: "var(--gold-bg)", border: "1px solid var(--gold-bg-strong)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none" }}>
                           <Plus size={13} /> إنشاء أول عقد
                         </Link>
                       </div>
@@ -202,22 +202,22 @@ export default function ContractsPage() {
                   return (
                     <tr key={c.id} style={{ borderTop: "1px solid rgba(255,255,255,0.04)", cursor: "pointer" }}>
                       <td style={{ padding: "11px 14px" }}>
-                        <Link href={`/dashboard/contracts/${c.id}`} style={{ color: "#C6914C", fontSize: 12, direction: "ltr", display: "inline-block", fontWeight: 600 }}>
+                        <Link href={`/dashboard/contracts/${c.id}`} style={{ color: "var(--gold-2)", fontSize: 12, direction: "ltr", display: "inline-block", fontWeight: 600 }}>
                           {c.contract_number || c.id.slice(0, 8)}
                         </Link>
                       </td>
                       <td style={{ padding: "11px 14px" }}>
-                        <Link href={`/dashboard/contracts/${c.id}`} style={{ color: "#E4E4E7", fontWeight: 500 }}>
+                        <Link href={`/dashboard/contracts/${c.id}`} style={{ color: "var(--text-on-dark)", fontWeight: 500 }}>
                           {c.title}
                         </Link>
                       </td>
-                      <td style={{ padding: "11px 14px", color: "#A1A1AA", fontSize: 12 }}>
+                      <td style={{ padding: "11px 14px", color: "var(--text-muted)", fontSize: 12 }}>
                         {CATEGORY_LABEL[c.category] || c.category}
                       </td>
-                      <td style={{ padding: "11px 14px", color: "#A1A1AA", fontSize: 12 }}>
+                      <td style={{ padding: "11px 14px", color: "var(--text-muted)", fontSize: 12 }}>
                         {(c.party_first?.name || "—")} ↔ {(c.party_second?.name || "—")}
                       </td>
-                      <td style={{ padding: "11px 14px", textAlign: "center", color: "#E4E4E7", fontWeight: 600 }}>
+                      <td style={{ padding: "11px 14px", textAlign: "center", color: "var(--text-on-dark)", fontWeight: 600 }}>
                         {c.amount ? `${Number(c.amount).toLocaleString("en-US")} ر.س` : "—"}
                       </td>
                       <td style={{ padding: "11px 14px" }}>
@@ -225,7 +225,7 @@ export default function ContractsPage() {
                           <sm.icon size={11} /> {sm.label}
                         </span>
                       </td>
-                      <td style={{ padding: "11px 14px", color: "#71717A", fontSize: 11, whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "11px 14px", color: "var(--text-ghost)", fontSize: 11, whiteSpace: "nowrap" }}>
                         {new Date(c.created_at).toLocaleDateString("ar-SA")}
                       </td>
                     </tr>

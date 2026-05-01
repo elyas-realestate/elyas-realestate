@@ -104,11 +104,11 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
   useEffect(() => { load(); }, [load]);
 
   if (loading && !employee) {
-    return <div style={{ display: "flex", justifyContent: "center", padding: 80 }}><Loader2 size={28} style={{ color: "#A78BFA", animation: "spin 1s linear infinite" }} /><style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style></div>;
+    return <div style={{ display: "flex", justifyContent: "center", padding: 80 }}><Loader2 size={28} style={{ color: "var(--purple-ai)", animation: "spin 1s linear infinite" }} /><style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style></div>;
   }
 
   if (error || !employee) {
-    return <div style={{ padding: 16, background: "rgba(239,68,68,0.07)", borderRadius: 10, color: "#F87171" }}><AlertCircle size={14} style={{ display: "inline", marginInlineEnd: 8 }} />{error || "الموظف غير موجود"}</div>;
+    return <div style={{ padding: 16, background: "rgba(239,68,68,0.07)", borderRadius: 10, color: "var(--danger)" }}><AlertCircle size={14} style={{ display: "inline", marginInlineEnd: 8 }} />{error || "الموظف غير موجود"}</div>;
   }
 
   const dept = DEPARTMENT_META[employee.department];
@@ -119,7 +119,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
   return (
     <div>
       <Link href={manager ? `/dashboard/organization/manager/${manager.id}` : "/dashboard/organization"}
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
         <ArrowRight size={12} /> {manager?.name || "الهيكل التنظيمي"}
       </Link>
 
@@ -129,15 +129,15 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           <Bot size={20} style={{ color: dept?.color }} />
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
-          <h1 style={{ fontSize: 18, fontWeight: 800, color: "#F4F4F5" }}>{employee.name}</h1>
-          <div style={{ fontSize: 12, color: "#A1A1AA", marginTop: 2 }}>{employee.description}</div>
+          <h1 style={{ fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>{employee.name}</h1>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{employee.description}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
-          <div style={{ fontSize: 11, color: "#71717A", display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ fontSize: 11, color: "var(--text-ghost)", display: "flex", alignItems: "center", gap: 4 }}>
             <Cpu size={11} /> {PROVIDER_LABELS[employee.default_ai_provider] || employee.default_ai_provider}
           </div>
           {employee.trigger_type && (
-            <div style={{ fontSize: 10, color: "#52525B", display: "flex", alignItems: "center", gap: 3 }}>
+            <div style={{ fontSize: 10, color: "var(--text-disabled)", display: "flex", alignItems: "center", gap: 3 }}>
               <Clock size={9} /> {TRIGGER_LABELS[employee.trigger_type] || employee.trigger_type}
             </div>
           )}
@@ -145,7 +145,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 18, borderBottom: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 4, marginBottom: 18, borderBottom: "1px solid var(--overlay-mid)", flexWrap: "wrap" }}>
         <Tab2 active={tab === "directives"} onClick={() => setTab("directives")} icon={Sparkles} label="التوجيهات"
           badge={managerDirectives.length + acceptedSuggestions.length + customDirectives.length}
           highlight={suggestedDirectives.length > 0 ? suggestedDirectives.length : undefined} />
@@ -169,7 +169,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
 
           {/* Pending Suggestions — أعلى أولوية */}
           {suggestedDirectives.length > 0 && (
-            <Section title={`${suggestedDirectives.length} اقتراح بانتظار مراجعتك`} sub="AI ولّد هذه التوجيهات تلقائياً بناءً على توجيهات المدير" color="#E8B86D" highlight>
+            <Section title={`${suggestedDirectives.length} اقتراح بانتظار مراجعتك`} sub="AI ولّد هذه التوجيهات تلقائياً بناءً على توجيهات المدير" color="var(--gold-1)" highlight>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {suggestedDirectives.map(d => (
                   <SuggestedDirectiveCard key={d.id} directive={d} onChange={load} />
@@ -202,7 +202,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
             color={DIRECTIVE_SOURCE_META.custom.color}
             action={
               <button onClick={() => { setEditingDirective(null); setShowDirectiveModal(true); }}
-                style={{ display: "flex", alignItems: "center", gap: 5, padding: "7px 12px", borderRadius: 7, background: "linear-gradient(135deg, #C6914C, #8A5F2E)", color: "#0A0A0C", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+                style={{ display: "flex", alignItems: "center", gap: 5, padding: "7px 12px", borderRadius: 7, background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))", color: "var(--bg-page)", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
                 <Plus size={12} /> توجيه مخصّص
               </button>
             }>
@@ -228,9 +228,9 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
       {tab === "knowledge" && tenantId && (
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <p style={{ fontSize: 12, color: "#71717A" }}>قاعدة معرفة خاصة بهذا الموظف (تُضاف لما يقرأه من قاعدة المدير).</p>
+            <p style={{ fontSize: 12, color: "var(--text-ghost)" }}>قاعدة معرفة خاصة بهذا الموظف (تُضاف لما يقرأه من قاعدة المدير).</p>
             <button onClick={() => { setEditingKB(null); setShowKBModal(true); }}
-              style={{ display: "flex", alignItems: "center", gap: 5, padding: "8px 14px", borderRadius: 8, background: "linear-gradient(135deg, #60A5FA, #2563EB)", color: "#fff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+              style={{ display: "flex", alignItems: "center", gap: 5, padding: "8px 14px", borderRadius: 8, background: "linear-gradient(135deg, var(--info), var(--info-3))", color: "#fff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
               <Plus size={12} /> عنصر معرفة
             </button>
           </div>
@@ -239,22 +239,22 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 10 }}>
               {kb.map(k => (
-                <div key={k.id} style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 11, padding: 14 }}>
+                <div key={k.id} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: 14 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 10, color: "#60A5FA", background: "rgba(96,165,250,0.1)", padding: "2px 7px", borderRadius: 4 }}>
+                    <span style={{ fontSize: 10, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "2px 7px", borderRadius: 4 }}>
                       {KB_CATEGORIES[k.category] || k.category}
                     </span>
                     <div style={{ display: "flex", gap: 6 }}>
-                      <button onClick={() => { setEditingKB(k); setShowKBModal(true); }} style={iconBtn("#A78BFA")}><Edit3 size={11} /></button>
+                      <button onClick={() => { setEditingKB(k); setShowKBModal(true); }} style={iconBtn("var(--purple-ai)")}><Edit3 size={11} /></button>
                       <button onClick={async () => {
                         if (!confirm("حذف؟")) return;
                         await supabase.from("knowledge_base").delete().eq("id", k.id);
                         toast.success("حُذف"); load();
-                      }} style={iconBtn("#F87171")}><Trash2 size={11} /></button>
+                      }} style={iconBtn("var(--danger)")}><Trash2 size={11} /></button>
                     </div>
                   </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#E4E4E7", marginBottom: 6 }}>{k.title}</div>
-                  <div style={{ fontSize: 12, color: "#A1A1AA", lineHeight: 1.6, maxHeight: 80, overflow: "hidden" }}>{k.content}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 6 }}>{k.title}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.6, maxHeight: 80, overflow: "hidden" }}>{k.content}</div>
                 </div>
               ))}
             </div>
@@ -330,15 +330,15 @@ function GenerateSuggestionsButton({ employeeId, managerId, employeeName, hasPen
       padding: 12, background: "rgba(232,184,109,0.05)", border: "1px solid rgba(232,184,109,0.18)",
       borderRadius: 10,
     }}>
-      <div style={{ fontSize: 12, color: "#A1A1AA", display: "flex", alignItems: "center", gap: 6 }}>
-        <Wand2 size={13} style={{ color: "#E8B86D" }} />
+      <div style={{ fontSize: 12, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
+        <Wand2 size={13} style={{ color: "var(--gold-1)" }} />
         ولّد اقتراحات توجيهات تشغيلية بناءً على توجيهات المدير
       </div>
       <button onClick={generate} disabled={busy}
         style={{
           display: "flex", alignItems: "center", gap: 5, padding: "7px 14px", borderRadius: 7,
-          background: "linear-gradient(135deg, #E8B86D, #C6914C)",
-          color: "#0A0A0C", border: "none", fontSize: 12, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
+          background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
+          color: "var(--bg-page)", border: "none", fontSize: 12, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
           fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
         }}>
         {busy ? <Loader2 size={11} style={{ animation: "spin 1s linear infinite" }} /> : <Wand2 size={11} />}
@@ -369,28 +369,28 @@ function SuggestedDirectiveCard({ directive, onChange }: { directive: Directive;
   }
 
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(232,184,109,0.3)", borderRadius: 11, padding: 14 }}>
+    <div style={{ background: "var(--bg-deep)", border: "1px solid rgba(232,184,109,0.3)", borderRadius: 11, padding: 14 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, gap: 8 }}>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7", marginBottom: 4 }}>{directive.title}</div>
-          <div style={{ fontSize: 11, color: "#E8B86D", display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 4 }}>{directive.title}</div>
+          <div style={{ fontSize: 11, color: "var(--gold-1)", display: "flex", alignItems: "center", gap: 4 }}>
             <Sparkles size={10} /> اقتراح من AI
           </div>
         </div>
-        <button onClick={() => setExpanded(s => !s)} style={iconBtn("#A1A1AA")}>
+        <button onClick={() => setExpanded(s => !s)} style={iconBtn("var(--text-muted)")}>
           {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
         </button>
       </div>
-      <div style={{ fontSize: 13, color: "#D4D4D8", lineHeight: 1.7, whiteSpace: "pre-wrap", maxHeight: expanded ? "none" : 60, overflow: "hidden" }}>
+      <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, whiteSpace: "pre-wrap", maxHeight: expanded ? "none" : 60, overflow: "hidden" }}>
         {directive.content}
       </div>
       <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
         <button onClick={accept} disabled={busy}
-          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "8px 12px", borderRadius: 7, background: "rgba(74,222,128,0.1)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.3)", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "8px 12px", borderRadius: 7, background: "rgba(74,222,128,0.1)", color: "var(--success)", border: "1px solid rgba(74,222,128,0.3)", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
           <Check size={12} /> اعتمد
         </button>
         <button onClick={reject} disabled={busy}
-          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "8px 12px", borderRadius: 7, background: "rgba(239,68,68,0.06)", color: "#F87171", border: "1px solid rgba(239,68,68,0.2)", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "8px 12px", borderRadius: 7, background: "rgba(239,68,68,0.06)", color: "var(--danger)", border: "1px solid rgba(239,68,68,0.2)", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
           <X size={12} /> ارفض
         </button>
       </div>
@@ -400,30 +400,30 @@ function SuggestedDirectiveCard({ directive, onChange }: { directive: Directive;
 
 function ReadOnlyDirectiveCard({ directive, sourceLabel }: { directive: Directive; sourceLabel: string }) {
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(167,139,250,0.2)", borderRadius: 10, padding: 12 }}>
+    <div style={{ background: "var(--bg-deep)", border: "1px solid rgba(167,139,250,0.2)", borderRadius: 10, padding: 12 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#E4E4E7" }}>{directive.title}</div>
-        <span style={{ fontSize: 9, color: "#A78BFA", background: "rgba(167,139,250,0.1)", padding: "2px 6px", borderRadius: 4 }}>{sourceLabel}</span>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>{directive.title}</div>
+        <span style={{ fontSize: 9, color: "var(--purple-ai)", background: "rgba(167,139,250,0.1)", padding: "2px 6px", borderRadius: 4 }}>{sourceLabel}</span>
       </div>
-      <div style={{ fontSize: 12, color: "#A1A1AA", lineHeight: 1.6 }}>{directive.content}</div>
+      <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.6 }}>{directive.content}</div>
     </div>
   );
 }
 
 function EditableDirectiveCard({ directive, onEdit, onDelete }: { directive: Directive; onEdit: () => void; onDelete: () => void }) {
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 11, padding: 14 }}>
+    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: 14 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7" }}>{directive.title}</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{directive.title}</div>
         <div style={{ display: "flex", gap: 6 }}>
           {directive.source === "suggested" && (
-            <span style={{ fontSize: 9, color: "#60A5FA", background: "rgba(96,165,250,0.1)", padding: "2px 6px", borderRadius: 4 }}>معتمَد من اقتراح</span>
+            <span style={{ fontSize: 9, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "2px 6px", borderRadius: 4 }}>معتمَد من اقتراح</span>
           )}
-          <button onClick={onEdit} style={iconBtn("#A78BFA")}><Edit3 size={12} /></button>
-          <button onClick={onDelete} style={iconBtn("#F87171")}><Trash2 size={12} /></button>
+          <button onClick={onEdit} style={iconBtn("var(--purple-ai)")}><Edit3 size={12} /></button>
+          <button onClick={onDelete} style={iconBtn("var(--danger)")}><Trash2 size={12} /></button>
         </div>
       </div>
-      <div style={{ fontSize: 13, color: "#D4D4D8", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{directive.content}</div>
+      <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{directive.content}</div>
     </div>
   );
 }
@@ -436,18 +436,18 @@ function Tab2({ active, onClick, icon: Icon, label, badge, highlight }: {
       style={{
         display: "flex", alignItems: "center", gap: 6, padding: "10px 16px",
         background: active ? "rgba(167,139,250,0.08)" : "transparent",
-        border: "none", borderBottom: `2px solid ${active ? "#A78BFA" : "transparent"}`,
-        color: active ? "#A78BFA" : "#A1A1AA", fontSize: 13, fontWeight: active ? 700 : 500,
+        border: "none", borderBottom: `2px solid ${active ? "var(--purple-ai)" : "transparent"}`,
+        color: active ? "var(--purple-ai)" : "var(--text-muted)", fontSize: 13, fontWeight: active ? 700 : 500,
         cursor: "pointer", fontFamily: "'Tajawal', sans-serif", marginBottom: -1,
       }}>
       <Icon size={13} /> {label}
       {typeof badge === "number" && (
-        <span style={{ fontSize: 10, background: active ? "#A78BFA" : "#27272A", color: active ? "#0A0A0C" : "#A1A1AA", padding: "1px 6px", borderRadius: 8 }}>
+        <span style={{ fontSize: 10, background: active ? "var(--purple-ai)" : "#27272A", color: active ? "var(--bg-page)" : "var(--text-muted)", padding: "1px 6px", borderRadius: 8 }}>
           {badge}
         </span>
       )}
       {typeof highlight === "number" && highlight > 0 && (
-        <span style={{ fontSize: 10, background: "#E8B86D", color: "#0A0A0C", padding: "1px 6px", borderRadius: 8 }}>
+        <span style={{ fontSize: 10, background: "var(--gold-1)", color: "var(--bg-page)", padding: "1px 6px", borderRadius: 8 }}>
           {highlight} جديد
         </span>
       )}
@@ -463,7 +463,7 @@ function Section({ title, sub, color, action, highlight, children }: {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
         <div>
           <h3 style={{ fontSize: 13, fontWeight: 700, color, marginBottom: 2 }}>{title}</h3>
-          {sub && <div style={{ fontSize: 11, color: "#71717A" }}>{sub}</div>}
+          {sub && <div style={{ fontSize: 11, color: "var(--text-ghost)" }}>{sub}</div>}
         </div>
         {action}
       </div>
@@ -474,7 +474,7 @@ function Section({ title, sub, color, action, highlight, children }: {
 
 function EmptyState2({ text }: { text: string }) {
   return (
-    <div style={{ background: "#0F0F12", border: "1px dashed rgba(255,255,255,0.08)", borderRadius: 10, padding: 20, textAlign: "center", color: "#52525B", fontSize: 12 }}>
+    <div style={{ background: "var(--bg-deep)", border: "1px dashed var(--overlay-mid)", borderRadius: 10, padding: 20, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>
       {text}
     </div>
   );
@@ -558,10 +558,10 @@ function KBModal({ kbItem, tenantId, targetKind, targetId, onClose, onSave }: {
 function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
-      <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: 22, maxWidth: 600, width: "100%", maxHeight: "90vh", overflowY: "auto" }}>
+      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 14, padding: 22, maxWidth: 600, width: "100%", maxHeight: "90vh", overflowY: "auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: "#E4E4E7" }}>{title}</h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "#71717A", cursor: "pointer" }}><X size={18} /></button>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-on-dark)" }}>{title}</h3>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--text-ghost)", cursor: "pointer" }}><X size={18} /></button>
         </div>
         {children}
       </div>
@@ -572,8 +572,8 @@ function Modal({ title, children, onClose }: { title: string; children: React.Re
 function ModalActions({ onClose, onSave, busy }: { onClose: () => void; onSave: () => void; busy: boolean }) {
   return (
     <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "flex-end" }}>
-      <button onClick={onClose} style={{ padding: "10px 18px", borderRadius: 8, background: "rgba(255,255,255,0.04)", color: "#A1A1AA", border: "1px solid rgba(255,255,255,0.08)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>إلغاء</button>
-      <button onClick={onSave} disabled={busy} style={{ padding: "10px 22px", borderRadius: 8, background: "linear-gradient(135deg, #A78BFA, #7C3AED)", color: "#0A0A0C", border: "none", fontSize: 13, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 6, opacity: busy ? 0.6 : 1 }}>
+      <button onClick={onClose} style={{ padding: "10px 18px", borderRadius: 8, background: "rgba(255,255,255,0.04)", color: "var(--text-muted)", border: "1px solid var(--overlay-mid)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>إلغاء</button>
+      <button onClick={onSave} disabled={busy} style={{ padding: "10px 22px", borderRadius: 8, background: "linear-gradient(135deg, var(--purple-ai), var(--purple-2))", color: "var(--bg-page)", border: "none", fontSize: 13, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 6, opacity: busy ? 0.6 : 1 }}>
         {busy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Save size={13} />}حفظ
       </button>
     </div>
@@ -581,13 +581,13 @@ function ModalActions({ onClose, onSave, busy }: { onClose: () => void; onSave: 
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (<div style={{ marginBottom: 14 }}><label style={{ display: "block", fontSize: 12, color: "#A1A1AA", marginBottom: 5 }}>{label}</label>{children}</div>);
+  return (<div style={{ marginBottom: 14 }}><label style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 5 }}>{label}</label>{children}</div>);
 }
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "10px 12px", background: "#18181B",
-  border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8,
-  color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none",
+  width: "100%", padding: "10px 12px", background: "var(--bg-surface-2)",
+  border: "1px solid var(--overlay-mid)", borderRadius: 8,
+  color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none",
 };
 
 function iconBtn(color: string): React.CSSProperties {

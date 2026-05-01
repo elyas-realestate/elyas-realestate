@@ -21,7 +21,7 @@ const ENTITY_META: Record<EntityType, { label: string; icon: any; color: string;
   properties: {
     label: "العقارات",
     icon: Building2,
-    color: "from-[#C6914C] to-[#8A5F2E]",
+    color: "from-[var(--gold-2)] to-[var(--gold-4)]",
     aliases: PROPERTY_ALIASES,
     requiredFields: ["title"],
   },
@@ -173,10 +173,10 @@ export default function ImportPage() {
 
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <FileSpreadsheet className="h-6 w-6 text-[#C6914C]" />
+          <FileSpreadsheet className="h-6 w-6 text-[var(--gold-2)]" />
           استيراد من CSV/Excel
         </h1>
-        <p className="text-sm text-[#8A8A92] mt-1">
+        <p className="text-sm text-[var(--text-soft)] mt-1">
           ارفع ملف CSV أو احفظ ملف Excel كـ CSV — ندعم الأعمدة العربية والإنجليزية تلقائياً.
         </p>
       </div>
@@ -194,12 +194,12 @@ export default function ImportPage() {
               className={`p-4 rounded-2xl border text-right transition ${
                 active
                   ? `bg-gradient-to-br ${m.color} border-transparent text-white`
-                  : "bg-[#16161A] border-[rgba(198,145,76,0.09)] text-[#9A9AA0] hover:border-[#C6914C]/30"
+                  : "bg-[var(--bg-surface-1)] border-[var(--gold-bg-soft)] text-[var(--text-soft)] hover:border-[var(--gold-2)]/30"
               }`}
             >
               <Icon className="h-6 w-6 mb-2" />
               <div className="font-bold">{m.label}</div>
-              <div className={`text-xs mt-1 ${active ? "text-white/80" : "text-[#5A5A62]"}`}>
+              <div className={`text-xs mt-1 ${active ? "text-white/80" : "text-[var(--text-faint)]"}`}>
                 الحقول الإلزامية: {m.requiredFields.join("، ")}
               </div>
             </button>
@@ -208,12 +208,12 @@ export default function ImportPage() {
       </div>
 
       {/* ── رفع الملف ── */}
-      <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-6">
+      <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-white">١. ارفع الملف</h2>
           <button
             onClick={downloadTemplate}
-            className="inline-flex items-center gap-2 text-xs text-[#C6914C] hover:text-[#d49f5c] transition"
+            className="inline-flex items-center gap-2 text-xs text-[var(--gold-2)] hover:text-[#d49f5c] transition"
           >
             <Download className="h-4 w-4" />
             تنزيل قالب فارغ
@@ -221,7 +221,7 @@ export default function ImportPage() {
         </div>
 
         {rawRows.length === 0 ? (
-          <label className="block border-2 border-dashed border-[rgba(198,145,76,0.2)] rounded-xl p-8 text-center cursor-pointer hover:border-[#C6914C]/50 transition">
+          <label className="block border-2 border-dashed border-[var(--gold-bg-hover)] rounded-xl p-8 text-center cursor-pointer hover:border-[var(--gold-2)]/50 transition">
             <input
               ref={fileRef}
               type="file"
@@ -232,20 +232,20 @@ export default function ImportPage() {
                 if (f) handleFile(f);
               }}
             />
-            <Upload className="h-10 w-10 text-[#C6914C] mx-auto mb-3" />
+            <Upload className="h-10 w-10 text-[var(--gold-2)] mx-auto mb-3" />
             <p className="text-white font-bold">اضغط أو اسحب ملف CSV هنا</p>
-            <p className="text-xs text-[#8A8A92] mt-1">الصيغ المدعومة: .csv (UTF-8)</p>
+            <p className="text-xs text-[var(--text-soft)] mt-1">الصيغ المدعومة: .csv (UTF-8)</p>
           </label>
         ) : (
-          <div className="flex items-center justify-between bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] rounded-xl p-4">
+          <div className="flex items-center justify-between bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] rounded-xl p-4">
             <div className="flex items-center gap-3">
               <CheckCircle2 className="h-6 w-6 text-emerald-400" />
               <div>
                 <div className="text-white font-bold">{rawRows.length} صفّ جاهز للاستيراد</div>
-                <div className="text-xs text-[#8A8A92]">{headers.length} عمود في الملف</div>
+                <div className="text-xs text-[var(--text-soft)]">{headers.length} عمود في الملف</div>
               </div>
             </div>
-            <button onClick={resetAll} className="text-[#8A8A92] hover:text-white">
+            <button onClick={resetAll} className="text-[var(--text-soft)] hover:text-white">
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -254,22 +254,22 @@ export default function ImportPage() {
 
       {/* ── Mapping ── */}
       {rawRows.length > 0 && (
-        <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-6">
+        <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-6">
           <h2 className="font-bold text-white mb-4">٢. اربط الأعمدة بالحقول</h2>
           <div className="space-y-2">
             {headers.map((h) => (
-              <div key={h} className="flex items-center gap-3 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] rounded-lg p-3">
+              <div key={h} className="flex items-center gap-3 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] rounded-lg p-3">
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-[#5A5A62] mb-0.5">عمود CSV</div>
+                  <div className="text-xs text-[var(--text-faint)] mb-0.5">عمود CSV</div>
                   <div className="text-white font-bold truncate">{h}</div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-[#5A5A62] flex-shrink-0" />
+                <ArrowRight className="h-4 w-4 text-[var(--text-faint)] flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-[#5A5A62] mb-0.5">حقل النظام</div>
+                  <div className="text-xs text-[var(--text-faint)] mb-0.5">حقل النظام</div>
                   <select
                     value={mapping[h] || ""}
                     onChange={(e) => setMapping({ ...mapping, [h]: e.target.value })}
-                    className="w-full bg-[#0E0E11] border border-[rgba(255,255,255,0.05)] rounded-lg px-3 py-1.5 text-sm text-white focus:border-[#C6914C] outline-none"
+                    className="w-full bg-[#0E0E11] border border-[var(--overlay-soft)] rounded-lg px-3 py-1.5 text-sm text-white focus:border-[var(--gold-2)] outline-none"
                   >
                     <option value="">— تجاهل هذا العمود —</option>
                     {targetFields.map((f) => (
@@ -281,25 +281,25 @@ export default function ImportPage() {
             ))}
           </div>
           <div className="mt-4 flex flex-wrap gap-4 text-sm">
-            <span className="text-[#8A8A92]">🔗 معيّن: <span className="text-white font-bold">{mappedCount}</span></span>
-            <span className="text-[#8A8A92]">✅ صفوف صالحة: <span className="text-emerald-400 font-bold">{validCount}</span></span>
-            <span className="text-[#8A8A92]">⚠️ سيُتجاهل: <span className="text-amber-400 font-bold">{rawRows.length - validCount}</span></span>
+            <span className="text-[var(--text-soft)]">🔗 معيّن: <span className="text-white font-bold">{mappedCount}</span></span>
+            <span className="text-[var(--text-soft)]">✅ صفوف صالحة: <span className="text-emerald-400 font-bold">{validCount}</span></span>
+            <span className="text-[var(--text-soft)]">⚠️ سيُتجاهل: <span className="text-amber-400 font-bold">{rawRows.length - validCount}</span></span>
           </div>
         </div>
       )}
 
       {/* ── معاينة ── */}
       {previewRows.length > 0 && (
-        <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-6">
+        <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-6">
           <h2 className="font-bold text-white mb-4">٣. معاينة أول 5 صفوف</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[rgba(255,255,255,0.05)]">
+                <tr className="border-b border-[var(--overlay-soft)]">
                   {headers.map((h) => (
-                    <th key={h} className="text-right p-2 text-xs text-[#8A8A92] font-bold">
+                    <th key={h} className="text-right p-2 text-xs text-[var(--text-soft)] font-bold">
                       {h}
-                      {mapping[h] && <div className="text-[10px] text-[#C6914C] font-normal">→ {mapping[h]}</div>}
+                      {mapping[h] && <div className="text-[10px] text-[var(--gold-2)] font-normal">→ {mapping[h]}</div>}
                     </th>
                   ))}
                 </tr>
@@ -308,7 +308,7 @@ export default function ImportPage() {
                 {previewRows.map((r, i) => (
                   <tr key={i} className="border-b border-[rgba(255,255,255,0.03)]">
                     {headers.map((h) => (
-                      <td key={h} className="p-2 text-white text-xs">{r[h] || <span className="text-[#5A5A62]">—</span>}</td>
+                      <td key={h} className="p-2 text-white text-xs">{r[h] || <span className="text-[var(--text-faint)]">—</span>}</td>
                     ))}
                   </tr>
                 ))}
@@ -323,7 +323,7 @@ export default function ImportPage() {
         <button
           onClick={runImport}
           disabled={importing || validCount === 0}
-          className="w-full py-4 bg-gradient-to-r from-[#C6914C] to-[#8A5F2E] text-white font-bold rounded-xl text-lg disabled:opacity-50 transition"
+          className="w-full py-4 bg-gradient-to-r from-[var(--gold-2)] to-[var(--gold-4)] text-white font-bold rounded-xl text-lg disabled:opacity-50 transition"
         >
           {importing ? "…جارِ الاستيراد" : `استيراد ${validCount} سجلّ الآن`}
         </button>
@@ -331,7 +331,7 @@ export default function ImportPage() {
 
       {/* ── النتيجة ── */}
       {result && (
-        <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-6 space-y-3">
+        <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-6 space-y-3">
           <h2 className="font-bold text-white flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-emerald-400" />
             نتيجة الاستيراد
@@ -359,7 +359,7 @@ export default function ImportPage() {
           )}
           <button
             onClick={resetAll}
-            className="w-full py-2.5 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] hover:bg-[#26262C] text-white rounded-lg text-sm transition"
+            className="w-full py-2.5 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] hover:bg-[#26262C] text-white rounded-lg text-sm transition"
           >
             استيراد ملف آخر
           </button>

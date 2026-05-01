@@ -94,13 +94,13 @@ export default function IdentityTab() {
   if (!identity) return null;
 
   const inputClass =
-    "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C]";
+    "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--gold-2)]";
 
   return (
     <div className="max-w-3xl">
       <div className="mb-6">
         <h3 className="text-xl font-bold mb-2">هوية الوسيط</h3>
-        <p className="text-[#9A9AA0] text-sm">
+        <p className="text-[var(--text-soft)] text-sm">
           هذه المعلومات تُستخدم تلقائياً في كل محتوى يُنتج — عبّئها مرة واحدة
           بدقة.
         </p>
@@ -108,14 +108,14 @@ export default function IdentityTab() {
 
       <div className="space-y-6">
         {/* المعلومات الأساسية */}
-        <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-          <h4 className="font-bold text-[#C6914C] mb-2">
+        <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+          <h4 className="font-bold text-[var(--gold-2)] mb-2">
             المعلومات الأساسية
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">
+              <label className="block text-sm text-[var(--text-soft)] mb-2">
                 اسم الوسيط
               </label>
               <input
@@ -125,7 +125,7 @@ export default function IdentityTab() {
               />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">
+              <label className="block text-sm text-[var(--text-soft)] mb-2">
                 رقم رخصة فال
               </label>
               <input
@@ -138,7 +138,7 @@ export default function IdentityTab() {
           </div>
 
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               التخصص
             </label>
             <input
@@ -149,9 +149,9 @@ export default function IdentityTab() {
           </div>
 
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               مناطق التغطية{" "}
-              <span className="text-[#5A5A62]">(افصل بفاصلة عربية ،)</span>
+              <span className="text-[var(--text-faint)]">(افصل بفاصلة عربية ،)</span>
             </label>
             <input
               value={(identity.coverage_areas || []).join("، ")}
@@ -163,9 +163,9 @@ export default function IdentityTab() {
           </div>
 
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               الجمهور المستهدف{" "}
-              <span className="text-[#5A5A62]">(افصل بفاصلة عربية ،)</span>
+              <span className="text-[var(--text-faint)]">(افصل بفاصلة عربية ،)</span>
             </label>
             <input
               value={(identity.target_audiences || []).join("، ")}
@@ -177,9 +177,9 @@ export default function IdentityTab() {
           </div>
 
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               كلمات مفتاحية للبراند{" "}
-              <span className="text-[#5A5A62]">(افصل بفاصلة عربية ،)</span>
+              <span className="text-[var(--text-faint)]">(افصل بفاصلة عربية ،)</span>
             </label>
             <input
               value={(identity.brand_keywords || []).join("، ")}
@@ -191,9 +191,9 @@ export default function IdentityTab() {
           </div>
 
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               عبارات تتجنبها{" "}
-              <span className="text-[#5A5A62]">(افصل بفاصلة عربية ،)</span>
+              <span className="text-[var(--text-faint)]">(افصل بفاصلة عربية ،)</span>
             </label>
             <input
               value={(identity.avoid_phrases || []).join("، ")}
@@ -206,12 +206,12 @@ export default function IdentityTab() {
         </div>
 
         {/* النبذة التعريفية */}
-        <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-          <h4 className="font-bold text-[#C6914C] mb-2">
+        <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+          <h4 className="font-bold text-[var(--gold-2)] mb-2">
             النبذة التعريفية
           </h4>
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               نبذة قصيرة
             </label>
             <textarea
@@ -223,7 +223,7 @@ export default function IdentityTab() {
             />
           </div>
           <div>
-            <label className="block text-sm text-[#9A9AA0] mb-2">
+            <label className="block text-sm text-[var(--text-soft)] mb-2">
               نبذة تفصيلية
             </label>
             <textarea
@@ -243,7 +243,7 @@ export default function IdentityTab() {
             "px-8 py-3 rounded-lg font-bold text-lg transition " +
             (saved
               ? "bg-green-600"
-              : "bg-[#C6914C] hover:bg-[#A6743A]")
+              : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)]")
           }
         >
           {saved ? "تم الحفظ ✓" : saving ? "جاري الحفظ..." : "حفظ الهوية"}

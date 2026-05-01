@@ -8,13 +8,13 @@ import {
 } from "lucide-react";
 
 const ACTION_CFG: Record<string, { label: string; color: string; icon: any }> = {
-  create:  { label: "إنشاء",  color: "#4ADE80", icon: Plus     },
-  update:  { label: "تعديل",  color: "#60A5FA", icon: Edit3    },
-  delete:  { label: "حذف",    color: "#F87171", icon: Trash2   },
-  login:   { label: "دخول",   color: "#C6914C", icon: LogIn    },
-  logout:  { label: "خروج",   color: "#9A9AA0", icon: LogOut   },
-  export:  { label: "تصدير",  color: "#A78BFA", icon: Download },
-  import:  { label: "استيراد", color: "#FACC15", icon: Upload   },
+  create:  { label: "إنشاء",  color: "var(--success)", icon: Plus     },
+  update:  { label: "تعديل",  color: "var(--info)", icon: Edit3    },
+  delete:  { label: "حذف",    color: "var(--danger)", icon: Trash2   },
+  login:   { label: "دخول",   color: "var(--gold-2)", icon: LogIn    },
+  logout:  { label: "خروج",   color: "var(--text-soft)", icon: LogOut   },
+  export:  { label: "تصدير",  color: "var(--purple-ai)", icon: Download },
+  import:  { label: "استيراد", color: "var(--warning)", icon: Upload   },
 };
 
 const ENTITY_LABELS: Record<string, string> = {
@@ -77,12 +77,12 @@ export default function AuditPage() {
 
   if (missingTable) return (
     <div dir="rtl" style={{ maxWidth: 520, margin: "60px auto", textAlign: "center" }}>
-      <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-        <Shield size={28} style={{ color: "#C6914C" }} />
+      <div style={{ width: 64, height: 64, borderRadius: 18, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+        <Shield size={28} style={{ color: "var(--gold-2)" }} />
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 12 }}>يلزم تفعيل سجل التدقيق</h2>
-      <p style={{ fontSize: 13, color: "#9A9AA0", lineHeight: 1.8 }}>
-        شغّل <code style={{ background: "#1C1C22", padding: "2px 8px", borderRadius: 6, color: "#C6914C" }}>supabase/010_audit_log.sql</code> في Supabase → SQL Editor
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 12 }}>يلزم تفعيل سجل التدقيق</h2>
+      <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8 }}>
+        شغّل <code style={{ background: "var(--bg-surface-2)", padding: "2px 8px", borderRadius: 6, color: "var(--gold-2)" }}>supabase/010_audit_log.sql</code> في Supabase → SQL Editor
       </p>
     </div>
   );
@@ -92,19 +92,19 @@ export default function AuditPage() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold mb-1">سجل التدقيق والأمان</h2>
-        <p style={{ color: "#5A5A62", fontSize: 13 }}>تتبع جميع العمليات التي تمت على المنصة</p>
+        <p style={{ color: "var(--text-faint)", fontSize: 13 }}>تتبع جميع العمليات التي تمت على المنصة</p>
       </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "إجمالي السجلات", val: logs.length, color: "#C6914C" },
-          { label: "اليوم", val: todayCount, color: "#4ADE80" },
-          { label: "آخر 7 أيام", val: weekCount, color: "#60A5FA" },
-          { label: "عمليات الحذف", val: logs.filter(l => l.action === "delete").length, color: "#F87171" },
+          { label: "إجمالي السجلات", val: logs.length, color: "var(--gold-2)" },
+          { label: "اليوم", val: todayCount, color: "var(--success)" },
+          { label: "آخر 7 أيام", val: weekCount, color: "var(--info)" },
+          { label: "عمليات الحذف", val: logs.filter(l => l.action === "delete").length, color: "var(--danger)" },
         ].map((k, i) => (
-          <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
-            <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6 }}>{k.label}</p>
+          <div key={i} className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
+            <p style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 6 }}>{k.label}</p>
             <p className="font-cairo font-bold" style={{ fontSize: 22, color: k.color }}>{k.val}</p>
           </div>
         ))}
@@ -113,19 +113,19 @@ export default function AuditPage() {
       {/* Filters */}
       <div className="flex gap-3 flex-wrap items-center">
         <div className="relative flex-1 min-w-[200px] max-w-md">
-          <Search size={16} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "#5A5A62" }} />
+          <Search size={16} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)" }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث بالاسم أو البريد..."
             className="w-full rounded-xl pr-10 pl-4 py-2.5 text-sm focus:outline-none"
-            style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)", color: "#F5F5F5" }} />
+            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)" }} />
         </div>
         <div className="flex gap-2 flex-wrap">
           {["الكل", "create", "update", "delete"].map(a => (
             <button key={a} onClick={() => { setActionFilter(a); setPage(0); }}
               className="px-3 py-2 rounded-xl text-xs font-semibold transition"
               style={{
-                background: actionFilter === a ? "rgba(198,145,76,0.15)" : "#16161A",
-                color: actionFilter === a ? "#C6914C" : "#5A5A62",
-                border: "1px solid " + (actionFilter === a ? "rgba(198,145,76,0.3)" : "rgba(198,145,76,0.08)"),
+                background: actionFilter === a ? "var(--gold-bg-hover)" : "var(--bg-surface-1)",
+                color: actionFilter === a ? "var(--gold-2)" : "var(--text-faint)",
+                border: "1px solid " + (actionFilter === a ? "var(--gold-bg-strong)" : "var(--gold-bg-soft)"),
                 cursor: "pointer",
               }}>
               {a === "الكل" ? "الكل" : ACTION_CFG[a]?.label || a}
@@ -136,14 +136,14 @@ export default function AuditPage() {
 
       {/* Log entries */}
       {paged.length === 0 ? (
-        <div className="rounded-2xl py-16 text-center" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
-          <Shield size={36} style={{ color: "rgba(198,145,76,0.2)", margin: "0 auto 12px", display: "block" }} />
-          <p style={{ color: "#5A5A62", fontSize: 14 }}>لا توجد سجلات</p>
+        <div className="rounded-2xl py-16 text-center" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
+          <Shield size={36} style={{ color: "var(--gold-bg-hover)", margin: "0 auto 12px", display: "block" }} />
+          <p style={{ color: "var(--text-faint)", fontSize: 14 }}>لا توجد سجلات</p>
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
           {paged.map((log, i) => {
-            const cfg = ACTION_CFG[log.action] || { label: log.action, color: "#9A9AA0", icon: Eye };
+            const cfg = ACTION_CFG[log.action] || { label: log.action, color: "var(--text-soft)", icon: Eye };
             const ActionIcon = cfg.icon;
             const date = new Date(log.created_at);
             return (
@@ -163,13 +163,13 @@ export default function AuditPage() {
                       {cfg.label}
                     </span>
                     {log.entity_type && (
-                      <span style={{ fontSize: 12, color: "#9A9AA0" }}>{ENTITY_LABELS[log.entity_type] || log.entity_type}</span>
+                      <span style={{ fontSize: 12, color: "var(--text-soft)" }}>{ENTITY_LABELS[log.entity_type] || log.entity_type}</span>
                     )}
                     {log.entity_name && (
-                      <span style={{ fontSize: 13, color: "#E5E5E5", fontWeight: 600 }} className="truncate">{log.entity_name}</span>
+                      <span style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 600 }} className="truncate">{log.entity_name}</span>
                     )}
                   </div>
-                  <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 3 }}>
+                  <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 3 }}>
                     <User size={10} style={{ display: "inline", marginLeft: 3, verticalAlign: "middle" }} />
                     {log.user_email || "—"}
                   </p>
@@ -177,11 +177,11 @@ export default function AuditPage() {
 
                 {/* Time */}
                 <div className="text-left flex-shrink-0">
-                  <p style={{ fontSize: 12, color: "#9A9AA0" }}>
+                  <p style={{ fontSize: 12, color: "var(--text-soft)" }}>
                     <Clock size={10} style={{ display: "inline", marginLeft: 3, verticalAlign: "middle" }} />
                     {date.toLocaleDateString("ar-SA", { month: "short", day: "numeric" })}
                   </p>
-                  <p style={{ fontSize: 11, color: "#5A5A62" }}>{date.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}</p>
+                  <p style={{ fontSize: 11, color: "var(--text-faint)" }}>{date.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}</p>
                 </div>
               </div>
             );
@@ -189,16 +189,16 @@ export default function AuditPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-3 py-4" style={{ borderTop: "1px solid rgba(198,145,76,0.06)" }}>
+            <div className="flex items-center justify-center gap-3 py-4" style={{ borderTop: "1px solid var(--gold-bg-soft)" }}>
               <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
                 className="p-2 rounded-lg transition disabled:opacity-30"
-                style={{ background: "rgba(198,145,76,0.06)", cursor: page === 0 ? "default" : "pointer", border: "none", color: "#C6914C" }}>
+                style={{ background: "var(--gold-bg-soft)", cursor: page === 0 ? "default" : "pointer", border: "none", color: "var(--gold-2)" }}>
                 <ChevronRight size={16} />
               </button>
-              <span style={{ fontSize: 12, color: "#5A5A62" }}>{page + 1} / {totalPages}</span>
+              <span style={{ fontSize: 12, color: "var(--text-faint)" }}>{page + 1} / {totalPages}</span>
               <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1}
                 className="p-2 rounded-lg transition disabled:opacity-30"
-                style={{ background: "rgba(198,145,76,0.06)", cursor: page >= totalPages - 1 ? "default" : "pointer", border: "none", color: "#C6914C" }}>
+                style={{ background: "var(--gold-bg-soft)", cursor: page >= totalPages - 1 ? "default" : "pointer", border: "none", color: "var(--gold-2)" }}>
                 <ChevronLeft size={16} />
               </button>
             </div>

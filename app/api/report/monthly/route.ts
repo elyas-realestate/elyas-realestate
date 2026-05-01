@@ -154,15 +154,15 @@ export async function GET(req: NextRequest) {
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Tajawal', Arial, sans-serif; color: #1a1a1a; background: #fff; padding: 40px; max-width: 900px; margin: 0 auto; font-size: 14px; }
-    .cover { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(198,145,76,0.08), rgba(138,95,46,0.02)); border-radius: 20px; margin-bottom: 40px; page-break-after: always; }
+    .cover { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; background: linear-gradient(135deg, var(--gold-bg-soft), rgba(138,95,46,0.02)); border-radius: 20px; margin-bottom: 40px; page-break-after: always; }
     .cover-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 40px; }
-    .logo-circle { width: 72px; height: 72px; border-radius: 18px; background: linear-gradient(135deg, #C6914C, #8A5F2E); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; font-weight: 900; }
+    .logo-circle { width: 72px; height: 72px; border-radius: 18px; background: linear-gradient(135deg, var(--gold-2), var(--gold-4)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; font-weight: 900; }
     .cover h1 { font-size: 42px; font-weight: 900; color: #1a1a1a; margin-bottom: 8px; }
     .cover .sub { font-size: 18px; color: #888; margin-bottom: 30px; }
-    .cover .month { font-size: 56px; font-weight: 900; color: #C6914C; margin-bottom: 12px; }
+    .cover .month { font-size: 56px; font-weight: 900; color: var(--gold-2); margin-bottom: 12px; }
     .cover .meta { font-size: 13px; color: #aaa; margin-top: 30px; }
 
-    h2 { font-size: 22px; font-weight: 800; margin: 30px 0 16px; color: #1a1a1a; padding-bottom: 10px; border-bottom: 2px solid #C6914C; }
+    h2 { font-size: 22px; font-weight: 800; margin: 30px 0 16px; color: #1a1a1a; padding-bottom: 10px; border-bottom: 2px solid var(--gold-2); }
     h3 { font-size: 16px; font-weight: 700; margin: 20px 0 10px; color: #555; }
 
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
@@ -170,22 +170,22 @@ export async function GET(req: NextRequest) {
     .stat-label { font-size: 11px; color: #888; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 8px; text-transform: uppercase; }
     .stat-value { font-size: 26px; font-weight: 900; color: #1a1a1a; line-height: 1; }
     .stat-sub { font-size: 11px; color: #999; margin-top: 6px; }
-    .stat-value.gold { color: #C6914C; }
-    .stat-value.green { color: #16a34a; }
+    .stat-value.gold { color: var(--gold-2); }
+    .stat-value.green { color: var(--success-4); }
     .stat-value.red { color: #dc2626; }
 
-    .revenue-box { background: linear-gradient(135deg, #C6914C, #8A5F2E); color: #fff; border-radius: 16px; padding: 28px 24px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+    .revenue-box { background: linear-gradient(135deg, var(--gold-2), var(--gold-4)); color: #fff; border-radius: 16px; padding: 28px 24px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
     .revenue-box .label { font-size: 13px; opacity: 0.9; margin-bottom: 8px; }
     .revenue-box .value { font-size: 36px; font-weight: 900; }
     .revenue-box .note { font-size: 12px; opacity: 0.85; margin-top: 8px; }
 
     .week-chart { display: flex; align-items: flex-end; gap: 12px; height: 120px; padding: 20px; background: #fafafa; border-radius: 14px; margin-bottom: 20px; }
-    .week-bar { flex: 1; background: linear-gradient(to top, #C6914C, #8A5F2E); border-radius: 8px 8px 0 0; position: relative; transition: all 0.3s; min-height: 4px; }
+    .week-bar { flex: 1; background: linear-gradient(to top, var(--gold-2), var(--gold-4)); border-radius: 8px 8px 0 0; position: relative; transition: all 0.3s; min-height: 4px; }
     .week-bar-label { position: absolute; bottom: -22px; left: 0; right: 0; text-align: center; font-size: 11px; color: #888; font-weight: 600; }
     .week-bar-value { position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-size: 12px; color: #1a1a1a; font-weight: 700; }
 
     table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
-    th { background: #f5f5f5; padding: 10px 12px; text-align: right; font-weight: 700; color: #555; font-size: 12px; }
+    th { background: var(--text-strong); padding: 10px 12px; text-align: right; font-weight: 700; color: #555; font-size: 12px; }
     td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
     tr:last-child td { border-bottom: none; }
 
@@ -308,7 +308,7 @@ export async function GET(req: NextRequest) {
         <tr>
           <td style="font-weight:700;">${h(p.title)}</td>
           <td>${h(p.city || "—")} — ${h(p.district || "—")}</td>
-          <td style="text-align:left;font-weight:700;color:#C6914C;">${money(p.price)} ر.س</td>
+          <td style="text-align:left;font-weight:700;color:var(--gold-2);">${money(p.price)} ر.س</td>
         </tr>
       `).join("")}
     </tbody>

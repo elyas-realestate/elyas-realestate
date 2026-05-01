@@ -14,17 +14,17 @@ export default function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
         const isLast = i === crumbs.length - 1;
         return (
           <span key={i} className="flex items-center gap-1">
-            {i > 0 && <ChevronLeft size={13} style={{ color: "#5A5A62" }} />}
+            {i > 0 && <ChevronLeft size={13} style={{ color: "var(--text-faint)" }} />}
             {!isLast && crumb.href ? (
               <Link
                 href={crumb.href}
                 className="transition hover:opacity-90"
-                style={{ color: "#9A9AA0", textDecoration: "none" }}
+                style={{ color: "var(--text-soft)", textDecoration: "none" }}
               >
                 {crumb.label}
               </Link>
             ) : (
-              <span style={{ color: isLast ? "#C18D4A" : "#9A9AA0", fontWeight: isLast ? 600 : 400 }}>
+              <span style={{ color: isLast ? "var(--gold-2)" : "var(--text-soft)", fontWeight: isLast ? 600 : 400 }}>
                 {crumb.label}
               </span>
             )}

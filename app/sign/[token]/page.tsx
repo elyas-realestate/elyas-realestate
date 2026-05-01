@@ -94,7 +94,7 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
   if (loading) {
     return (
       <Wrapper>
-        <Loader2 size={32} style={{ color: "#C6914C", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={32} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </Wrapper>
     );
@@ -104,9 +104,9 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
     return (
       <Wrapper>
         <div style={{ maxWidth: 460, textAlign: "center" }}>
-          <AlertCircle size={42} style={{ color: "#F87171", marginBottom: 14 }} />
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: "#F4F4F5", marginBottom: 8 }}>الرابط غير متاح</h1>
-          <p style={{ fontSize: 14, color: "#A1A1AA" }}>{error || "تأكد من صحة الرابط أو راجع الوسيط الذي أرسله لك."}</p>
+          <AlertCircle size={42} style={{ color: "var(--danger)", marginBottom: 14 }} />
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>الرابط غير متاح</h1>
+          <p style={{ fontSize: 14, color: "var(--text-muted)" }}>{error || "تأكد من صحة الرابط أو راجع الوسيط الذي أرسله لك."}</p>
         </div>
       </Wrapper>
     );
@@ -116,9 +116,9 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
     return (
       <Wrapper>
         <div style={{ maxWidth: 480, textAlign: "center" }}>
-          <CheckCircle2 size={48} style={{ color: "#4ADE80", marginBottom: 14 }} />
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 10 }}>تم التوقيع بنجاح</h1>
-          <p style={{ fontSize: 14, color: "#A1A1AA", lineHeight: 1.7 }}>
+          <CheckCircle2 size={48} style={{ color: "var(--success)", marginBottom: 14 }} />
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 10 }}>تم التوقيع بنجاح</h1>
+          <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.7 }}>
             شكراً لك. تم تسجيل توقيعك على {contract.title}.
             <br />
             ستحصل على نسخة موقّعة من الطرف الأول قريباً.
@@ -129,24 +129,24 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
   }
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "#09090B", color: "#E4E4E7", fontFamily: "'Tajawal', sans-serif" }}>
+    <div dir="rtl" style={{ minHeight: "100vh", background: "#09090B", color: "var(--text-on-dark)", fontFamily: "'Tajawal', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
       `}</style>
 
-      <Toaster position="top-center" dir="rtl" toastOptions={{ style: { background: "#18181B", border: "1px solid rgba(198,145,76,0.2)", color: "#F4F4F5", fontFamily: "'Tajawal', sans-serif" } }} />
+      <Toaster position="top-center" dir="rtl" toastOptions={{ style: { background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-primary)", fontFamily: "'Tajawal', sans-serif" } }} />
 
-      <header style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", background: "#0F0F12" }}>
+      <header style={{ padding: "16px 20px", borderBottom: "1px solid var(--overlay-soft)", background: "var(--bg-deep)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10 }}>
-          <FileSignature size={22} style={{ color: "#C6914C" }} />
+          <FileSignature size={22} style={{ color: "var(--gold-2)" }} />
           <div>
             <div style={{ fontSize: 14, fontWeight: 700 }}>{contract.title}</div>
-            <div style={{ fontSize: 11, color: "#71717A", direction: "ltr", textAlign: "right" }}>
+            <div style={{ fontSize: 11, color: "var(--text-ghost)", direction: "ltr", textAlign: "right" }}>
               {contract.contract_number}
             </div>
           </div>
-          <div style={{ marginInlineStart: "auto", fontSize: 11, color: "#52525B", display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ marginInlineStart: "auto", fontSize: 11, color: "var(--text-disabled)", display: "flex", alignItems: "center", gap: 5 }}>
             <Shield size={12} /> توقيع إلكتروني آمن
           </div>
         </div>
@@ -178,8 +178,8 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
         `}</style>
 
         {/* الموافقة + بيانات الموقّع */}
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 18, marginBottom: 16 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 14, color: "#C6914C" }}>بياناتك للتوقيع</h2>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 18, marginBottom: 16 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 14, color: "var(--gold-2)" }}>بياناتك للتوقيع</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12, marginBottom: 14 }}>
             <Field label="الاسم الكامل *">
@@ -193,10 +193,10 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
             </Field>
           </div>
 
-          <label style={{ display: "flex", alignItems: "flex-start", gap: 9, padding: "10px 12px", background: "rgba(198,145,76,0.05)", border: "1px solid rgba(198,145,76,0.15)", borderRadius: 9, cursor: "pointer" }}>
+          <label style={{ display: "flex", alignItems: "flex-start", gap: 9, padding: "10px 12px", background: "rgba(198,145,76,0.05)", border: "1px solid var(--gold-bg-hover)", borderRadius: 9, cursor: "pointer" }}>
             <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
-              style={{ marginTop: 3, accentColor: "#C6914C" }} />
-            <span style={{ fontSize: 13, color: "#D4D4D8", lineHeight: 1.6 }}>
+              style={{ marginTop: 3, accentColor: "var(--gold-2)" }} />
+            <span style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6 }}>
               قرأت محتوى العقد بالكامل، وأوافق على جميع شروطه وبنوده، وأقرّ بأن توقيعي الإلكتروني التالي مُلزِم قانونياً ويعادل توقيعي اليدوي.
             </span>
           </label>
@@ -211,8 +211,8 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
             }}
             style={{
               width: "100%", padding: "14px",
-              background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
-              color: "#0A0A0C", border: "none", borderRadius: 10,
+              background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
+              color: "var(--bg-page)", border: "none", borderRadius: 10,
               fontSize: 15, fontWeight: 700, cursor: "pointer",
               fontFamily: "'Tajawal', sans-serif",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -220,8 +220,8 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
             <FileSignature size={16} /> ابدأ التوقيع
           </button>
         ) : (
-          <div style={{ background: "#0F0F12", border: "1px solid rgba(198,145,76,0.3)", borderRadius: 12, padding: 18 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 700, color: "#C6914C", marginBottom: 12 }}>وقّع هنا</h3>
+          <div style={{ background: "var(--bg-deep)", border: "1px solid var(--gold-bg-strong)", borderRadius: 12, padding: 18 }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--gold-2)", marginBottom: 12 }}>وقّع هنا</h3>
             <SignaturePad
               onConfirm={handleSubmit}
               onCancel={() => setShowSig(false)}
@@ -238,7 +238,7 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <div dir="rtl" style={{
-      minHeight: "100vh", background: "#09090B", color: "#E4E4E7",
+      minHeight: "100vh", background: "#09090B", color: "var(--text-on-dark)",
       display: "flex", alignItems: "center", justifyContent: "center",
       fontFamily: "'Tajawal', sans-serif", padding: 20,
     }}>
@@ -254,7 +254,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-      <span style={{ fontSize: 11, color: "#A1A1AA" }}>{label}</span>
+      <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{label}</span>
       {children}
     </label>
   );
@@ -262,17 +262,17 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function InfoChip({ icon: Icon, label, value }: { icon: typeof User; label: string; value: string }) {
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10, padding: "10px 12px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#71717A", marginBottom: 4 }}>
+    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 10, padding: "10px 12px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "var(--text-ghost)", marginBottom: 4 }}>
         <Icon size={11} /> {label}
       </div>
-      <div style={{ fontSize: 13, color: "#E4E4E7", fontWeight: 600 }}>{value}</div>
+      <div style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 600 }}>{value}</div>
     </div>
   );
 }
 
 const inputStyle: React.CSSProperties = {
-  padding: "9px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: 8, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
+  padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)",
+  borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
   outline: "none", width: "100%",
 };

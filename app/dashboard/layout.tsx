@@ -107,16 +107,16 @@ function NavItem({
         borderRadius: 10,
         fontSize: 13.5,
         fontWeight: isActive ? 600 : 400,
-        color: isActive ? "#C6914C" : "#6A6A72",
-        background: isActive ? "rgba(198,145,76,0.09)" : "transparent",
-        borderRight: isActive ? "3px solid #C6914C" : "3px solid transparent",
+        color: isActive ? "var(--gold-2)" : "#6A6A72",
+        background: isActive ? "var(--gold-bg-soft)" : "transparent",
+        borderRight: isActive ? "3px solid var(--gold-2)" : "3px solid transparent",
         marginBottom: 1,
       }}
     >
       <item.icon
         size={17}
         style={{
-          color: isActive ? "#C6914C" : "#6A6A72",
+          color: isActive ? "var(--gold-2)" : "#6A6A72",
           flexShrink: 0,
           transition: "color 0.2s",
         }}
@@ -126,8 +126,8 @@ function NavItem({
         <span
           style={{
             fontSize: 10, fontWeight: 700,
-            color: "#0A0A0C",
-            background: "#C6914C",
+            color: "var(--bg-page)",
+            background: "var(--gold-2)",
             borderRadius: 999,
             padding: "1px 6px",
             minWidth: 18,
@@ -251,17 +251,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   if (!authorized) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0A0A0C" }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-page)" }}>
       <div
         className="w-8 h-8 rounded-full border-2 animate-spin"
-        style={{ borderColor: "rgba(198,145,76,0.3)", borderTopColor: "#C6914C" }}
+        style={{ borderColor: "var(--gold-bg-strong)", borderTopColor: "var(--gold-2)" }}
       />
     </div>
   );
 
 
   return (
-    <div className="min-h-screen" dir="rtl" style={{ background: "#0A0A0C", color: "#F5F5F5" }}>
+    <div className="min-h-screen" dir="rtl" style={{ background: "var(--bg-page)", color: "var(--text-strong)" }}>
       <style>{`
         .dash-sidebar {
           transform: translateX(100%);
@@ -269,13 +269,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }
         .dash-sidebar.open { transform: translateX(0); }
         .dash-main { margin-right: 0; padding: 20px 16px; }
-        .dash-nav-item:hover { color: #C6914C !important; background: rgba(198,145,76,0.05) !important; }
+        .dash-nav-item:hover { color: var(--gold-2) !important; background: rgba(198,145,76,0.05) !important; }
         @media (min-width: 768px) {
           .dash-sidebar { transform: translateX(0) !important; }
           .dash-main { margin-right: 240px; padding: 28px 32px; }
         }
         nav::-webkit-scrollbar { width: 3px; }
-        nav::-webkit-scrollbar-thumb { background: rgba(198,145,76,0.15); border-radius: 4px; }
+        nav::-webkit-scrollbar-thumb { background: var(--gold-bg-hover); border-radius: 4px; }
       `}</style>
 
       {/* ═══════ HEADER ═══════ */}
@@ -287,7 +287,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           background: "rgba(10,10,12,0.92)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(198,145,76,0.08)",
+          borderBottom: "1px solid var(--gold-bg-soft)",
         }}
       >
         {/* Right: hamburger + page title */}
@@ -296,9 +296,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className="md:hidden flex items-center justify-center rounded-lg transition"
             style={{
               width: 36, height: 36,
-              background: "rgba(198,145,76,0.06)",
-              border: "1px solid rgba(198,145,76,0.12)",
-              color: "#9A9AA0",
+              background: "var(--gold-bg-soft)",
+              border: "1px solid var(--gold-bg)",
+              color: "var(--text-soft)",
             }}
             onClick={() => setSidebarOpen(v => !v)}
           >
@@ -308,8 +308,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Page title — desktop */}
           {currentPage && (
             <div className="hidden md:flex items-center gap-2">
-              <currentPage.icon size={16} style={{ color: "#C6914C" }} />
-              <span className="font-cairo font-semibold" style={{ fontSize: 15, color: "#E5E5E5" }}>
+              <currentPage.icon size={16} style={{ color: "var(--gold-2)" }} />
+              <span className="font-cairo font-semibold" style={{ fontSize: 15, color: "var(--text-on-dark)" }}>
                 {currentPage.label}
               </span>
             </div>
@@ -321,13 +321,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Link
             href="/dashboard/requests"
             className="relative no-underline flex items-center justify-center rounded-lg transition"
-            style={{ width: 36, height: 36, background: newRequests > 0 ? "rgba(198,145,76,0.08)" : "rgba(198,145,76,0.04)", border: `1px solid ${newRequests > 0 ? "rgba(198,145,76,0.2)" : "rgba(198,145,76,0.08)"}`, color: newRequests > 0 ? "#C6914C" : "#5A5A62" }}
+            style={{ width: 36, height: 36, background: newRequests > 0 ? "var(--gold-bg-soft)" : "rgba(198,145,76,0.04)", border: `1px solid ${newRequests > 0 ? "var(--gold-bg-hover)" : "var(--gold-bg-soft)"}`, color: newRequests > 0 ? "var(--gold-2)" : "var(--text-faint)" }}
           >
             <Bell size={16} />
             {(newRequests > 0 || notifCount > 0) && (
               <span
                 className="absolute flex items-center justify-center"
-                style={{ top: -4, left: -4, minWidth: 16, height: 16, borderRadius: 999, background: "#F87171", border: "1.5px solid #0A0A0C", fontSize: 9, fontWeight: 800, color: "#fff", padding: "0 3px" }}
+                style={{ top: -4, left: -4, minWidth: 16, height: 16, borderRadius: 999, background: "var(--danger)", border: "1.5px solid var(--bg-page)", fontSize: 9, fontWeight: 800, color: "#fff", padding: "0 3px" }}
               >
                 {notifCount > 0 ? (notifCount > 9 ? "9+" : notifCount) : newRequests > 9 ? "9+" : newRequests}
               </span>
@@ -338,7 +338,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             href="/search"
             target="_blank"
             className="hidden sm:flex items-center gap-1.5 no-underline transition"
-            style={{ color: "#5A5A62", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}
+            style={{ color: "var(--text-faint)", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg-soft)" }}
           >
             <ExternalLink size={13} />
             <span>صفحة البحث</span>
@@ -347,7 +347,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             href="/mortgage"
             target="_blank"
             className="hidden sm:flex items-center gap-1.5 no-underline transition"
-            style={{ color: "#5A5A62", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}
+            style={{ color: "var(--text-faint)", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg-soft)" }}
           >
             <ExternalLink size={13} />
             <span>التمويل</span>
@@ -357,7 +357,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href={`/${brokerSlug}`}
               target="_blank"
               className="hidden sm:flex items-center gap-1.5 no-underline transition"
-              style={{ color: "#C6914C", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", fontWeight: 600 }}
+              style={{ color: "var(--gold-2)", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", fontWeight: 600 }}
             >
               <ExternalLink size={13} />
               <span>/{brokerSlug}</span>
@@ -382,7 +382,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             gap: 10,
             fontSize: 13,
             fontWeight: 600,
-            color: renewalDaysLeft === 0 ? "#fff" : "#0A0A0C",
+            color: renewalDaysLeft === 0 ? "#fff" : "var(--bg-page)",
           }}
         >
           <AlertTriangle size={15} />
@@ -399,7 +399,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               borderRadius: 7,
               background: renewalDaysLeft === 0 ? "rgba(255,255,255,0.2)" : "rgba(10,10,12,0.18)",
               border: `1px solid ${renewalDaysLeft === 0 ? "rgba(255,255,255,0.3)" : "rgba(10,10,12,0.25)"}`,
-              color: renewalDaysLeft === 0 ? "#fff" : "#0A0A0C",
+              color: renewalDaysLeft === 0 ? "#fff" : "var(--bg-page)",
               fontSize: 12,
               fontWeight: 700,
               textDecoration: "none",
@@ -441,12 +441,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div style={{ padding: "20px 16px 16px" }}>
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center font-cairo font-black"
-                  style={{ width:38, height:38, borderRadius:11, background:"linear-gradient(135deg,#C6914C,#8A5F2E)", color:"#0A0A0C", fontSize:17, flexShrink:0, boxShadow:"0 4px 12px rgba(198,145,76,0.3)" }}>
+                  style={{ width:38, height:38, borderRadius:11, background:"linear-gradient(135deg,var(--gold-2),var(--gold-4))", color:"var(--bg-page)", fontSize:17, flexShrink:0, boxShadow:"0 4px 12px var(--gold-bg-strong)" }}>
                   و
                 </div>
                 <div>
-                  <div className="font-cairo font-bold" style={{ fontSize:14, color:"#F5F5F5", lineHeight:1.2 }}>وسيط برو</div>
-                  <div style={{ fontSize:10, color:"#C6914C", fontWeight:500 }}>لوحة التحكم</div>
+                  <div className="font-cairo font-bold" style={{ fontSize:14, color:"var(--text-strong)", lineHeight:1.2 }}>وسيط برو</div>
+                  <div style={{ fontSize:10, color:"var(--gold-2)", fontWeight:500 }}>لوحة التحكم</div>
                 </div>
               </div>
             </div>
@@ -454,7 +454,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* New Property CTA */}
             <div style={{ padding:"0 12px 14px" }}>
               <Link href="/dashboard/properties" className="flex items-center justify-center gap-2 no-underline transition-all"
-                style={{ padding:"9px 12px", borderRadius:10, background:"linear-gradient(135deg,rgba(198,145,76,0.18),rgba(198,145,76,0.08))", border:"1px solid rgba(198,145,76,0.25)", color:"#C6914C", fontSize:13, fontWeight:600 }}>
+                style={{ padding:"9px 12px", borderRadius:10, background:"linear-gradient(135deg,rgba(198,145,76,0.18),var(--gold-bg-soft))", border:"1px solid rgba(198,145,76,0.25)", color:"var(--gold-2)", fontSize:13, fontWeight:600 }}>
                 <Plus size={15} />
                 إضافة عقار
               </Link>
@@ -464,7 +464,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <nav style={{ flex:1, padding:"0 8px", overflowY:"auto", minHeight:0 }}>
               {menuGroups.map((group, i) => (
                 <div key={group.title} style={{ marginBottom:12 }}>
-                  <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"#5A5A62", letterSpacing:"1.2px", borderTop: i>0?"1px solid rgba(198,145,76,0.08)":"none", paddingTop: i>0?12:0 }}>
+                  <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"var(--text-faint)", letterSpacing:"1.2px", borderTop: i>0?"1px solid var(--gold-bg-soft)":"none", paddingTop: i>0?12:0 }}>
                     {group.title}
                   </div>
                   {group.items.map((item) => {
@@ -478,7 +478,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               ))}
 
               <div style={{ margin:"14px 0 12px" }}>
-                <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"#5A5A62", letterSpacing:"1.2px", borderTop:"1px solid rgba(198,145,76,0.08)", paddingTop:12 }}>
+                <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"var(--text-faint)", letterSpacing:"1.2px", borderTop:"1px solid var(--gold-bg-soft)", paddingTop:12 }}>
                   الإعدادات
                 </div>
                 {settingsMenu
@@ -513,21 +513,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   onMouseLeave={e=>{ e.currentTarget.style.background="linear-gradient(135deg, rgba(124,58,237,0.14), rgba(124,58,237,0.06))"; }}>
                   <Shield size={14} />
                   <span style={{ flex:1 }}>لوحة إدارة المنصّة</span>
-                  <span style={{ fontSize:9, padding:"2px 6px", borderRadius:4, background:"rgba(124,58,237,0.25)", color:"#A78BFA" }}>مالك</span>
+                  <span style={{ fontSize:9, padding:"2px 6px", borderRadius:4, background:"rgba(124,58,237,0.25)", color:"var(--purple-ai)" }}>مالك</span>
                 </Link>
               </div>
             )}
 
             {/* Bottom Profile */}
-            <div style={{ padding:"12px 12px 16px", borderTop:"1px solid rgba(198,145,76,0.08)" }}>
+            <div style={{ padding:"12px 12px 16px", borderTop:"1px solid var(--gold-bg-soft)" }}>
               <div className="flex items-center gap-3" style={{ padding:"10px 10px", borderRadius:12, background:"rgba(198,145,76,0.04)" }}>
                 <div className="flex items-center justify-center font-cairo font-black flex-shrink-0"
-                  style={{ width:34, height:34, borderRadius:9, background:"linear-gradient(135deg,#C6914C,#8A5F2E)", color:"#0A0A0C", fontSize:14 }}>
+                  style={{ width:34, height:34, borderRadius:9, background:"linear-gradient(135deg,var(--gold-2),var(--gold-4))", color:"var(--bg-page)", fontSize:14 }}>
                   {brokerName.charAt(0)}
                 </div>
                 <div style={{ flex:1, minWidth:0 }}>
-                  <div className="truncate" style={{ fontSize:12.5, fontWeight:600, color:"#E5E5E5", lineHeight:1.3 }}>{brokerName}</div>
-                  <div style={{ fontSize:10, color:"#5A5A62", display:"flex", alignItems:"center", gap:4 }}>
+                  <div className="truncate" style={{ fontSize:12.5, fontWeight:600, color:"var(--text-on-dark)", lineHeight:1.3 }}>{brokerName}</div>
+                  <div style={{ fontSize:10, color:"var(--text-faint)", display:"flex", alignItems:"center", gap:4 }}>
                     <span>وسيط عقاري</span>
                     {role !== "none" && (
                       <span style={{
@@ -536,10 +536,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                   : role === "admin" ? "rgba(56,189,248,0.15)"
                                   : role === "viewer" ? "rgba(148,163,184,0.15)"
                                   : "rgba(74,222,128,0.15)",
-                        color: role === "owner" ? "#FACC15"
-                             : role === "admin" ? "#38BDF8"
-                             : role === "viewer" ? "#94A3B8"
-                             : "#4ADE80",
+                        color: role === "owner" ? "var(--warning)"
+                             : role === "admin" ? "var(--info-2)"
+                             : role === "viewer" ? "var(--text-muted)"
+                             : "var(--success)",
                       }}>
                         {ROLE_LABELS[role]}
                       </span>
@@ -547,9 +547,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </div>
                 </div>
                 <button onClick={handleLogout} title="تسجيل خروج"
-                  style={{ background:"none", border:"none", cursor:"pointer", color:"#5A5A62", padding:4, borderRadius:6, transition:"color 0.2s" }}
-                  onMouseEnter={e=>(e.currentTarget.style.color="#F87171")}
-                  onMouseLeave={e=>(e.currentTarget.style.color="#5A5A62")}>
+                  style={{ background:"none", border:"none", cursor:"pointer", color:"var(--text-faint)", padding:4, borderRadius:6, transition:"color 0.2s" }}
+                  onMouseEnter={e=>(e.currentTarget.style.color="var(--danger)")}
+                  onMouseLeave={e=>(e.currentTarget.style.color="var(--text-faint)")}>
                   <LogOut size={15}/>
                 </button>
               </div>
@@ -570,9 +570,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         dir="rtl"
         toastOptions={{
           style: {
-            background: "#16161A",
-            border: "1px solid rgba(198,145,76,0.2)",
-            color: "#F5F5F5",
+            background: "var(--bg-surface-1)",
+            border: "1px solid var(--gold-bg-hover)",
+            color: "var(--text-strong)",
             fontFamily: "var(--font-tajawal), 'Tajawal', sans-serif",
             fontSize: 14,
             borderRadius: 12,

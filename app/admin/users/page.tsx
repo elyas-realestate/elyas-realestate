@@ -5,9 +5,9 @@ import { toast } from "sonner";
 
 
 const PLAN_META: Record<string, { label: string; color: string; Icon: typeof Gift }> = {
-  free:  { label: "مجاني",   color: "#71717A", Icon: Gift  },
-  basic: { label: "أساسي",   color: "#C6914C", Icon: Zap   },
-  pro:   { label: "احترافي", color: "#E8B86D", Icon: Crown },
+  free:  { label: "مجاني",   color: "var(--text-ghost)", Icon: Gift  },
+  basic: { label: "أساسي",   color: "var(--gold-2)", Icon: Zap   },
+  pro:   { label: "احترافي", color: "var(--gold-1)", Icon: Crown },
 };
 
 type Tenant = {
@@ -81,15 +81,15 @@ export default function AdminUsersPage() {
     <div>
       <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4 }}>المستخدمون</h1>
-          <p style={{ fontSize: 13, color: "#52525B" }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>المستخدمون</h1>
+          <p style={{ fontSize: 13, color: "var(--text-disabled)" }}>
             {loading ? "..." : `${tenants.length} وسيط مسجّل`}
           </p>
         </div>
         <button
           onClick={loadTenants}
           disabled={loading}
-          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.18)", color: "#A78BFA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}
+          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.18)", color: "var(--purple-ai)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}
         >
           <RefreshCw size={14} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
           تحديث
@@ -99,28 +99,28 @@ export default function AdminUsersPage() {
 
       {error && (
         <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
-          <AlertCircle size={14} style={{ color: "#F87171", flexShrink: 0 }} />
-          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+          <AlertCircle size={14} style={{ color: "var(--danger)", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
-      <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden" }}>
+      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, overflow: "hidden" }}>
         {loading ? (
-          <div style={{ padding: 40, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#52525B", fontSize: 13 }}>
+          <div style={{ padding: 40, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "var(--text-disabled)", fontSize: 13 }}>
             <RefreshCw size={16} style={{ animation: "spin 1s linear infinite" }} />
             جاري التحميل...
           </div>
         ) : tenants.length === 0 ? (
           <div style={{ padding: "48px 32px", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
             <Users size={32} style={{ color: "#27272A" }} />
-            <p style={{ fontSize: 13, color: "#52525B" }}>لا يوجد مستخدمون مسجّلون بعد</p>
+            <p style={{ fontSize: 13, color: "var(--text-disabled)" }}>لا يوجد مستخدمون مسجّلون بعد</p>
           </div>
         ) : (
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              <tr style={{ borderBottom: "1px solid var(--overlay-soft)" }}>
                 {["الوسيط", "الرابط", "الخطة", "الحالة", "تاريخ التسجيل", "إجراءات"].map(h => (
-                  <th key={h} style={{ padding: "12px 16px", textAlign: "right", fontSize: 11, color: "#52525B", fontWeight: 600, letterSpacing: "0.05em" }}>{h}</th>
+                  <th key={h} style={{ padding: "12px 16px", textAlign: "right", fontSize: 11, color: "var(--text-disabled)", fontWeight: 600, letterSpacing: "0.05em" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -136,7 +136,7 @@ export default function AdminUsersPage() {
                   >
                     {/* Name */}
                     <td style={{ padding: "14px 16px" }}>
-                      <span style={{ fontSize: 13, color: "#E4E4E7", fontWeight: 500 }}>
+                      <span style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 500 }}>
                         {t.broker_name || "—"}
                       </span>
                     </td>
@@ -147,7 +147,7 @@ export default function AdminUsersPage() {
                         href={`/${t.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ fontSize: 12, color: "#A78BFA", background: "rgba(124,58,237,0.08)", padding: "3px 8px", borderRadius: 5, textDecoration: "none", fontFamily: "monospace" }}
+                        style={{ fontSize: 12, color: "var(--purple-ai)", background: "rgba(124,58,237,0.08)", padding: "3px 8px", borderRadius: 5, textDecoration: "none", fontFamily: "monospace" }}
                       >
                         /{t.slug}
                       </a>
@@ -168,8 +168,8 @@ export default function AdminUsersPage() {
                               style={{
                                 display: "flex", alignItems: "center", gap: 4, padding: "4px 9px", borderRadius: 7,
                                 background: isActive ? `${pm.color}14` : "transparent",
-                                border: `1px solid ${isActive ? pm.color + "40" : "rgba(255,255,255,0.06)"}`,
-                                color: isActive ? pm.color : "#52525B",
+                                border: `1px solid ${isActive ? pm.color + "40" : "var(--overlay-mid)"}`,
+                                color: isActive ? pm.color : "var(--text-disabled)",
                                 fontSize: 11, cursor: isActive ? "default" : "pointer",
                                 fontFamily: "'Tajawal', sans-serif",
                               }}
@@ -185,18 +185,18 @@ export default function AdminUsersPage() {
                     {/* Status */}
                     <td style={{ padding: "14px 16px" }}>
                       {t.is_active ? (
-                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#4ADE80" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--success)" }}>
                           <CheckCircle size={13} /> نشط
                         </span>
                       ) : (
-                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#F87171" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--danger)" }}>
                           <XCircle size={13} /> موقوف
                         </span>
                       )}
                     </td>
 
                     {/* Date */}
-                    <td style={{ padding: "14px 16px", fontSize: 12, color: "#52525B" }}>
+                    <td style={{ padding: "14px 16px", fontSize: 12, color: "var(--text-disabled)" }}>
                       {new Date(t.created_at).toLocaleDateString("ar-SA")}
                     </td>
 
@@ -210,7 +210,7 @@ export default function AdminUsersPage() {
                           fontFamily: "'Tajawal', sans-serif",
                           background: t.is_active ? "rgba(239,68,68,0.06)" : "rgba(74,222,128,0.06)",
                           border: `1px solid ${t.is_active ? "rgba(239,68,68,0.15)" : "rgba(74,222,128,0.15)"}`,
-                          color: t.is_active ? "#F87171" : "#4ADE80",
+                          color: t.is_active ? "var(--danger)" : "var(--success)",
                         }}
                       >
                         {t.is_active ? "إيقاف" : "تفعيل"}

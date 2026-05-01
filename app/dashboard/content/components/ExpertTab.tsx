@@ -152,7 +152,7 @@ export default function ExpertTab({
       <div className="flex items-center gap-2 mb-3 flex-wrap">
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-bold">خبير المحتوى</h3>
-          <p className="text-[#9A9AA0] text-xs hidden sm:block">
+          <p className="text-[var(--text-soft)] text-xs hidden sm:block">
             أعطه فكرة — يكتب محتوى جاهز للنشر
           </p>
         </div>
@@ -163,7 +163,7 @@ export default function ExpertTab({
             const prov = providers.find((p) => p.id === e.target.value);
             if (prov) setAiModel(prov.models[0].id);
           }}
-          className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-[#C6914C]"
+          className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-[var(--gold-2)]"
           style={{ minWidth: 90 }}
         >
           {providers.map((p) => (
@@ -175,7 +175,7 @@ export default function ExpertTab({
         <select
           value={aiModel}
           onChange={(e) => setAiModel(e.target.value)}
-          className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-[#C6914C]"
+          className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-[var(--gold-2)]"
           style={{ minWidth: 110 }}
         >
           {providers
@@ -189,7 +189,7 @@ export default function ExpertTab({
         {messages.length > 0 && (
           <button
             onClick={() => setMessages([])}
-            className="flex items-center gap-1 text-xs text-[#9A9AA0] hover:text-white bg-[#16161A] border border-[rgba(198,145,76,0.12)] px-3 py-2 rounded-lg transition flex-shrink-0"
+            className="flex items-center gap-1 text-xs text-[var(--text-soft)] hover:text-white bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg transition flex-shrink-0"
           >
             <RefreshCw size={12} />{" "}
             <span className="hidden sm:inline">جديدة</span>
@@ -199,7 +199,7 @@ export default function ExpertTab({
 
       {/* Chat Container */}
       <div
-        className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden"
+        className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden"
         style={{
           height: "calc(100svh - 280px)",
           minHeight: 320,
@@ -210,11 +210,11 @@ export default function ExpertTab({
         <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center px-4">
-              <MessageSquare size={40} className="text-[#3A3A42] mb-3" />
-              <p className="text-[#9A9AA0] font-bold mb-1 text-sm">
+              <MessageSquare size={40} className="text-[var(--border-1)] mb-3" />
+              <p className="text-[var(--text-soft)] font-bold mb-1 text-sm">
                 مرحباً، أنا خبير المحتوى العقاري
               </p>
-              <p className="text-[#5A5A62] text-xs max-w-xs mb-5">
+              <p className="text-[var(--text-faint)] text-xs max-w-xs mb-5">
                 أعطني فكرة أو موضوع وسأكتب لك محتوى جاهز للنشر
               </p>
               <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:justify-center">
@@ -226,7 +226,7 @@ export default function ExpertTab({
                   <button
                     key={i}
                     onClick={() => setInput(s)}
-                    className="text-xs bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] text-[#9A9AA0] hover:text-white px-3 py-2 rounded-lg transition text-right"
+                    className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-white px-3 py-2 rounded-lg transition text-right"
                   >
                     {s}
                   </button>
@@ -248,8 +248,8 @@ export default function ExpertTab({
                   className={
                     "rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm leading-relaxed whitespace-pre-wrap " +
                     (msg.role === "user"
-                      ? "bg-[#1C1C22] text-gray-200 rounded-tr-sm"
-                      : "bg-[rgba(198,145,76,0.08)] border border-[rgba(198,145,76,0.15)] text-gray-200 rounded-tl-sm")
+                      ? "bg-[var(--bg-surface-2)] text-gray-200 rounded-tr-sm"
+                      : "bg-[var(--gold-bg-soft)] border border-[var(--gold-bg-hover)] text-gray-200 rounded-tl-sm")
                   }
                 >
                   {msg.content}
@@ -263,7 +263,7 @@ export default function ExpertTab({
                       {copiedIdx === idx ? (
                         <span className="text-green-400">نُسخ ✓</span>
                       ) : (
-                        <span className="text-[#5A5A62] hover:text-white">
+                        <span className="text-[var(--text-faint)] hover:text-white">
                           نسخ
                         </span>
                       )}
@@ -275,7 +275,7 @@ export default function ExpertTab({
                       {savedIdx === idx ? (
                         <span className="text-green-400">حُفظ ✓</span>
                       ) : (
-                        <span className="text-[#5A5A62] hover:text-white">
+                        <span className="text-[var(--text-faint)] hover:text-white">
                           حفظ كمسودة
                         </span>
                       )}
@@ -291,15 +291,15 @@ export default function ExpertTab({
 
           {loading && (
             <div className="flex justify-end">
-              <div className="bg-[rgba(198,145,76,0.08)] border border-[rgba(198,145,76,0.15)] rounded-2xl rounded-tl-sm px-4 py-3">
+              <div className="bg-[var(--gold-bg-soft)] border border-[var(--gold-bg-hover)] rounded-2xl rounded-tl-sm px-4 py-3">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-[#C6914C] rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-[var(--gold-2)] rounded-full animate-bounce" />
                   <div
-                    className="w-2 h-2 bg-[#C6914C] rounded-full animate-bounce"
+                    className="w-2 h-2 bg-[var(--gold-2)] rounded-full animate-bounce"
                     style={{ animationDelay: "0.15s" }}
                   />
                   <div
-                    className="w-2 h-2 bg-[#C6914C] rounded-full animate-bounce"
+                    className="w-2 h-2 bg-[var(--gold-2)] rounded-full animate-bounce"
                     style={{ animationDelay: "0.3s" }}
                   />
                 </div>
@@ -310,7 +310,7 @@ export default function ExpertTab({
         </div>
 
         {/* Input */}
-        <div className="border-t border-[rgba(198,145,76,0.12)] p-3">
+        <div className="border-t border-[var(--gold-bg)] p-3">
           <div className="flex items-end gap-2">
             <textarea
               ref={textareaRef}
@@ -319,7 +319,7 @@ export default function ExpertTab({
               onKeyDown={handleKeyDown}
               placeholder="اكتب فكرتك..."
               rows={1}
-              className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[#C6914C] resize-none"
+              className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[var(--gold-2)] resize-none"
               style={{ maxHeight: 120 }}
               dir="rtl"
             />
@@ -329,8 +329,8 @@ export default function ExpertTab({
               className={
                 "w-10 h-10 rounded-xl flex items-center justify-center transition flex-shrink-0 " +
                 (input.trim() && !loading
-                  ? "bg-[#C6914C] hover:bg-[#A6743A] text-white"
-                  : "bg-[#1C1C22] text-[#5A5A62]")
+                  ? "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white"
+                  : "bg-[var(--bg-surface-2)] text-[var(--text-faint)]")
               }
             >
               <Send size={16} style={{ transform: "scaleX(-1)" }} />

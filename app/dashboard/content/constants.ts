@@ -115,21 +115,21 @@ export const modes = [
 // ── Calendar ──
 
 export const platformColors: Record<string, string> = {
-  "X (تويتر)": "bg-[#1C2333] text-[#C18D4A]",
+  "X (تويتر)": "bg-[#1C2333] text-[var(--gold-2)]",
   Instagram: "bg-pink-500",
   TikTok: "bg-gray-100 text-black",
   Snapchat: "bg-yellow-400 text-black",
-  LinkedIn: "bg-[#A6743A]",
+  LinkedIn: "bg-[var(--gold-3)]",
   Threads: "bg-gray-400",
   "متعدد": "bg-purple-500",
 };
 
 export const platformDots: Record<string, string> = {
-  "X (تويتر)": "bg-[#C18D4A]",
+  "X (تويتر)": "bg-[var(--gold-2)]",
   Instagram: "bg-pink-500",
   TikTok: "bg-white",
   Snapchat: "bg-yellow-400",
-  LinkedIn: "bg-[#A6743A]",
+  LinkedIn: "bg-[var(--gold-3)]",
   Threads: "bg-gray-400",
   "متعدد": "bg-purple-500",
 };

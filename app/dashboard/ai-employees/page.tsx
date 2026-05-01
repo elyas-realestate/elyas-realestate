@@ -35,7 +35,7 @@ const EMPLOYEES = [
     name: "موظف الاستقبال",
     desc: "يرد تلقائياً على رسائل واتساب العملاء ويقترح عقارات مطابقة",
     icon: Phone,
-    color: "#60A5FA",
+    color: "var(--info)",
     schedule: "فوري (webhook)",
     note: "يتطلب ربط WhatsApp Business API يدوياً عبر Meta (قريباً)",
   },
@@ -45,7 +45,7 @@ const EMPLOYEES = [
     name: "موظف التسويق",
     desc: "يولِّد يومياً 3 منشورات لكل عقار جديد (تويتر/إنستجرام/واتساب)",
     icon: Megaphone,
-    color: "#C6914C",
+    color: "var(--gold-2)",
     schedule: "يومياً 10ص",
     note: "تراجع المنشورات في قائمة الانتظار وتوافق عليها قبل النشر",
   },
@@ -55,7 +55,7 @@ const EMPLOYEES = [
     name: "موظف المتابعة",
     desc: "يرصد العملاء الباردين ويولِّد لهم رسائل تواصل مخصَّصة",
     icon: MessageCircle,
-    color: "#34D399",
+    color: "var(--success-2)",
     schedule: "يومياً 6م",
     note: "أنت تراجع وتضغط \"إرسال\" — ما يُرسل شيء تلقائياً",
   },
@@ -65,7 +65,7 @@ const EMPLOYEES = [
     name: "محلّل البيانات",
     desc: "يحلّل أداءك أسبوعياً ويقدم توصيات عملية للأسبوع القادم",
     icon: BarChart3,
-    color: "#A78BFA",
+    color: "var(--purple-ai)",
     schedule: "أسبوعياً — الأحد 9ص",
     note: "التقارير تُعرض في هذه الصفحة",
   },
@@ -140,7 +140,7 @@ export default function AIEmployeesPage() {
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "#C6914C", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={28} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -149,8 +149,8 @@ export default function AIEmployeesPage() {
   if (error || !settings) {
     return (
       <div style={{ padding: "16px 20px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-        <AlertCircle size={16} style={{ color: "#F87171", display: "inline", marginInlineEnd: 8 }} />
-        <span style={{ fontSize: 14, color: "#F87171" }}>{error || "لم نتمكن من تحميل الإعدادات"}</span>
+        <AlertCircle size={16} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+        <span style={{ fontSize: 14, color: "var(--danger)" }}>{error || "لم نتمكن من تحميل الإعدادات"}</span>
       </div>
     );
   }
@@ -160,13 +160,13 @@ export default function AIEmployeesPage() {
       {/* Header */}
       <div style={{ marginBottom: 22, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <Bot size={20} style={{ color: "#C6914C" }} /> موظفو الذكاء الاصطناعي
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <Bot size={20} style={{ color: "var(--gold-2)" }} /> موظفو الذكاء الاصطناعي
           </h1>
-          <p style={{ fontSize: 13, color: "#71717A" }}>4 موظفين يعملون خلف الكواليس — تفعّل اللي تريده فقط</p>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>4 موظفين يعملون خلف الكواليس — تفعّل اللي تريده فقط</p>
         </div>
         <button onClick={load}
-          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", color: "#C6914C", fontSize: 13, cursor: "pointer" }}>
+          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, cursor: "pointer" }}>
           <RefreshCw size={13} /> تحديث
         </button>
       </div>
@@ -175,15 +175,15 @@ export default function AIEmployeesPage() {
       {counts && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 10, marginBottom: 20 }}>
           {[
-            { label: "منشورات بانتظار الموافقة", value: counts.marketing_pending, icon: Megaphone, color: "#C6914C" },
-            { label: "رسائل متابعة جاهزة",       value: counts.followup_pending,  icon: MessageCircle, color: "#34D399" },
-            { label: "محادثات مستقبَلة",          value: counts.conversations_count, icon: Phone, color: "#60A5FA" },
-            { label: "تقارير أسبوعية",            value: counts.insights_count,    icon: BarChart3, color: "#A78BFA" },
+            { label: "منشورات بانتظار الموافقة", value: counts.marketing_pending, icon: Megaphone, color: "var(--gold-2)" },
+            { label: "رسائل متابعة جاهزة",       value: counts.followup_pending,  icon: MessageCircle, color: "var(--success-2)" },
+            { label: "محادثات مستقبَلة",          value: counts.conversations_count, icon: Phone, color: "var(--info)" },
+            { label: "تقارير أسبوعية",            value: counts.insights_count,    icon: BarChart3, color: "var(--purple-ai)" },
           ].map(({ label, value, icon: Icon, color }) => (
-            <div key={label} style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 11, padding: "12px 14px" }}>
+            <div key={label} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: "12px 14px" }}>
               <Icon size={14} style={{ color, marginBottom: 6 }} />
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", lineHeight: 1 }}>{value}</div>
-              <div style={{ fontSize: 11, color: "#52525B", marginTop: 4 }}>{label}</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{value}</div>
+              <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 4 }}>{label}</div>
             </div>
           ))}
         </div>
@@ -195,15 +195,15 @@ export default function AIEmployeesPage() {
           const enabled = settings[emp.flag as keyof Settings] as boolean;
           const Icon = emp.icon;
           return (
-            <div key={emp.id} style={{ background: "#0F0F12", border: `1px solid ${enabled ? emp.color + "33" : "rgba(255,255,255,0.05)"}`, borderRadius: 13, padding: 16, position: "relative" }}>
+            <div key={emp.id} style={{ background: "var(--bg-deep)", border: `1px solid ${enabled ? emp.color + "33" : "var(--overlay-soft)"}`, borderRadius: 13, padding: 16, position: "relative" }}>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 9, background: `${emp.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <Icon size={17} style={{ color: emp.color }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7" }}>{emp.name}</div>
-                    <div style={{ fontSize: 11, color: "#52525B", marginTop: 2 }}>{emp.schedule}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{emp.name}</div>
+                    <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 2 }}>{emp.schedule}</div>
                   </div>
                 </div>
                 <button
@@ -224,8 +224,8 @@ export default function AIEmployeesPage() {
                   }} />
                 </button>
               </div>
-              <p style={{ fontSize: 12.5, color: "#A1A1AA", lineHeight: 1.6, marginBottom: 10 }}>{emp.desc}</p>
-              <div style={{ fontSize: 11, color: "#71717A", padding: "8px 10px", background: "#18181B", borderRadius: 7, borderInlineStart: `3px solid ${emp.color}` }}>
+              <p style={{ fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.6, marginBottom: 10 }}>{emp.desc}</p>
+              <div style={{ fontSize: 11, color: "var(--text-ghost)", padding: "8px 10px", background: "var(--bg-surface-2)", borderRadius: 7, borderInlineStart: `3px solid ${emp.color}` }}>
                 {emp.note}
               </div>
             </div>
@@ -234,9 +234,9 @@ export default function AIEmployeesPage() {
       </div>
 
       {/* Shared AI settings */}
-      <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, padding: 18 }}>
-        <h2 style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
-          <Sparkles size={14} style={{ color: "#C6914C" }} /> إعدادات الذكاء الاصطناعي
+      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, padding: 18 }}>
+        <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+          <Sparkles size={14} style={{ color: "var(--gold-2)" }} /> إعدادات الذكاء الاصطناعي
         </h2>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
@@ -300,7 +300,7 @@ export default function AIEmployeesPage() {
           </Field>
         </div>
 
-        <p style={{ fontSize: 11, color: "#52525B", marginTop: 14 }}>
+        <p style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 14 }}>
           التغييرات تُحفظ تلقائياً.
         </p>
       </div>
@@ -311,20 +311,20 @@ export default function AIEmployeesPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <span style={{ fontSize: 12, color: "#A1A1AA" }}>{label}</span>
+      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{label}</span>
       {children}
     </label>
   );
 }
 
 const selectStyle: React.CSSProperties = {
-  padding: "9px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: 8, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
+  padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)",
+  borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
   outline: "none", cursor: "pointer",
 };
 
 const inputStyle: React.CSSProperties = {
-  padding: "9px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: 8, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
+  padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)",
+  borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
   outline: "none",
 };

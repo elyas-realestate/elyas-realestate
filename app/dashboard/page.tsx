@@ -25,9 +25,9 @@ const revenueData = [
 ];
 
 const propertyStatusData = [
-  { name: "متاح", value: 45, color: "#4ADE80" },
-  { name: "قيد التفاوض", value: 12, color: "#FACC15" },
-  { name: "مباع/مؤجر", value: 89, color: "#38BDF8" },
+  { name: "متاح", value: 45, color: "var(--success)" },
+  { name: "قيد التفاوض", value: 12, color: "var(--warning)" },
+  { name: "مباع/مؤجر", value: 89, color: "var(--info-2)" },
 ];
 
 const dealPipelineData = [
@@ -92,26 +92,26 @@ export default function DashboardPage() {
       {/* HEADER & TOGGLES */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-cairo font-bold text-[#F5F5F5]">نظرة عامة</h1>
-          <p className="text-sm text-[#9A9AA0] mt-1">المركز المالي والتشغيلي لمنصتك العقارية</p>
+          <h1 className="text-2xl font-cairo font-bold text-[var(--text-strong)]">نظرة عامة</h1>
+          <p className="text-sm text-[var(--text-soft)] mt-1">المركز المالي والتشغيلي لمنصتك العقارية</p>
         </div>
         
-        <div className="bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl p-1 flex items-center">
+        <div className="bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl p-1 flex items-center">
           <button 
             onClick={() => setViewType("all")}
-            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${viewType === "all" ? "bg-[#C6914C] text-[#0A0A0C]" : "text-[#9A9AA0] hover:text-[#F5F5F5]"}`}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${viewType === "all" ? "bg-[var(--gold-2)] text-[var(--bg-page)]" : "text-[var(--text-soft)] hover:text-[var(--text-strong)]"}`}
           >
             الكل
           </button>
           <button 
             onClick={() => setViewType("buy")}
-            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${viewType === "buy" ? "bg-[#38BDF8] text-[#0A0A0C]" : "text-[#9A9AA0] hover:text-[#F5F5F5]"}`}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${viewType === "buy" ? "bg-[var(--info-2)] text-[var(--bg-page)]" : "text-[var(--text-soft)] hover:text-[var(--text-strong)]"}`}
           >
             بيع
           </button>
           <button 
             onClick={() => setViewType("rent")}
-            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${viewType === "rent" ? "bg-[#4ADE80] text-[#0A0A0C]" : "text-[#9A9AA0] hover:text-[#F5F5F5]"}`}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${viewType === "rent" ? "bg-[var(--success)] text-[var(--bg-page)]" : "text-[var(--text-soft)] hover:text-[var(--text-strong)]"}`}
           >
             إيجار
           </button>
@@ -119,17 +119,17 @@ export default function DashboardPage() {
       </div>
 
       {/* AI COPILOT INSIGHTS */}
-      <div className="bg-gradient-to-l from-[rgba(198,145,76,0.15)] to-[rgba(198,145,76,0.02)] border border-[rgba(198,145,76,0.25)] rounded-2xl p-5 flex items-start gap-4 shadow-lg shadow-[rgba(198,145,76,0.05)] relative overflow-hidden">
-        <div className="absolute -left-10 -top-10 w-40 h-40 bg-[#C6914C] opacity-10 rounded-full blur-3xl"></div>
-        <div className="bg-[#0A0A0C] p-3 rounded-xl border border-[rgba(198,145,76,0.3)] shadow-[0_0_15px_rgba(198,145,76,0.2)]">
-          <Brain size={24} className="text-[#C6914C]" />
+      <div className="bg-gradient-to-l from-[var(--gold-bg-hover)] to-[rgba(198,145,76,0.02)] border border-[rgba(198,145,76,0.25)] rounded-2xl p-5 flex items-start gap-4 shadow-lg shadow-[rgba(198,145,76,0.05)] relative overflow-hidden">
+        <div className="absolute -left-10 -top-10 w-40 h-40 bg-[var(--gold-2)] opacity-10 rounded-full blur-3xl"></div>
+        <div className="bg-[var(--bg-page)] p-3 rounded-xl border border-[var(--gold-bg-strong)] shadow-[0_0_15px_var(--gold-bg-hover)]">
+          <Brain size={24} className="text-[var(--gold-2)]" />
         </div>
         <div className="flex-1 relative z-10">
-          <h3 className="text-base font-bold text-[#F5F5F5] flex items-center gap-2 mb-1">
-            مستشار الذكاء الاصطناعي <Sparkles size={14} className="text-[#C6914C]" />
+          <h3 className="text-base font-bold text-[var(--text-strong)] flex items-center gap-2 mb-1">
+            مستشار الذكاء الاصطناعي <Sparkles size={14} className="text-[var(--gold-2)]" />
           </h3>
-          <p className="text-sm text-[#D4D4D8] leading-relaxed">
-            صباح الخير! هناك <strong className="text-[#38BDF8]">3 صفقات</strong> إيجار جاهزة للإغلاق اليوم في حي النرجس. 
+          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+            صباح الخير! هناك <strong className="text-[var(--info-2)]">3 صفقات</strong> إيجار جاهزة للإغلاق اليوم في حي النرجس. 
             {subs.length > 0 && <span> كما أن لديك اشتراكات قريبة الانتهاء، لا تنسَ مراجعتها.</span>}
           </p>
         </div>
@@ -184,23 +184,23 @@ export default function DashboardPage() {
       {/* TOP STATS - BENTO GRID START */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "إجمالي العقارات", value: stats.properties, icon: Building2, color: "#C6914C", trend: "+12%" },
-          { label: "حجم المبيعات المؤكدة", value: formatSAR(stats.revenue), icon: CircleDollarSign, color: "#4ADE80", trend: "+8.4%" },
-          { label: "العملاء النشطين", value: stats.clients, icon: Users, color: "#38BDF8", trend: "+24%" },
-          { label: "الصفقات الجارية", value: stats.deals, icon: TrendingUp, color: "#FACC15", trend: "-2.1%" },
+          { label: "إجمالي العقارات", value: stats.properties, icon: Building2, color: "var(--gold-2)", trend: "+12%" },
+          { label: "حجم المبيعات المؤكدة", value: formatSAR(stats.revenue), icon: CircleDollarSign, color: "var(--success)", trend: "+8.4%" },
+          { label: "العملاء النشطين", value: stats.clients, icon: Users, color: "var(--info-2)", trend: "+24%" },
+          { label: "الصفقات الجارية", value: stats.deals, icon: TrendingUp, color: "var(--warning)", trend: "-2.1%" },
         ].map((kpi, i) => (
-          <div key={i} className="bg-[#1C1C22] border border-[#27272F] rounded-2xl p-5 hover:border-[rgba(198,145,76,0.3)] transition-colors">
+          <div key={i} className="bg-[var(--bg-surface-2)] border border-[#27272F] rounded-2xl p-5 hover:border-[var(--gold-bg-strong)] transition-colors">
             <div className="flex justify-between items-start mb-4">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${kpi.color}15` }}>
                 <kpi.icon size={20} style={{ color: kpi.color }} />
               </div>
-              <span className={`text-xs font-bold px-2 py-1 rounded-md flex items-center gap-1 ${kpi.trend.startsWith('+') ? 'text-[#4ADE80] bg-[#4ADE80]10' : 'text-[#F87171] bg-[#F87171]10'}`}>
+              <span className={`text-xs font-bold px-2 py-1 rounded-md flex items-center gap-1 ${kpi.trend.startsWith('+') ? 'text-[var(--success)] bg-[var(--success)]10' : 'text-[var(--danger)] bg-[var(--danger)]10'}`}>
                 {kpi.trend.startsWith('+') ? <ArrowUpRight size={12}/> : <ArrowDownRight size={12}/>}
                 {kpi.trend}
               </span>
             </div>
-            <h4 className="text-3xl font-cairo font-bold text-[#F5F5F5] mb-1">{kpi.value}</h4>
-            <span className="text-sm text-[#9A9AA0]">{kpi.label}</span>
+            <h4 className="text-3xl font-cairo font-bold text-[var(--text-strong)] mb-1">{kpi.value}</h4>
+            <span className="text-sm text-[var(--text-soft)]">{kpi.label}</span>
           </div>
         ))}
       </div>
@@ -209,21 +209,21 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* REVENUE CHART */}
-        <div className="lg:col-span-2 bg-[#1C1C22] border border-[#27272F] rounded-2xl p-5">
+        <div className="lg:col-span-2 bg-[var(--bg-surface-2)] border border-[#27272F] rounded-2xl p-5">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-cairo font-bold text-[#F5F5F5] text-lg">التدفق المالي (بيع / إيجار)</h3>
+            <h3 className="font-cairo font-bold text-[var(--text-strong)] text-lg">التدفق المالي (بيع / إيجار)</h3>
           </div>
           <div className="h-[280px] w-full" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorBuy" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--info-2)" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="var(--info-2)" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorRent" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4ADE80" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#4ADE80" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--success)" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="var(--success)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#27272F" vertical={false} />
@@ -231,13 +231,13 @@ export default function DashboardPage() {
                 <YAxis stroke="#6A6A72" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${val / 1000}k`} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#0D0D10', border: '1px solid #27272F', borderRadius: '12px' }}
-                  itemStyle={{ fontSize: 13 }} labelStyle={{ color: '#9A9AA0', marginBottom: 4 }}
+                  itemStyle={{ fontSize: 13 }} labelStyle={{ color: 'var(--text-soft)', marginBottom: 4 }}
                 />
                 {(viewType === "all" || viewType === "buy") && (
-                  <Area type="monotone" dataKey="buy" name="مبيعات" stroke="#38BDF8" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
+                  <Area type="monotone" dataKey="buy" name="مبيعات" stroke="var(--info-2)" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" />
                 )}
                 {(viewType === "all" || viewType === "rent") && (
-                  <Area type="monotone" dataKey="rent" name="إيجارات" stroke="#4ADE80" strokeWidth={3} fillOpacity={1} fill="url(#colorRent)" />
+                  <Area type="monotone" dataKey="rent" name="إيجارات" stroke="var(--success)" strokeWidth={3} fillOpacity={1} fill="url(#colorRent)" />
                 )}
               </AreaChart>
             </ResponsiveContainer>
@@ -245,8 +245,8 @@ export default function DashboardPage() {
         </div>
 
         {/* PROPERTY STATUS PIE */}
-        <div className="bg-[#1C1C22] border border-[#27272F] rounded-2xl p-5 flex flex-col">
-          <h3 className="font-cairo font-bold text-[#F5F5F5] text-lg mb-2">حالة المحفظة العقارية</h3>
+        <div className="bg-[var(--bg-surface-2)] border border-[#27272F] rounded-2xl p-5 flex flex-col">
+          <h3 className="font-cairo font-bold text-[var(--text-strong)] text-lg mb-2">حالة المحفظة العقارية</h3>
           <div className="flex-1 flex items-center justify-center relative min-h-[220px]" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -262,8 +262,8 @@ export default function DashboardPage() {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl font-bold text-[#F5F5F5]">{stats.properties || 146}</span>
-              <span className="text-xs text-[#9A9AA0]">عقار إجمالي</span>
+              <span className="text-2xl font-bold text-[var(--text-strong)]">{stats.properties || 146}</span>
+              <span className="text-xs text-[var(--text-soft)]">عقار إجمالي</span>
             </div>
           </div>
           <div className="space-y-2 mt-4">
@@ -271,9 +271,9 @@ export default function DashboardPage() {
               <div key={item.name} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  <span className="text-[#D4D4D8]">{item.name}</span>
+                  <span className="text-[var(--text-secondary)]">{item.name}</span>
                 </div>
-                <span className="font-bold text-[#F5F5F5]">{item.value}</span>
+                <span className="font-bold text-[var(--text-strong)]">{item.value}</span>
               </div>
             ))}
           </div>
@@ -284,12 +284,12 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* PIPELINE */}
-        <div className="bg-[#1C1C22] border border-[#27272F] rounded-2xl p-5">
+        <div className="bg-[var(--bg-surface-2)] border border-[#27272F] rounded-2xl p-5">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-cairo font-bold text-[#F5F5F5] text-lg flex items-center gap-2">
-              <Target size={18} className="text-[#C6914C]" /> مسار الصفقات (Pipeline)
+            <h3 className="font-cairo font-bold text-[var(--text-strong)] text-lg flex items-center gap-2">
+              <Target size={18} className="text-[var(--gold-2)]" /> مسار الصفقات (Pipeline)
             </h3>
-            <Link href="/dashboard/deals" className="text-xs text-[#C6914C] hover:underline">عرض الكل</Link>
+            <Link href="/dashboard/deals" className="text-xs text-[var(--gold-2)] hover:underline">عرض الكل</Link>
           </div>
           <div className="space-y-5">
             {dealPipelineData.map((stage, idx) => {
@@ -299,15 +299,15 @@ export default function DashboardPage() {
               return (
                 <div key={stage.stage} className="relative">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-semibold text-[#D4D4D8]">{stage.stage}</span>
-                    <span className="text-sm font-bold text-[#F5F5F5]">{stage.count} صفقات</span>
+                    <span className="text-sm font-semibold text-[var(--text-secondary)]">{stage.stage}</span>
+                    <span className="text-sm font-bold text-[var(--text-strong)]">{stage.count} صفقات</span>
                   </div>
-                  <div className="h-2 w-full bg-[#0A0A0C] rounded-full overflow-hidden border border-[#27272F]">
+                  <div className="h-2 w-full bg-[var(--bg-page)] rounded-full overflow-hidden border border-[#27272F]">
                     <div 
                       className="h-full rounded-full transition-all duration-1000 ease-out"
                       style={{ 
                         width: `${pct}%`, 
-                        background: isLast ? 'linear-gradient(90deg, rgba(74,222,128,0.5), #4ADE80)' : 'linear-gradient(90deg, rgba(198,145,76,0.5), #C6914C)' 
+                        background: isLast ? 'linear-gradient(90deg, rgba(74,222,128,0.5), var(--success))' : 'linear-gradient(90deg, rgba(198,145,76,0.5), var(--gold-2))' 
                       }}
                     />
                   </div>
@@ -318,28 +318,28 @@ export default function DashboardPage() {
         </div>
 
         {/* SUBSCRIPTIONS ALERTS */}
-        <div className="bg-[#1C1C22] border border-[#27272F] rounded-2xl p-5 flex flex-col">
+        <div className="bg-[var(--bg-surface-2)] border border-[#27272F] rounded-2xl p-5 flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-cairo font-bold text-[#F5F5F5] text-lg flex items-center gap-2">
-              <BellRing size={18} className="text-[#F87171]" /> تنبيهات الاشتراكات
+            <h3 className="font-cairo font-bold text-[var(--text-strong)] text-lg flex items-center gap-2">
+              <BellRing size={18} className="text-[var(--danger)]" /> تنبيهات الاشتراكات
             </h3>
-            <Link href="/dashboard/external-subscriptions" className="text-xs text-[#C6914C] hover:underline">إدارة الكل</Link>
+            <Link href="/dashboard/external-subscriptions" className="text-xs text-[var(--gold-2)] hover:underline">إدارة الكل</Link>
           </div>
           
           <div className="space-y-3 flex-1">
             {subs && subs.length > 0 ? subs.map((sub: any) => (
-              <div key={sub.id} className="flex items-center justify-between p-3 rounded-xl bg-[#0A0A0C] border border-[#27272F]">
+              <div key={sub.id} className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-page)] border border-[#27272F]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[rgba(198,145,76,0.1)] flex items-center justify-center text-[#C6914C]">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--gold-bg)] flex items-center justify-center text-[var(--gold-2)]">
                     <CreditCard size={18} />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-[#F5F5F5]">{sub.platform_name || "منصة إعلانية"}</h4>
-                    <p className="text-xs text-[#9A9AA0]">انتهاء: {new Date(sub.end_date).toLocaleDateString('ar-SA')}</p>
+                    <h4 className="text-sm font-bold text-[var(--text-strong)]">{sub.platform_name || "منصة إعلانية"}</h4>
+                    <p className="text-xs text-[var(--text-soft)]">انتهاء: {new Date(sub.end_date).toLocaleDateString('ar-SA')}</p>
                   </div>
                 </div>
                 <div className="text-left">
-                  <span className="text-xs font-bold px-2 py-1 bg-[rgba(248,113,113,0.1)] text-[#F87171] rounded-lg">
+                  <span className="text-xs font-bold px-2 py-1 bg-[rgba(248,113,113,0.1)] text-[var(--danger)] rounded-lg">
                     يجب التجديد
                   </span>
                 </div>
@@ -348,7 +348,7 @@ export default function DashboardPage() {
               <div className="flex-1 flex flex-col items-center justify-center text-[#6A6A72] py-6">
                 <CheckCircle size={32} className="mb-2 opacity-50" />
                 <p className="text-sm">جميع الاشتراكات سارية ولا توجد تنبيهات قريبة</p>
-                <Link href="/dashboard/external-subscriptions" className="mt-3 px-4 py-1.5 rounded-lg border border-[#27272F] text-xs hover:bg-[#1C1C22]">
+                <Link href="/dashboard/external-subscriptions" className="mt-3 px-4 py-1.5 rounded-lg border border-[#27272F] text-xs hover:bg-[var(--bg-surface-2)]">
                   إضافة اشتراك جديد
                 </Link>
               </div>

@@ -14,20 +14,20 @@ import Breadcrumb from "../../../components/Breadcrumb";
 
 // ── Category config ──────────────────────────────────────────────────────
 const CAT_CFG: Record<string, { color: string; bg: string }> = {
-  "مشتري":      { color: "#4ADE80", bg: "rgba(74,222,128,0.1)"  },
-  "مستثمر":     { color: "#A78BFA", bg: "rgba(167,139,250,0.1)" },
-  "مالك":       { color: "#C6914C", bg: "rgba(198,145,76,0.1)"  },
-  "مستأجر":     { color: "#FACC15", bg: "rgba(250,204,21,0.1)"  },
-  "وسيط عقاري": { color: "#38BDF8", bg: "rgba(56,189,248,0.1)"  },
+  "مشتري":      { color: "var(--success)", bg: "rgba(74,222,128,0.1)"  },
+  "مستثمر":     { color: "var(--purple-ai)", bg: "rgba(167,139,250,0.1)" },
+  "مالك":       { color: "var(--gold-2)", bg: "var(--gold-bg)"  },
+  "مستأجر":     { color: "var(--warning)", bg: "rgba(250,204,21,0.1)"  },
+  "وسيط عقاري": { color: "var(--info-2)", bg: "rgba(56,189,248,0.1)"  },
 };
 
 // ── Activity type config ─────────────────────────────────────────────────
 const ACT_CFG: Record<string, { label: string; color: string; icon: any }> = {
-  "واتساب":      { label: "واتساب",       color: "#4ADE80", icon: MessageSquare },
-  "مكالمة":      { label: "مكالمة",       color: "#38BDF8", icon: PhoneCall     },
-  "زيارة":       { label: "زيارة ميدانية", color: "#FACC15", icon: MapPinned     },
-  "عرض":         { label: "إرسال عرض",    color: "#C6914C", icon: Send          },
-  "ملاحظة":      { label: "ملاحظة",       color: "#A78BFA", icon: StickyNote    },
+  "واتساب":      { label: "واتساب",       color: "var(--success)", icon: MessageSquare },
+  "مكالمة":      { label: "مكالمة",       color: "var(--info-2)", icon: PhoneCall     },
+  "زيارة":       { label: "زيارة ميدانية", color: "var(--warning)", icon: MapPinned     },
+  "عرض":         { label: "إرسال عرض",    color: "var(--gold-2)", icon: Send          },
+  "ملاحظة":      { label: "ملاحظة",       color: "var(--purple-ai)", icon: StickyNote    },
 };
 
 // ── Lead score ───────────────────────────────────────────────────────────
@@ -44,9 +44,9 @@ function leadScore(c: any): number {
 }
 
 function scoreColor(s: number) {
-  if (s >= 75) return "#4ADE80";
-  if (s >= 45) return "#FACC15";
-  return "#F87171";
+  if (s >= 75) return "var(--success)";
+  if (s >= 45) return "var(--warning)";
+  return "var(--danger)";
 }
 
 function WAIcon({ size = 15 }: { size?: number }) {
@@ -150,7 +150,7 @@ export default function ClientProfile() {
     setActivities(data || []);
   }
 
-  const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C] transition";
+  const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)] transition";
 
   if (loading) return (
     <div dir="rtl" className="max-w-4xl mx-auto">
@@ -179,23 +179,23 @@ export default function ClientProfile() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Link href="/dashboard/clients" className="flex items-center justify-center rounded-xl no-underline transition"
-            style={{ width: 36, height: 36, background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.12)", color: "#9A9AA0" }}>
+            style={{ width: 36, height: 36, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
             <ArrowRight size={16} />
           </Link>
           <div>
             <h2 className="font-cairo font-bold" style={{ fontSize: 20 }}>{client.full_name}</h2>
-            <p style={{ fontSize: 12, color: "#5A5A62" }}>ملف العميل الكامل</p>
+            <p style={{ fontSize: 12, color: "var(--text-faint)" }}>ملف العميل الكامل</p>
           </div>
         </div>
         <div className="flex gap-2">
           {!editMode && (
             <button onClick={() => setEditMode(true)} className="flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl transition"
-              style={{ background: "rgba(198,145,76,0.08)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)" }}>
+              style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)" }}>
               <Pencil size={14} /> تعديل
             </button>
           )}
           <button onClick={handleDelete} className="flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl transition"
-            style={{ background: "rgba(248,113,113,0.08)", color: "#F87171", border: "1px solid rgba(248,113,113,0.15)" }}>
+            style={{ background: "rgba(248,113,113,0.08)", color: "var(--danger)", border: "1px solid rgba(248,113,113,0.15)" }}>
             <Trash2 size={14} /> حذف
           </button>
         </div>
@@ -211,7 +211,7 @@ export default function ClientProfile() {
             <div className="flex flex-col items-center text-center mb-5">
               <div
                 className="flex items-center justify-center rounded-2xl font-cairo font-black mb-3"
-                style={{ width: 64, height: 64, background: cfg?.bg || "rgba(198,145,76,0.1)", color: cfg?.color || "#C6914C", fontSize: 28 }}
+                style={{ width: 64, height: 64, background: cfg?.bg || "var(--gold-bg)", color: cfg?.color || "var(--gold-2)", fontSize: 28 }}
               >
                 {client.full_name?.charAt(0)}
               </div>
@@ -221,19 +221,19 @@ export default function ClientProfile() {
                   {client.category}
                 </span>
               )}
-              {client.code && <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 4 }}>{client.code}</p>}
+              {client.code && <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 4 }}>{client.code}</p>}
             </div>
 
             {/* Lead score */}
-            <div className="p-3 rounded-xl mb-4" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.1)" }}>
+            <div className="p-3 rounded-xl mb-4" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}>
               <div className="flex justify-between mb-2">
-                <span style={{ fontSize: 12, color: "#9A9AA0" }}>Lead Score</span>
+                <span style={{ fontSize: 12, color: "var(--text-soft)" }}>Lead Score</span>
                 <span className="font-cairo font-bold" style={{ color: scoreColor(score), fontSize: 14 }}>{score}/100</span>
               </div>
-              <div style={{ height: 6, borderRadius: 999, background: "rgba(255,255,255,0.05)" }}>
+              <div style={{ height: 6, borderRadius: 999, background: "var(--overlay-soft)" }}>
                 <div style={{ height: "100%", borderRadius: 999, width: score + "%", background: scoreColor(score), transition: "width 1s" }} />
               </div>
-              <p style={{ fontSize: 10, color: "#5A5A62", marginTop: 6 }}>
+              <p style={{ fontSize: 10, color: "var(--text-faint)", marginTop: 6 }}>
                 {score >= 75 ? "عميل واعد جداً — تابع بشكل دوري" : score >= 45 ? "اهتمام متوسط — يحتاج مزيداً من التواصل" : "اهتمام منخفض — أكمل بياناته أولاً"}
               </p>
             </div>
@@ -241,30 +241,30 @@ export default function ClientProfile() {
             {!editMode ? (
               <div className="space-y-2">
                 {client.phone && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                    <Phone size={14} style={{ color: "#C6914C" }} />
-                    <a href={`tel:${client.phone}`} className="text-sm no-underline flex-1" style={{ color: "#F5F5F5", direction: "ltr" }}>{client.phone}</a>
+                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <Phone size={14} style={{ color: "var(--gold-2)" }} />
+                    <a href={`tel:${client.phone}`} className="text-sm no-underline flex-1" style={{ color: "var(--text-strong)", direction: "ltr" }}>{client.phone}</a>
                   </div>
                 )}
                 {(client.city || client.district) && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                    <MapPin size={14} style={{ color: "#C6914C" }} />
+                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <MapPin size={14} style={{ color: "var(--gold-2)" }} />
                     <p className="text-sm">{[client.district, client.city].filter(Boolean).join(" — ")}</p>
                   </div>
                 )}
                 {client.budget && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                    <TrendingUp size={14} style={{ color: "#A78BFA" }} />
+                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <TrendingUp size={14} style={{ color: "var(--purple-ai)" }} />
                     <div>
-                      <p style={{ fontSize: 10, color: "#5A5A62" }}>الميزانية</p>
-                      <p className="font-cairo font-bold text-sm" style={{ color: "#A78BFA" }}>{client.budget}</p>
+                      <p style={{ fontSize: 10, color: "var(--text-faint)" }}>الميزانية</p>
+                      <p className="font-cairo font-bold text-sm" style={{ color: "var(--purple-ai)" }}>{client.budget}</p>
                     </div>
                   </div>
                 )}
                 {client.notes && (
-                  <div className="p-3 rounded-xl" style={{ background: "#16161A" }}>
-                    <p style={{ fontSize: 10, color: "#5A5A62", marginBottom: 4 }}>ملاحظات</p>
-                    <p className="text-sm leading-relaxed" style={{ color: "#9A9AA0" }}>{client.notes}</p>
+                  <div className="p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <p style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 4 }}>ملاحظات</p>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-soft)" }}>{client.notes}</p>
                   </div>
                 )}
               </div>
@@ -278,21 +278,21 @@ export default function ClientProfile() {
                   { label: "الميزانية", key: "budget"    },
                 ].map(f => (
                   <div key={f.key}>
-                    <label className="block text-xs text-[#9A9AA0] mb-1">{f.label}</label>
+                    <label className="block text-xs text-[var(--text-soft)] mb-1">{f.label}</label>
                     <input value={editForm[f.key]} onChange={e => setEditForm((p: any) => ({ ...p, [f.key]: e.target.value }))}
-                      dir={(f as any).dir} className={inp} style={{ color: "#F5F5F5", padding: "10px 14px" }} />
+                      dir={(f as any).dir} className={inp} style={{ color: "var(--text-strong)", padding: "10px 14px" }} />
                   </div>
                 ))}
                 <div>
-                  <label className="block text-xs text-[#9A9AA0] mb-1">الفئة</label>
-                  <select value={editForm.category} onChange={e => setEditForm((p: any) => ({ ...p, category: e.target.value }))} className={inp} style={{ color: "#F5F5F5", padding: "10px 14px" }}>
+                  <label className="block text-xs text-[var(--text-soft)] mb-1">الفئة</label>
+                  <select value={editForm.category} onChange={e => setEditForm((p: any) => ({ ...p, category: e.target.value }))} className={inp} style={{ color: "var(--text-strong)", padding: "10px 14px" }}>
                     <option value="">اختر...</option>
                     {Object.keys(CAT_CFG).map(c => <option key={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-[#9A9AA0] mb-1">ملاحظات</label>
-                  <textarea value={editForm.notes} onChange={e => setEditForm((p: any) => ({ ...p, notes: e.target.value }))} rows={3} className={inp} style={{ color: "#F5F5F5" }} />
+                  <label className="block text-xs text-[var(--text-soft)] mb-1">ملاحظات</label>
+                  <textarea value={editForm.notes} onChange={e => setEditForm((p: any) => ({ ...p, notes: e.target.value }))} rows={3} className={inp} style={{ color: "var(--text-strong)" }} />
                 </div>
                 <div className="flex gap-2 pt-1">
                   <button onClick={handleSave} disabled={saving} className="btn-gold flex-1 py-2.5 text-sm disabled:opacity-50">
@@ -306,30 +306,30 @@ export default function ClientProfile() {
 
           {/* Quick actions */}
           <div className="card-luxury p-4">
-            <p style={{ fontSize: 12, color: "#5A5A62", marginBottom: 10, fontWeight: 600 }}>إجراءات سريعة</p>
+            <p style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 10, fontWeight: 600 }}>إجراءات سريعة</p>
             <div className="space-y-2">
               {client.phone && (
                 <a href={`https://wa.me/${client.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"
                   className="flex items-center gap-3 py-2.5 px-3 rounded-xl no-underline font-bold text-sm transition"
-                  style={{ background: "rgba(22,163,74,0.12)", color: "#4ADE80", border: "1px solid rgba(22,163,74,0.2)" }}>
+                  style={{ background: "rgba(22,163,74,0.12)", color: "var(--success)", border: "1px solid rgba(22,163,74,0.2)" }}>
                   <WAIcon /> فتح واتساب
                 </a>
               )}
               {client.phone && (
                 <a href={`tel:${client.phone}`}
                   className="flex items-center gap-3 py-2.5 px-3 rounded-xl no-underline font-bold text-sm transition"
-                  style={{ background: "rgba(56,189,248,0.08)", color: "#38BDF8", border: "1px solid rgba(56,189,248,0.15)" }}>
+                  style={{ background: "rgba(56,189,248,0.08)", color: "var(--info-2)", border: "1px solid rgba(56,189,248,0.15)" }}>
                   <PhoneCall size={14} /> اتصال مباشر
                 </a>
               )}
               <button onClick={() => { setActForm({ type: "زيارة", note: "" }); setShowAddAct(true); }}
                 className="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl font-bold text-sm transition"
-                style={{ background: "rgba(250,204,21,0.08)", color: "#FACC15", border: "1px solid rgba(250,204,21,0.15)" }}>
+                style={{ background: "rgba(250,204,21,0.08)", color: "var(--warning)", border: "1px solid rgba(250,204,21,0.15)" }}>
                 <MapPinned size={14} /> جدولة زيارة
               </button>
               <button onClick={() => { setActForm({ type: "عرض", note: "" }); setShowAddAct(true); }}
                 className="w-full flex items-center gap-3 py-2.5 px-3 rounded-xl font-bold text-sm transition"
-                style={{ background: "rgba(198,145,76,0.08)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.15)" }}>
+                style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)" }}>
                 <Send size={14} /> إرسال عرض
               </button>
             </div>
@@ -343,7 +343,7 @@ export default function ClientProfile() {
           <div className="card-luxury p-5">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <Clock size={15} style={{ color: "#C6914C" }} />
+                <Clock size={15} style={{ color: "var(--gold-2)" }} />
                 <h3 className="font-cairo font-bold" style={{ fontSize: 15 }}>سجل النشاطات</h3>
                 {activities.length > 0 && (
                   <span className="status-pill gold" style={{ fontSize: 10, padding: "1px 8px" }}>{activities.length}</span>
@@ -352,7 +352,7 @@ export default function ClientProfile() {
               <button
                 onClick={() => setShowAddAct(v => !v)}
                 className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg transition font-medium"
-                style={{ background: showAddAct ? "#1C1C22" : "rgba(198,145,76,0.1)", color: showAddAct ? "#9A9AA0" : "#C6914C", border: "1px solid rgba(198,145,76,0.2)" }}
+                style={{ background: showAddAct ? "var(--bg-surface-2)" : "var(--gold-bg)", color: showAddAct ? "var(--text-soft)" : "var(--gold-2)", border: "1px solid var(--gold-bg-hover)" }}
               >
                 {showAddAct ? <><X size={13} /> إلغاء</> : <><Plus size={13} /> تسجيل نشاط</>}
               </button>
@@ -360,7 +360,7 @@ export default function ClientProfile() {
 
             {/* Add activity form */}
             {showAddAct && (
-              <div className="mb-5 p-4 rounded-xl fade-up" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.12)" }}>
+              <div className="mb-5 p-4 rounded-xl fade-up" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   {Object.entries(ACT_CFG).map(([key, val]) => (
                     <button
@@ -369,7 +369,7 @@ export default function ClientProfile() {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition"
                       style={{
                         background: actForm.type === key ? val.color + "20" : "rgba(255,255,255,0.03)",
-                        border: `1px solid ${actForm.type === key ? val.color + "50" : "rgba(255,255,255,0.05)"}`,
+                        border: `1px solid ${actForm.type === key ? val.color + "50" : "var(--overlay-soft)"}`,
                         color: actForm.type === key ? val.color : "#7A7A82",
                       }}
                     >
@@ -384,7 +384,7 @@ export default function ClientProfile() {
                   rows={3}
                   placeholder="سجّل ما حدث في هذا التواصل..."
                   className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition mb-3"
-                  style={{ background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", color: "#F5F5F5", resize: "none" }}
+                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)", resize: "none" }}
                 />
                 <div className="flex gap-2">
                   <button onClick={handleAddActivity} disabled={addingAct} className="btn-gold px-5 py-2 text-sm flex-1 disabled:opacity-50">
@@ -397,23 +397,23 @@ export default function ClientProfile() {
 
             {/* Timeline entries */}
             {!hasActTable ? (
-              <div className="text-center py-8 rounded-xl" style={{ background: "rgba(198,145,76,0.03)", border: "1px dashed rgba(198,145,76,0.15)" }}>
-                <Clock size={32} className="mx-auto mb-3" style={{ color: "#3A3A42" }} />
-                <p style={{ color: "#9A9AA0", fontSize: 14, marginBottom: 6 }}>سجل النشاطات يحتاج إعداداً</p>
-                <p style={{ color: "#5A5A62", fontSize: 12, maxWidth: 320, margin: "0 auto" }}>
-                  شغّل ملف <code style={{ color: "#C6914C", fontSize: 11 }}>supabase/002_client_activities.sql</code> في Supabase لتفعيل هذه الميزة.
+              <div className="text-center py-8 rounded-xl" style={{ background: "rgba(198,145,76,0.03)", border: "1px dashed var(--gold-bg-hover)" }}>
+                <Clock size={32} className="mx-auto mb-3" style={{ color: "var(--border-1)" }} />
+                <p style={{ color: "var(--text-soft)", fontSize: 14, marginBottom: 6 }}>سجل النشاطات يحتاج إعداداً</p>
+                <p style={{ color: "var(--text-faint)", fontSize: 12, maxWidth: 320, margin: "0 auto" }}>
+                  شغّل ملف <code style={{ color: "var(--gold-2)", fontSize: 11 }}>supabase/002_client_activities.sql</code> في Supabase لتفعيل هذه الميزة.
                 </p>
               </div>
             ) : activities.length === 0 ? (
-              <div className="text-center py-10" style={{ color: "#5A5A62" }}>
-                <MessageSquare size={28} className="mx-auto mb-2" style={{ color: "#3A3A42" }} />
+              <div className="text-center py-10" style={{ color: "var(--text-faint)" }}>
+                <MessageSquare size={28} className="mx-auto mb-2" style={{ color: "var(--border-1)" }} />
                 <p style={{ fontSize: 13 }}>لا يوجد سجل نشاطات بعد</p>
                 <p style={{ fontSize: 11, marginTop: 4 }}>ابدأ بتسجيل أول تواصل مع هذا العميل</p>
               </div>
             ) : (
               <div className="relative">
                 {/* Vertical line */}
-                <div className="absolute" style={{ top: 8, bottom: 8, right: 19, width: 2, background: "rgba(198,145,76,0.1)", borderRadius: 999 }} />
+                <div className="absolute" style={{ top: 8, bottom: 8, right: 19, width: 2, background: "var(--gold-bg)", borderRadius: 999 }} />
 
                 <div className="space-y-5">
                   {activities.map((act, i) => {
@@ -429,12 +429,12 @@ export default function ClientProfile() {
                           <Icon size={15} style={{ color: cfg.color }} />
                         </div>
                         {/* Content */}
-                        <div className="flex-1 pb-5" style={{ borderBottom: i < activities.length - 1 ? "1px solid rgba(198,145,76,0.06)" : "none" }}>
+                        <div className="flex-1 pb-5" style={{ borderBottom: i < activities.length - 1 ? "1px solid var(--gold-bg-soft)" : "none" }}>
                           <div className="flex items-center justify-between mb-1">
                             <span className="font-medium" style={{ fontSize: 13, color: cfg.color }}>{cfg.label}</span>
-                            <span style={{ fontSize: 11, color: "#5A5A62" }}>{formatDate(act.created_at)}</span>
+                            <span style={{ fontSize: 11, color: "var(--text-faint)" }}>{formatDate(act.created_at)}</span>
                           </div>
-                          <p className="leading-relaxed" style={{ fontSize: 13, color: "#9A9AA0" }}>{act.note}</p>
+                          <p className="leading-relaxed" style={{ fontSize: 13, color: "var(--text-soft)" }}>{act.note}</p>
                         </div>
                       </div>
                     );

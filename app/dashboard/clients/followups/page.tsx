@@ -21,10 +21,10 @@ type FollowupItem = {
 };
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string }> = {
-  pending: { label: "بانتظار الإرسال", color: "#E8B86D", bg: "rgba(232,184,109,0.10)" },
-  sent:    { label: "أُرسل",            color: "#4ADE80", bg: "rgba(74,222,128,0.10)"  },
-  skipped: { label: "تم تخطّيه",        color: "#71717A", bg: "rgba(113,113,122,0.10)" },
-  expired: { label: "منتهي الصلاحية",   color: "#52525B", bg: "rgba(82,82,91,0.08)"     },
+  pending: { label: "بانتظار الإرسال", color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)" },
+  sent:    { label: "أُرسل",            color: "var(--success)", bg: "rgba(74,222,128,0.10)"  },
+  skipped: { label: "تم تخطّيه",        color: "var(--text-ghost)", bg: "rgba(113,113,122,0.10)" },
+  expired: { label: "منتهي الصلاحية",   color: "var(--text-disabled)", bg: "rgba(82,82,91,0.08)"     },
 };
 
 export default function FollowupsPage() {
@@ -166,20 +166,20 @@ export default function FollowupsPage() {
   return (
     <div>
       <Link href="/dashboard/clients"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
         <ArrowRight size={12} /> العملاء
       </Link>
 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 18 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <MessageCircle size={20} style={{ color: "#34D399" }} /> رسائل المتابعة (موظف المتابعة)
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <MessageCircle size={20} style={{ color: "var(--success-2)" }} /> رسائل المتابعة (موظف المتابعة)
           </h1>
-          <p style={{ fontSize: 13, color: "#71717A" }}>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>
             رسائل واتساب مولَّدة تلقائياً للعملاء الباردين — راجع، عدّل، وأرسل
           </p>
         </div>
-        <button onClick={load} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#A1A1AA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+        <button onClick={load} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-muted)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
           <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
           تحديث
         </button>
@@ -189,14 +189,14 @@ export default function FollowupsPage() {
       <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
         {["all", "pending", "sent", "skipped"].map(s => {
           const isActive = statusFilter === s;
-          const m = STATUS_META[s] || { label: "الكل", color: "#A1A1AA", bg: "rgba(255,255,255,0.04)" };
+          const m = STATUS_META[s] || { label: "الكل", color: "var(--text-muted)", bg: "rgba(255,255,255,0.04)" };
           return (
             <button key={s} onClick={() => setStatusFilter(s)}
               style={{
                 padding: "8px 14px", borderRadius: 9,
                 background: isActive ? m.bg : "transparent",
-                border: `1px solid ${isActive ? m.color + "55" : "rgba(255,255,255,0.06)"}`,
-                color: isActive ? m.color : "#71717A",
+                border: `1px solid ${isActive ? m.color + "55" : "var(--overlay-mid)"}`,
+                color: isActive ? m.color : "var(--text-ghost)",
                 fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
               }}>
               {s === "all" ? "الكل" : m.label}
@@ -208,13 +208,13 @@ export default function FollowupsPage() {
 
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
-          <Loader2 size={26} style={{ color: "#34D399", animation: "spin 1s linear infinite" }} />
+          <Loader2 size={26} style={{ color: "var(--success-2)", animation: "spin 1s linear infinite" }} />
         </div>
       ) : items.length === 0 ? (
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 40, textAlign: "center" }}>
-          <MessageCircle size={32} style={{ color: "#3F3F46", marginBottom: 10 }} />
-          <div style={{ fontSize: 14, color: "#A1A1AA", marginBottom: 4 }}>لا متابعات بعد</div>
-          <div style={{ fontSize: 12, color: "#71717A" }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 40, textAlign: "center" }}>
+          <MessageCircle size={32} style={{ color: "var(--border-1)", marginBottom: 10 }} />
+          <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 4 }}>لا متابعات بعد</div>
+          <div style={{ fontSize: 12, color: "var(--text-ghost)" }}>
             موظف المتابعة يولّد الرسائل يومياً 6م للعملاء الباردين الذين لم تتواصل معهم منذ 14+ يوم.
           </div>
         </div>
@@ -227,27 +227,27 @@ export default function FollowupsPage() {
 
             return (
               <div key={item.id} style={{
-                background: "#0F0F12", border: `1px solid ${status.color}22`,
+                background: "var(--bg-deep)", border: `1px solid ${status.color}22`,
                 borderRadius: 12, padding: 16,
               }}>
                 {/* Header */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(52,211,153,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Phone size={14} style={{ color: "#34D399" }} />
+                      <Phone size={14} style={{ color: "var(--success-2)" }} />
                     </div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>
                         {item.client?.full_name || "—"}
                       </div>
-                      <div style={{ fontSize: 11, color: "#71717A", direction: "ltr", textAlign: "right" }}>
+                      <div style={{ fontSize: 11, color: "var(--text-ghost)", direction: "ltr", textAlign: "right" }}>
                         {item.client?.phone || "بدون رقم"}
                       </div>
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {item.client?.sentiment === "cold" && (
-                      <span style={{ fontSize: 10, color: "#60A5FA", background: "rgba(96,165,250,0.1)", padding: "3px 7px", borderRadius: 5 }}>
+                      <span style={{ fontSize: 10, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "3px 7px", borderRadius: 5 }}>
                         ❄ بارد
                       </span>
                     )}
@@ -259,8 +259,8 @@ export default function FollowupsPage() {
 
                 {/* Reason */}
                 {item.reason && (
-                  <div style={{ fontSize: 11, color: "#71717A", marginBottom: 10, display: "flex", alignItems: "center", gap: 5 }}>
-                    <Sparkles size={11} style={{ color: "#A78BFA" }} /> {item.reason}
+                  <div style={{ fontSize: 11, color: "var(--text-ghost)", marginBottom: 10, display: "flex", alignItems: "center", gap: 5 }}>
+                    <Sparkles size={11} style={{ color: "var(--purple-ai)" }} /> {item.reason}
                   </div>
                 )}
 
@@ -272,47 +272,47 @@ export default function FollowupsPage() {
                     rows={5}
                     style={{
                       width: "100%", padding: "12px 14px", marginBottom: 10,
-                      background: "#18181B", border: "1px solid rgba(52,211,153,0.3)",
-                      borderRadius: 9, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
+                      background: "var(--bg-surface-2)", border: "1px solid rgba(52,211,153,0.3)",
+                      borderRadius: 9, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
                       outline: "none", resize: "vertical",
                     }}
                   />
                 ) : (
-                  <div style={{ fontSize: 13, color: "#D4D4D8", lineHeight: 1.8, whiteSpace: "pre-wrap", padding: "12px 14px", background: "#18181B", borderRadius: 9, marginBottom: 10 }}>
+                  <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, whiteSpace: "pre-wrap", padding: "12px 14px", background: "var(--bg-surface-2)", borderRadius: 9, marginBottom: 10 }}>
                     {item.message}
                   </div>
                 )}
 
                 {/* Meta */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-                  <div style={{ fontSize: 10, color: "#52525B", display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ fontSize: 10, color: "var(--text-disabled)", display: "flex", alignItems: "center", gap: 4 }}>
                     <Clock size={10} /> {new Date(item.generated_at).toLocaleString("ar-SA")}
                   </div>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     {isEditing ? (
                       <>
-                        <button onClick={saveEdit} disabled={isBusy} style={btnSm("#4ADE80", "rgba(74,222,128,0.1)")}>
+                        <button onClick={saveEdit} disabled={isBusy} style={btnSm("var(--success)", "rgba(74,222,128,0.1)")}>
                           <Check size={11} /> حفظ
                         </button>
-                        <button onClick={() => setEditingId(null)} style={btnSm("#A1A1AA", "rgba(255,255,255,0.04)")}>
+                        <button onClick={() => setEditingId(null)} style={btnSm("var(--text-muted)", "rgba(255,255,255,0.04)")}>
                           <X size={11} /> إلغاء
                         </button>
                       </>
                     ) : item.status === "pending" ? (
                       <>
-                        <button onClick={() => { setEditingId(item.id); setEditText(item.message); }} style={btnSm("#A78BFA", "rgba(124,58,237,0.08)")}>
+                        <button onClick={() => { setEditingId(item.id); setEditText(item.message); }} style={btnSm("var(--purple-ai)", "rgba(124,58,237,0.08)")}>
                           <Edit3 size={11} /> تعديل
                         </button>
-                        <button onClick={() => skip(item.id)} disabled={isBusy} style={btnSm("#71717A", "rgba(113,113,122,0.08)")}>
+                        <button onClick={() => skip(item.id)} disabled={isBusy} style={btnSm("var(--text-ghost)", "rgba(113,113,122,0.08)")}>
                           <X size={11} /> تخطٍّ
                         </button>
-                        <button onClick={() => send(item)} disabled={isBusy || !item.client?.phone} style={btnSm("#34D399", "rgba(52,211,153,0.12)")}>
+                        <button onClick={() => send(item)} disabled={isBusy || !item.client?.phone} style={btnSm("var(--success-2)", "rgba(52,211,153,0.12)")}>
                           {isBusy ? <Loader2 size={11} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={11} />}
                           إرسال
                         </button>
                       </>
                     ) : null}
-                    <button onClick={() => remove(item.id)} disabled={isBusy} style={btnSm("#F87171", "rgba(239,68,68,0.04)")}>
+                    <button onClick={() => remove(item.id)} disabled={isBusy} style={btnSm("var(--danger)", "rgba(239,68,68,0.04)")}>
                       <Trash2 size={11} />
                     </button>
                   </div>

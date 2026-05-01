@@ -68,7 +68,7 @@ export default function InsightsPage() {
   if (loading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "#A78BFA", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={28} style={{ color: "var(--purple-ai)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -88,22 +88,22 @@ export default function InsightsPage() {
 
       <div className="no-print">
         <Link href="/dashboard/ai-employees"
-          style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+          style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
           <ArrowRight size={12} /> موظفو AI
         </Link>
 
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 18 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-              <BarChart3 size={20} style={{ color: "#A78BFA" }} /> تقارير محلّل البيانات
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+              <BarChart3 size={20} style={{ color: "var(--purple-ai)" }} /> تقارير محلّل البيانات
             </h1>
-            <p style={{ fontSize: 13, color: "#71717A" }}>
+            <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>
               تقارير أسبوعية تلقائية — ملخص أدائك + توصيات للأسبوع القادم
             </p>
           </div>
           {selected && (
             <button onClick={handlePrint}
-              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)", color: "#A78BFA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)", color: "var(--purple-ai)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
               <Printer size={13} /> طباعة / PDF
             </button>
           )}
@@ -111,24 +111,24 @@ export default function InsightsPage() {
 
         {error && (
           <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-            <AlertCircle size={14} style={{ color: "#F87171", display: "inline", marginInlineEnd: 8 }} />
-            <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+            <AlertCircle size={14} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+            <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
           </div>
         )}
 
         {insights.length === 0 ? (
-          <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 40, textAlign: "center" }}>
-            <BarChart3 size={32} style={{ color: "#3F3F46", marginBottom: 10 }} />
-            <div style={{ fontSize: 14, color: "#A1A1AA", marginBottom: 4 }}>لا تقارير بعد</div>
-            <div style={{ fontSize: 12, color: "#71717A" }}>
+          <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 40, textAlign: "center" }}>
+            <BarChart3 size={32} style={{ color: "var(--border-1)", marginBottom: 10 }} />
+            <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 4 }}>لا تقارير بعد</div>
+            <div style={{ fontSize: 12, color: "var(--text-ghost)" }}>
               محلّل البيانات يُنشئ تقريراً أسبوعياً كل يوم أحد الساعة 9 صباحاً.
             </div>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: 14 }}>
             {/* قائمة التقارير */}
-            <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, overflow: "hidden", maxHeight: "75vh", overflowY: "auto" }}>
-              <div style={{ padding: "10px 12px", borderBottom: "1px solid rgba(255,255,255,0.05)", fontSize: 11, fontWeight: 700, color: "#71717A" }}>
+            <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, overflow: "hidden", maxHeight: "75vh", overflowY: "auto" }}>
+              <div style={{ padding: "10px 12px", borderBottom: "1px solid var(--overlay-soft)", fontSize: 11, fontWeight: 700, color: "var(--text-ghost)" }}>
                 التقارير ({insights.length})
               </div>
               {insights.map(i => (
@@ -139,10 +139,10 @@ export default function InsightsPage() {
                     border: "none", borderBottom: "1px solid rgba(255,255,255,0.03)",
                     cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
                   }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#E4E4E7", marginBottom: 3 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-on-dark)", marginBottom: 3 }}>
                     {new Date(i.period_start).toLocaleDateString("ar-SA")} - {new Date(i.period_end).toLocaleDateString("ar-SA")}
                   </div>
-                  <div style={{ fontSize: 10, color: "#52525B" }}>
+                  <div style={{ fontSize: 10, color: "var(--text-disabled)" }}>
                     {i.raw_metrics?.new_properties || 0} عقار، {i.raw_metrics?.new_clients || 0} عميل
                   </div>
                 </button>
@@ -179,12 +179,12 @@ function ReportView({ insight }: { insight: Insight }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {/* Period banner */}
       <div style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.08), rgba(167,139,250,0.04))", border: "1px solid rgba(124,58,237,0.2)", borderRadius: 12, padding: 14, display: "flex", alignItems: "center", gap: 12 }}>
-        <Calendar size={20} style={{ color: "#A78BFA" }} />
+        <Calendar size={20} style={{ color: "var(--purple-ai)" }} />
         <div>
-          <div style={{ fontSize: 13, color: "#A78BFA", fontWeight: 700 }}>
+          <div style={{ fontSize: 13, color: "var(--purple-ai)", fontWeight: 700 }}>
             تقرير الأسبوع
           </div>
-          <div style={{ fontSize: 12, color: "#A1A1AA", marginTop: 2 }}>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
             {new Date(insight.period_start).toLocaleDateString("ar-SA", { dateStyle: "full" })}
             <span style={{ margin: "0 6px" }}>—</span>
             {new Date(insight.period_end).toLocaleDateString("ar-SA", { dateStyle: "full" })}
@@ -194,21 +194,21 @@ function ReportView({ insight }: { insight: Insight }) {
 
       {/* KPIs */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 }}>
-        <Stat icon={Building}    color="#C6914C" label="عقارات جديدة"  value={m.new_properties || 0} />
-        <Stat icon={Users}       color="#34D399" label="عملاء جدد"     value={m.new_clients || 0} />
-        <Stat icon={Briefcase}   color="#60A5FA" label="صفقات جديدة"   value={m.new_deals || 0} />
-        <Stat icon={FileText}    color="#E8B86D" label="فواتير"         value={m.new_invoices || 0} />
-        <Stat icon={TrendingUp}  color="#4ADE80" label="فواتير مدفوعة" value={`${Number(m.paid_invoice_total || 0).toLocaleString("en-US")} ر.س`} />
-        <Stat icon={Sparkles}    color="#F87171" label="عملاء ساخنون"  value={m.hot_clients || 0} />
+        <Stat icon={Building}    color="var(--gold-2)" label="عقارات جديدة"  value={m.new_properties || 0} />
+        <Stat icon={Users}       color="var(--success-2)" label="عملاء جدد"     value={m.new_clients || 0} />
+        <Stat icon={Briefcase}   color="var(--info)" label="صفقات جديدة"   value={m.new_deals || 0} />
+        <Stat icon={FileText}    color="var(--gold-1)" label="فواتير"         value={m.new_invoices || 0} />
+        <Stat icon={TrendingUp}  color="var(--success)" label="فواتير مدفوعة" value={`${Number(m.paid_invoice_total || 0).toLocaleString("en-US")} ر.س`} />
+        <Stat icon={Sparkles}    color="var(--danger)" label="عملاء ساخنون"  value={m.hot_clients || 0} />
       </div>
 
       {/* Summary */}
       {insight.summary_text && (
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: 18 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A78BFA", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, padding: 18 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--purple-ai)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
             <BarChart3 size={14} /> الملخص التنفيذي
           </h2>
-          <div style={{ fontSize: 14, color: "#D4D4D8", lineHeight: 1.85, whiteSpace: "pre-wrap" }}>
+          <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.85, whiteSpace: "pre-wrap" }}>
             {insight.summary_text}
           </div>
         </div>
@@ -216,11 +216,11 @@ function ReportView({ insight }: { insight: Insight }) {
 
       {/* Recommendations */}
       {insight.recommendations && (
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 12, padding: 18 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#4ADE80", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 12, padding: 18 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--success)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
             <Sparkles size={14} /> التوصيات للأسبوع القادم
           </h2>
-          <div style={{ fontSize: 14, color: "#D4D4D8", lineHeight: 1.85, whiteSpace: "pre-wrap" }}>
+          <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.85, whiteSpace: "pre-wrap" }}>
             {insight.recommendations}
           </div>
         </div>
@@ -236,7 +236,7 @@ function ReportView({ insight }: { insight: Insight }) {
       </div>
 
       {insight.generated_by_model && (
-        <div style={{ fontSize: 10, color: "#52525B", textAlign: "left", direction: "ltr" }}>
+        <div style={{ fontSize: 10, color: "var(--text-disabled)", textAlign: "left", direction: "ltr" }}>
           Generated by: {insight.generated_by_model} • {new Date(insight.created_at).toLocaleString("ar-SA")}
         </div>
       )}
@@ -246,10 +246,10 @@ function ReportView({ insight }: { insight: Insight }) {
 
 function Stat({ icon: Icon, color, label, value }: { icon: typeof Building; color: string; label: string; value: number | string }) {
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 11, padding: "12px 14px" }}>
+    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: "12px 14px" }}>
       <Icon size={14} style={{ color, marginBottom: 6 }} />
-      <div style={{ fontSize: 18, fontWeight: 800, color: "#F4F4F5", lineHeight: 1.1 }}>{value}</div>
-      <div style={{ fontSize: 11, color: "#52525B", marginTop: 4 }}>{label}</div>
+      <div style={{ fontSize: 18, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 4 }}>{label}</div>
     </div>
   );
 }
@@ -258,17 +258,17 @@ function TopList({ title, items }: { title: string; items: Array<{ key: string; 
   if (!items || items.length === 0) return null;
   const max = Math.max(...items.map(i => i.count));
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 11, padding: 14 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#A1A1AA", marginBottom: 10 }}>{title}</div>
+    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: 14 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10 }}>{title}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {items.map((i, idx) => (
           <div key={idx}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3, fontSize: 11 }}>
-              <span style={{ color: "#D4D4D8" }}>{i.key || "—"}</span>
-              <span style={{ color: "#71717A" }}>{i.count}</span>
+              <span style={{ color: "var(--text-secondary)" }}>{i.key || "—"}</span>
+              <span style={{ color: "var(--text-ghost)" }}>{i.count}</span>
             </div>
-            <div style={{ height: 4, borderRadius: 2, background: "#18181B", overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${(i.count / max) * 100}%`, background: "linear-gradient(90deg, #A78BFA, #7C3AED)", borderRadius: 2 }} />
+            <div style={{ height: 4, borderRadius: 2, background: "var(--bg-surface-2)", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${(i.count / max) * 100}%`, background: "linear-gradient(90deg, var(--purple-ai), var(--purple-2))", borderRadius: 2 }} />
             </div>
           </div>
         ))}

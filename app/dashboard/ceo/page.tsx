@@ -28,9 +28,9 @@ type ManagerStats = {
 };
 
 const SEVERITY_META: Record<string, { color: string; bg: string; icon: typeof Info; label: string }> = {
-  info:     { color: "#60A5FA", bg: "rgba(96,165,250,0.10)",  icon: Info,           label: "معلومة" },
-  warning:  { color: "#E8B86D", bg: "rgba(232,184,109,0.10)", icon: AlertTriangle,  label: "تحذير" },
-  critical: { color: "#F87171", bg: "rgba(239,68,68,0.10)",   icon: AlertTriangle,  label: "حرج" },
+  info:     { color: "var(--info)", bg: "rgba(96,165,250,0.10)",  icon: Info,           label: "معلومة" },
+  warning:  { color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", icon: AlertTriangle,  label: "تحذير" },
+  critical: { color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   icon: AlertTriangle,  label: "حرج" },
 };
 
 export default function CEODashboardPage() {
@@ -87,18 +87,18 @@ export default function CEODashboardPage() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <Crown size={20} style={{ color: "#E8B86D" }} /> لوحة الرئيس التنفيذي
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <Crown size={20} style={{ color: "var(--gold-1)" }} /> لوحة الرئيس التنفيذي
           </h1>
-          <p style={{ fontSize: 13, color: "#71717A" }}>نظرة شاملة على نشاط منظومتك التنظيمية + قرارات تنتظر موافقتك</p>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>نظرة شاملة على نشاط منظومتك التنظيمية + قرارات تنتظر موافقتك</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <Link href="/dashboard/ceo/approvals"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: pendingEscalations.length > 0 ? "rgba(248,113,113,0.10)" : "rgba(167,139,250,0.08)", border: `1px solid ${pendingEscalations.length > 0 ? "rgba(248,113,113,0.30)" : "rgba(167,139,250,0.20)"}`, color: pendingEscalations.length > 0 ? "#F87171" : "#A78BFA", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: pendingEscalations.length > 0 ? "rgba(248,113,113,0.10)" : "rgba(167,139,250,0.08)", border: `1px solid ${pendingEscalations.length > 0 ? "rgba(248,113,113,0.30)" : "rgba(167,139,250,0.20)"}`, color: pendingEscalations.length > 0 ? "var(--danger)" : "var(--purple-ai)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
             <AlertTriangle size={13} /> بوابات الموافقة {pendingEscalations.length > 0 ? `(${pendingEscalations.length})` : ""}
           </Link>
           <button onClick={load} disabled={loading}
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(232,184,109,0.08)", border: "1px solid rgba(232,184,109,0.2)", color: "#E8B86D", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(232,184,109,0.08)", border: "1px solid rgba(232,184,109,0.2)", color: "var(--gold-1)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
             <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} /> تحديث
           </button>
         </div>
@@ -107,16 +107,16 @@ export default function CEODashboardPage() {
 
       {/* Top KPIs */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: 10, marginBottom: 18 }}>
-        <KPI label="مدراء نشطون" value={managers.filter(m => m.manager_enabled).length} icon={Network} color="#A78BFA" />
-        <KPI label="توجيهات نشطة" value={totalActiveDirectives} icon={Sparkles} color="#60A5FA" />
-        <KPI label="اقتراحات تنتظرك" value={totalPendingSuggestions} icon={Bot} color={totalPendingSuggestions > 0 ? "#E8B86D" : "#71717A"} highlight={totalPendingSuggestions > 0} />
-        <KPI label="قرارات تنتظرك" value={pendingEscalations.length} icon={AlertTriangle} color={pendingEscalations.length > 0 ? "#F87171" : "#71717A"} highlight={pendingEscalations.length > 0} />
+        <KPI label="مدراء نشطون" value={managers.filter(m => m.manager_enabled).length} icon={Network} color="var(--purple-ai)" />
+        <KPI label="توجيهات نشطة" value={totalActiveDirectives} icon={Sparkles} color="var(--info)" />
+        <KPI label="اقتراحات تنتظرك" value={totalPendingSuggestions} icon={Bot} color={totalPendingSuggestions > 0 ? "var(--gold-1)" : "var(--text-ghost)"} highlight={totalPendingSuggestions > 0} />
+        <KPI label="قرارات تنتظرك" value={pendingEscalations.length} icon={AlertTriangle} color={pendingEscalations.length > 0 ? "var(--danger)" : "var(--text-ghost)"} highlight={pendingEscalations.length > 0} />
       </div>
 
       {/* Pending Escalations — أعلى أولوية */}
       {pendingEscalations.length > 0 && (
         <div style={{ marginBottom: 22 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "#F87171", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--danger)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
             <AlertTriangle size={14} /> قرارات تنتظر اعتمادك ({pendingEscalations.length})
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -124,18 +124,18 @@ export default function CEODashboardPage() {
               const sev = SEVERITY_META[esc.severity] || SEVERITY_META.info;
               const SevIcon = sev.icon;
               return (
-                <div key={esc.id} style={{ background: "#0F0F12", border: `1px solid ${sev.color}55`, borderRadius: 12, padding: 16 }}>
+                <div key={esc.id} style={{ background: "var(--bg-deep)", border: `1px solid ${sev.color}55`, borderRadius: 12, padding: 16 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <div style={{ width: 32, height: 32, borderRadius: 8, background: sev.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       <SevIcon size={14} style={{ color: sev.color }} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7" }}>{esc.title}</span>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{esc.title}</span>
                         <span style={{ fontSize: 10, color: sev.color, background: sev.bg, padding: "2px 7px", borderRadius: 4 }}>{sev.label}</span>
-                        <span style={{ fontSize: 10, color: "#71717A" }}>{esc.type}</span>
+                        <span style={{ fontSize: 10, color: "var(--text-ghost)" }}>{esc.type}</span>
                       </div>
-                      <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.7 }}>{esc.description}</p>
+                      <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7 }}>{esc.description}</p>
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
@@ -143,14 +143,14 @@ export default function CEODashboardPage() {
                       const note = prompt("سبب الرفض (اختياري):") || "";
                       decideEscalation(esc.id, "rejected", note);
                     }} disabled={busyId === esc.id}
-                      style={{ padding: "8px 14px", borderRadius: 7, background: "rgba(239,68,68,0.06)", color: "#F87171", border: "1px solid rgba(239,68,68,0.2)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
+                      style={{ padding: "8px 14px", borderRadius: 7, background: "rgba(239,68,68,0.06)", color: "var(--danger)", border: "1px solid rgba(239,68,68,0.2)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
                       <XCircle size={11} /> ارفض
                     </button>
                     <button onClick={() => {
                       const note = prompt("ملاحظة على الموافقة (اختياري):") || "";
                       decideEscalation(esc.id, "approved", note);
                     }} disabled={busyId === esc.id}
-                      style={{ padding: "8px 14px", borderRadius: 7, background: "rgba(74,222,128,0.1)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.3)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
+                      style={{ padding: "8px 14px", borderRadius: 7, background: "rgba(74,222,128,0.1)", color: "var(--success)", border: "1px solid rgba(74,222,128,0.3)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
                       <CheckCircle2 size={11} /> اعتمد
                     </button>
                   </div>
@@ -162,12 +162,12 @@ export default function CEODashboardPage() {
       )}
 
       {/* Manager status grid */}
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
         <Network size={14} /> حالة الأقسام
       </h2>
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
-          <Loader2 size={26} style={{ color: "#E8B86D", animation: "spin 1s linear infinite" }} />
+          <Loader2 size={26} style={{ color: "var(--gold-1)", animation: "spin 1s linear infinite" }} />
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 10, marginBottom: 22 }}>
@@ -176,25 +176,25 @@ export default function CEODashboardPage() {
             const Icon = dept?.icon || Bot;
             return (
               <Link key={m.manager_id} href={`/dashboard/organization/manager/${m.manager_id}`}
-                style={{ background: "#0F0F12", border: `1px solid ${dept?.color}22`, borderRadius: 11, padding: 14, textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+                style={{ background: "var(--bg-deep)", border: `1px solid ${dept?.color}22`, borderRadius: 11, padding: 14, textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 9, background: dept?.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <Icon size={16} style={{ color: dept?.color }} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#E4E4E7", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.manager_name}</div>
-                  <div style={{ fontSize: 10, color: "#71717A", marginTop: 3, display: "flex", gap: 8 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.manager_name}</div>
+                  <div style={{ fontSize: 10, color: "var(--text-ghost)", marginTop: 3, display: "flex", gap: 8 }}>
                     <span>{m.employee_count} موظف</span>
                     <span>•</span>
                     <span>{m.active_directives} توجيه</span>
                     {m.pending_suggestions > 0 && (
                       <>
                         <span>•</span>
-                        <span style={{ color: "#E8B86D" }}>{m.pending_suggestions} تنتظرك</span>
+                        <span style={{ color: "var(--gold-1)" }}>{m.pending_suggestions} تنتظرك</span>
                       </>
                     )}
                   </div>
                 </div>
-                <ChevronLeft size={12} style={{ color: "#52525B", flexShrink: 0 }} />
+                <ChevronLeft size={12} style={{ color: "var(--text-disabled)", flexShrink: 0 }} />
               </Link>
             );
           })}
@@ -202,27 +202,27 @@ export default function CEODashboardPage() {
       )}
 
       {/* Recent activity feed */}
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
         <Activity size={14} /> آخر أنشطة المنظومة
       </h2>
       {activity.length === 0 ? (
-        <div style={{ background: "#0F0F12", border: "1px dashed rgba(255,255,255,0.06)", borderRadius: 10, padding: 24, textAlign: "center", color: "#52525B", fontSize: 12 }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px dashed var(--overlay-mid)", borderRadius: 10, padding: 24, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>
           لا نشاط مسجَّل بعد — يبدأ الموظفون بتسجيل الإجراءات لما يشغّلون مهامهم اليومية
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {activity.slice(0, 15).map(a => (
-            <div key={a.id} style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.04)", borderRadius: 8, padding: "9px 12px", display: "flex", alignItems: "center", gap: 10 }}>
+            <div key={a.id} style={{ background: "var(--bg-deep)", border: "1px solid rgba(255,255,255,0.04)", borderRadius: 8, padding: "9px 12px", display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ width: 24, height: 24, borderRadius: 6, background: "rgba(167,139,250,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Bot size={11} style={{ color: "#A78BFA" }} />
+                <Bot size={11} style={{ color: "var(--purple-ai)" }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, color: "#D4D4D8" }}>{translateAction(a.action)}</div>
-                <div style={{ fontSize: 10, color: "#52525B", marginTop: 2 }}>
-                  <span style={{ color: "#71717A" }}>{a.actor_kind}</span> • {summarizeDetails(a.details)}
+                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>{translateAction(a.action)}</div>
+                <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>
+                  <span style={{ color: "var(--text-ghost)" }}>{a.actor_kind}</span> • {summarizeDetails(a.details)}
                 </div>
               </div>
-              <div style={{ fontSize: 10, color: "#52525B", flexShrink: 0 }}>{timeAgo(a.created_at)}</div>
+              <div style={{ fontSize: 10, color: "var(--text-disabled)", flexShrink: 0 }}>{timeAgo(a.created_at)}</div>
             </div>
           ))}
         </div>
@@ -234,13 +234,13 @@ export default function CEODashboardPage() {
 function KPI({ label, value, icon: Icon, color, highlight }: { label: string; value: number; icon: typeof Crown; color: string; highlight?: boolean }) {
   return (
     <div style={{
-      background: highlight ? `${color}10` : "#0F0F12",
-      border: `1px solid ${highlight ? color + "55" : "rgba(255,255,255,0.05)"}`,
+      background: highlight ? `${color}10` : "var(--bg-deep)",
+      border: `1px solid ${highlight ? color + "55" : "var(--overlay-soft)"}`,
       borderRadius: 11, padding: "12px 14px",
     }}>
       <Icon size={14} style={{ color, marginBottom: 6 }} />
-      <div style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", lineHeight: 1.1 }}>{value}</div>
-      <div style={{ fontSize: 11, color: "#52525B", marginTop: 4 }}>{label}</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 4 }}>{label}</div>
     </div>
   );
 }

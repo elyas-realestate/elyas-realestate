@@ -9,30 +9,30 @@ export default function DataProcessingPage() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#0A0A0C",
-      color: "#E5E5E5",
+      background: "var(--bg-page)",
+      color: "var(--text-on-dark)",
       direction: "rtl",
       fontFamily: "'Tajawal', sans-serif",
       padding: "48px 24px",
     }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <a href="/" style={{
-          color: "#E8B86D", textDecoration: "none", fontSize: 14, marginBottom: 32,
+          color: "var(--gold-1)", textDecoration: "none", fontSize: 14, marginBottom: 32,
           display: "inline-block",
         }}>
           ← العودة للصفحة الرئيسية
         </a>
 
-        <h1 style={{ fontSize: 32, fontWeight: 800, color: "#F4F4F5", marginBottom: 8 }}>
+        <h1 style={{ fontSize: 32, fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}>
           اتفاقية معالجة البيانات
         </h1>
-        <p style={{ color: "#A1A1AA", fontSize: 14, marginBottom: 40 }}>
+        <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 40 }}>
           آخر تحديث: ٣٠ أبريل ٢٠٢٦
         </p>
 
         <Section title="نطاق الاتفاقية">
           <p>
-            تسري هذه الاتفاقية على معالجة منصّة <strong style={{ color: "#E8B86D" }}>وسيط برو</strong>
+            تسري هذه الاتفاقية على معالجة منصّة <strong style={{ color: "var(--gold-1)" }}>وسيط برو</strong>
             للبيانات الشخصية لعملائك (المشترين، المستأجرين، الملاك) عبر خدماتنا، وفقاً
             لنظام حماية البيانات الشخصية في المملكة (PDPL) ولوائح REGA.
           </p>
@@ -124,7 +124,7 @@ export default function DataProcessingPage() {
           <p style={{ lineHeight: 2 }}>
             <strong>منسّق حماية البيانات</strong><br />
             إلياس الدخيل<br />
-            <a href="mailto:vip.elyas@gmail.com" style={{ color: "#E8B86D" }}>
+            <a href="mailto:vip.elyas@gmail.com" style={{ color: "var(--gold-1)" }}>
               vip.elyas@gmail.com
             </a>
           </p>
@@ -132,7 +132,7 @@ export default function DataProcessingPage() {
 
         <div style={{
           marginTop: 60, paddingTop: 24, borderTop: "1px solid #1F2937",
-          color: "#71717A", fontSize: 12, textAlign: "center",
+          color: "var(--text-ghost)", fontSize: 12, textAlign: "center",
         }}>
           © ٢٠٢٦ وسيط برو. جميع الحقوق محفوظة.
         </div>
@@ -144,10 +144,10 @@ export default function DataProcessingPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section style={{ marginBottom: 36 }}>
-      <h2 style={{ fontSize: 22, fontWeight: 700, color: "#F4F4F5", marginBottom: 12 }}>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: "var(--text-primary)", marginBottom: 12 }}>
         {title}
       </h2>
-      <div style={{ color: "#D4D4D8", fontSize: 15, lineHeight: 1.9 }}>
+      <div style={{ color: "var(--text-secondary)", fontSize: 15, lineHeight: 1.9 }}>
         {children}
       </div>
       <style>{`

@@ -40,12 +40,12 @@ type Signature = {
 };
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string; icon: typeof Edit3 }> = {
-  draft:               { label: "مسودة",            color: "#A1A1AA", bg: "rgba(161,161,170,0.10)", icon: Edit3 },
-  sent_for_signature:  { label: "بانتظار التوقيع", color: "#60A5FA", bg: "rgba(96,165,250,0.10)",  icon: Send },
-  partially_signed:    { label: "وُقّع جزئياً",     color: "#E8B86D", bg: "rgba(232,184,109,0.10)", icon: Clock },
-  signed:              { label: "موقَّع",            color: "#4ADE80", bg: "rgba(74,222,128,0.10)",  icon: CheckCircle2 },
-  expired:             { label: "منتهي",            color: "#71717A", bg: "rgba(113,113,122,0.10)", icon: XCircle },
-  void:                { label: "ملغي",              color: "#F87171", bg: "rgba(239,68,68,0.10)",   icon: XCircle },
+  draft:               { label: "مسودة",            color: "var(--text-muted)", bg: "rgba(161,161,170,0.10)", icon: Edit3 },
+  sent_for_signature:  { label: "بانتظار التوقيع", color: "var(--info)", bg: "rgba(96,165,250,0.10)",  icon: Send },
+  partially_signed:    { label: "وُقّع جزئياً",     color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", icon: Clock },
+  signed:              { label: "موقَّع",            color: "var(--success)", bg: "rgba(74,222,128,0.10)",  icon: CheckCircle2 },
+  expired:             { label: "منتهي",            color: "var(--text-ghost)", bg: "rgba(113,113,122,0.10)", icon: XCircle },
+  void:                { label: "ملغي",              color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   icon: XCircle },
 };
 
 async function sha256(text: string): Promise<string> {
@@ -260,7 +260,7 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "#C6914C", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={28} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -269,8 +269,8 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
   if (error || !contract) {
     return (
       <div style={{ padding: "16px 20px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-        <AlertCircle size={16} style={{ color: "#F87171", display: "inline", marginInlineEnd: 8 }} />
-        <span style={{ fontSize: 14, color: "#F87171" }}>{error || "لم يُعثر على العقد"}</span>
+        <AlertCircle size={16} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+        <span style={{ fontSize: 14, color: "var(--danger)" }}>{error || "لم يُعثر على العقد"}</span>
       </div>
     );
   }
@@ -297,7 +297,7 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
       <div className="no-print">
         <Link href="/dashboard/contracts"
-          style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+          style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
           <ArrowRight size={12} /> العقود
         </Link>
 
@@ -305,15 +305,15 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 18 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
-              <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F4F4F5" }}>{contract.title}</h1>
-              <span style={{ fontSize: 12, color: "#C6914C", direction: "ltr", fontWeight: 600 }}>
+              <h1 style={{ fontSize: 20, fontWeight: 800, color: "var(--text-primary)" }}>{contract.title}</h1>
+              <span style={{ fontSize: 12, color: "var(--gold-2)", direction: "ltr", fontWeight: 600 }}>
                 {contract.contract_number}
               </span>
               <span style={{ fontSize: 11, fontWeight: 600, color: sm.color, background: sm.bg, padding: "3px 9px", borderRadius: 6, display: "inline-flex", alignItems: "center", gap: 4 }}>
                 <sm.icon size={11} /> {sm.label}
               </span>
             </div>
-            <div style={{ fontSize: 12, color: "#71717A" }}>
+            <div style={{ fontSize: 12, color: "var(--text-ghost)" }}>
               {contract.party_first.name} ↔ {contract.party_second.name}
               {contract.amount && <> • {Number(contract.amount).toLocaleString("en-US")} ر.س</>}
             </div>
@@ -323,29 +323,29 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {canSend && (
               <button onClick={handleSendForSignature} disabled={busy}
-                style={btn("#60A5FA", "rgba(96,165,250,0.1)")}>
+                style={btn("var(--info)", "rgba(96,165,250,0.1)")}>
                 <Send size={13} /> إرسال للتوقيع
               </button>
             )}
             {canFinalize && (
               <button onClick={handleFinalize} disabled={busy}
-                style={btn("#4ADE80", "rgba(74,222,128,0.1)")}>
+                style={btn("var(--success)", "rgba(74,222,128,0.1)")}>
                 <Shield size={13} /> تثبيت بختم رقمي
               </button>
             )}
             <button onClick={handlePrint} disabled={busy}
-              style={btn("#A1A1AA", "rgba(255,255,255,0.04)")}>
+              style={btn("var(--text-muted)", "rgba(255,255,255,0.04)")}>
               <Printer size={13} /> طباعة / PDF
             </button>
             {!canEdit && contract.status !== "void" && contract.status !== "signed" && (
               <button onClick={handleVoid} disabled={busy}
-                style={btn("#F87171", "rgba(239,68,68,0.08)")}>
+                style={btn("var(--danger)", "rgba(239,68,68,0.08)")}>
                 <XCircle size={13} /> إلغاء
               </button>
             )}
             {canEdit && (
               <button onClick={handleDelete} disabled={busy}
-                style={btn("#F87171", "rgba(239,68,68,0.08)")}>
+                style={btn("var(--danger)", "rgba(239,68,68,0.08)")}>
                 <Trash2 size={13} /> حذف
               </button>
             )}
@@ -355,23 +355,23 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
         {/* Signing link */}
         {contract.signing_token && contract.status !== "signed" && contract.status !== "void" && (
           <div style={{ marginBottom: 16, padding: 14, borderRadius: 11, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)" }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "#60A5FA", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--info)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
               <Link2 size={13} /> رابط التوقيع للطرف الثاني
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <code style={{ flex: 1, padding: "9px 12px", background: "#0A0A0C", borderRadius: 7, fontSize: 11, color: "#A1A1AA", direction: "ltr", overflow: "auto", whiteSpace: "nowrap" }}>
+              <code style={{ flex: 1, padding: "9px 12px", background: "var(--bg-page)", borderRadius: 7, fontSize: 11, color: "var(--text-muted)", direction: "ltr", overflow: "auto", whiteSpace: "nowrap" }}>
                 {getSigningURL()}
               </code>
-              <button onClick={copySigningLink} style={btn("#60A5FA", "rgba(96,165,250,0.1)")}>
+              <button onClick={copySigningLink} style={btn("var(--info)", "rgba(96,165,250,0.1)")}>
                 {linkCopied ? <Check size={13} /> : <Copy size={13} />}
                 {linkCopied ? "نُسخ" : "نسخ"}
               </button>
-              <button onClick={copyWhatsAppMessage} style={btn("#34D399", "rgba(52,211,153,0.1)")}>
+              <button onClick={copyWhatsAppMessage} style={btn("var(--success-2)", "rgba(52,211,153,0.1)")}>
                 <Copy size={13} /> رسالة واتساب
               </button>
             </div>
             {contract.signing_expires_at && (
-              <div style={{ fontSize: 11, color: "#71717A", marginTop: 8 }}>
+              <div style={{ fontSize: 11, color: "var(--text-ghost)", marginTop: 8 }}>
                 ينتهي في: {new Date(contract.signing_expires_at).toLocaleDateString("ar-SA")}
               </div>
             )}
@@ -391,10 +391,10 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
         {/* Hash badge */}
         {contract.final_hash && (
           <div style={{ marginBottom: 16, padding: 12, borderRadius: 10, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.2)", display: "flex", alignItems: "center", gap: 10 }}>
-            <Shield size={16} style={{ color: "#4ADE80" }} />
+            <Shield size={16} style={{ color: "var(--success)" }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#4ADE80" }}>عقد مُثبَّت بختم رقمي</div>
-              <div style={{ fontSize: 10, color: "#71717A", direction: "ltr", marginTop: 2 }}>SHA-256: {contract.final_hash}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--success)" }}>عقد مُثبَّت بختم رقمي</div>
+              <div style={{ fontSize: 10, color: "var(--text-ghost)", direction: "ltr", marginTop: 2 }}>SHA-256: {contract.final_hash}</div>
             </div>
           </div>
         )}
@@ -434,8 +434,8 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
       {/* First party signature modal */}
       {showFirstPartySign && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
-          <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: 24, maxWidth: 600, width: "100%" }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#E4E4E7", marginBottom: 14 }}>توقيع الطرف الأول — {contract.party_first.name}</h3>
+          <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 14, padding: 24, maxWidth: 600, width: "100%" }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 14 }}>توقيع الطرف الأول — {contract.party_first.name}</h3>
             <SignaturePad
               onConfirm={handleFirstPartySignature}
               onCancel={() => setShowFirstPartySign(false)}
@@ -461,22 +461,22 @@ function SigCard({ title, name, sig, actionLabel, onAction }: {
   actionLabel: string | null; onAction: (() => void) | null;
 }) {
   return (
-    <div style={{ padding: 14, background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 11 }}>
-      <div style={{ fontSize: 12, color: "#71717A", marginBottom: 4 }}>{title}</div>
-      <div style={{ fontSize: 14, color: "#E4E4E7", fontWeight: 600, marginBottom: 8 }}>{name || "—"}</div>
+    <div style={{ padding: 14, background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11 }}>
+      <div style={{ fontSize: 12, color: "var(--text-ghost)", marginBottom: 4 }}>{title}</div>
+      <div style={{ fontSize: 14, color: "var(--text-on-dark)", fontWeight: 600, marginBottom: 8 }}>{name || "—"}</div>
       {sig ? (
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <CheckCircle2 size={14} style={{ color: "#4ADE80" }} />
-          <span style={{ fontSize: 11, color: "#4ADE80" }}>وقّع في {new Date(sig.signed_at).toLocaleDateString("ar-SA")}</span>
+          <CheckCircle2 size={14} style={{ color: "var(--success)" }} />
+          <span style={{ fontSize: 11, color: "var(--success)" }}>وقّع في {new Date(sig.signed_at).toLocaleDateString("ar-SA")}</span>
         </div>
       ) : actionLabel && onAction ? (
-        <button onClick={onAction} style={btn("#C6914C", "rgba(198,145,76,0.1)")}>
+        <button onClick={onAction} style={btn("var(--gold-2)", "var(--gold-bg)")}>
           <FileSignature size={12} /> {actionLabel}
         </button>
       ) : actionLabel ? (
-        <span style={{ fontSize: 11, color: "#71717A" }}>{actionLabel}</span>
+        <span style={{ fontSize: 11, color: "var(--text-ghost)" }}>{actionLabel}</span>
       ) : (
-        <span style={{ fontSize: 11, color: "#71717A" }}>لم يوقّع بعد</span>
+        <span style={{ fontSize: 11, color: "var(--text-ghost)" }}>لم يوقّع بعد</span>
       )}
     </div>
   );

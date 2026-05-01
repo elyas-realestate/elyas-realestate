@@ -170,46 +170,46 @@ export default function CalendarTab({
       <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
         <div>
           <h3 className="text-xl font-bold mb-1">الخطة الشهرية</h3>
-          <p className="text-[#9A9AA0] text-sm hidden sm:block">خطط لمحتواك على تقويم بصري</p>
+          <p className="text-[var(--text-soft)] text-sm hidden sm:block">خطط لمحتواك على تقويم بصري</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={exportExcel} className="hidden sm:flex items-center gap-2 text-sm bg-[#16161A] border border-[rgba(198,145,76,0.12)] px-3 py-2 rounded-lg text-[#9A9AA0] hover:text-white transition">📥 تصدير</button>
-          <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="flex items-center gap-2 text-sm bg-[#C6914C] hover:bg-[#A6743A] px-3 py-2 rounded-lg text-white transition"><Plus size={14} /> <span>جدولة</span></button>
+          <button onClick={exportExcel} className="hidden sm:flex items-center gap-2 text-sm bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg text-[var(--text-soft)] hover:text-white transition">📥 تصدير</button>
+          <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="flex items-center gap-2 text-sm bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-2 rounded-lg text-white transition"><Plus size={14} /> <span>جدولة</span></button>
         </div>
       </div>
 
       {/* Controls */}
       <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <button onClick={() => navigate(-1)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] w-8 h-8 rounded-lg flex items-center justify-center text-[#9A9AA0]">→</button>
+          <button onClick={() => navigate(-1)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-soft)]">→</button>
           <h4 className="font-bold text-sm min-w-[130px] text-center">{view === "week" ? "الأسبوع" : arabicMonths[currentDate.getMonth()] + " " + currentDate.getFullYear()}</h4>
-          <button onClick={() => navigate(1)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] w-8 h-8 rounded-lg flex items-center justify-center text-[#9A9AA0]">←</button>
-          <button onClick={() => setCurrentDate(new Date())} className="text-xs text-[#C6914C]">اليوم</button>
+          <button onClick={() => navigate(1)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-soft)]">←</button>
+          <button onClick={() => setCurrentDate(new Date())} className="text-xs text-[var(--gold-2)]">اليوم</button>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <select value={filterPlatform} onChange={(e) => setFilterPlatform(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#C6914C]" style={{ color: "#F5F5F5" }}>
+          <select value={filterPlatform} onChange={(e) => setFilterPlatform(e.target.value)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[var(--gold-2)]" style={{ color: "var(--text-strong)" }}>
             <option value="all">كل المنصات</option>
             <option value="X (تويتر)">X</option><option value="Instagram">Instagram</option><option value="TikTok">TikTok</option><option value="Snapchat">Snapchat</option><option value="LinkedIn">LinkedIn</option><option value="Threads">Threads</option>
           </select>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#C6914C]" style={{ color: "#F5F5F5" }}>
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[var(--gold-2)]" style={{ color: "var(--text-strong)" }}>
             <option value="all">كل الحالات</option><option value="مسودة">مسودة</option><option value="جاهز">جاهز</option><option value="منشور">منشور</option>
           </select>
-          <div className="flex bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-lg overflow-hidden">
-            <button onClick={() => setView("month")} className={"px-2 py-1.5 text-xs transition " + (view === "month" ? "bg-[#C6914C] text-white" : "text-[#9A9AA0]")}>شهري</button>
-            <button onClick={() => setView("week")} className={"px-2 py-1.5 text-xs transition " + (view === "week" ? "bg-[#C6914C] text-white" : "text-[#9A9AA0]")}>أسبوعي</button>
-            <button onClick={() => setView("agenda")} className={"px-2 py-1.5 text-xs transition " + (view === "agenda" ? "bg-[#C6914C] text-white" : "text-[#9A9AA0]")}>قائمة</button>
+          <div className="flex bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg overflow-hidden">
+            <button onClick={() => setView("month")} className={"px-2 py-1.5 text-xs transition " + (view === "month" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")}>شهري</button>
+            <button onClick={() => setView("week")} className={"px-2 py-1.5 text-xs transition " + (view === "week" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")}>أسبوعي</button>
+            <button onClick={() => setView("agenda")} className={"px-2 py-1.5 text-xs transition " + (view === "agenda" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")}>قائمة</button>
           </div>
-          <span className="text-xs text-[#5A5A62]">{monthPostsCount} منشور</span>
+          <span className="text-xs text-[var(--text-faint)]">{monthPostsCount} منشور</span>
         </div>
       </div>
 
       {/* Monthly View */}
       {view === "month" && (
         <div className="overflow-x-auto">
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden" style={{ minWidth: 420 }}>
-            <div className="grid grid-cols-7 border-b border-[rgba(198,145,76,0.12)]">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden" style={{ minWidth: 420 }}>
+            <div className="grid grid-cols-7 border-b border-[var(--gold-bg)]">
               {arabicDays.map((d, i) => (
-                <div key={d} className="px-1 py-2 sm:px-2 sm:py-3 text-center text-xs font-bold text-[#5A5A62] border-l border-[rgba(198,145,76,0.12)] last:border-l-0">
+                <div key={d} className="px-1 py-2 sm:px-2 sm:py-3 text-center text-xs font-bold text-[var(--text-faint)] border-l border-[var(--gold-bg)] last:border-l-0">
                   <span className="hidden sm:inline">{d}</span>
                   <span className="sm:hidden">{arabicDaysShort[i]}</span>
                 </div>
@@ -221,17 +221,17 @@ export default function CalendarTab({
                 const dayPosts = item.current ? getPostsForDate(dateStr) : [];
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} onClick={() => { if (item.current) { setSelectedDay(dateStr); setSelectedPost(null); } }} className={"min-h-[70px] sm:min-h-[100px] border-l border-b border-[rgba(198,145,76,0.12)] last:border-l-0 p-1 sm:p-1.5 cursor-pointer transition " + (item.current ? "hover:bg-[#1C1C22]/50" : "bg-gray-950/30") + (selectedDay === dateStr ? " bg-[rgba(193,141,74,0.06)]" : "")}>
-                    <div className={"text-xs font-bold mb-1 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center rounded-full " + (isToday ? "bg-[#C6914C] text-white" : item.current ? "text-[#9A9AA0]" : "text-[#3A3A42]")}>{item.day}</div>
+                  <div key={idx} onClick={() => { if (item.current) { setSelectedDay(dateStr); setSelectedPost(null); } }} className={"min-h-[70px] sm:min-h-[100px] border-l border-b border-[var(--gold-bg)] last:border-l-0 p-1 sm:p-1.5 cursor-pointer transition " + (item.current ? "hover:bg-[var(--bg-surface-2)]/50" : "bg-gray-950/30") + (selectedDay === dateStr ? " bg-[rgba(193,141,74,0.06)]" : "")}>
+                    <div className={"text-xs font-bold mb-1 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center rounded-full " + (isToday ? "bg-[var(--gold-2)] text-white" : item.current ? "text-[var(--text-soft)]" : "text-[var(--border-1)]")}>{item.day}</div>
                     {item.current && (
                       <div className="space-y-0.5">
                         {dayPosts.slice(0, 2).map((p) => (
-                          <div key={p.id} onClick={(e) => { e.stopPropagation(); setSelectedPost(p); setSelectedDay(dateStr); }} className={"text-xs px-1 py-0.5 rounded truncate cursor-pointer transition hover:opacity-80 " + (platformColors[p.main_channel || ""] || "bg-[#2A2A32]")}>
+                          <div key={p.id} onClick={(e) => { e.stopPropagation(); setSelectedPost(p); setSelectedDay(dateStr); }} className={"text-xs px-1 py-0.5 rounded truncate cursor-pointer transition hover:opacity-80 " + (platformColors[p.main_channel || ""] || "bg-[var(--bg-surface-3)]")}>
                             <span className="hidden sm:inline">{p.main_text?.substring(0, 20)}</span>
                             <span className="sm:hidden">●</span>
                           </div>
                         ))}
-                        {dayPosts.length > 2 && <div className="text-xs text-[#5A5A62] text-center">+{dayPosts.length - 2}</div>}
+                        {dayPosts.length > 2 && <div className="text-xs text-[var(--text-faint)] text-center">+{dayPosts.length - 2}</div>}
                       </div>
                     )}
                   </div>
@@ -245,26 +245,26 @@ export default function CalendarTab({
       {/* Weekly View */}
       {view === "week" && (
         <div className="overflow-x-auto">
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden" style={{ minWidth: 500 }}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden" style={{ minWidth: 500 }}>
             <div className="grid grid-cols-7">
               {getWeekDays().map((d, idx) => {
                 const dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
                 const dayPosts = getPostsForDate(dateStr);
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} className={"border-l border-[rgba(198,145,76,0.12)] last:border-l-0 min-h-[300px] " + (isToday ? "bg-[rgba(193,141,74,0.04)]" : "")}>
-                    <div className={"px-1 py-2 border-b border-[rgba(198,145,76,0.12)] text-center " + (isToday ? "bg-[rgba(198,145,76,0.08)]" : "")}>
-                      <div className="text-xs text-[#5A5A62]"><span className="hidden sm:inline">{arabicDays[d.getDay()]}</span><span className="sm:hidden">{arabicDaysShort[d.getDay()]}</span></div>
-                      <div className={"text-base font-bold " + (isToday ? "text-[#C6914C]" : "text-gray-300")}>{d.getDate()}</div>
+                  <div key={idx} className={"border-l border-[var(--gold-bg)] last:border-l-0 min-h-[300px] " + (isToday ? "bg-[rgba(193,141,74,0.04)]" : "")}>
+                    <div className={"px-1 py-2 border-b border-[var(--gold-bg)] text-center " + (isToday ? "bg-[var(--gold-bg-soft)]" : "")}>
+                      <div className="text-xs text-[var(--text-faint)]"><span className="hidden sm:inline">{arabicDays[d.getDay()]}</span><span className="sm:hidden">{arabicDaysShort[d.getDay()]}</span></div>
+                      <div className={"text-base font-bold " + (isToday ? "text-[var(--gold-2)]" : "text-gray-300")}>{d.getDate()}</div>
                     </div>
                     <div className="p-1 sm:p-2 space-y-1 sm:space-y-2">
                       {dayPosts.map((p) => (
-                        <div key={p.id} onClick={() => { setSelectedPost(p); setSelectedDay(dateStr); }} className="bg-[#1C1C22] rounded p-1 sm:p-2 cursor-pointer hover:bg-[#2A2A32] transition">
-                          <div className="flex items-center gap-1 mb-1"><div className={"w-2 h-2 rounded-full flex-shrink-0 " + (platformDots[p.main_channel || ""] || "bg-gray-500")} /><span className="text-xs text-[#5A5A62] hidden sm:inline">{p.scheduled_time || ""}</span></div>
+                        <div key={p.id} onClick={() => { setSelectedPost(p); setSelectedDay(dateStr); }} className="bg-[var(--bg-surface-2)] rounded p-1 sm:p-2 cursor-pointer hover:bg-[var(--bg-surface-3)] transition">
+                          <div className="flex items-center gap-1 mb-1"><div className={"w-2 h-2 rounded-full flex-shrink-0 " + (platformDots[p.main_channel || ""] || "bg-gray-500")} /><span className="text-xs text-[var(--text-faint)] hidden sm:inline">{p.scheduled_time || ""}</span></div>
                           <p className="text-xs text-gray-300 line-clamp-2">{p.main_text}</p>
                         </div>
                       ))}
-                      <button onClick={() => { setShowAssign(true); setAssignDate(dateStr); }} className="w-full text-center text-xs text-[#5A5A62] hover:text-[#C6914C] py-1 transition">+</button>
+                      <button onClick={() => { setShowAssign(true); setAssignDate(dateStr); }} className="w-full text-center text-xs text-[var(--text-faint)] hover:text-[var(--gold-2)] py-1 transition">+</button>
                     </div>
                   </div>
                 );
@@ -288,10 +288,10 @@ export default function CalendarTab({
         return (
           <div className="space-y-3">
             {agendaDays.length === 0 && (
-              <div className="text-center py-16 text-[#5A5A62]">
+              <div className="text-center py-16 text-[var(--text-faint)]">
                 <Calendar size={40} className="mx-auto mb-3 opacity-30" />
                 <p>لا يوجد محتوى مجدول هذا الشهر</p>
-                <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="mt-4 text-sm text-[#C6914C] hover:underline">+ جدولة محتوى</button>
+                <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="mt-4 text-sm text-[var(--gold-2)] hover:underline">+ جدولة محتوى</button>
               </div>
             )}
             {agendaDays.map(({ dateStr, dayPosts }) => {
@@ -299,21 +299,21 @@ export default function CalendarTab({
               const isToday = dateStr === todayStr;
               const dayLabel = arabicDays[d.getDay()] + " " + d.getDate() + " " + arabicMonths[d.getMonth()];
               return (
-                <div key={dateStr} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden">
-                  <div className={"flex items-center gap-3 px-4 py-2.5 border-b border-[rgba(198,145,76,0.12)] " + (isToday ? "bg-[rgba(198,145,76,0.08)]" : "")}>
-                    <span className={"text-sm font-bold " + (isToday ? "text-[#C6914C]" : "text-gray-300")}>{dayLabel}</span>
-                    {isToday && <span className="text-xs bg-[#C6914C] text-white px-2 py-0.5 rounded-full">اليوم</span>}
-                    <span className="text-xs text-[#5A5A62] mr-auto">{dayPosts.length} منشور</span>
+                <div key={dateStr} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden">
+                  <div className={"flex items-center gap-3 px-4 py-2.5 border-b border-[var(--gold-bg)] " + (isToday ? "bg-[var(--gold-bg-soft)]" : "")}>
+                    <span className={"text-sm font-bold " + (isToday ? "text-[var(--gold-2)]" : "text-gray-300")}>{dayLabel}</span>
+                    {isToday && <span className="text-xs bg-[var(--gold-2)] text-white px-2 py-0.5 rounded-full">اليوم</span>}
+                    <span className="text-xs text-[var(--text-faint)] mr-auto">{dayPosts.length} منشور</span>
                   </div>
-                  <div className="divide-y divide-[rgba(198,145,76,0.08)]">
+                  <div className="divide-y divide-[var(--gold-bg-soft)]">
                     {dayPosts.map((p) => (
-                      <div key={p.id} onClick={() => setSelectedPost(p)} className="flex items-start gap-3 px-4 py-3 hover:bg-[#1C1C22] cursor-pointer transition">
+                      <div key={p.id} onClick={() => setSelectedPost(p)} className="flex items-start gap-3 px-4 py-3 hover:bg-[var(--bg-surface-2)] cursor-pointer transition">
                         <div className="flex-shrink-0 mt-1"><div className={"w-2.5 h-2.5 rounded-full " + (platformDots[p.main_channel || ""] || "bg-gray-500")} /></div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className={"text-xs px-2 py-0.5 rounded " + (platformColors[p.main_channel || ""] || "bg-[#2A2A32]")}>{p.main_channel}</span>
-                            {p.scheduled_time && <span className="text-xs text-[#5A5A62]">{p.scheduled_time}</span>}
-                            <span className="text-xs text-[#5A5A62]">{p.status || "مسودة"}</span>
+                            <span className={"text-xs px-2 py-0.5 rounded " + (platformColors[p.main_channel || ""] || "bg-[var(--bg-surface-3)]")}>{p.main_channel}</span>
+                            {p.scheduled_time && <span className="text-xs text-[var(--text-faint)]">{p.scheduled_time}</span>}
+                            <span className="text-xs text-[var(--text-faint)]">{p.status || "مسودة"}</span>
                           </div>
                           <p className="text-sm text-gray-300 line-clamp-2">{p.main_text}</p>
                         </div>
@@ -330,23 +330,23 @@ export default function CalendarTab({
       {/* Post Detail Modal */}
       {selectedPost && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setSelectedPost(null)}>
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <span className={"text-xs px-2 py-1 rounded " + (platformColors[selectedPost.main_channel || ""] || "bg-[#2A2A32]")}>{selectedPost.main_channel}</span>
-                <select value={selectedPost.status} onChange={(e) => { updatePostStatus(selectedPost.id, e.target.value); setSelectedPost({ ...selectedPost, status: e.target.value }); }} className="text-xs bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded px-2 py-1 focus:outline-none">
+                <span className={"text-xs px-2 py-1 rounded " + (platformColors[selectedPost.main_channel || ""] || "bg-[var(--bg-surface-3)]")}>{selectedPost.main_channel}</span>
+                <select value={selectedPost.status} onChange={(e) => { updatePostStatus(selectedPost.id, e.target.value); setSelectedPost({ ...selectedPost, status: e.target.value }); }} className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded px-2 py-1 focus:outline-none">
                   <option value="مسودة">مسودة</option><option value="جاهز">جاهز</option><option value="منشور">منشور</option>
                 </select>
               </div>
-              <button onClick={() => setSelectedPost(null)} className="text-[#5A5A62] hover:text-white"><X size={18} /></button>
+              <button onClick={() => setSelectedPost(null)} className="text-[var(--text-faint)] hover:text-white"><X size={18} /></button>
             </div>
-            <div className="text-xs text-[#5A5A62] mb-3">{selectedPost.scheduled_date} — {selectedPost.scheduled_time || "بدون وقت"}</div>
+            <div className="text-xs text-[var(--text-faint)] mb-3">{selectedPost.scheduled_date} — {selectedPost.scheduled_time || "بدون وقت"}</div>
             {editingPost?.id === selectedPost.id ? (
               <div>
-                <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows={6} className="w-full bg-[#1C1C22] border border-[#C6914C] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none mb-3" />
+                <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows={6} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-2)] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none mb-3" />
                 <div className="flex gap-2">
                   <button onClick={() => savePostEdit(selectedPost.id)} className="text-sm bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition">حفظ</button>
-                  <button onClick={() => setEditingPost(null)} className="text-sm bg-[#2A2A32] px-4 py-2 rounded-lg transition">إلغاء</button>
+                  <button onClick={() => setEditingPost(null)} className="text-sm bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition">إلغاء</button>
                 </div>
               </div>
             ) : (
@@ -354,8 +354,8 @@ export default function CalendarTab({
             )}
             {editingPost?.id !== selectedPost.id && (
               <div className="flex gap-2 flex-wrap">
-                <button onClick={() => { setEditingPost(selectedPost); setEditText(selectedPost.main_text); }} className="text-xs bg-[#1C1C22] hover:bg-[#2A2A32] px-3 py-2 rounded-lg flex items-center gap-1 transition"><Pencil size={12} /> تعديل</button>
-                <button onClick={() => copyText(selectedPost.id, selectedPost.main_text)} className="text-xs bg-[#1C1C22] hover:bg-[#2A2A32] px-3 py-2 rounded-lg flex items-center gap-1 transition">{copiedId === selectedPost.id ? <><Check size={12} className="text-green-400" /> نُسخ</> : <><Copy size={12} /> نسخ</>}</button>
+                <button onClick={() => { setEditingPost(selectedPost); setEditText(selectedPost.main_text); }} className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-2 rounded-lg flex items-center gap-1 transition"><Pencil size={12} /> تعديل</button>
+                <button onClick={() => copyText(selectedPost.id, selectedPost.main_text)} className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-2 rounded-lg flex items-center gap-1 transition">{copiedId === selectedPost.id ? <><Check size={12} className="text-green-400" /> نُسخ</> : <><Copy size={12} /> نسخ</>}</button>
                 <button onClick={() => unschedulePost(selectedPost.id)} className="text-xs bg-yellow-900/30 hover:bg-yellow-900/50 text-yellow-400 px-3 py-2 rounded-lg transition">إلغاء الجدولة</button>
                 <button onClick={() => deletePost(selectedPost.id)} className="text-xs bg-red-900/30 hover:bg-red-900/50 text-red-400 px-3 py-2 rounded-lg transition">حذف</button>
               </div>
@@ -367,27 +367,27 @@ export default function CalendarTab({
       {/* Schedule Draft Modal */}
       {showAssign && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowAssign(false)}>
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-2xl max-w-md w-full p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl max-w-md w-full p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-bold text-lg">جدولة مسودة</h4>
-              <button onClick={() => setShowAssign(false)} className="text-[#5A5A62] hover:text-white"><X size={18} /></button>
+              <button onClick={() => setShowAssign(false)} className="text-[var(--text-faint)] hover:text-white"><X size={18} /></button>
             </div>
             {allDrafts.length === 0 ? (
-              <p className="text-[#5A5A62] text-center py-8">لا توجد مسودات — أنتج محتوى أولاً من مصنع المحتوى أو خبير المحتوى</p>
+              <p className="text-[var(--text-faint)] text-center py-8">لا توجد مسودات — أنتج محتوى أولاً من مصنع المحتوى أو خبير المحتوى</p>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-[#9A9AA0] mb-2">اختر المسودة</label>
-                  <select value={assignDraftId} onChange={(e) => setAssignDraftId(e.target.value)} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]">
+                  <label className="block text-sm text-[var(--text-soft)] mb-2">اختر المسودة</label>
+                  <select value={assignDraftId} onChange={(e) => setAssignDraftId(e.target.value)} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]">
                     <option value="">اختر مسودة...</option>
                     {allDrafts.map((d) => (<option key={d.id} value={d.id}>{(d.main_channel || "") + " — " + (d.main_text || "").substring(0, 50)}</option>))}
                   </select>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div><label className="block text-sm text-[#9A9AA0] mb-2">تاريخ النشر</label><input type="date" value={assignDate} onChange={(e) => setAssignDate(e.target.value)} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" /></div>
-                  <div><label className="block text-sm text-[#9A9AA0] mb-2">وقت النشر</label><input type="time" value={assignTime} onChange={(e) => setAssignTime(e.target.value)} className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]" /></div>
+                  <div><label className="block text-sm text-[var(--text-soft)] mb-2">تاريخ النشر</label><input type="date" value={assignDate} onChange={(e) => setAssignDate(e.target.value)} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]" /></div>
+                  <div><label className="block text-sm text-[var(--text-soft)] mb-2">وقت النشر</label><input type="time" value={assignTime} onChange={(e) => setAssignTime(e.target.value)} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]" /></div>
                 </div>
-                <button onClick={assignDraft} disabled={!assignDraftId || !assignDate} className={"w-full py-3 rounded-lg font-bold transition " + (assignDraftId && assignDate ? "bg-[#C6914C] hover:bg-[#A6743A] text-white" : "bg-[#2A2A32] text-[#5A5A62]")}>جدولة المسودة</button>
+                <button onClick={assignDraft} disabled={!assignDraftId || !assignDate} className={"w-full py-3 rounded-lg font-bold transition " + (assignDraftId && assignDate ? "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white" : "bg-[var(--bg-surface-3)] text-[var(--text-faint)]")}>جدولة المسودة</button>
               </div>
             )}
           </div>

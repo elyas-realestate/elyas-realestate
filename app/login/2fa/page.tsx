@@ -40,7 +40,7 @@ export default function TwoFactorChallenge() {
       dir="rtl"
       style={{
         minHeight: "100vh",
-        background: "#0A0A0C",
+        background: "var(--bg-page)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -53,7 +53,7 @@ export default function TwoFactorChallenge() {
         style={{
           width: "100%",
           maxWidth: 440,
-          background: "#16161A",
+          background: "var(--bg-surface-1)",
           border: "1px solid rgba(198,145,76,0.14)",
           borderRadius: 24,
           padding: 36,
@@ -66,7 +66,7 @@ export default function TwoFactorChallenge() {
               width: 64,
               height: 64,
               borderRadius: 20,
-              background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
+              background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
               margin: "0 auto 16px",
               display: "flex",
               alignItems: "center",
@@ -75,10 +75,10 @@ export default function TwoFactorChallenge() {
           >
             <ShieldCheck size={32} color="#fff" />
           </div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 6 }}>
             التحقّق الثنائي
           </h1>
-          <p style={{ fontSize: 13, color: "#9A9AA0" }}>
+          <p style={{ fontSize: 13, color: "var(--text-soft)" }}>
             {mode === "totp"
               ? "أدخل الرمز المكوّن من 6 أرقام من تطبيق المصادقة"
               : "أدخل أحد رموز الاسترداد (XXXX-XXXX-XXXX)"}
@@ -98,12 +98,12 @@ export default function TwoFactorChallenge() {
             inputMode={mode === "totp" ? "numeric" : "text"}
             style={{
               width: "100%",
-              background: "#1C1C22",
-              border: `1px solid ${error ? "rgba(239,68,68,0.5)" : "rgba(198,145,76,0.15)"}`,
+              background: "var(--bg-surface-2)",
+              border: `1px solid ${error ? "rgba(239,68,68,0.5)" : "var(--gold-bg-hover)"}`,
               borderRadius: 12,
               padding: "16px 18px",
               fontSize: 20,
-              color: "#F5F5F5",
+              color: "var(--text-strong)",
               outline: "none",
               textAlign: "center",
               letterSpacing: mode === "totp" ? "0.4em" : "0.1em",
@@ -124,7 +124,7 @@ export default function TwoFactorChallenge() {
               width: "100%",
               marginTop: 16,
               padding: "14px 0",
-              background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
+              background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
               color: "#fff",
               fontWeight: 700,
               fontSize: 15,
@@ -145,7 +145,7 @@ export default function TwoFactorChallenge() {
             style={{
               background: "transparent",
               border: "none",
-              color: "#C6914C",
+              color: "var(--gold-2)",
               fontSize: 13,
               cursor: "pointer",
               display: "inline-flex",
@@ -158,14 +158,14 @@ export default function TwoFactorChallenge() {
           </button>
         </div>
 
-        <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
+        <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--overlay-soft)", textAlign: "center" }}>
           <button
             type="button"
             onClick={logout}
             style={{
               background: "transparent",
               border: "none",
-              color: "#5A5A62",
+              color: "var(--text-faint)",
               fontSize: 12,
               cursor: "pointer",
             }}

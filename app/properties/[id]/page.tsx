@@ -78,7 +78,7 @@ export default function PropertyDetail() {
 
   if (loading) return (
     <div dir="rtl" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, color: "#C6914C" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--gold-2)" }}>
         <div style={{ width: 20, height: 20, border: "2px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
         <span>جاري التحميل...</span>
       </div>
@@ -89,9 +89,9 @@ export default function PropertyDetail() {
   if (!property) return (
     <div dir="rtl" style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif", textAlign: "center" }}>
       <div style={{ fontSize: 56, marginBottom: 16 }}>🏚️</div>
-      <p className="font-kufi" style={{ fontSize: 20, fontWeight: 700, color: "#F5F5F5", marginBottom: 8 }}>العقار غير موجود</p>
-      <p style={{ fontSize: 14, color: "#5A5A62", marginBottom: 24 }}>ربما تم حذفه أو إيقاف نشره</p>
-      <Link href="/properties" style={{ background: "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", textDecoration: "none", padding: "12px 28px", borderRadius: 12, fontWeight: 700, fontSize: 14 }}>
+      <p className="font-kufi" style={{ fontSize: 20, fontWeight: 700, color: "var(--text-strong)", marginBottom: 8 }}>العقار غير موجود</p>
+      <p style={{ fontSize: 14, color: "var(--text-faint)", marginBottom: 24 }}>ربما تم حذفه أو إيقاف نشره</p>
+      <Link href="/properties" style={{ background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", textDecoration: "none", padding: "12px 28px", borderRadius: 12, fontWeight: 700, fontSize: 14 }}>
         العودة للعقارات
       </Link>
     </div>
@@ -137,7 +137,7 @@ export default function PropertyDetail() {
         .nav-btn:hover { background: rgba(198,145,76,0.25) !important; }
         .action-btn { transition: all 0.25s; }
         .action-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-        .lightbox-nav:hover { background: rgba(198,145,76,0.2) !important; }
+        .lightbox-nav:hover { background: var(--gold-bg-hover) !important; }
         .prop-content-grid { display: grid; grid-template-columns: 1fr 360px; gap: 36px; align-items: start; }
         .prop-sticky-card { position: sticky; top: 88px; }
         @media (max-width: 767px) {
@@ -149,23 +149,23 @@ export default function PropertyDetail() {
       `}</style>
 
       {/* ═══ BREADCRUMB ═══ */}
-      <div className="prop-breadcrumb" style={{ background: "#111114", borderBottom: "1px solid rgba(198,145,76,0.08)", padding: "12px 48px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#5A5A62" }}>
-          <Link href="/" style={{ color: "#5A5A62", textDecoration: "none" }}>الرئيسية</Link>
+      <div className="prop-breadcrumb" style={{ background: "var(--bg-deep)", borderBottom: "1px solid var(--gold-bg-soft)", padding: "12px 48px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-faint)" }}>
+          <Link href="/" style={{ color: "var(--text-faint)", textDecoration: "none" }}>الرئيسية</Link>
           <ChevronLeft size={13} />
-          <Link href="/properties" style={{ color: "#5A5A62", textDecoration: "none" }}>العقارات</Link>
+          <Link href="/properties" style={{ color: "var(--text-faint)", textDecoration: "none" }}>العقارات</Link>
           <ChevronLeft size={13} />
-          <span style={{ color: "#9A9AA0" }} className="truncate">{property.title}</span>
+          <span style={{ color: "var(--text-soft)" }} className="truncate">{property.title}</span>
         </div>
       </div>
 
       {/* ═══ GALLERY — FULL WIDTH ═══ */}
       {images.length > 0 && (
-        <div style={{ background: "#0A0A0C", borderBottom: "1px solid rgba(198,145,76,0.1)" }}>
+        <div style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--gold-bg)" }}>
           <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 48px" }}>
 
             {/* Main image */}
-            <div style={{ position: "relative", borderRadius: "0 0 20px 20px", overflow: "hidden", background: "#111114" }}
+            <div style={{ position: "relative", borderRadius: "0 0 20px 20px", overflow: "hidden", background: "var(--bg-deep)" }}
               onClick={() => setLightbox(true)}>
               <div style={{ height: "clamp(320px, 56vw, 600px)", cursor: "zoom-in" }}>
                 <img
@@ -178,14 +178,14 @@ export default function PropertyDetail() {
 
               {/* Offer badge */}
               <div style={{ position: "absolute", top: 20, right: 20 }}>
-                <span style={{ background: "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", fontSize: 13, fontWeight: 700, padding: "7px 18px", borderRadius: 10 }}>
+                <span style={{ background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", fontSize: 13, fontWeight: 700, padding: "7px 18px", borderRadius: 10 }}>
                   {property.offer_type === "بيع" ? "للبيع" : property.offer_type === "إيجار" ? "للإيجار" : property.offer_type || "متاح"}
                 </span>
               </div>
 
               {/* Counter */}
               {images.length > 1 && (
-                <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(10,10,12,0.75)", color: "#9A9AA0", fontSize: 12, padding: "5px 14px", borderRadius: 20, backdropFilter: "blur(8px)", letterSpacing: 1 }}>
+                <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(10,10,12,0.75)", color: "var(--text-soft)", fontSize: 12, padding: "5px 14px", borderRadius: 20, backdropFilter: "blur(8px)", letterSpacing: 1 }}>
                   {activeImg + 1} / {images.length}
                 </div>
               )}
@@ -194,11 +194,11 @@ export default function PropertyDetail() {
               {images.length > 1 && (
                 <>
                   <button onClick={e => { e.stopPropagation(); prev(); }} className="nav-btn"
-                    style={{ position: "absolute", top: "50%", right: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "rgba(10,10,12,0.65)", border: "1px solid rgba(198,145,76,0.2)", color: "#C6914C", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
+                    style={{ position: "absolute", top: "50%", right: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "rgba(10,10,12,0.65)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
                     <ChevronRight size={20} />
                   </button>
                   <button onClick={e => { e.stopPropagation(); next(); }} className="nav-btn"
-                    style={{ position: "absolute", top: "50%", left: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "rgba(10,10,12,0.65)", border: "1px solid rgba(198,145,76,0.2)", color: "#C6914C", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
+                    style={{ position: "absolute", top: "50%", left: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "rgba(10,10,12,0.65)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
                     <ChevronLeft size={20} />
                   </button>
                 </>
@@ -210,7 +210,7 @@ export default function PropertyDetail() {
               <div style={{ display: "flex", gap: 10, padding: "14px 0 16px", overflowX: "auto", scrollbarWidth: "none" }}>
                 {images.map((img, i) => (
                   <div key={i} className="thumb-item" onClick={() => setActiveImg(i)}
-                    style={{ width: 100, height: 70, borderRadius: 10, overflow: "hidden", border: "2px solid " + (activeImg === i ? "#C6914C" : "rgba(198,145,76,0.1)"), flexShrink: 0, boxShadow: activeImg === i ? "0 0 0 2px rgba(198,145,76,0.25)" : "none" }}>
+                    style={{ width: 100, height: 70, borderRadius: 10, overflow: "hidden", border: "2px solid " + (activeImg === i ? "var(--gold-2)" : "var(--gold-bg)"), flexShrink: 0, boxShadow: activeImg === i ? "0 0 0 2px rgba(198,145,76,0.25)" : "none" }}>
                     <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
                 ))}
@@ -230,28 +230,28 @@ export default function PropertyDetail() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
                 {property.sub_category && (
-                  <span style={{ background: "rgba(198,145,76,0.1)", color: "#C6914C", fontSize: 12, fontWeight: 600, padding: "5px 14px", borderRadius: 20, border: "1px solid rgba(198,145,76,0.2)" }}>
+                  <span style={{ background: "var(--gold-bg)", color: "var(--gold-2)", fontSize: 12, fontWeight: 600, padding: "5px 14px", borderRadius: 20, border: "1px solid var(--gold-bg-hover)" }}>
                     {property.sub_category}
                   </span>
                 )}
                 {property.main_category && (
-                  <span style={{ background: "#1C1C22", color: "#9A9AA0", fontSize: 12, padding: "5px 14px", borderRadius: 20, border: "1px solid rgba(198,145,76,0.08)" }}>
+                  <span style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", fontSize: 12, padding: "5px 14px", borderRadius: 20, border: "1px solid var(--gold-bg-soft)" }}>
                     {property.main_category}
                   </span>
                 )}
               </div>
-              <h1 className="font-kufi" style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, color: "#F5F5F5", lineHeight: 1.35, marginBottom: 12 }}>
+              <h1 className="font-kufi" style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, color: "var(--text-strong)", lineHeight: 1.35, marginBottom: 12 }}>
                 {property.title}
               </h1>
               {property.ad_license_number && (
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.15)", borderRadius: 8, padding: "4px 10px", marginBottom: 10, fontSize: 12, color: "#9A9AA0" }}>
-                  <span style={{ color: "#5A5A62" }}>رقم ترخيص الإعلان:</span>
-                  <span style={{ color: "#C6914C", fontWeight: 600, direction: "ltr" }}>{property.ad_license_number}</span>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", borderRadius: 8, padding: "4px 10px", marginBottom: 10, fontSize: 12, color: "var(--text-soft)" }}>
+                  <span style={{ color: "var(--text-faint)" }}>رقم ترخيص الإعلان:</span>
+                  <span style={{ color: "var(--gold-2)", fontWeight: 600, direction: "ltr" }}>{property.ad_license_number}</span>
                 </div>
               )}
               {(property.district || property.city) && (
-                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#9A9AA0" }}>
-                  <MapPin size={15} style={{ color: "#C6914C", flexShrink: 0 }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text-soft)" }}>
+                  <MapPin size={15} style={{ color: "var(--gold-2)", flexShrink: 0 }} />
                   <span style={{ fontSize: 14 }}>{[property.district, property.city].filter(Boolean).join("، ")}</span>
                 </div>
               )}
@@ -261,10 +261,10 @@ export default function PropertyDetail() {
             {specs.length > 0 && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 10, marginBottom: 28 }}>
                 {specs.map((spec: any, i: number) => (
-                  <div key={i} style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.1)", borderRadius: 14, padding: "16px 14px", textAlign: "center" }}>
-                    <div style={{ color: "#C6914C", marginBottom: 8, display: "flex", justifyContent: "center" }}>{spec.icon}</div>
-                    <div className="font-kufi" style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>{spec.value}</div>
-                    <div style={{ fontSize: 11, color: "#5A5A62" }}>{spec.label}</div>
+                  <div key={i} style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", borderRadius: 14, padding: "16px 14px", textAlign: "center" }}>
+                    <div style={{ color: "var(--gold-2)", marginBottom: 8, display: "flex", justifyContent: "center" }}>{spec.icon}</div>
+                    <div className="font-kufi" style={{ fontSize: 20, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4 }}>{spec.value}</div>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)" }}>{spec.label}</div>
                   </div>
                 ))}
               </div>
@@ -272,17 +272,17 @@ export default function PropertyDetail() {
 
             {/* Description */}
             {property.description && (
-              <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)", borderRadius: 16, padding: "22px 24px", marginBottom: 20 }}>
-                <h3 className="font-kufi" style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: "#C6914C" }}>تفاصيل العقار</h3>
-                <p style={{ fontSize: 14.5, color: "#9A9AA0", lineHeight: 1.9, whiteSpace: "pre-line" }}>{property.description}</p>
+              <div style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", borderRadius: 16, padding: "22px 24px", marginBottom: 20 }}>
+                <h3 className="font-kufi" style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: "var(--gold-2)" }}>تفاصيل العقار</h3>
+                <p style={{ fontSize: 14.5, color: "var(--text-soft)", lineHeight: 1.9, whiteSpace: "pre-line" }}>{property.description}</p>
               </div>
             )}
 
             {/* Map */}
             {property.location_url && (
               <a href={property.location_url} target="_blank" rel="noopener noreferrer"
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 20px", borderRadius: 12, background: "#16161A", border: "1px solid rgba(198,145,76,0.12)", color: "#9A9AA0", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>
-                <MapPin size={15} style={{ color: "#C6914C" }} />
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 20px", borderRadius: 12, background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)", textDecoration: "none", fontSize: 13, fontWeight: 500 }}>
+                <MapPin size={15} style={{ color: "var(--gold-2)" }} />
                 الموقع على الخريطة
               </a>
             )}
@@ -290,20 +290,20 @@ export default function PropertyDetail() {
 
           {/* RIGHT — Sticky Card */}
           <div className="prop-sticky-card">
-            <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.18)", borderRadius: 20, overflow: "hidden" }}>
+            <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.18)", borderRadius: 20, overflow: "hidden" }}>
 
               {/* Price */}
-              <div style={{ background: "linear-gradient(135deg, rgba(198,145,76,0.07), transparent)", padding: "22px 24px", borderBottom: "1px solid rgba(198,145,76,0.1)" }}>
+              <div style={{ background: "linear-gradient(135deg, rgba(198,145,76,0.07), transparent)", padding: "22px 24px", borderBottom: "1px solid var(--gold-bg)" }}>
                 {price ? (
                   <>
-                    <div style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6, letterSpacing: 0.5 }}>السعر</div>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 6, letterSpacing: 0.5 }}>السعر</div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span className="font-kufi" style={{ fontSize: 30, fontWeight: 900, color: "#C6914C" }}>{price}</span>
+                      <span className="font-kufi" style={{ fontSize: 30, fontWeight: 900, color: "var(--gold-2)" }}>{price}</span>
                       <SARIcon size={18} color="accent" />
                     </div>
                   </>
                 ) : (
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "#9A9AA0" }}>السعر عند التواصل</div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text-soft)" }}>السعر عند التواصل</div>
                 )}
               </div>
 
@@ -312,25 +312,25 @@ export default function PropertyDetail() {
                 {hasContact && (
                   <>
                     <button onClick={handleWhatsApp} className="action-btn"
-                      style={{ width: "100%", padding: "15px", borderRadius: 14, background: "linear-gradient(135deg, #25D366, #128C7E)", border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
+                      style={{ width: "100%", padding: "15px", borderRadius: 14, background: "linear-gradient(135deg, var(--whatsapp), #128C7E)", border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                       تواصل عبر واتساب
                     </button>
                     <button onClick={handleCall} className="action-btn"
-                      style={{ width: "100%", padding: "13px", borderRadius: 14, background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", color: "#F5F5F5", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
-                      <Phone size={17} style={{ color: "#C6914C" }} />
+                      style={{ width: "100%", padding: "13px", borderRadius: 14, background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
+                      <Phone size={17} style={{ color: "var(--gold-2)" }} />
                       اتصال مباشر
                     </button>
                   </>
                 )}
                 <div style={{ display: "flex", gap: 10 }}>
                   <button onClick={handleShare} className="action-btn"
-                    style={{ flex: 1, padding: "11px", borderRadius: 12, background: copied ? "rgba(74,222,128,0.08)" : "transparent", border: "1px solid " + (copied ? "rgba(74,222,128,0.2)" : "rgba(198,145,76,0.08)"), color: copied ? "#4ADE80" : "#5A5A62", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
+                    style={{ flex: 1, padding: "11px", borderRadius: 12, background: copied ? "rgba(74,222,128,0.08)" : "transparent", border: "1px solid " + (copied ? "rgba(74,222,128,0.2)" : "var(--gold-bg-soft)"), color: copied ? "var(--success)" : "var(--text-faint)", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
                     <Share2 size={14} />
                     {copied ? "تم النسخ ✓" : "مشاركة"}
                   </button>
                   <Link href={`/properties/${params.id}/print`} target="_blank" className="action-btn"
-                    style={{ flex: 1, padding: "11px", borderRadius: 12, background: "transparent", border: "1px solid rgba(198,145,76,0.08)", color: "#5A5A62", textDecoration: "none", fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
+                    style={{ flex: 1, padding: "11px", borderRadius: 12, background: "transparent", border: "1px solid var(--gold-bg-soft)", color: "var(--text-faint)", textDecoration: "none", fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "'Tajawal', sans-serif", transition: "all 0.3s" }}>
                     <Printer size={14} />
                     طباعة / PDF
                   </Link>
@@ -338,16 +338,16 @@ export default function PropertyDetail() {
               </div>
 
               {/* Agent */}
-              <div style={{ borderTop: "1px solid rgba(198,145,76,0.08)", padding: "14px 20px", display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, #C6914C, #A6743A)", display: "flex", alignItems: "center", justifyContent: "center", color: "#0A0A0C", fontSize: 15, fontWeight: 900, flexShrink: 0, fontFamily: "'Noto Kufi Arabic', serif" }}>إ</div>
+              <div style={{ borderTop: "1px solid var(--gold-bg-soft)", padding: "14px 20px", display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--bg-page)", fontSize: 15, fontWeight: 900, flexShrink: 0, fontFamily: "'Noto Kufi Arabic', serif" }}>إ</div>
                 <div>
-                  <p className="font-kufi" style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5", marginBottom: 2 }}>{settings?.site_name || "إلياس الدخيل"}</p>
-                  <p style={{ fontSize: 11, color: "#5A5A62" }}>وسيط عقاري مرخّص{settings?.fal_license ? " — " + settings.fal_license : ""}</p>
+                  <p className="font-kufi" style={{ fontSize: 13, fontWeight: 700, color: "var(--text-strong)", marginBottom: 2 }}>{settings?.site_name || "إلياس الدخيل"}</p>
+                  <p style={{ fontSize: 11, color: "var(--text-faint)" }}>وسيط عقاري مرخّص{settings?.fal_license ? " — " + settings.fal_license : ""}</p>
                 </div>
               </div>
             </div>
 
-            <Link href="/properties" style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 14, color: "#5A5A62", textDecoration: "none", fontSize: 13, justifyContent: "center" }}>
+            <Link href="/properties" style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 14, color: "var(--text-faint)", textDecoration: "none", fontSize: 13, justifyContent: "center" }}>
               <ArrowRight size={14} />
               العودة لجميع العقارات
             </Link>
@@ -368,17 +368,17 @@ export default function PropertyDetail() {
           {images.length > 1 && (
             <>
               <button onClick={e => { e.stopPropagation(); prev(); }} className="lightbox-nav"
-                style={{ position: "absolute", top: "50%", right: 20, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "none", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                style={{ position: "absolute", top: "50%", right: 20, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", background: "var(--overlay-mid)", border: "none", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <ChevronRight size={24} />
               </button>
               <button onClick={e => { e.stopPropagation(); next(); }} className="lightbox-nav"
-                style={{ position: "absolute", top: "50%", left: 20, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.08)", border: "none", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                style={{ position: "absolute", top: "50%", left: 20, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", background: "var(--overlay-mid)", border: "none", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <ChevronLeft size={24} />
               </button>
               <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8 }}>
                 {images.map((_, i) => (
                   <button key={i} onClick={e => { e.stopPropagation(); setActiveImg(i); }}
-                    style={{ width: i === activeImg ? 24 : 8, height: 8, borderRadius: 4, background: i === activeImg ? "#C6914C" : "rgba(255,255,255,0.3)", border: "none", cursor: "pointer", transition: "all 0.25s", padding: 0 }} />
+                    style={{ width: i === activeImg ? 24 : 8, height: 8, borderRadius: 4, background: i === activeImg ? "var(--gold-2)" : "rgba(255,255,255,0.3)", border: "none", cursor: "pointer", transition: "all 0.25s", padding: 0 }} />
                 ))}
               </div>
             </>

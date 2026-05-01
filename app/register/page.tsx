@@ -136,13 +136,13 @@ export default function Register() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("https://", "") || "waseet-pro.com";
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "#0A0A0C", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif", padding: "24px" }}>
+    <div dir="rtl" style={{ minHeight: "100vh", background: "var(--bg-page)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif", padding: "24px" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
         .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
-        .reg-input { width: 100%; background: #1C1C22; border: 1px solid rgba(198,145,76,0.15); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: #F5F5F5; outline: none; transition: border-color 0.3s; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-        .reg-input:focus { border-color: #C6914C; }
-        .reg-input::placeholder { color: #5A5A62; }
+        .reg-input { width: 100%; background: var(--bg-surface-2); border: 1px solid var(--gold-bg-hover); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--text-strong); outline: none; transition: border-color 0.3s; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        .reg-input:focus { border-color: var(--gold-2); }
+        .reg-input::placeholder { color: var(--text-faint); }
         .dot-pattern { background-image: radial-gradient(rgba(198,145,76,0.04) 1px, transparent 1px); background-size: 32px 32px; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .fade-up { animation: fadeUp 0.6s ease-out both; }
@@ -158,38 +158,38 @@ export default function Register() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-block" }}>
-            <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, #C6914C, #A6743A)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontSize: 22, fontWeight: 900, color: "#0A0A0C", fontFamily: "'Noto Kufi Arabic', serif" }}>و</div>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontSize: 22, fontWeight: 900, color: "var(--bg-page)", fontFamily: "'Noto Kufi Arabic', serif" }}>و</div>
           </Link>
-          <h1 className="font-kufi" style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>وسيط برو</h1>
-          <p style={{ fontSize: 12, color: "#5A5A62" }}>المنصة العقارية الذكية للوسطاء السعوديين</p>
+          <h1 className="font-kufi" style={{ fontSize: 20, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4 }}>وسيط برو</h1>
+          <p style={{ fontSize: 12, color: "var(--text-faint)" }}>المنصة العقارية الذكية للوسطاء السعوديين</p>
         </div>
 
         {step === "verify" ? (
           /* ═══ شاشة التحقق ═══ */
-          <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "40px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)", textAlign: "center" }}>
-            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>📧</div>
-            <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 10 }}>تحقق من بريدك</h2>
-            <p style={{ fontSize: 13, color: "#9A9AA0", lineHeight: 1.7, marginBottom: 24 }}>
+          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "40px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)", textAlign: "center" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>📧</div>
+            <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 10 }}>تحقق من بريدك</h2>
+            <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.7, marginBottom: 24 }}>
               أرسلنا رابط تأكيد إلى<br />
-              <span style={{ color: "#C6914C", fontWeight: 600 }}>{email}</span>
+              <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>{email}</span>
               <br />افتح البريد واضغط على الرابط للدخول
             </p>
-            <Link href="/login" style={{ display: "inline-block", fontSize: 14, fontWeight: 700, color: "#0A0A0C", background: "linear-gradient(135deg, #C6914C, #A6743A)", padding: "12px 28px", borderRadius: 10, textDecoration: "none" }}>
+            <Link href="/login" style={{ display: "inline-block", fontSize: 14, fontWeight: 700, color: "var(--bg-page)", background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", padding: "12px 28px", borderRadius: 10, textDecoration: "none" }}>
               الذهاب لتسجيل الدخول
             </Link>
-            <p style={{ fontSize: 12, color: "#3A3A42", marginTop: 20 }}>لم يصل البريد؟ تحقق من مجلد Spam</p>
+            <p style={{ fontSize: 12, color: "var(--border-1)", marginTop: 20 }}>لم يصل البريد؟ تحقق من مجلد Spam</p>
           </div>
         ) : (
           /* ═══ نموذج التسجيل ═══ */
-          <div style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)" }}>
-            <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 4, textAlign: "center" }}>إنشاء حساب جديد</h2>
-            <p style={{ fontSize: 13, color: "#5A5A62", textAlign: "center", marginBottom: 28 }}>ابدأ مجاناً — بدون بطاقة ائتمان</p>
+          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)" }}>
+            <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 4, textAlign: "center" }}>إنشاء حساب جديد</h2>
+            <p style={{ fontSize: 13, color: "var(--text-faint)", textAlign: "center", marginBottom: 28 }}>ابدأ مجاناً — بدون بطاقة ائتمان</p>
 
             <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
               {/* الاسم */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>الاسم الكامل</label>
+                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>الاسم الكامل</label>
                 <input
                   type="text"
                   value={name}
@@ -202,7 +202,7 @@ export default function Register() {
 
               {/* البريد */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>البريد الإلكتروني</label>
+                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>البريد الإلكتروني</label>
                 <input
                   type="email"
                   value={email}
@@ -216,7 +216,7 @@ export default function Register() {
 
               {/* كلمة المرور */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>كلمة المرور</label>
+                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>كلمة المرور</label>
                 <div style={{ position: "relative" }}>
                   <input
                     type={showPass ? "text" : "password"}
@@ -231,7 +231,7 @@ export default function Register() {
                   <button
                     type="button"
                     onClick={() => setShowPass(v => !v)}
-                    style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#5A5A62", display: "flex", alignItems: "center", padding: 0 }}
+                    style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", display: "flex", alignItems: "center", padding: 0 }}
                   >
                     {showPass ? (
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -243,9 +243,9 @@ export default function Register() {
                 {password.length > 0 && (
                   <div style={{ display: "flex", gap: 4, marginTop: 8 }}>
                     {[1,2,3,4].map(i => (
-                      <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: password.length >= i * 2 ? (password.length >= 8 ? "#4ADE80" : "#C6914C") : "#2A2A32", transition: "background 0.3s" }} />
+                      <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: password.length >= i * 2 ? (password.length >= 8 ? "var(--success)" : "var(--gold-2)") : "var(--bg-surface-3)", transition: "background 0.3s" }} />
                     ))}
-                    <span style={{ fontSize: 11, color: password.length >= 8 ? "#4ADE80" : "#C6914C", marginRight: 4, whiteSpace: "nowrap" }}>
+                    <span style={{ fontSize: 11, color: password.length >= 8 ? "var(--success)" : "var(--gold-2)", marginRight: 4, whiteSpace: "nowrap" }}>
                       {password.length >= 8 ? "قوية ✓" : password.length >= 4 ? "متوسطة" : "ضعيفة"}
                     </span>
                   </div>
@@ -254,9 +254,9 @@ export default function Register() {
 
               {/* رابط الملف الشخصي */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>
+                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>
                   رابط صفحتك الشخصية
-                  <span style={{ color: "#3A3A42", fontWeight: 400, marginRight: 6 }}>(يراه عملاؤك)</span>
+                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>(يراه عملاؤك)</span>
                 </label>
                 <div style={{ position: "relative" }}>
                   <input
@@ -269,35 +269,35 @@ export default function Register() {
                     dir="ltr"
                     style={{ paddingLeft: 44, paddingRight: 130 }}
                   />
-                  <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#5A5A62", pointerEvents: "none", whiteSpace: "nowrap" }}>
+                  <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "var(--text-faint)", pointerEvents: "none", whiteSpace: "nowrap" }}>
                     {siteUrl}/
                   </span>
                   {/* مؤشر الحالة */}
                   {slugStatus === "checking" && (
-                    <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, border: "2px solid rgba(198,145,76,0.3)", borderTopColor: "#C6914C", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, border: "2px solid var(--gold-bg-strong)", borderTopColor: "var(--gold-2)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
                   )}
                   {slugStatus === "available" && (
-                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#4ADE80", fontSize: 16 }}>✓</span>
+                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--success)", fontSize: 16 }}>✓</span>
                   )}
                   {(slugStatus === "taken" || slugStatus === "invalid") && (
-                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#F87171", fontSize: 16 }}>✕</span>
+                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--danger)", fontSize: 16 }}>✕</span>
                   )}
                 </div>
                 {slug && slugStatus !== "idle" && (
-                  <p style={{ fontSize: 11, marginTop: 5, color: slugStatus === "available" ? "#4ADE80" : slugStatus === "checking" ? "#9A9AA0" : "#F87171" }}>
+                  <p style={{ fontSize: 11, marginTop: 5, color: slugStatus === "available" ? "var(--success)" : slugStatus === "checking" ? "var(--text-soft)" : "var(--danger)" }}>
                     {slugStatus === "checking" ? "جاري الفحص..." : slugStatus === "available" ? `رابطك: ${siteUrl}/${slug}` : slugMsg}
                   </p>
                 )}
                 {slug && slugStatus === "idle" && (
-                  <p style={{ fontSize: 11, marginTop: 5, color: "#5A5A62" }}>{siteUrl}/{slug}</p>
+                  <p style={{ fontSize: 11, marginTop: 5, color: "var(--text-faint)" }}>{siteUrl}/{slug}</p>
                 )}
               </div>
 
               {/* رخصة فال (اختياري) */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "#9A9AA0", marginBottom: 7, fontWeight: 500 }}>
+                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>
                   رقم رخصة فال
-                  <span style={{ color: "#3A3A42", fontWeight: 400, marginRight: 6 }}>(اختياري)</span>
+                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>(اختياري)</span>
                 </label>
                 <input
                   type="text"
@@ -321,22 +321,22 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={loading}
-                style={{ width: "100%", padding: "15px", borderRadius: 14, background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, #C6914C, #A6743A)", border: "none", color: "#0A0A0C", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", transition: "all 0.3s", fontFamily: "'Tajawal', sans-serif", marginTop: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                style={{ width: "100%", padding: "15px", borderRadius: 14, background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", border: "none", color: "var(--bg-page)", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", transition: "all 0.3s", fontFamily: "'Tajawal', sans-serif", marginTop: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
               >
                 {loading ? (
                   <>
-                    <div style={{ width: 16, height: 16, border: "2px solid rgba(10,10,12,0.4)", borderTopColor: "#0A0A0C", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    <div style={{ width: 16, height: 16, border: "2px solid rgba(10,10,12,0.4)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
                     جاري إنشاء الحساب...
                   </>
                 ) : "إنشاء الحساب"}
               </button>
 
               {/* شروط */}
-              <p style={{ fontSize: 11, color: "#3A3A42", textAlign: "center", lineHeight: 1.6 }}>
+              <p style={{ fontSize: 11, color: "var(--border-1)", textAlign: "center", lineHeight: 1.6 }}>
                 بالتسجيل أنت توافق على{" "}
-                <span style={{ color: "#5A5A62" }}>شروط الاستخدام</span>
+                <span style={{ color: "var(--text-faint)" }}>شروط الاستخدام</span>
                 {" "}و{" "}
-                <span style={{ color: "#5A5A62" }}>سياسة الخصوصية</span>
+                <span style={{ color: "var(--text-faint)" }}>سياسة الخصوصية</span>
               </p>
             </form>
           </div>
@@ -344,12 +344,12 @@ export default function Register() {
 
         {/* رابط تسجيل الدخول */}
         <div style={{ textAlign: "center", marginTop: 20, display: "flex", justifyContent: "center", gap: 16 }}>
-          <Link href="/login" style={{ fontSize: 13, color: "#5A5A62", textDecoration: "none" }}>
-            عندك حساب؟ <span style={{ color: "#C6914C", fontWeight: 600 }}>سجّل الدخول</span>
+          <Link href="/login" style={{ fontSize: 13, color: "var(--text-faint)", textDecoration: "none" }}>
+            عندك حساب؟ <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>سجّل الدخول</span>
           </Link>
         </div>
         <div style={{ textAlign: "center", marginTop: 10 }}>
-          <Link href="/" style={{ fontSize: 12, color: "#3A3A42", textDecoration: "none" }}>← العودة للموقع</Link>
+          <Link href="/" style={{ fontSize: 12, color: "var(--border-1)", textDecoration: "none" }}>← العودة للموقع</Link>
         </div>
       </div>
     </div>

@@ -115,29 +115,29 @@ export async function GET(req: NextRequest) {
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Tajawal', Arial, sans-serif; color: #1a1a1a; background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; font-size: 14px; }
-    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #C6914C; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid var(--gold-2); }
     .brand { display: flex; align-items: center; gap: 12px; }
-    .logo-circle { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #C6914C, #8A5F2E); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 900; flex-shrink: 0; }
+    .logo-circle { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, var(--gold-2), var(--gold-4)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 900; flex-shrink: 0; }
     .brand-name { font-size: 20px; font-weight: 800; color: #1a1a1a; }
     .brand-sub { font-size: 12px; color: #888; margin-top: 2px; }
     .doc-info { text-align: left; }
-    .doc-type { font-size: 28px; font-weight: 900; color: #C6914C; }
+    .doc-type { font-size: 28px; font-weight: 900; color: var(--gold-2); }
     .doc-number { font-size: 13px; color: #666; margin-top: 4px; }
     .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
     .meta-box { background: #f8f8f8; border-radius: 12px; padding: 16px 20px; }
     .meta-label { font-size: 11px; color: #888; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
     .meta-value { font-size: 14px; color: #1a1a1a; font-weight: 600; line-height: 1.7; }
     .items-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-    .items-table th { background: #C6914C; color: #fff; font-weight: 700; font-size: 13px; padding: 12px 16px; text-align: right; }
+    .items-table th { background: var(--gold-2); color: #fff; font-weight: 700; font-size: 13px; padding: 12px 16px; text-align: right; }
     .items-table td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
     .items-table tr:last-child td { border-bottom: none; }
     .totals { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; margin-bottom: 32px; }
     .total-row { display: flex; gap: 40px; font-size: 13px; }
-    .total-row.grand { font-size: 16px; font-weight: 800; color: #C6914C; padding-top: 10px; border-top: 2px solid #C6914C; margin-top: 4px; }
+    .total-row.grand { font-size: 16px; font-weight: 800; color: var(--gold-2); padding-top: 10px; border-top: 2px solid var(--gold-2); margin-top: 4px; }
     .total-label { color: #666; min-width: 120px; text-align: right; }
     .total-value { min-width: 100px; text-align: left; font-weight: 600; }
     .notes-box { background: #fffbf5; border: 1px solid #f0e6d0; border-radius: 10px; padding: 16px 20px; margin-bottom: 32px; }
-    .notes-label { font-size: 11px; font-weight: 700; color: #C6914C; margin-bottom: 6px; }
+    .notes-label { font-size: 11px; font-weight: 700; color: var(--gold-2); margin-bottom: 6px; }
     .notes-text { font-size: 13px; color: #555; line-height: 1.7; white-space: pre-wrap; }
     .footer { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888; }
     .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; }
@@ -177,7 +177,7 @@ export async function GET(req: NextRequest) {
     <div class="meta-box">
       <div class="meta-label">${isInvoice ? "تاريخ الاستحقاق" : "صالح حتى"}</div>
       <div class="meta-value">${formatDate(isInvoice ? doc.due_date : doc.valid_until)}</div>
-      ${doc.status ? `<div style="margin-top:8px;"><span class="status-badge" style="background:rgba(198,145,76,0.1);color:#C6914C;">${h(doc.status)}</span></div>` : ""}
+      ${doc.status ? `<div style="margin-top:8px;"><span class="status-badge" style="background:var(--gold-bg);color:var(--gold-2);">${h(doc.status)}</span></div>` : ""}
     </div>
   </div>
 

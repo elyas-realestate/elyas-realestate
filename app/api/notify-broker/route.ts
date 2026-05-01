@@ -59,16 +59,16 @@ export async function POST(req: NextRequest) {
 <head>
 <meta charset="UTF-8">
 <style>
-  body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; direction: rtl; }
+  body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: var(--text-strong); margin: 0; padding: 20px; direction: rtl; }
   .card { background: #fff; border-radius: 12px; max-width: 520px; margin: 0 auto; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-  .header { background: linear-gradient(135deg, #C6914C, #8A5F2E); padding: 24px 28px; }
+  .header { background: linear-gradient(135deg, var(--gold-2), var(--gold-4)); padding: 24px 28px; }
   .header h1 { color: #fff; margin: 0; font-size: 18px; font-weight: 800; }
   .header p { color: rgba(255,255,255,0.7); margin: 6px 0 0; font-size: 13px; }
   .body { padding: 24px 28px; }
   .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
   .label { color: #888; font-size: 13px; }
   .value { color: #1a1a1a; font-size: 14px; font-weight: 600; }
-  .btn { display: inline-block; background: #C6914C; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-top: 20px; }
+  .btn { display: inline-block; background: var(--gold-2); color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-top: 20px; }
   .footer { background: #f9f9f9; padding: 14px 28px; font-size: 11px; color: #aaa; text-align: center; }
 </style>
 </head>

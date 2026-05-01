@@ -120,7 +120,7 @@ export default function RequestForm({ tenantId, accentColor, accentDark, bgCard,
       </div>
 
       {status === "error" && (
-        <p style={{ color: "#f87171", fontSize: 13, marginBottom: 16, textAlign: "center" }}>{errMsg}</p>
+        <p style={{ color: "var(--danger)", fontSize: 13, marginBottom: 16, textAlign: "center" }}>{errMsg}</p>
       )}
 
       <button

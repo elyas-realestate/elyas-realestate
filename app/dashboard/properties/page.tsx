@@ -71,17 +71,17 @@ export default function Properties() {
             onClick={() => exportToCSV(filtered, PROPERTIES_EXPORT_HEADERS, "عقارات")}
             disabled={filtered.length === 0}
             className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition text-sm"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#9A9AA0" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-soft)" }}
             title="تصدير إلى Excel / CSV"
           >
             <Download size={14} />
             تصدير
           </button>
-          <Link href="/dashboard/properties/smart-add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, rgba(198,145,76,0.15), rgba(168,93,255,0.08))', color:'#C6914C', border: '1px solid rgba(198,145,76,0.25)' }}>
+          <Link href="/dashboard/properties/smart-add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, var(--gold-bg-hover), rgba(168,93,255,0.08))', color:'var(--gold-2)', border: '1px solid rgba(198,145,76,0.25)' }}>
             <Sparkles size={15} />
             إضافة ذكية AI
           </Link>
-          <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
+          <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, var(--gold-2), var(--gold-3))', color:'var(--bg-page)' }}>
             <Plus size={16} />
             إضافة عقار
           </Link>
@@ -95,17 +95,17 @@ export default function Properties() {
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-4 text-right transition"
           style={{ background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.2)", cursor: "pointer" }}
         >
-          <AlertTriangle size={16} style={{ color: "#FACC15", flexShrink: 0 }} />
-          <span style={{ fontSize: 13, color: "#FACC15", fontWeight: 600 }}>
+          <AlertTriangle size={16} style={{ color: "var(--warning)", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "var(--warning)", fontWeight: 600 }}>
             {staleProperties.length} {staleProperties.length === 1 ? "عقار يحتاج" : "عقارات تحتاج"} تحديث إتاحة مع المالك
           </span>
-          <span style={{ fontSize: 12, color: "#9A9AA0", marginRight: "auto" }}>انقر للعرض ←</span>
+          <span style={{ fontSize: 12, color: "var(--text-soft)", marginRight: "auto" }}>انقر للعرض ←</span>
         </button>
       )}
 
       <div className="relative mb-4">
-        <Search size={18} className="absolute right-3 top-3.5" style={{ color:'#5A5A62' }} />
-        <input type="text" placeholder="ابحث بالاسم أو الحي أو الرمز..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-lg pr-10 pl-4 py-3 focus:outline-none text-sm" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }} />
+        <Search size={18} className="absolute right-3 top-3.5" style={{ color:'var(--text-faint)' }} />
+        <input type="text" placeholder="ابحث بالاسم أو الحي أو الرمز..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-lg pr-10 pl-4 py-3 focus:outline-none text-sm" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)', color:'var(--text-strong)' }} />
       </div>
 
       {/* ── فلتر نوع العرض ── */}
@@ -121,13 +121,13 @@ export default function Properties() {
               style={{
                 background: tab === "تحتاج متابعة"
                   ? (isActive ? "rgba(250,204,21,0.12)" : "rgba(250,204,21,0.04)")
-                  : (isActive ? "rgba(198,145,76,0.15)" : "#16161A"),
+                  : (isActive ? "var(--gold-bg-hover)" : "var(--bg-surface-1)"),
                 color: tab === "تحتاج متابعة"
-                  ? (isActive ? "#FACC15" : "#9A9AA0")
-                  : (isActive ? "#C6914C" : "#5A5A62"),
+                  ? (isActive ? "var(--warning)" : "var(--text-soft)")
+                  : (isActive ? "var(--gold-2)" : "var(--text-faint)"),
                 border: "1px solid " + (tab === "تحتاج متابعة"
                   ? (isActive ? "rgba(250,204,21,0.35)" : "rgba(250,204,21,0.1)")
-                  : (isActive ? "rgba(198,145,76,0.35)" : "rgba(198,145,76,0.08)")),
+                  : (isActive ? "rgba(198,145,76,0.35)" : "var(--gold-bg-soft)")),
                 cursor: "pointer",
               }}
             >
@@ -135,8 +135,8 @@ export default function Properties() {
               <span
                 className="text-xs font-bold rounded-full px-1.5 py-0.5"
                 style={{
-                  background: isActive ? "rgba(198,145,76,0.2)" : "rgba(90,90,98,0.15)",
-                  color: isActive ? "#C6914C" : "#5A5A62",
+                  background: isActive ? "var(--gold-bg-hover)" : "rgba(90,90,98,0.15)",
+                  color: isActive ? "var(--gold-2)" : "var(--text-faint)",
                   fontSize: 10,
                   minWidth: 20,
                   textAlign: "center",
@@ -152,7 +152,7 @@ export default function Properties() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-xl p-4" style={{ background:'#16161A', border:'1px solid rgba(193,141,74,0.08)' }}>
+            <div key={i} className="rounded-xl p-4" style={{ background:'var(--bg-surface-1)', border:'1px solid rgba(193,141,74,0.08)' }}>
               <div className="skeleton h-40 rounded-lg mb-3" />
               <div className="skeleton h-4 rounded w-3/4 mb-2" />
               <div className="skeleton h-3 rounded w-1/2" />
@@ -161,8 +161,8 @@ export default function Properties() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">
-          <p className="text-lg mb-4" style={{ color:'#9A9AA0' }}>لا توجد عقارات بعد</p>
-          <Link href="/dashboard/properties/add" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg no-underline font-bold transition text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)', color:'#0A0A0C' }}>
+          <p className="text-lg mb-4" style={{ color:'var(--text-soft)' }}>لا توجد عقارات بعد</p>
+          <Link href="/dashboard/properties/add" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg no-underline font-bold transition text-sm" style={{ background:'linear-gradient(135deg, var(--gold-2), var(--gold-3))', color:'var(--bg-page)' }}>
             <Plus size={16} /> أضف أول عقار
           </Link>
         </div>
@@ -183,7 +183,7 @@ export default function Properties() {
                   fontSize: 11, fontWeight: 700, cursor: "pointer",
                   fontFamily: "'Tajawal', sans-serif",
                   background: property.is_published ? "rgba(74,222,128,0.15)" : "rgba(90,90,98,0.25)",
-                  color: property.is_published ? "#4ADE80" : "#9A9AA0",
+                  color: property.is_published ? "var(--success)" : "var(--text-soft)",
                   backdropFilter: "blur(8px)",
                   transition: "all 0.25s",
                   opacity: toggling === property.id ? 0.5 : 1,
@@ -200,18 +200,18 @@ export default function Properties() {
               </button>
 
               {/* ── البطاقة ── */}
-              <Link href={"/dashboard/properties/" + property.id} className="block rounded-xl overflow-hidden no-underline transition" style={{ background:'#16161A', border:'1px solid ' + (property.is_published ? 'rgba(74,222,128,0.15)' : 'rgba(198,145,76,0.12)'), color:'#F5F5F5' }}>
-                <div className="h-44 flex items-center justify-center" style={{ background:'#1C1C22' }}>
+              <Link href={"/dashboard/properties/" + property.id} className="block rounded-xl overflow-hidden no-underline transition" style={{ background:'var(--bg-surface-1)', border:'1px solid ' + (property.is_published ? 'rgba(74,222,128,0.15)' : 'var(--gold-bg)'), color:'var(--text-strong)' }}>
+                <div className="h-44 flex items-center justify-center" style={{ background:'var(--bg-surface-2)' }}>
                   {(property.images?.[0] || property.main_image) ? (
                     <img src={property.images?.[0] || property.main_image} alt={property.title} className="w-full h-full object-cover" />
                   ) : (
-                    <p style={{ color:'#5A5A62', fontSize: 13 }}>لا توجد صورة</p>
+                    <p style={{ color:'var(--text-faint)', fontSize: 13 }}>لا توجد صورة</p>
                   )}
                 </div>
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs px-2 py-1 rounded" style={{ color:'#C6914C', background:'rgba(198,145,76,0.1)' }}>{property.code}</span>
-                    <span className="text-xs" style={{ color:'#5A5A62' }}>{property.offer_type}</span>
+                    <span className="text-xs px-2 py-1 rounded" style={{ color:'var(--gold-2)', background:'var(--gold-bg)' }}>{property.code}</span>
+                    <span className="text-xs" style={{ color:'var(--text-faint)' }}>{property.offer_type}</span>
                   </div>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h3 className="font-bold leading-snug" style={{ fontSize: 15 }}>{property.title}</h3>
@@ -219,9 +219,9 @@ export default function Properties() {
                       const avail = property.owner_confirmed_available;
                       const checkDate = property.owner_last_check ? new Date(property.owner_last_check) : null;
                       const isStale = checkDate ? Math.floor((Date.now() - checkDate.getTime()) / 86400000) > 7 : false;
-                      let dColor = "#9A9AA0"; let text = "لم يُتحقق";
-                      if (avail === true) { dColor = isStale ? "#FACC15" : "#4ADE80"; text = isStale ? "متاح (قديم)" : "متاح باعتراف"; }
-                      else if (avail === false) { dColor = "#F87171"; text = "غير متاح"; }
+                      let dColor = "var(--text-soft)"; let text = "لم يُتحقق";
+                      if (avail === true) { dColor = isStale ? "var(--warning)" : "var(--success)"; text = isStale ? "متاح (قديم)" : "متاح باعتراف"; }
+                      else if (avail === false) { dColor = "var(--danger)"; text = "غير متاح"; }
                       return (
                         <div className="flex items-center gap-1.5 flex-shrink-0" style={{ background: "rgba(255,255,255,0.03)", padding: "2px 6px", borderRadius: 6 }} title="حالة الاتاحة مع المالك">
                           <span style={{ width: 6, height: 6, borderRadius: "50%", background: dColor }} />
@@ -230,15 +230,15 @@ export default function Properties() {
                       );
                     })()}
                   </div>
-                  <div className="flex items-center gap-1 text-sm mb-3" style={{ color:'#9A9AA0', fontSize: 13 }}>
+                  <div className="flex items-center gap-1 text-sm mb-3" style={{ color:'var(--text-soft)', fontSize: 13 }}>
                     <MapPin size={13} />
                     <span>{property.district} — {property.city}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="font-bold flex items-center gap-1" style={{ color:'#C6914C', fontSize: 15 }}>
+                    <span className="font-bold flex items-center gap-1" style={{ color:'var(--gold-2)', fontSize: 15 }}>
                       {property.price?.toLocaleString("ar-SA")} <SARIcon size={12} color="accent" />
                     </span>
-                    <span className="text-xs" style={{ color:'#5A5A62' }}>{property.main_category}</span>
+                    <span className="text-xs" style={{ color:'var(--text-faint)' }}>{property.main_category}</span>
                   </div>
                 </div>
               </Link>

@@ -18,30 +18,30 @@ type Tab = "contracts" | "payments" | "maintenance";
 // ── status configs ──────────────────────────────────────────────────────────
 
 const CONTRACT_STATUS: Record<string, { label: string; color: string }> = {
-  active:    { label: "نشط",     color: "#4ADE80" },
-  expired:   { label: "منتهي",   color: "#94A3B8" },
-  cancelled: { label: "ملغي",    color: "#F87171" },
+  active:    { label: "نشط",     color: "var(--success)" },
+  expired:   { label: "منتهي",   color: "var(--text-muted)" },
+  cancelled: { label: "ملغي",    color: "var(--danger)" },
 };
 
 const PAYMENT_STATUS: Record<string, { label: string; color: string }> = {
-  pending:   { label: "معلق",     color: "#FACC15" },
-  paid:      { label: "مدفوع",   color: "#4ADE80" },
-  late:      { label: "متأخر",   color: "#F87171" },
-  cancelled: { label: "ملغي",    color: "#94A3B8" },
+  pending:   { label: "معلق",     color: "var(--warning)" },
+  paid:      { label: "مدفوع",   color: "var(--success)" },
+  late:      { label: "متأخر",   color: "var(--danger)" },
+  cancelled: { label: "ملغي",    color: "var(--text-muted)" },
 };
 
 const MAINTENANCE_PRIORITY: Record<string, { label: string; color: string }> = {
-  low:    { label: "منخفض",  color: "#4ADE80" },
-  medium: { label: "متوسط",  color: "#FACC15" },
+  low:    { label: "منخفض",  color: "var(--success)" },
+  medium: { label: "متوسط",  color: "var(--warning)" },
   high:   { label: "عالي",   color: "#F97316" },
-  urgent: { label: "عاجل",   color: "#F87171" },
+  urgent: { label: "عاجل",   color: "var(--danger)" },
 };
 
 const MAINTENANCE_STATUS: Record<string, { label: string; color: string }> = {
-  open:        { label: "مفتوح",       color: "#FACC15" },
-  in_progress: { label: "قيد التنفيذ", color: "#60A5FA" },
-  resolved:    { label: "محلول",       color: "#4ADE80" },
-  cancelled:   { label: "ملغي",        color: "#94A3B8" },
+  open:        { label: "مفتوح",       color: "var(--warning)" },
+  in_progress: { label: "قيد التنفيذ", color: "var(--info)" },
+  resolved:    { label: "محلول",       color: "var(--success)" },
+  cancelled:   { label: "ملغي",        color: "var(--text-muted)" },
 };
 
 // ── helpers ────────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ function ModalOverlay({ onClose, children }: { onClose: () => void; children: Re
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div style={{
-        background: "#16161A", border: "1px solid #2A2A35",
+        background: "var(--bg-surface-1)", border: "1px solid #2A2A35",
         borderRadius: 16, padding: 28, width: "100%", maxWidth: 520,
         maxHeight: "90vh", overflowY: "auto",
       }}>
@@ -215,7 +215,7 @@ export default function TenantPortalPage() {
   });
 
   const label = (text: string) => (
-    <label style={{ fontSize: 13, color: "#94A3B8", display: "block", marginBottom: 4 }}>{text}</label>
+    <label style={{ fontSize: 13, color: "var(--text-muted)", display: "block", marginBottom: 4 }}>{text}</label>
   );
 
   // ── render ──
@@ -225,7 +225,7 @@ export default function TenantPortalPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700, color: "#E2E8F0", margin: 0 }}>بوابة المستأجر</h1>
-          <p style={{ color: "#64748B", fontSize: 14, marginTop: 4 }}>إدارة العقود والدفعات وطلبات الصيانة</p>
+          <p style={{ color: "var(--text-ghost)", fontSize: 14, marginTop: 4 }}>إدارة العقود والدفعات وطلبات الصيانة</p>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           {tab === "contracts"   && <button onClick={() => setContractModal(true)} style={btnStyle()}><Plus size={15} /> عقد جديد</button>}
@@ -237,19 +237,19 @@ export default function TenantPortalPage() {
       {/* Stats row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 24 }}>
         {[
-          { icon: <FileText size={18} />, label: "عقود نشطة",     value: activeContracts, color: "#4ADE80" },
-          { icon: <CreditCard size={18} />, label: "دفعات معلقة", value: pendingPayments, color: "#FACC15" },
-          { icon: <AlertTriangle size={18} />, label: "متأخرة",    value: overduePayments, color: "#F87171" },
-          { icon: <Wrench size={18} />, label: "صيانة مفتوحة",    value: openMaintenance, color: "#60A5FA" },
+          { icon: <FileText size={18} />, label: "عقود نشطة",     value: activeContracts, color: "var(--success)" },
+          { icon: <CreditCard size={18} />, label: "دفعات معلقة", value: pendingPayments, color: "var(--warning)" },
+          { icon: <AlertTriangle size={18} />, label: "متأخرة",    value: overduePayments, color: "var(--danger)" },
+          { icon: <Wrench size={18} />, label: "صيانة مفتوحة",    value: openMaintenance, color: "var(--info)" },
         ].map(s => (
           <div key={s.label} style={{
-            background: "#16161A", border: "1px solid #2A2A35", borderRadius: 12,
+            background: "var(--bg-surface-1)", border: "1px solid #2A2A35", borderRadius: 12,
             padding: "16px 20px", display: "flex", alignItems: "center", gap: 14,
           }}>
             <div style={{ color: s.color, background: s.color + "18", borderRadius: 10, padding: 10 }}>{s.icon}</div>
             <div>
               <div style={{ fontSize: 22, fontWeight: 700, color: "#E2E8F0" }}>{s.value}</div>
-              <div style={{ fontSize: 13, color: "#64748B" }}>{s.label}</div>
+              <div style={{ fontSize: 13, color: "var(--text-ghost)" }}>{s.label}</div>
             </div>
           </div>
         ))}
@@ -266,8 +266,8 @@ export default function TenantPortalPage() {
             display: "flex", alignItems: "center", gap: 6,
             padding: "7px 18px", borderRadius: 8, fontSize: 14, fontWeight: 600,
             border: "none", cursor: "pointer",
-            background: tab === id ? "#C6914C" : "transparent",
-            color: tab === id ? "#0A0A0C" : "#94A3B8",
+            background: tab === id ? "var(--gold-2)" : "transparent",
+            color: tab === id ? "var(--bg-page)" : "var(--text-muted)",
           }}>
             {icon}{lbl}
           </button>
@@ -275,7 +275,7 @@ export default function TenantPortalPage() {
       </div>
 
       {loading ? (
-        <div style={{ color: "#64748B", padding: 40, textAlign: "center" }}>جاري التحميل…</div>
+        <div style={{ color: "var(--text-ghost)", padding: 40, textAlign: "center" }}>جاري التحميل…</div>
       ) : (
         <>
           {/* ── Contracts Tab ── */}
@@ -287,7 +287,7 @@ export default function TenantPortalPage() {
                 const prop   = properties.find(p => p.id === c.property_id);
                 return (
                   <div key={c.id} style={{
-                    background: "#16161A", border: "1px solid #2A2A35",
+                    background: "var(--bg-surface-1)", border: "1px solid #2A2A35",
                     borderRadius: 12, padding: "16px 20px",
                     display: "grid", gridTemplateColumns: "1fr auto", gap: 12,
                   }}>
@@ -295,22 +295,22 @@ export default function TenantPortalPage() {
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
                         <span style={{ color: "#E2E8F0", fontWeight: 700 }}>{c.title}</span>
                         <Badge cfg={CONTRACT_STATUS[c.status]} />
-                        <span style={{ fontSize: 12, color: "#64748B" }}>
+                        <span style={{ fontSize: 12, color: "var(--text-ghost)" }}>
                           {c.type === "rent" ? "إيجار" : c.type === "sale" ? "بيع" : "إدارة"}
                         </span>
                       </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 24px", color: "#94A3B8", fontSize: 13 }}>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 24px", color: "var(--text-muted)", fontSize: 13 }}>
                         {client && <span>العميل: <b style={{ color: "#CBD5E1" }}>{client.full_name}</b></span>}
                         {prop   && <span>العقار: <b style={{ color: "#CBD5E1" }}>{prop.title}</b></span>}
-                        {c.monthly_rent && <span>الإيجار الشهري: <b style={{ color: "#C6914C" }}>{fmt(c.monthly_rent)}</b></span>}
+                        {c.monthly_rent && <span>الإيجار الشهري: <b style={{ color: "var(--gold-2)" }}>{fmt(c.monthly_rent)}</b></span>}
                         {c.start_date && <span>من: {fmtDate(c.start_date)}</span>}
                         {c.end_date   && <span>إلى: {fmtDate(c.end_date)}</span>}
                       </div>
-                      {c.notes && <p style={{ color: "#64748B", fontSize: 13, marginTop: 6 }}>{c.notes}</p>}
+                      {c.notes && <p style={{ color: "var(--text-ghost)", fontSize: 13, marginTop: 6 }}>{c.notes}</p>}
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
                       <span style={{ fontSize: 12, color: "#475569" }}>{fmtDate(c.created_at)}</span>
-                      {c.total_value && <span style={{ color: "#C6914C", fontWeight: 700 }}>{fmt(c.total_value)}</span>}
+                      {c.total_value && <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>{fmt(c.total_value)}</span>}
                     </div>
                   </div>
                 );
@@ -328,17 +328,17 @@ export default function TenantPortalPage() {
                 const isLate   = p.status === "late" || (p.status === "pending" && new Date(p.due_date) < new Date());
                 return (
                   <div key={p.id} style={{
-                    background: "#16161A",
-                    border: `1px solid ${isLate ? "#F8717144" : "#2A2A35"}`,
+                    background: "var(--bg-surface-1)",
+                    border: `1px solid ${isLate ? "var(--danger)44" : "#2A2A35"}`,
                     borderRadius: 12, padding: "14px 20px",
                     display: "grid", gridTemplateColumns: "1fr auto", alignItems: "center", gap: 12,
                   }}>
                     <div>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-                        <span style={{ color: "#C6914C", fontWeight: 700, fontSize: 16 }}>{fmt(p.amount)}</span>
+                        <span style={{ color: "var(--gold-2)", fontWeight: 700, fontSize: 16 }}>{fmt(p.amount)}</span>
                         <Badge cfg={PAYMENT_STATUS[isLate && p.status === "pending" ? "late" : p.status]} />
                       </div>
-                      <div style={{ display: "flex", gap: 20, color: "#94A3B8", fontSize: 13 }}>
+                      <div style={{ display: "flex", gap: 20, color: "var(--text-muted)", fontSize: 13 }}>
                         {client   && <span>العميل: <b style={{ color: "#CBD5E1" }}>{client.full_name}</b></span>}
                         {contract && <span>العقد: <b style={{ color: "#CBD5E1" }}>{contract.title}</b></span>}
                         <span><Clock size={12} style={{ display: "inline", marginLeft: 4 }} />استحقاق: {fmtDate(p.due_date)}</span>
@@ -347,8 +347,8 @@ export default function TenantPortalPage() {
                     </div>
                     {p.status !== "paid" && p.status !== "cancelled" && (
                       <button onClick={() => markPaid(p.id)} style={{
-                        background: "#4ADE8022", color: "#4ADE80",
-                        border: "1px solid #4ADE8044", borderRadius: 8,
+                        background: "var(--success)22", color: "var(--success)",
+                        border: "1px solid var(--success)44", borderRadius: 8,
                         padding: "6px 14px", fontSize: 13, cursor: "pointer", fontWeight: 600,
                       }}>
                         تأكيد الدفع
@@ -369,7 +369,7 @@ export default function TenantPortalPage() {
                 const prop   = properties.find(p => p.id === m.property_id);
                 return (
                   <div key={m.id} style={{
-                    background: "#16161A", border: "1px solid #2A2A35",
+                    background: "var(--bg-surface-1)", border: "1px solid #2A2A35",
                     borderRadius: 12, padding: "16px 20px",
                   }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -379,24 +379,24 @@ export default function TenantPortalPage() {
                           <Badge cfg={MAINTENANCE_PRIORITY[m.priority]} />
                           <Badge cfg={MAINTENANCE_STATUS[m.status]} />
                         </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 20px", color: "#94A3B8", fontSize: 13 }}>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 20px", color: "var(--text-muted)", fontSize: 13 }}>
                           {client && <span>العميل: <b style={{ color: "#CBD5E1" }}>{client.full_name}</b></span>}
                           {prop   && <span>العقار: <b style={{ color: "#CBD5E1" }}>{prop.title}</b></span>}
-                          {m.cost && <span>التكلفة: <b style={{ color: "#C6914C" }}>{fmt(m.cost)}</b></span>}
+                          {m.cost && <span>التكلفة: <b style={{ color: "var(--gold-2)" }}>{fmt(m.cost)}</b></span>}
                           <span>{fmtDate(m.created_at)}</span>
                         </div>
-                        {m.description && <p style={{ color: "#64748B", fontSize: 13, marginTop: 6 }}>{m.description}</p>}
+                        {m.description && <p style={{ color: "var(--text-ghost)", fontSize: 13, marginTop: 6 }}>{m.description}</p>}
                       </div>
                       {/* Status changer */}
                       {m.status !== "resolved" && m.status !== "cancelled" && (
                         <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                           {m.status === "open" && (
-                            <button onClick={() => updateMaintStatus(m.id, "in_progress")} style={actionBtn("#60A5FA")}>بدء التنفيذ</button>
+                            <button onClick={() => updateMaintStatus(m.id, "in_progress")} style={actionBtn("var(--info)")}>بدء التنفيذ</button>
                           )}
                           {m.status === "in_progress" && (
-                            <button onClick={() => updateMaintStatus(m.id, "resolved")} style={actionBtn("#4ADE80")}>تم الحل</button>
+                            <button onClick={() => updateMaintStatus(m.id, "resolved")} style={actionBtn("var(--success)")}>تم الحل</button>
                           )}
-                          <button onClick={() => updateMaintStatus(m.id, "cancelled")} style={actionBtn("#F87171")}>إلغاء</button>
+                          <button onClick={() => updateMaintStatus(m.id, "cancelled")} style={actionBtn("var(--danger)")}>إلغاء</button>
                         </div>
                       )}
                     </div>
@@ -529,7 +529,7 @@ export default function TenantPortalPage() {
 function Empty({ label }: { label: string }) {
   return (
     <div style={{
-      background: "#16161A", border: "1px dashed #2A2A35",
+      background: "var(--bg-surface-1)", border: "1px dashed #2A2A35",
       borderRadius: 12, padding: 40, textAlign: "center", color: "#475569",
     }}>
       {label}
@@ -540,8 +540,8 @@ function Empty({ label }: { label: string }) {
 function btnStyle(width?: string, disabled?: boolean): React.CSSProperties {
   return {
     display: "flex", alignItems: "center", gap: 6, justifyContent: "center",
-    background: disabled ? "#2A2A35" : "#C6914C",
-    color: disabled ? "#475569" : "#0A0A0C",
+    background: disabled ? "#2A2A35" : "var(--gold-2)",
+    color: disabled ? "#475569" : "var(--bg-page)",
     border: "none", borderRadius: 10, padding: "9px 20px",
     fontSize: 14, fontWeight: 700, cursor: disabled ? "not-allowed" : "pointer",
     width: width || "auto",
@@ -557,7 +557,7 @@ function actionBtn(color: string): React.CSSProperties {
 
 function closeBtn(): React.CSSProperties {
   return {
-    background: "transparent", border: "none", color: "#64748B",
+    background: "transparent", border: "none", color: "var(--text-ghost)",
     cursor: "pointer", padding: 4, display: "flex",
   };
 }

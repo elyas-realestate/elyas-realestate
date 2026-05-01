@@ -49,7 +49,7 @@ export default function DashboardError({
         style={{
           fontSize: 22,
           fontWeight: 800,
-          color: "#F5F5F5",
+          color: "var(--text-strong)",
           marginBottom: 10,
           fontFamily: "'Noto Kufi Arabic', serif",
         }}
@@ -60,7 +60,7 @@ export default function DashboardError({
       <p
         style={{
           fontSize: 14,
-          color: "#9A9AA0",
+          color: "var(--text-soft)",
           lineHeight: 1.7,
           maxWidth: 400,
           marginBottom: 28,
@@ -76,8 +76,8 @@ export default function DashboardError({
           style={{
             padding: "12px 28px",
             borderRadius: 10,
-            background: "linear-gradient(135deg, #C6914C, #A6743A)",
-            color: "#0A0A0C",
+            background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+            color: "var(--bg-page)",
             fontWeight: 700,
             fontSize: 14,
             border: "none",
@@ -94,9 +94,9 @@ export default function DashboardError({
           style={{
             padding: "12px 28px",
             borderRadius: 10,
-            background: "rgba(198,145,76,0.08)",
-            border: "1px solid rgba(198,145,76,0.2)",
-            color: "#C6914C",
+            background: "var(--gold-bg-soft)",
+            border: "1px solid var(--gold-bg-hover)",
+            color: "var(--gold-2)",
             fontWeight: 600,
             fontSize: 14,
             cursor: "pointer",
@@ -113,7 +113,7 @@ export default function DashboardError({
         <p
           style={{
             fontSize: 11,
-            color: "#3A3A42",
+            color: "var(--border-1)",
             marginTop: 24,
           }}
         >

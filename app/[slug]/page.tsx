@@ -101,14 +101,14 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
     whatsapp:  s?.social_whatsapp  || "",
   };
 
-  const clrAccent      = s?.color_accent         || "#C6914C";
-  const clrAccentDark  = s?.color_accent_dark    || "#A6743A";
-  const clrBgPrimary   = s?.color_bg_primary     || "#0A0A0C";
-  const clrBgSecondary = s?.color_bg_secondary   || "#111114";
-  const clrBgCard      = s?.color_bg_card        || "#16161A";
-  const clrTextPrimary = s?.color_text_primary   || "#F5F5F5";
-  const clrTextSec     = s?.color_text_secondary || "#9A9AA0";
-  const clrTextMuted   = s?.color_text_muted     || "#5A5A62";
+  const clrAccent      = s?.color_accent         || "var(--gold-2)";
+  const clrAccentDark  = s?.color_accent_dark    || "var(--gold-3)";
+  const clrBgPrimary   = s?.color_bg_primary     || "var(--bg-page)";
+  const clrBgSecondary = s?.color_bg_secondary   || "var(--bg-deep)";
+  const clrBgCard      = s?.color_bg_card        || "var(--bg-surface-1)";
+  const clrTextPrimary = s?.color_text_primary   || "var(--text-strong)";
+  const clrTextSec     = s?.color_text_secondary || "var(--text-soft)";
+  const clrTextMuted   = s?.color_text_muted     || "var(--text-faint)";
   const fntHero        = s?.font_size_hero        || "clamp(2.2rem, 5vw, 3.8rem)";
   const fntSection     = s?.font_size_section_title || "clamp(1.6rem, 3vw, 2.4rem)";
   const fntBody        = s?.font_size_body        || "15px";
@@ -315,7 +315,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                     <div className="prop-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(300px, 1fr))", gap:22 }}>
                       {filtered.map((p: any) => (
                         <div key={p.id} className="card" style={{ overflow:"hidden", color:clrTextPrimary }}>
-                          <div style={{ height:210, overflow:"hidden", position:"relative", background:"#1C1C22" }}>
+                          <div style={{ height:210, overflow:"hidden", position:"relative", background:"var(--bg-surface-2)" }}>
                             {p.images?.[0]
                               ? <img src={p.images[0]} alt={p.title} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                               : <div style={{ display:"flex", alignItems:"center", justifyContent:"center", height:"100%", fontSize:36, color:clrTextMuted }}>{labels[type].emoji}</div>

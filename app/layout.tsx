@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#C6914C",
+  themeColor: "var(--gold-2)",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -65,6 +65,14 @@ export default function RootLayout({
       dir="rtl"
       className={`${notoKufi.variable} ${tajawal.variable} ${cairo.variable} h-full antialiased`}
     >
+      <head>
+        {/* تطبيق الثيم قبل أول render لتجنّب FOUC (وميض الألوان القديمة) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('wasit_theme');if(t==='cream'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <AnalyticsTracker />
         <I18nProvider>{children}</I18nProvider>

@@ -46,7 +46,7 @@ export default function PropertyPrintView() {
       `}</style>
 
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "2px solid #C6914C", paddingBottom: "20px", marginBottom: "30px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "2px solid var(--gold-2)", paddingBottom: "20px", marginBottom: "30px" }}>
         <div>
           <h2 style={{ margin: 0, fontWeight: 900, fontSize: "28px", color: "#111" }}>{brokerName}</h2>
           <p style={{ margin: "5px 0 0 0", color: "#666", fontSize: "14px" }}>
@@ -61,9 +61,9 @@ export default function PropertyPrintView() {
       {/* Title & Info */}
       <h1 style={{ fontSize: "24px", fontWeight: 800, marginBottom: "10px", lineHeight: "1.4" }}>{property.title}</h1>
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-        <span style={{ padding: "4px 12px", background: "#F5F5F5", borderRadius: "4px", fontSize: "14px", fontWeight: "bold" }}>{property.offer_type || "متاح"}</span>
-        <span style={{ padding: "4px 12px", background: "#F5F5F5", borderRadius: "4px", fontSize: "14px" }}>📍 {[property.district, property.city].filter(Boolean).join("، ")}</span>
-        {property.sub_category && <span style={{ padding: "4px 12px", background: "#F5F5F5", borderRadius: "4px", fontSize: "14px" }}>{property.sub_category}</span>}
+        <span style={{ padding: "4px 12px", background: "var(--text-strong)", borderRadius: "4px", fontSize: "14px", fontWeight: "bold" }}>{property.offer_type || "متاح"}</span>
+        <span style={{ padding: "4px 12px", background: "var(--text-strong)", borderRadius: "4px", fontSize: "14px" }}>📍 {[property.district, property.city].filter(Boolean).join("، ")}</span>
+        {property.sub_category && <span style={{ padding: "4px 12px", background: "var(--text-strong)", borderRadius: "4px", fontSize: "14px" }}>{property.sub_category}</span>}
       </div>
 
       {/* Hero Image */}
@@ -77,10 +77,10 @@ export default function PropertyPrintView() {
       <div style={{ display: "flex", justifyContent: "space-between", gap: "20px", marginBottom: "30px" }}>
         
         {/* Price Box */}
-        <div style={{ flex: "1", padding: "20px", border: "2px solid #C6914C", borderRadius: "8px", textAlign: "center" }}>
+        <div style={{ flex: "1", padding: "20px", border: "2px solid var(--gold-2)", borderRadius: "8px", textAlign: "center" }}>
           <p style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}>القيمة</p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
-            <span style={{ fontSize: "28px", fontWeight: 900, color: "#C6914C" }}>{price}</span>
+            <span style={{ fontSize: "28px", fontWeight: 900, color: "var(--gold-2)" }}>{price}</span>
             {property.price && <SARIcon size={18} color="accent" />}
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function PropertyPrintView() {
       {/* Description */}
       {property.description && (
         <div style={{ marginBottom: "40px" }}>
-          <h3 style={{ borderBottom: "1px solid #ddd", paddingBottom: "10px", color: "#C6914C", fontSize: "18px" }}>تفاصيل العقار</h3>
+          <h3 style={{ borderBottom: "1px solid #ddd", paddingBottom: "10px", color: "var(--gold-2)", fontSize: "18px" }}>تفاصيل العقار</h3>
           <p style={{ lineHeight: "1.8", fontSize: "14px", color: "#333", whiteSpace: "pre-line" }}>
             {property.description}
           </p>
@@ -121,7 +121,7 @@ export default function PropertyPrintView() {
         </div>
         <div style={{ textAlign: "left", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <p style={{ margin: "0 0 8px 0" }}>تم الإنشاء بواسطة <strong>استوديوهات منصة وسيط برو</strong></p>
-          <button className="no-print" onClick={() => window.print()} style={{ padding: "8px 16px", background: "#C6914C", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
+          <button className="no-print" onClick={() => window.print()} style={{ padding: "8px 16px", background: "var(--gold-2)", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
             طباعة المستند
           </button>
         </div>

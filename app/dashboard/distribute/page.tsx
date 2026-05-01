@@ -161,7 +161,7 @@ export default function DistributePage() {
   }
 
   if (loading) {
-    return <div className="p-6 text-center text-[#8A8A92]">…جارِ التحميل</div>;
+    return <div className="p-6 text-center text-[var(--text-soft)]">…جارِ التحميل</div>;
   }
 
   return (
@@ -170,10 +170,10 @@ export default function DistributePage() {
 
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Share2 className="h-6 w-6 text-[#C6914C]" />
+          <Share2 className="h-6 w-6 text-[var(--gold-2)]" />
           توزيع العقارات على المنصّات
         </h1>
-        <p className="text-sm text-[#8A8A92] mt-1">
+        <p className="text-sm text-[var(--text-soft)] mt-1">
           اختر عقاراً، انسخ النص المُحسّن لكل منصة، والصقه. سنتتبّع أين نشرت كل عقار.
         </p>
       </div>
@@ -182,12 +182,12 @@ export default function DistributePage() {
         {/* ── قائمة العقارات ── */}
         <div className="lg:col-span-1 space-y-3">
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5A5A62]" />
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-faint)]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="بحث بالعنوان، الكود، المدينة…"
-              className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.09)] rounded-xl pr-10 pl-3 py-2.5 text-white text-sm focus:border-[#C6914C] outline-none"
+              className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] rounded-xl pr-10 pl-3 py-2.5 text-white text-sm focus:border-[var(--gold-2)] outline-none"
             />
           </div>
 
@@ -201,12 +201,12 @@ export default function DistributePage() {
                   onClick={() => setSelectedId(p.id)}
                   className={`w-full text-right rounded-xl p-3 border transition ${
                     isSelected
-                      ? "bg-[#C6914C]/10 border-[#C6914C]/50"
-                      : "bg-[#16161A] border-[rgba(198,145,76,0.09)] hover:border-[#C6914C]/30"
+                      ? "bg-[var(--gold-2)]/10 border-[var(--gold-2)]/50"
+                      : "bg-[var(--bg-surface-1)] border-[var(--gold-bg-soft)] hover:border-[var(--gold-2)]/30"
                   }`}
                 >
                   <div className="text-white font-bold text-sm truncate">{p.title}</div>
-                  <div className="text-xs text-[#8A8A92] mt-1 flex items-center justify-between">
+                  <div className="text-xs text-[var(--text-soft)] mt-1 flex items-center justify-between">
                     <span>{p.city}{p.district ? ` — ${p.district}` : ""}</span>
                     {sum && sum.published_count > 0 && (
                       <span className="text-emerald-400 font-bold">
@@ -218,7 +218,7 @@ export default function DistributePage() {
               );
             })}
             {filtered.length === 0 && (
-              <div className="text-center text-[#5A5A62] text-sm py-8">لا توجد عقارات</div>
+              <div className="text-center text-[var(--text-faint)] text-sm py-8">لا توجد عقارات</div>
             )}
           </div>
         </div>
@@ -226,18 +226,18 @@ export default function DistributePage() {
         {/* ── تفاصيل التوزيع ── */}
         <div className="lg:col-span-2 space-y-3">
           {!selected ? (
-            <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-12 text-center">
-              <Share2 className="h-12 w-12 text-[#5A5A62] mx-auto mb-3" />
-              <p className="text-[#8A8A92]">اختر عقاراً من القائمة لعرض خيارات التوزيع</p>
+            <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-12 text-center">
+              <Share2 className="h-12 w-12 text-[var(--text-faint)] mx-auto mb-3" />
+              <p className="text-[var(--text-soft)]">اختر عقاراً من القائمة لعرض خيارات التوزيع</p>
             </div>
           ) : (
             <>
-              <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-5">
+              <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="text-xs text-[#8A8A92] mb-1">العقار المُحدّد</div>
+                    <div className="text-xs text-[var(--text-soft)] mb-1">العقار المُحدّد</div>
                     <div className="text-lg font-bold text-white">{selected.title}</div>
-                    <div className="text-sm text-[#8A8A92] mt-1">
+                    <div className="text-sm text-[var(--text-soft)] mt-1">
                       {selected.code && <span>#{selected.code} • </span>}
                       {selected.city}{selected.district ? ` — ${selected.district}` : ""}
                       {selected.price && ` • ${Number(selected.price).toLocaleString("ar-SA")} ر.س`}
@@ -245,7 +245,7 @@ export default function DistributePage() {
                   </div>
                   <button
                     onClick={loadAll}
-                    className="text-[#8A8A92] hover:text-white p-1"
+                    className="text-[var(--text-soft)] hover:text-white p-1"
                     title="تحديث"
                   >
                     <RefreshCw className="h-4 w-4" />
@@ -267,7 +267,7 @@ export default function DistributePage() {
                     className={`rounded-2xl border p-5 transition ${
                       isPublished
                         ? "bg-emerald-500/5 border-emerald-500/30"
-                        : "bg-[#16161A] border-[rgba(198,145,76,0.09)]"
+                        : "bg-[var(--bg-surface-1)] border-[var(--gold-bg-soft)]"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
@@ -276,7 +276,7 @@ export default function DistributePage() {
                         <div>
                           <div className="text-white font-bold">{portal.name}</div>
                           {portal.hint && (
-                            <div className="text-xs text-[#5A5A62]">{portal.hint}</div>
+                            <div className="text-xs text-[var(--text-faint)]">{portal.hint}</div>
                           )}
                         </div>
                       </div>
@@ -296,7 +296,7 @@ export default function DistributePage() {
                             href={portal.directUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] hover:bg-[#26262C] text-xs text-white transition"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] hover:bg-[#26262C] text-xs text-white transition"
                           >
                             <ExternalLink className="h-3 w-3" /> افتح المنصة
                           </a>
@@ -305,11 +305,11 @@ export default function DistributePage() {
                     </div>
 
                     <div className="relative">
-                      <pre className="bg-[#0E0E11] border border-[rgba(255,255,255,0.05)] rounded-xl p-3 text-xs text-[#d4d4d4] whitespace-pre-wrap font-mono max-h-48 overflow-y-auto leading-relaxed">
+                      <pre className="bg-[#0E0E11] border border-[var(--overlay-soft)] rounded-xl p-3 text-xs text-[#d4d4d4] whitespace-pre-wrap font-mono max-h-48 overflow-y-auto leading-relaxed">
                         {text}
                       </pre>
                       {portal.maxLength && (
-                        <div className="absolute bottom-2 left-2 text-[10px] text-[#5A5A62] bg-[#0E0E11]/80 px-2 py-0.5 rounded">
+                        <div className="absolute bottom-2 left-2 text-[10px] text-[var(--text-faint)] bg-[#0E0E11]/80 px-2 py-0.5 rounded">
                           {text.length} / {portal.maxLength}
                           {text.length > portal.maxLength && <span className="text-red-400"> ⚠️</span>}
                         </div>
@@ -319,7 +319,7 @@ export default function DistributePage() {
                     <div className="flex gap-2 mt-3 flex-wrap">
                       <button
                         onClick={() => copyText(portal.id)}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] hover:bg-[#26262C] rounded-lg text-sm text-white transition"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] hover:bg-[#26262C] rounded-lg text-sm text-white transition"
                       >
                         {isCopied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
                         نسخ النص
@@ -386,7 +386,7 @@ function MarkPublishedButton({ onMark }: { onMark: (url: string) => void }) {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="رابط الإعلان (اختياري)"
-        className="bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#C6914C] w-48"
+        className="bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[var(--gold-2)] w-48"
       />
       <button
         onClick={() => { onMark(url); setShow(false); setUrl(""); }}
@@ -396,7 +396,7 @@ function MarkPublishedButton({ onMark }: { onMark: (url: string) => void }) {
       </button>
       <button
         onClick={() => { setShow(false); setUrl(""); }}
-        className="px-3 py-1.5 text-[#8A8A92] hover:text-white text-sm transition"
+        className="px-3 py-1.5 text-[var(--text-soft)] hover:text-white text-sm transition"
       >
         ×
       </button>

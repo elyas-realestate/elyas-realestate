@@ -1,59 +1,202 @@
 @import "tailwindcss";
 
-/* ═══════════════════════════════════════════════
-   ألوان العلامة التجارية — Real Estate Platform
-═══════════════════════════════════════════════ */
-:root {
-  /* الألوان الأساسية */
-  --gold:          #10B981; /* تحويل الذهبي إلى زمردي (Emerald) ليتماشى مع روح MVP */
-  --gold-dark:     #059669;
-  --gold-light:    #34D399;
+/* ═══════════════════════════════════════════════════════════════
+   نظام الثيمات — Wasit Pro Design Tokens
+   - الافتراضي = الثيم الداكن (هوية المنصّة الأصلية)
+   - [data-theme="cream"] = الثيم العقاري الفخم الجديد
+   كل المتغيرات بأسماء معنوية (semantic) لتعمل في الثيمين بنفس الكود
+═══════════════════════════════════════════════════════════════ */
 
-  /* الخلفيات للمنصة (Power BI) */
-  --bg-main:       #020617; /* Slate 950 */
-  --bg-card:       #0F172A; /* Slate 900 */
-  --bg-elevated:   #1E293B; /* Slate 800 */
-  --bg-header:     rgba(2, 6, 23, 0.8);
+:root,
+[data-theme="dark"] {
+  /* ── الخلفيات ── */
+  --bg-page:       #0A0A0C;   /* الصفحة الرئيسية */
+  --bg-deep:       #0F0F12;   /* أعمق */
+  --bg-surface-1:  #16161A;   /* البطاقات */
+  --bg-surface-2:  #1C1C22;   /* البطاقات البديلة */
+  --bg-surface-3:  #2A2A32;   /* الحقول الداخلية */
+  --bg-elevated:   #3A3A42;   /* العلوي */
 
-  /* الحدود */
-  --border:        rgba(16, 185, 129, 0.12); /* Emerald border */
-  --border-hover:  rgba(16, 185, 129, 0.28);
-  --border-active: rgba(16, 185, 129, 0.5);
+  /* ── الحدود ── */
+  --border-1:      #3A3A42;
+  --border-2:      #2A2A32;
+  --border-soft:   rgba(255,255,255,0.06);
+  --border-hover:  rgba(255,255,255,0.12);
 
-  /* النصوص */
-  --text-primary:   #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted:     #64748B;
+  /* ── النصوص ── */
+  --text-strong:    #F5F5F5;
+  --text-primary:   #F4F4F5;
+  --text-on-dark:   #E4E4E7;
+  --text-secondary: #D4D4D8;
+  --text-muted:     #A1A1AA;
+  --text-soft:      #9A9AA0;
+  --text-ghost:     #71717A;
+  --text-faint:     #5A5A62;
+  --text-disabled:  #52525B;
 
-  /* الحالات */
-  --success:  #34D399;
-  --warning:  #FBBF24;
-  --error:    #F87171;
-  --info:     #38BDF8;
+  /* ── الذهبي (هوية وسيط برو — لا يتغيّر) ── */
+  --gold-1:        #E8B86D;   /* primary */
+  --gold-2:        #C6914C;   /* secondary */
+  --gold-3:        #A6743A;   /* deep */
+  --gold-4:        #8A5F2E;
+  --gold-bg:       rgba(198,145,76,0.12);
+  --gold-bg-soft:  rgba(198,145,76,0.08);
+  --gold-bg-hover: rgba(198,145,76,0.20);
+  --gold-bg-strong:rgba(198,145,76,0.30);
 
-  /* الظلال */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
-  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.5);
-  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.5);
-  --shadow-gold: 0 4px 20px rgba(16, 185, 129, 0.2);
+  /* ── الحالات ── */
+  --success:       #4ADE80;
+  --success-bg:    rgba(74,222,128,0.10);
+  --success-2:     #34D399;
+  --success-3:     #10B981;
+  --success-4:     #16A34A;
 
-  /* التحولات */
+  --warning:       #FACC15;
+  --warning-bg:    rgba(250,204,21,0.10);
+  --warning-2:     #FBBF24;
+
+  --danger:        #F87171;
+  --danger-bg:     rgba(248,113,113,0.10);
+
+  --info:          #60A5FA;
+  --info-bg:       rgba(96,165,250,0.10);
+  --info-2:        #38BDF8;
+  --info-3:        #2563EB;
+
+  --purple-ai:     #A78BFA;
+  --purple-bg:     rgba(167,139,250,0.10);
+  --purple-2:      #7C3AED;
+
+  --whatsapp:      #25D366;
+
+  /* ── overlays عامة ── */
+  --overlay-soft:  rgba(255,255,255,0.05);
+  --overlay-mid:   rgba(255,255,255,0.08);
+  --overlay-strong:rgba(255,255,255,0.12);
+
+  /* ── ظلال ── */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:   0 4px 6px -1px rgba(0,0,0,0.5);
+  --shadow-lg:   0 10px 15px -3px rgba(0,0,0,0.5);
+  --shadow-gold: 0 4px 20px rgba(198,145,76,0.20);
+
+  /* ── تحوّلات ── */
   --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+
+  /* ── legacy aliases (للتوافق مع الكود القديم) ── */
+  --gold:          var(--gold-1);
+  --gold-dark:     var(--gold-2);
+  --gold-light:    #34D399;
+  --bg-main:       var(--bg-page);
+  --bg-card:       var(--bg-surface-1);
+  --bg-elevated-l: var(--bg-elevated);
+  --bg-header:     rgba(10,10,12,0.80);
+  --border:        rgba(198,145,76,0.12);
+  --error:         var(--danger);
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   الثيم الكريمي العقاري الفخم
+   مستوحى من Sotheby's, Compass, Christie's
+═══════════════════════════════════════════════════════════════ */
+
+[data-theme="cream"] {
+  /* ── الخلفيات ── */
+  --bg-page:       #FAF7F2;
+  --bg-deep:       #F0EBE0;
+  --bg-surface-1:  #FFFFFF;
+  --bg-surface-2:  #FAF7F2;
+  --bg-surface-3:  #F5F0E8;
+  --bg-elevated:   #E5DFD0;
+
+  /* ── الحدود ── */
+  --border-1:      #E5DFD0;
+  --border-2:      #EFE9DD;
+  --border-soft:   rgba(0,0,0,0.06);
+  --border-hover:  rgba(0,0,0,0.12);
+
+  /* ── النصوص ── */
+  --text-strong:    #1A1206;
+  --text-primary:   #1A1206;
+  --text-on-dark:   #2A2218;
+  --text-secondary: #3A3022;
+  --text-muted:     #5A5044;
+  --text-soft:      #6A6055;
+  --text-ghost:     #9A9080;
+  --text-faint:     #A89E92;
+  --text-disabled:  #BDB4A6;
+
+  /* ── الذهبي (نفس قيم الداكن — هوية ثابتة) ── */
+  --gold-1:        #E8B86D;
+  --gold-2:        #C6914C;
+  --gold-3:        #A6743A;
+  --gold-4:        #8A5F2E;
+  --gold-bg:       rgba(198,145,76,0.10);
+  --gold-bg-soft:  rgba(198,145,76,0.06);
+  --gold-bg-hover: rgba(198,145,76,0.18);
+  --gold-bg-strong:rgba(198,145,76,0.28);
+
+  /* ── الحالات (أعمق للقراءة على خلفية فاتحة) ── */
+  --success:       #16A34A;
+  --success-bg:    rgba(22,163,74,0.08);
+  --success-2:     #15803D;
+  --success-3:     #16A34A;
+  --success-4:     #15803D;
+
+  --warning:       #D97706;
+  --warning-bg:    rgba(217,119,6,0.08);
+  --warning-2:     #B45309;
+
+  --danger:        #DC2626;
+  --danger-bg:     rgba(220,38,38,0.08);
+
+  --info:          #2563EB;
+  --info-bg:       rgba(37,99,235,0.08);
+  --info-2:        #1D4ED8;
+  --info-3:        #1E40AF;
+
+  --purple-ai:     #7C3AED;
+  --purple-bg:     rgba(124,58,237,0.08);
+  --purple-2:      #6D28D9;
+
+  --whatsapp:      #128C7E;
+
+  /* ── overlays ── */
+  --overlay-soft:  rgba(0,0,0,0.04);
+  --overlay-mid:   rgba(0,0,0,0.06);
+  --overlay-strong:rgba(0,0,0,0.10);
+
+  /* ── ظلال (ناعمة) ── */
+  --shadow-sm:   0 1px 3px rgba(26,18,6,0.06);
+  --shadow-md:   0 4px 6px -1px rgba(26,18,6,0.10);
+  --shadow-lg:   0 10px 25px -5px rgba(26,18,6,0.12);
+  --shadow-gold: 0 4px 20px rgba(198,145,76,0.25);
+
+  /* ── legacy aliases ── */
+  --gold:          var(--gold-1);
+  --gold-dark:     var(--gold-2);
+  --gold-light:    #D9A85F;
+  --bg-main:       var(--bg-page);
+  --bg-card:       var(--bg-surface-1);
+  --bg-header:     rgba(250,247,242,0.85);
+  --border:        rgba(198,145,76,0.18);
+  --error:         var(--danger);
+}
+
+/* ═══════════════════════════════════════════════════════════════
    الخلفية والنص الافتراضي
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 body {
-  background: var(--bg-main);
+  background: var(--bg-page);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    الخطوط
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 .font-kufi {
   font-family: 'Noto Kufi Arabic', serif;
 }
@@ -67,19 +210,19 @@ body {
   font-family: var(--font-tajawal), 'Tajawal', 'Arial', sans-serif;
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    Scrollbar مخصصة
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar          { width: 5px; height: 5px; }
-::-webkit-scrollbar-track    { background: var(--bg-main); }
-::-webkit-scrollbar-thumb    { background: rgba(193,141,74,0.2); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(193,141,74,0.4); }
+::-webkit-scrollbar-track    { background: var(--bg-page); }
+::-webkit-scrollbar-thumb    { background: rgba(198,145,74,0.25); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(198,145,74,0.45); }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    تأثيرات الكروت — بطاقات لوحة التحكم
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 .card-luxury {
-  background: var(--bg-card);
+  background: var(--bg-surface-1);
   border: 1px solid var(--border);
   border-radius: 14px;
   transition: var(--transition);
@@ -90,11 +233,11 @@ body {
   transform: translateY(-1px);
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    أزرار — البريق الذهبي
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 .btn-gold {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
   color: #0A0A0C;
   font-weight: 700;
   border: none;
@@ -104,243 +247,7 @@ body {
   font-family: 'Tajawal', sans-serif;
 }
 .btn-gold:hover {
-  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  background: linear-gradient(135deg, #F0C480, var(--gold-1));
   box-shadow: var(--shadow-gold);
   transform: translateY(-1px);
-}
-.btn-gold:active  { transform: translateY(0); }
-
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: 'Tajawal', sans-serif;
-}
-.btn-ghost:hover {
-  border-color: var(--border-hover);
-  color: var(--gold);
-  background: rgba(193,141,74,0.05);
-}
-
-/* ═══════════════════════════════════════════════
-   حقول الإدخال
-═══════════════════════════════════════════════ */
-.input-luxury {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  border-radius: 10px;
-  transition: var(--transition);
-  font-family: 'Tajawal', sans-serif;
-  outline: none;
-}
-.input-luxury:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(193,141,74,0.1);
-}
-.input-luxury::placeholder { color: var(--text-muted); }
-
-/* ═══════════════════════════════════════════════
-   شارات الحالة
-═══════════════════════════════════════════════ */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* ═══════════════════════════════════════════════
-   حركة الظهور التدريجي
-═══════════════════════════════════════════════ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-.fade-up { animation: fadeUp 0.35s cubic-bezier(0.16,1,0.3,1) both; }
-
-@keyframes pulse-gold {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.5; }
-}
-.pulse-gold { animation: pulse-gold 1.8s ease-in-out infinite; }
-
-/* ═══════════════════════════════════════════════
-   Skeleton Loading
-═══════════════════════════════════════════════ */
-@keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
-}
-.skeleton {
-  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-elevated) 50%, var(--bg-card) 75%);
-  background-size: 800px 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8px;
-}
-
-/* ═══════════════════════════════════════════════
-   جدول فاخر
-═══════════════════════════════════════════════ */
-.table-luxury th {
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-}
-.table-luxury td {
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(193,141,74,0.05);
-  transition: var(--transition);
-}
-.table-luxury tr:hover td {
-  background: rgba(193,141,74,0.03);
-}
-
-/* ═══════════════════════════════════════════════
-   عناصر عامة
-═══════════════════════════════════════════════ */
-a { text-decoration: none; }
-* { box-sizing: border-box; }
-
-/* إخفاء مؤشر التحديد من Tailwind إذا كان مخالفاً للتصميم */
-[class~="focus:ring-blue-500"] { --tw-ring-color: rgba(193,141,74,0.4) !important; }
-[class~="border-blue-500"]     { border-color: var(--gold) !important; }
-
-/* ═══════════════════════════════════════════════
-   كروت إحصائية — hero stat cards
-═══════════════════════════════════════════════ */
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px;
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 80px; height: 80px;
-  border-radius: 0 16px 0 80px;
-  opacity: 0.04;
-  background: var(--gold);
-  transition: var(--transition);
-}
-.stat-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-gold);
-  transform: translateY(-2px);
-}
-.stat-card:hover::before { opacity: 0.08; }
-
-/* ═══════════════════════════════════════════════
-   Hero Banner — بطاقة الترحيب
-═══════════════════════════════════════════════ */
-.hero-banner {
-  background: linear-gradient(135deg, #1A1208 0%, #0F0D0A 50%, #0A0A0C 100%);
-  border: 1px solid rgba(198,145,76,0.2);
-  border-radius: 20px;
-  padding: 28px 32px;
-  position: relative;
-  overflow: hidden;
-}
-.hero-banner::after {
-  content: '';
-  position: absolute;
-  top: -40px; left: -40px;
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(198,145,76,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* ═══════════════════════════════════════════════
-   شارة الحالة — status pill
-═══════════════════════════════════════════════ */
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: var(--font-tajawal), 'Tajawal', sans-serif;
-}
-.status-pill.green  { background: rgba(74,222,128,0.1);  color: #4ADE80; }
-.status-pill.gold   { background: rgba(198,145,76,0.12); color: #C6914C; }
-.status-pill.red    { background: rgba(248,113,113,0.1); color: #F87171; }
-.status-pill.purple { background: rgba(167,139,250,0.1); color: #A78BFA; }
-.status-pill.gray   { background: rgba(90,90,98,0.2);    color: #9A9AA0; }
-
-/* ═══════════════════════════════════════════════
-   قسم العنوان — section header
-═══════════════════════════════════════════════ */
-.section-title {
-  font-family: var(--font-cairo), 'Cairo', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--text-primary);
-  letter-spacing: -0.3px;
-}
-.section-subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-/* ═══════════════════════════════════════════════
-   أزرار الإجراء السريع — quick action
-═══════════════════════════════════════════════ */
-.quick-action {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: rgba(198,145,76,0.04);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  transition: var(--transition);
-  text-decoration: none;
-  cursor: pointer;
-}
-.quick-action:hover {
-  background: rgba(198,145,76,0.08);
-  border-color: var(--border-hover);
-  color: var(--gold);
-  transform: translateY(-1px);
-}
-
-/* ═══════════════════════════════════════════════
-   خط فاصل مع نص — divider label
-═══════════════════════════════════════════════ */
-.divider-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 16px 0 10px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-.divider-label::before, .divider-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
 }

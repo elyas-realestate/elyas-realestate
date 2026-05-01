@@ -250,19 +250,19 @@ export default function FactoryTab({
       ?.name || mid;
 
   const selectClass =
-    "w-full bg-[#1C1C22] rounded-lg px-4 py-3 focus:outline-none text-sm border";
+    "w-full bg-[var(--bg-surface-2)] rounded-lg px-4 py-3 focus:outline-none text-sm border";
   const labelClass = (has: boolean) =>
-    "block text-sm mb-2 " + (showErrors && !has ? "text-red-400" : "text-[#9A9AA0]");
+    "block text-sm mb-2 " + (showErrors && !has ? "text-red-400" : "text-[var(--text-soft)]");
   const borderClass = (has: boolean) =>
     showErrors && !has
       ? "border-red-500"
-      : "border-[rgba(198,145,76,0.15)] focus:border-[#C6914C]";
+      : "border-[var(--gold-bg-hover)] focus:border-[var(--gold-2)]";
 
   return (
     <div>
       <div className="mb-6">
         <h3 className="text-xl font-bold mb-2">مصنع المحتوى</h3>
-        <p className="text-[#9A9AA0] text-sm">
+        <p className="text-[var(--text-soft)] text-sm">
           أضف طلبات المحتوى للقائمة ثم انتجها دفعة واحدة — تُحفظ تلقائياً
           كمسودات
         </p>
@@ -271,20 +271,20 @@ export default function FactoryTab({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ─── Sidebar: Content Request Form ─── */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 space-y-4">
-            <h4 className="font-bold text-[#C6914C] text-sm">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 space-y-4">
+            <h4 className="font-bold text-[var(--gold-2)] text-sm">
               إضافة طلب محتوى
             </h4>
 
             {/* Property */}
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">
-                العقار <span className="text-[#5A5A62]">(اختياري)</span>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">
+                العقار <span className="text-[var(--text-faint)]">(اختياري)</span>
               </label>
               <select
                 value={selectedProperty}
                 onChange={(e) => setSelectedProperty(e.target.value)}
-                className={`${selectClass} border-[rgba(198,145,76,0.15)] focus:border-[#C6914C]`}
+                className={`${selectClass} border-[var(--gold-bg-hover)] focus:border-[var(--gold-2)]`}
               >
                 <option value="">محتوى عام — بدون عقار محدد</option>
                 {properties.map((p) => (
@@ -395,13 +395,13 @@ export default function FactoryTab({
 
             {/* Post count */}
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">
+              <label className="block text-sm text-[var(--text-soft)] mb-2">
                 عدد المنشورات
               </label>
               <select
                 value={postCount}
                 onChange={(e) => setPostCount(e.target.value)}
-                className={`${selectClass} border-[rgba(198,145,76,0.15)] focus:border-[#C6914C]`}
+                className={`${selectClass} border-[var(--gold-bg-hover)] focus:border-[var(--gold-2)]`}
               >
                 {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
                   <option key={n} value={String(n)}>
@@ -431,38 +431,38 @@ export default function FactoryTab({
 
           <button
             onClick={addToQueue}
-            className="w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 bg-[#2A2A32] hover:bg-[#2A2A32] text-white"
+            className="w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 bg-[var(--bg-surface-3)] hover:bg-[var(--bg-surface-3)] text-white"
           >
             <Plus size={18} /> إضافة للقائمة
           </button>
 
           {/* Queue */}
           {queue.length > 0 && (
-            <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 space-y-3">
+            <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 space-y-3">
               <h4 className="font-bold text-sm">
                 قائمة المحتوى ({queue.length} طلب — {totalPosts} منشور)
               </h4>
               {queue.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-[#1C1C22] rounded-lg p-3 flex items-start justify-between gap-3"
+                  className="bg-[var(--bg-surface-2)] rounded-lg p-3 flex items-start justify-between gap-3"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs bg-[rgba(198,145,76,0.1)] text-[#C6914C] px-2 py-0.5 rounded">
+                      <span className="text-xs bg-[var(--gold-bg)] text-[var(--gold-2)] px-2 py-0.5 rounded">
                         {item.platform}
                       </span>
-                      <span className="text-xs bg-[#2A2A32] text-gray-300 px-2 py-0.5 rounded">
+                      <span className="text-xs bg-[var(--bg-surface-3)] text-gray-300 px-2 py-0.5 rounded">
                         {item.contentFormat}
                       </span>
-                      <span className="text-xs text-[#5A5A62]">
+                      <span className="text-xs text-[var(--text-faint)]">
                         {item.postCount} منشور
                       </span>
                     </div>
-                    <p className="text-xs text-[#9A9AA0] mt-1 truncate">
+                    <p className="text-xs text-[var(--text-soft)] mt-1 truncate">
                       {item.propertyLabel} — {item.contentGoal}
                     </p>
-                    <p className="text-xs text-[#5A5A62] mt-0.5">
+                    <p className="text-xs text-[var(--text-faint)] mt-0.5">
                       {modes.find((m) => m.id === item.mode)?.name} •{" "}
                       {modelName(item.provider, item.model)}
                       {item.mode !== "single"
@@ -472,7 +472,7 @@ export default function FactoryTab({
                   </div>
                   <button
                     onClick={() => removeFromQueue(item.id)}
-                    className="text-[#5A5A62] hover:text-red-400 flex-shrink-0"
+                    className="text-[var(--text-faint)] hover:text-red-400 flex-shrink-0"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -484,8 +484,8 @@ export default function FactoryTab({
                 className={
                   "w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 " +
                   (generating
-                    ? "bg-[#2A2A32] text-[#9A9AA0]"
-                    : "bg-[#C6914C] hover:bg-[#A6743A] text-white")
+                    ? "bg-[var(--bg-surface-3)] text-[var(--text-soft)]"
+                    : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white")
                 }
               >
                 {generating ? (
@@ -507,8 +507,8 @@ export default function FactoryTab({
         <div className="lg:col-span-2">
           {resultGroups.length === 0 && !generating && queue.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Factory size={48} className="text-[#3A3A42] mb-4" />
-              <p className="text-[#5A5A62]">
+              <Factory size={48} className="text-[var(--border-1)] mb-4" />
+              <p className="text-[var(--text-faint)]">
                 أضف طلبات المحتوى للقائمة ثم اضغط &quot;إنتاج الكل&quot;
               </p>
             </div>
@@ -518,7 +518,7 @@ export default function FactoryTab({
             !generating && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <div className="text-6xl mb-4">📋</div>
-                <p className="text-[#9A9AA0] font-bold text-lg">
+                <p className="text-[var(--text-soft)] font-bold text-lg">
                   {queue.length} طلب — {totalPosts} منشور
                 </p>
               </div>
@@ -527,17 +527,17 @@ export default function FactoryTab({
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <Loader2
                 size={56}
-                className="text-[#C6914C] animate-spin mb-6"
+                className="text-[var(--gold-2)] animate-spin mb-6"
               />
               <p className="text-white font-bold text-lg mb-2">
                 جاري إنتاج المحتوى...
               </p>
-              <p className="text-[#9A9AA0]">
+              <p className="text-[var(--text-soft)]">
                 الطلب {progress.current} من {progress.total}
               </p>
-              <div className="w-64 bg-[#1C1C22] rounded-full h-2 mt-4">
+              <div className="w-64 bg-[var(--bg-surface-2)] rounded-full h-2 mt-4">
                 <div
-                  className="bg-[#C6914C] h-2 rounded-full transition-all duration-500"
+                  className="bg-[var(--gold-2)] h-2 rounded-full transition-all duration-500"
                   style={{
                     width:
                       (progress.current / progress.total) * 100 + "%",
@@ -559,17 +559,17 @@ export default function FactoryTab({
               {resultGroups.map((group, gIdx) => (
                 <div
                   key={gIdx}
-                  className="border border-[rgba(198,145,76,0.12)] rounded-xl overflow-hidden"
+                  className="border border-[var(--gold-bg)] rounded-xl overflow-hidden"
                 >
-                  <div className="px-5 py-3 bg-[#16161A] border-b border-[rgba(198,145,76,0.12)] flex items-center justify-between flex-wrap gap-2">
+                  <div className="px-5 py-3 bg-[var(--bg-surface-1)] border-b border-[var(--gold-bg)] flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs bg-[rgba(198,145,76,0.1)] text-[#C6914C] px-2 py-1 rounded">
+                      <span className="text-xs bg-[var(--gold-bg)] text-[var(--gold-2)] px-2 py-1 rounded">
                         {group.queueItem.platform}
                       </span>
-                      <span className="text-xs text-[#9A9AA0]">
+                      <span className="text-xs text-[var(--text-soft)]">
                         {group.queueItem.contentFormat}
                       </span>
-                      <span className="text-xs text-[#5A5A62]">
+                      <span className="text-xs text-[var(--text-faint)]">
                         {modelName(
                           group.queueItem.provider,
                           group.queueItem.model
@@ -594,7 +594,7 @@ export default function FactoryTab({
                   {group.queueItem.mode === "compare" && group.posts2 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-gray-800">
                       <div>
-                        <div className="px-4 py-2 bg-gray-800/50 text-xs text-center font-bold text-[#9A9AA0]">
+                        <div className="px-4 py-2 bg-gray-800/50 text-xs text-center font-bold text-[var(--text-soft)]">
                           {modelName(
                             group.queueItem.provider,
                             group.queueItem.model
@@ -606,7 +606,7 @@ export default function FactoryTab({
                             return (
                               <div key={pIdx} className="p-4">
                                 <div className="flex justify-between mb-2">
-                                  <span className="text-xs text-[#5A5A62]">
+                                  <span className="text-xs text-[var(--text-faint)]">
                                     منشور {pIdx + 1}
                                   </span>
                                   <button
@@ -618,7 +618,7 @@ export default function FactoryTab({
                                         نُسخ ✓
                                       </span>
                                     ) : (
-                                      <span className="text-[#5A5A62] hover:text-white">
+                                      <span className="text-[var(--text-faint)] hover:text-white">
                                         نسخ
                                       </span>
                                     )}
@@ -633,7 +633,7 @@ export default function FactoryTab({
                         </div>
                       </div>
                       <div>
-                        <div className="px-4 py-2 bg-gray-800/50 text-xs text-center font-bold text-[#9A9AA0]">
+                        <div className="px-4 py-2 bg-gray-800/50 text-xs text-center font-bold text-[var(--text-soft)]">
                           {modelName(
                             group.queueItem.provider2,
                             group.queueItem.model2
@@ -645,7 +645,7 @@ export default function FactoryTab({
                             return (
                               <div key={pIdx} className="p-4">
                                 <div className="flex justify-between mb-2">
-                                  <span className="text-xs text-[#5A5A62]">
+                                  <span className="text-xs text-[var(--text-faint)]">
                                     منشور {pIdx + 1}
                                   </span>
                                   <button
@@ -657,7 +657,7 @@ export default function FactoryTab({
                                         نُسخ ✓
                                       </span>
                                     ) : (
-                                      <span className="text-[#5A5A62] hover:text-white">
+                                      <span className="text-[var(--text-faint)] hover:text-white">
                                         نسخ
                                       </span>
                                     )}
@@ -675,11 +675,11 @@ export default function FactoryTab({
                   ) : (
                     <div className="divide-y divide-gray-800">
                       {group.draft && (
-                        <div className="p-4 bg-yellow-900/10 border-b border-[rgba(198,145,76,0.12)]">
+                        <div className="p-4 bg-yellow-900/10 border-b border-[var(--gold-bg)]">
                           <p className="text-xs text-yellow-400 mb-2">
                             المسودة الأولى (قبل المراجعة):
                           </p>
-                          <p className="text-[#9A9AA0] text-xs leading-relaxed whitespace-pre-wrap line-clamp-3">
+                          <p className="text-[var(--text-soft)] text-xs leading-relaxed whitespace-pre-wrap line-clamp-3">
                             {group.draft}
                           </p>
                         </div>
@@ -689,10 +689,10 @@ export default function FactoryTab({
                         return (
                           <div
                             key={pIdx}
-                            className="p-4 hover:bg-[#16161A]/50"
+                            className="p-4 hover:bg-[var(--bg-surface-1)]/50"
                           >
                             <div className="flex justify-between mb-2">
-                              <span className="text-xs text-[#5A5A62]">
+                              <span className="text-xs text-[var(--text-faint)]">
                                 منشور {pIdx + 1}
                               </span>
                               <button
@@ -704,7 +704,7 @@ export default function FactoryTab({
                                     نُسخ ✓
                                   </span>
                                 ) : (
-                                  <span className="text-[#5A5A62] hover:text-white">
+                                  <span className="text-[var(--text-faint)] hover:text-white">
                                     نسخ
                                   </span>
                                 )}

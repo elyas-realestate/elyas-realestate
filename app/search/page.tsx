@@ -35,7 +35,7 @@ const PRICE_RANGES = [
 ];
 
 // ── Property Card ─────────────────────────────────────────────────────────────
-function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
+function PropertyCard({ p, accent = "var(--gold-2)" }: { p: any; accent?: string }) {
   const img   = p.images?.[0] || p.main_image || null;
   const price = fmtPrice(p.price);
 
@@ -43,13 +43,13 @@ function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
     <div
       className="group rounded-2xl overflow-hidden transition-all"
       style={{
-        background: "#16161A",
-        border: "1px solid rgba(198,145,76,0.1)",
+        background: "var(--bg-surface-1)",
+        border: "1px solid var(--gold-bg)",
         cursor: "default",
       }}
     >
       {/* Image */}
-      <div style={{ height: 200, position: "relative", background: "#1C1C22", overflow: "hidden" }}>
+      <div style={{ height: 200, position: "relative", background: "var(--bg-surface-2)", overflow: "hidden" }}>
         {img ? (
           <img src={img} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s", }} className="group-hover:scale-105" />
         ) : (
@@ -59,7 +59,7 @@ function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
         {p.offer_type && (
           <span style={{
             position: "absolute", top: 12, right: 12,
-            background: accent, color: "#0A0A0C",
+            background: accent, color: "var(--bg-page)",
             fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 7,
           }}>{p.offer_type}</span>
         )}
@@ -81,12 +81,12 @@ function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
 
       {/* Content */}
       <div style={{ padding: "16px 18px 18px" }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#E5E5E5", marginBottom: 6, lineHeight: 1.4 }}
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 6, lineHeight: 1.4 }}
           className="line-clamp-2">
           {p.title || "بدون عنوان"}
         </h3>
 
-        <p style={{ fontSize: 12, color: "#5A5A62", marginBottom: 12, display: "flex", alignItems: "center", gap: 4 }}>
+        <p style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 12, display: "flex", alignItems: "center", gap: 4 }}>
           <MapPin size={11} style={{ color: accent, flexShrink: 0 }} />
           {[p.district, p.city].filter(Boolean).join("، ") || "—"}
         </p>
@@ -94,17 +94,17 @@ function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
         {/* Specs */}
         <div className="flex gap-3 flex-wrap" style={{ marginBottom: 14, paddingBottom: 14, borderBottom: "1px solid rgba(198,145,76,0.07)" }}>
           {p.rooms && (
-            <span style={{ fontSize: 12, color: "#9A9AA0", display: "flex", alignItems: "center", gap: 3 }}>
-              <Bed size={12} style={{ color: "#5A5A62" }} /> {p.rooms} غرف
+            <span style={{ fontSize: 12, color: "var(--text-soft)", display: "flex", alignItems: "center", gap: 3 }}>
+              <Bed size={12} style={{ color: "var(--text-faint)" }} /> {p.rooms} غرف
             </span>
           )}
           {p.land_area && (
-            <span style={{ fontSize: 12, color: "#9A9AA0", display: "flex", alignItems: "center", gap: 3 }}>
-              <Maximize2 size={12} style={{ color: "#5A5A62" }} /> {p.land_area} م²
+            <span style={{ fontSize: 12, color: "var(--text-soft)", display: "flex", alignItems: "center", gap: 3 }}>
+              <Maximize2 size={12} style={{ color: "var(--text-faint)" }} /> {p.land_area} م²
             </span>
           )}
           {p.sub_category && (
-            <span style={{ fontSize: 11, color: "#5A5A62", background: "rgba(198,145,76,0.06)", padding: "2px 8px", borderRadius: 6 }}>
+            <span style={{ fontSize: 11, color: "var(--text-faint)", background: "var(--gold-bg-soft)", padding: "2px 8px", borderRadius: 6 }}>
               {p.sub_category}
             </span>
           )}
@@ -115,15 +115,15 @@ function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
           {price ? (
             <p style={{ fontSize: 18, fontWeight: 800, color: accent, fontFamily: "Cairo, sans-serif" }}>{price}</p>
           ) : (
-            <p style={{ fontSize: 13, color: "#5A5A62" }}>السعر عند التواصل</p>
+            <p style={{ fontSize: 13, color: "var(--text-faint)" }}>السعر عند التواصل</p>
           )}
           <div style={{ display: "flex", gap: 6 }}>
             {p.contact_phone && (
               <a href={`tel:${p.contact_phone}`}
                 style={{
                   width: 32, height: 32, borderRadius: 9,
-                  background: "rgba(198,145,76,0.06)",
-                  border: "1px solid rgba(198,145,76,0.15)",
+                  background: "var(--gold-bg-soft)",
+                  border: "1px solid var(--gold-bg-hover)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   color: accent, textDecoration: "none",
                 }}>
@@ -134,8 +134,8 @@ function PropertyCard({ p, accent = "#C6914C" }: { p: any; accent?: string }) {
               <a href={p.location_url} target="_blank" rel="noopener noreferrer"
                 style={{
                   width: 32, height: 32, borderRadius: 9,
-                  background: "rgba(198,145,76,0.06)",
-                  border: "1px solid rgba(198,145,76,0.15)",
+                  background: "var(--gold-bg-soft)",
+                  border: "1px solid var(--gold-bg-hover)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   color: accent, textDecoration: "none",
                 }}>
@@ -220,41 +220,41 @@ export default function SearchPage() {
   }
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "#0A0A0C", color: "#F5F5F5" }}>
+    <div dir="rtl" style={{ minHeight: "100vh", background: "var(--bg-page)", color: "var(--text-strong)" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap');
         * { font-family: 'Tajawal', sans-serif; }
         .font-cairo { font-family: 'Cairo', sans-serif; }
         .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-        input[type=range]::-webkit-slider-thumb { background:#C6914C; }
-        input[type=range]::-webkit-slider-runnable-track { background:rgba(198,145,76,0.2); }
+        input[type=range]::-webkit-slider-thumb { background:var(--gold-2); }
+        input[type=range]::-webkit-slider-runnable-track { background:var(--gold-bg-hover); }
       `}</style>
 
       {/* ── Header ── */}
       <header style={{
         position: "sticky", top: 0, zIndex: 40,
         background: "rgba(10,10,12,0.95)", backdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(198,145,76,0.1)",
+        borderBottom: "1px solid var(--gold-bg)",
         padding: "0 24px", height: 60,
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{
             width: 34, height: 34, borderRadius: 9,
-            background: "linear-gradient(135deg,#C6914C,#8A5F2E)",
+            background: "linear-gradient(135deg,var(--gold-2),var(--gold-4))",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 15, fontWeight: 900, color: "#0A0A0C", fontFamily: "Cairo,sans-serif",
+            fontSize: 15, fontWeight: 900, color: "var(--bg-page)", fontFamily: "Cairo,sans-serif",
           }}>و</div>
           <div>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5", lineHeight: 1.2 }}>{brokerName}</p>
-            <p style={{ fontSize: 10, color: "#C6914C" }}>البحث عن عقار</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text-strong)", lineHeight: 1.2 }}>{brokerName}</p>
+            <p style={{ fontSize: 10, color: "var(--gold-2)" }}>البحث عن عقار</p>
           </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <Link href="/mortgage" style={{ fontSize: 12, color: "#5A5A62", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}>
+          <Link href="/mortgage" style={{ fontSize: 12, color: "var(--text-faint)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg-soft)" }}>
             <Calculator size={13} /> حاسبة التمويل
           </Link>
-          <Link href="/dashboard" style={{ fontSize: 12, color: "#5A5A62", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.08)" }}>
+          <Link href="/dashboard" style={{ fontSize: 12, color: "var(--text-faint)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, padding: "6px 10px", borderRadius: 8, background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg-soft)" }}>
             لوحة التحكم
           </Link>
         </div>
@@ -262,34 +262,34 @@ export default function SearchPage() {
 
       {/* ── Hero Search ── */}
       <div style={{
-        background: "linear-gradient(180deg, #1A1208 0%, #0A0A0C 100%)",
+        background: "linear-gradient(180deg, #1A1208 0%, var(--bg-page) 100%)",
         padding: "48px 24px 36px",
-        borderBottom: "1px solid rgba(198,145,76,0.08)",
+        borderBottom: "1px solid var(--gold-bg-soft)",
       }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <h1 className="font-cairo" style={{ fontSize: "clamp(22px,4vw,32px)", fontWeight: 900, textAlign: "center", marginBottom: 8, lineHeight: 1.3 }}>
             ابحث عن عقارك المثالي
           </h1>
-          <p style={{ fontSize: 14, color: "#5A5A62", textAlign: "center", marginBottom: 24 }}>
+          <p style={{ fontSize: 14, color: "var(--text-faint)", textAlign: "center", marginBottom: 24 }}>
             {properties.length} عقار متاح — فلتر وابحث بسهولة
           </p>
 
           {/* Search bar */}
           <div style={{ position: "relative", marginBottom: 16 }}>
-            <Search size={18} style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", color: "#5A5A62" }} />
+            <Search size={18} style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)" }} />
             <input
               type="text" value={query} onChange={e => setQuery(e.target.value)}
               placeholder="ابحث بالاسم أو الحي أو المدينة..."
               style={{
-                width: "100%", background: "#16161A",
-                border: "1px solid rgba(198,145,76,0.2)",
+                width: "100%", background: "var(--bg-surface-1)",
+                border: "1px solid var(--gold-bg-hover)",
                 borderRadius: 14, padding: "14px 50px 14px 16px",
-                fontSize: 14, color: "#F5F5F5", outline: "none",
+                fontSize: 14, color: "var(--text-strong)", outline: "none",
                 boxSizing: "border-box",
               }}
             />
             {query && (
-              <button onClick={() => setQuery("")} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#5A5A62", cursor: "pointer" }}>
+              <button onClick={() => setQuery("")} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer" }}>
                 <X size={16} />
               </button>
             )}
@@ -301,9 +301,9 @@ export default function SearchPage() {
               <button key={t} onClick={() => setOfferType(t)}
                 style={{
                   padding: "8px 18px", borderRadius: 20, fontSize: 13, fontWeight: 600,
-                  background: offerType === t ? "#C6914C" : "rgba(198,145,76,0.06)",
-                  color: offerType === t ? "#0A0A0C" : "#9A9AA0",
-                  border: "1px solid " + (offerType === t ? "#C6914C" : "rgba(198,145,76,0.12)"),
+                  background: offerType === t ? "var(--gold-2)" : "var(--gold-bg-soft)",
+                  color: offerType === t ? "var(--bg-page)" : "var(--text-soft)",
+                  border: "1px solid " + (offerType === t ? "var(--gold-2)" : "var(--gold-bg)"),
                   cursor: "pointer", transition: "all 0.2s",
                 }}>
                 {t}
@@ -319,25 +319,25 @@ export default function SearchPage() {
         {/* Sidebar filters — desktop */}
         {showFilters && (
           <aside style={{ position: "sticky", top: 76 }}>
-            <div className="rounded-2xl p-5 space-y-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.1)" }}>
+            <div className="rounded-2xl p-5 space-y-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <h3 style={{ fontSize: 13, fontWeight: 700 }}>الفلاتر</h3>
                 {hasFilters && (
-                  <button onClick={clearFilters} style={{ fontSize: 11, color: "#F87171", background: "none", border: "none", cursor: "pointer" }}>مسح الكل</button>
+                  <button onClick={clearFilters} style={{ fontSize: 11, color: "var(--danger)", background: "none", border: "none", cursor: "pointer" }}>مسح الكل</button>
                 )}
               </div>
 
               {/* Category */}
               <div>
-                <p style={{ fontSize: 11, color: "#5A5A62", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>التصنيف</p>
+                <p style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>التصنيف</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {CATEGORIES.map(c => (
                     <button key={c} onClick={() => setCategory(c)}
                       style={{
                         textAlign: "right", padding: "8px 12px", borderRadius: 10, fontSize: 13,
-                        background: category === c ? "rgba(198,145,76,0.12)" : "transparent",
-                        color: category === c ? "#C6914C" : "#9A9AA0",
-                        border: "1px solid " + (category === c ? "rgba(198,145,76,0.3)" : "transparent"),
+                        background: category === c ? "var(--gold-bg)" : "transparent",
+                        color: category === c ? "var(--gold-2)" : "var(--text-soft)",
+                        border: "1px solid " + (category === c ? "var(--gold-bg-strong)" : "transparent"),
                         cursor: "pointer", fontWeight: category === c ? 600 : 400,
                       }}>
                       {c}
@@ -348,9 +348,9 @@ export default function SearchPage() {
 
               {/* City */}
               <div>
-                <p style={{ fontSize: 11, color: "#5A5A62", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>المدينة</p>
+                <p style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>المدينة</p>
                 <select value={city} onChange={e => setCity(e.target.value)}
-                  style={{ width: "100%", background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", borderRadius: 10, padding: "10px 12px", fontSize: 13, color: "#F5F5F5", outline: "none" }}>
+                  style={{ width: "100%", background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", borderRadius: 10, padding: "10px 12px", fontSize: 13, color: "var(--text-strong)", outline: "none" }}>
                   <option value="">جميع المدن</option>
                   {cities.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -358,15 +358,15 @@ export default function SearchPage() {
 
               {/* Price range */}
               <div>
-                <p style={{ fontSize: 11, color: "#5A5A62", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>نطاق السعر</p>
+                <p style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>نطاق السعر</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {PRICE_RANGES.map((r, i) => (
                     <button key={i} onClick={() => setPriceRange(i)}
                       style={{
                         textAlign: "right", padding: "8px 12px", borderRadius: 10, fontSize: 12,
-                        background: priceRange === i ? "rgba(198,145,76,0.12)" : "transparent",
-                        color: priceRange === i ? "#C6914C" : "#9A9AA0",
-                        border: "1px solid " + (priceRange === i ? "rgba(198,145,76,0.3)" : "transparent"),
+                        background: priceRange === i ? "var(--gold-bg)" : "transparent",
+                        color: priceRange === i ? "var(--gold-2)" : "var(--text-soft)",
+                        border: "1px solid " + (priceRange === i ? "var(--gold-bg-strong)" : "transparent"),
                         cursor: "pointer", fontWeight: priceRange === i ? 600 : 400,
                       }}>
                       {r.label}
@@ -377,15 +377,15 @@ export default function SearchPage() {
 
               {/* Rooms */}
               <div>
-                <p style={{ fontSize: 11, color: "#5A5A62", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>الغرف (الحد الأدنى)</p>
+                <p style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, marginBottom: 8, letterSpacing: 1 }}>الغرف (الحد الأدنى)</p>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   {[0, 1, 2, 3, 4, 5].map(n => (
                     <button key={n} onClick={() => setMinRooms(n)}
                       style={{
                         width: 36, height: 36, borderRadius: 10, fontSize: 13,
-                        background: minRooms === n ? "rgba(198,145,76,0.15)" : "#1C1C22",
-                        color: minRooms === n ? "#C6914C" : "#5A5A62",
-                        border: "1px solid " + (minRooms === n ? "rgba(198,145,76,0.4)" : "rgba(198,145,76,0.08)"),
+                        background: minRooms === n ? "var(--gold-bg-hover)" : "var(--bg-surface-2)",
+                        color: minRooms === n ? "var(--gold-2)" : "var(--text-faint)",
+                        border: "1px solid " + (minRooms === n ? "rgba(198,145,76,0.4)" : "var(--gold-bg-soft)"),
                         cursor: "pointer", fontWeight: 700,
                       }}>
                       {n === 0 ? "الكل" : n + "+"}
@@ -406,24 +406,24 @@ export default function SearchPage() {
                 style={{
                   display: "flex", alignItems: "center", gap: 7,
                   padding: "9px 16px", borderRadius: 12, fontSize: 13, fontWeight: 600,
-                  background: showFilters ? "rgba(198,145,76,0.12)" : "#16161A",
-                  color: showFilters ? "#C6914C" : "#9A9AA0",
-                  border: "1px solid " + (showFilters ? "rgba(198,145,76,0.3)" : "rgba(198,145,76,0.1)"),
+                  background: showFilters ? "var(--gold-bg)" : "var(--bg-surface-1)",
+                  color: showFilters ? "var(--gold-2)" : "var(--text-soft)",
+                  border: "1px solid " + (showFilters ? "var(--gold-bg-strong)" : "var(--gold-bg)"),
                   cursor: "pointer",
                 }}>
                 <SlidersHorizontal size={14} />
                 فلاتر
-                {hasFilters && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#C6914C", display: "inline-block" }} />}
+                {hasFilters && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold-2)", display: "inline-block" }} />}
               </button>
 
               {hasFilters && (
                 <button onClick={clearFilters}
-                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#F87171", background: "none", border: "none", cursor: "pointer" }}>
+                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--danger)", background: "none", border: "none", cursor: "pointer" }}>
                   <X size={12} /> مسح الفلاتر
                 </button>
               )}
 
-              <p style={{ fontSize: 13, color: "#5A5A62" }}>
+              <p style={{ fontSize: 13, color: "var(--text-faint)" }}>
                 {filtered.length} نتيجة
               </p>
             </div>
@@ -432,14 +432,14 @@ export default function SearchPage() {
             <div style={{ position: "relative" }}>
               <select value={sort} onChange={e => setSort(e.target.value)}
                 style={{
-                  appearance: "none", background: "#16161A",
-                  border: "1px solid rgba(198,145,76,0.1)",
+                  appearance: "none", background: "var(--bg-surface-1)",
+                  border: "1px solid var(--gold-bg)",
                   borderRadius: 12, padding: "9px 36px 9px 14px",
-                  fontSize: 13, color: "#9A9AA0", outline: "none", cursor: "pointer",
+                  fontSize: 13, color: "var(--text-soft)", outline: "none", cursor: "pointer",
                 }}>
                 {SORT_OPTIONS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
               </select>
-              <ArrowUpDown size={13} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#5A5A62", pointerEvents: "none" }} />
+              <ArrowUpDown size={13} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)", pointerEvents: "none" }} />
             </div>
           </div>
 
@@ -447,28 +447,28 @@ export default function SearchPage() {
           {hasFilters && (
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
               {offerType !== "الكل" && (
-                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "rgba(198,145,76,0.1)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
-                  {offerType} <button onClick={() => setOfferType("الكل")} style={{ background: "none", border: "none", color: "#C6914C", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
+                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", gap: 4 }}>
+                  {offerType} <button onClick={() => setOfferType("الكل")} style={{ background: "none", border: "none", color: "var(--gold-2)", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
                 </span>
               )}
               {category !== "الكل" && (
-                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "rgba(198,145,76,0.1)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
-                  {category} <button onClick={() => setCategory("الكل")} style={{ background: "none", border: "none", color: "#C6914C", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
+                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", gap: 4 }}>
+                  {category} <button onClick={() => setCategory("الكل")} style={{ background: "none", border: "none", color: "var(--gold-2)", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
                 </span>
               )}
               {city && (
-                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "rgba(198,145,76,0.1)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
-                  {city} <button onClick={() => setCity("")} style={{ background: "none", border: "none", color: "#C6914C", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
+                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", gap: 4 }}>
+                  {city} <button onClick={() => setCity("")} style={{ background: "none", border: "none", color: "var(--gold-2)", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
                 </span>
               )}
               {priceRange !== 0 && (
-                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "rgba(198,145,76,0.1)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
-                  {PRICE_RANGES[priceRange].label} <button onClick={() => setPriceRange(0)} style={{ background: "none", border: "none", color: "#C6914C", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
+                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", gap: 4 }}>
+                  {PRICE_RANGES[priceRange].label} <button onClick={() => setPriceRange(0)} style={{ background: "none", border: "none", color: "var(--gold-2)", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
                 </span>
               )}
               {minRooms > 0 && (
-                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "rgba(198,145,76,0.1)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", gap: 4 }}>
-                  {minRooms}+ غرف <button onClick={() => setMinRooms(0)} style={{ background: "none", border: "none", color: "#C6914C", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
+                <span style={{ fontSize: 11, padding: "4px 10px", borderRadius: 20, background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", gap: 4 }}>
+                  {minRooms}+ غرف <button onClick={() => setMinRooms(0)} style={{ background: "none", border: "none", color: "var(--gold-2)", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
                 </span>
               )}
             </div>
@@ -478,16 +478,16 @@ export default function SearchPage() {
           {loading ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} style={{ height: 340, borderRadius: 16, background: "#16161A", animation: "pulse 2s infinite" }} />
+                <div key={i} style={{ height: 340, borderRadius: 16, background: "var(--bg-surface-1)", animation: "pulse 2s infinite" }} />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div style={{ textAlign: "center", padding: "80px 20px" }}>
-              <Home size={48} style={{ color: "rgba(198,145,76,0.2)", margin: "0 auto 16px", display: "block" }} />
-              <p style={{ fontSize: 16, color: "#5A5A62", marginBottom: 8 }}>لا توجد نتائج</p>
+              <Home size={48} style={{ color: "var(--gold-bg-hover)", margin: "0 auto 16px", display: "block" }} />
+              <p style={{ fontSize: 16, color: "var(--text-faint)", marginBottom: 8 }}>لا توجد نتائج</p>
               <p style={{ fontSize: 13, color: "#3A3A44" }}>جرّب تغيير الفلاتر أو البحث بكلمات مختلفة</p>
               {hasFilters && (
-                <button onClick={clearFilters} style={{ marginTop: 16, padding: "10px 24px", borderRadius: 12, background: "rgba(198,145,76,0.1)", border: "1px solid rgba(198,145,76,0.2)", color: "#C6914C", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                <button onClick={clearFilters} style={{ marginTop: 16, padding: "10px 24px", borderRadius: 12, background: "var(--gold-bg)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                   مسح الفلاتر
                 </button>
               )}

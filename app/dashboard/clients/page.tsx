@@ -15,11 +15,11 @@ const emptyForm = { full_name: "", phone: "", category: "", city: "", district: 
 
 // ── Category config ──────────────────────────────────────────────────────
 const CAT_CFG: Record<string, { color: string; bg: string; dot: string }> = {
-  "مشتري":      { color: "#4ADE80", bg: "rgba(74,222,128,0.1)",  dot: "#4ADE80"  },
-  "مستثمر":     { color: "#A78BFA", bg: "rgba(167,139,250,0.1)", dot: "#A78BFA"  },
-  "مالك":       { color: "#C6914C", bg: "rgba(198,145,76,0.1)",  dot: "#C6914C"  },
-  "مستأجر":     { color: "#FACC15", bg: "rgba(250,204,21,0.1)",  dot: "#FACC15"  },
-  "وسيط عقاري": { color: "#38BDF8", bg: "rgba(56,189,248,0.1)",  dot: "#38BDF8"  },
+  "مشتري":      { color: "var(--success)", bg: "rgba(74,222,128,0.1)",  dot: "var(--success)"  },
+  "مستثمر":     { color: "var(--purple-ai)", bg: "rgba(167,139,250,0.1)", dot: "var(--purple-ai)"  },
+  "مالك":       { color: "var(--gold-2)", bg: "var(--gold-bg)",  dot: "var(--gold-2)"  },
+  "مستأجر":     { color: "var(--warning)", bg: "rgba(250,204,21,0.1)",  dot: "var(--warning)"  },
+  "وسيط عقاري": { color: "var(--info-2)", bg: "rgba(56,189,248,0.1)",  dot: "var(--info-2)"  },
 };
 
 // ── Lead score (0–100) ───────────────────────────────────────────────────
@@ -36,18 +36,18 @@ function leadScore(c: any): number {
 }
 
 function scoreColor(s: number) {
-  if (s >= 75) return "#4ADE80";
-  if (s >= 45) return "#FACC15";
-  return "#F87171";
+  if (s >= 75) return "var(--success)";
+  if (s >= 45) return "var(--warning)";
+  return "var(--danger)";
 }
 
 // ── Sentiment ───────────────────────────────────────────────────────────
 type SentimentKey = "hot" | "warm" | "cold";
 
 const SENTIMENT_CFG: Record<SentimentKey, { label: string; color: string; bg: string; icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }> = {
-  hot:  { label: "ساخن",  color: "#F87171", bg: "rgba(248,113,113,0.1)", icon: Flame       },
-  warm: { label: "دافئ",  color: "#FACC15", bg: "rgba(250,204,21,0.1)",  icon: Thermometer },
-  cold: { label: "بارد",  color: "#60A5FA", bg: "rgba(96,165,250,0.1)",  icon: Snowflake   },
+  hot:  { label: "ساخن",  color: "var(--danger)", bg: "rgba(248,113,113,0.1)", icon: Flame       },
+  warm: { label: "دافئ",  color: "var(--warning)", bg: "rgba(250,204,21,0.1)",  icon: Thermometer },
+  cold: { label: "بارد",  color: "var(--info)", bg: "rgba(96,165,250,0.1)",  icon: Snowflake   },
 };
 
 function sentimentAuto(score: number): SentimentKey {
@@ -177,7 +177,7 @@ export default function Clients() {
   // ── Sort by score ───────────────────────────────────────────────────
   const sorted = useMemo(() => [...filtered].sort((a, b) => leadScore(b) - leadScore(a)), [filtered]);
 
-  const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C] transition";
+  const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)] transition";
 
   if (loading) return (
     <div dir="rtl">
@@ -194,7 +194,7 @@ export default function Clients() {
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="font-cairo font-bold" style={{ fontSize: 22 }}>إدارة العملاء</h2>
-          <p style={{ color: "#5A5A62", fontSize: 13, marginTop: 2 }}>
+          <p style={{ color: "var(--text-faint)", fontSize: 13, marginTop: 2 }}>
             {clients.length} عميل — مرتّبون حسب درجة الاهتمام
           </p>
         </div>
@@ -203,7 +203,7 @@ export default function Clients() {
             onClick={() => exportToCSV(sorted, CLIENTS_EXPORT_HEADERS, "عملاء")}
             disabled={sorted.length === 0}
             className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition text-sm"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#9A9AA0" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-soft)" }}
             title="تصدير إلى Excel / CSV"
           >
             <Download size={14} />
@@ -213,9 +213,9 @@ export default function Clients() {
             onClick={() => setShowAdd(v => !v)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-sm"
             style={{
-              background: showAdd ? "#1C1C22" : "linear-gradient(135deg, #C6914C, #A6743A)",
-              color: showAdd ? "#9A9AA0" : "#0A0A0C",
-              border: showAdd ? "1px solid rgba(198,145,76,0.15)" : "none",
+              background: showAdd ? "var(--bg-surface-2)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              color: showAdd ? "var(--text-soft)" : "var(--bg-page)",
+              border: showAdd ? "1px solid var(--gold-bg-hover)" : "none",
             }}
           >
             {showAdd ? <><X size={16} /> إلغاء</> : <><Plus size={16} /> إضافة عميل</>}
@@ -226,14 +226,14 @@ export default function Clients() {
       {/* ── Stats row ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "إجمالي العملاء",   value: clients.length,           color: "#C6914C" },
-          { label: "🔥 ساخنون",        value: sentimentCounts.hot,      color: "#F87171" },
-          { label: "🌡️ دافئون",        value: sentimentCounts.warm,     color: "#FACC15" },
-          { label: "❄️ باردون",         value: sentimentCounts.cold,     color: "#60A5FA" },
+          { label: "إجمالي العملاء",   value: clients.length,           color: "var(--gold-2)" },
+          { label: "🔥 ساخنون",        value: sentimentCounts.hot,      color: "var(--danger)" },
+          { label: "🌡️ دافئون",        value: sentimentCounts.warm,     color: "var(--warning)" },
+          { label: "❄️ باردون",         value: sentimentCounts.cold,     color: "var(--info)" },
         ].map(s => (
           <div key={s.label} className="card-luxury p-4">
             <div className="font-cairo font-bold" style={{ fontSize: 22, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: "#5A5A62", marginTop: 3 }}>{s.label}</div>
+            <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 3 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -241,38 +241,38 @@ export default function Clients() {
       {/* ── Add form ── */}
       {showAdd && (
         <form onSubmit={handleSubmit} className="card-luxury p-5 mb-6 fade-up">
-          <h3 className="font-cairo font-bold mb-4" style={{ color: "#C6914C", fontSize: 13, letterSpacing: 1 }}>عميل جديد</h3>
+          <h3 className="font-cairo font-bold mb-4" style={{ color: "var(--gold-2)", fontSize: 13, letterSpacing: 1 }}>عميل جديد</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الاسم الكامل *</label>
-              <input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required className={inp} style={{ color: "#F5F5F5" }} />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الاسم الكامل *</label>
+              <input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required className={inp} style={{ color: "var(--text-strong)" }} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">رقم الجوال</label>
-              <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={inp} style={{ color: "#F5F5F5" }} dir="ltr" />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم الجوال</label>
+              <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} dir="ltr" />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الفئة *</label>
-              <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required className={inp} style={{ color: "#F5F5F5" }}>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الفئة *</label>
+              <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required className={inp} style={{ color: "var(--text-strong)" }}>
                 <option value="">اختر...</option>
                 {Object.keys(CAT_CFG).map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">المدينة</label>
-              <input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} className={inp} style={{ color: "#F5F5F5" }} />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">المدينة</label>
+              <input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الحي</label>
-              <input value={form.district} onChange={e => setForm(f => ({ ...f, district: e.target.value }))} className={inp} style={{ color: "#F5F5F5" }} />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الحي</label>
+              <input value={form.district} onChange={e => setForm(f => ({ ...f, district: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الميزانية التقريبية</label>
-              <input value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))} className={inp} style={{ color: "#F5F5F5" }} placeholder="مثال: 1,200,000 ر.س" />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الميزانية التقريبية</label>
+              <input value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} placeholder="مثال: 1,200,000 ر.س" />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm text-[#9A9AA0] mb-2">ملاحظات</label>
-              <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2} className={inp} style={{ color: "#F5F5F5" }} />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">ملاحظات</label>
+              <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2} className={inp} style={{ color: "var(--text-strong)" }} />
             </div>
             <div className="sm:col-span-2 flex gap-3">
               <button type="submit" className="btn-gold px-6 py-2.5 text-sm">حفظ</button>
@@ -285,12 +285,12 @@ export default function Clients() {
       {/* ── Search + Filter tabs ── */}
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="relative flex-1">
-          <Search size={16} className="absolute right-3 top-3.5" style={{ color: "#5A5A62" }} />
+          <Search size={16} className="absolute right-3 top-3.5" style={{ color: "var(--text-faint)" }} />
           <input
             type="text" placeholder="ابحث بالاسم أو الجوال..."
             value={search} onChange={e => setSearch(e.target.value)}
             className="w-full rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none transition"
-            style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)", color: "#F5F5F5" }}
+            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)" }}
           />
         </div>
       </div>
@@ -303,13 +303,13 @@ export default function Clients() {
             onClick={() => setActiveTab(tab)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition flex-shrink-0"
             style={{
-              background: activeTab === tab ? "rgba(198,145,76,0.12)" : "rgba(198,145,76,0.04)",
-              color: activeTab === tab ? "#C6914C" : "#7A7A82",
-              border: `1px solid ${activeTab === tab ? "rgba(198,145,76,0.3)" : "rgba(198,145,76,0.08)"}`,
+              background: activeTab === tab ? "var(--gold-bg)" : "rgba(198,145,76,0.04)",
+              color: activeTab === tab ? "var(--gold-2)" : "#7A7A82",
+              border: `1px solid ${activeTab === tab ? "var(--gold-bg-strong)" : "var(--gold-bg-soft)"}`,
             }}
           >
             {tab !== "الكل" && (
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: CAT_CFG[tab]?.dot || "#C6914C" }} />
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: CAT_CFG[tab]?.dot || "var(--gold-2)" }} />
             )}
             {tab}
             <span style={{ fontSize: 11, opacity: 0.7 }}>({catCounts[tab] || 0})</span>
@@ -320,10 +320,10 @@ export default function Clients() {
       {/* ── Sentiment filter ── */}
       <div className="flex gap-2 mb-5 flex-wrap">
         {([
-          { key: "الكل", label: "الكل", color: "#9A9AA0", bg: "rgba(90,90,98,0.1)" },
-          { key: "hot",  label: "🔥 ساخن", color: "#F87171", bg: "rgba(248,113,113,0.08)" },
-          { key: "warm", label: "🌡️ دافئ", color: "#FACC15", bg: "rgba(250,204,21,0.08)"  },
-          { key: "cold", label: "❄️ بارد",  color: "#60A5FA", bg: "rgba(96,165,250,0.08)"  },
+          { key: "الكل", label: "الكل", color: "var(--text-soft)", bg: "rgba(90,90,98,0.1)" },
+          { key: "hot",  label: "🔥 ساخن", color: "var(--danger)", bg: "rgba(248,113,113,0.08)" },
+          { key: "warm", label: "🌡️ دافئ", color: "var(--warning)", bg: "rgba(250,204,21,0.08)"  },
+          { key: "cold", label: "❄️ بارد",  color: "var(--info)", bg: "rgba(96,165,250,0.08)"  },
         ] as const).map(({ key, label, color, bg }) => {
           const isActive = sentimentFilter === key;
           const count = key === "الكل" ? clients.length : sentimentCounts[key as SentimentKey];
@@ -334,8 +334,8 @@ export default function Clients() {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition flex-shrink-0"
               style={{
                 background: isActive ? bg : "rgba(255,255,255,0.02)",
-                color: isActive ? color : "#5A5A62",
-                border: `1px solid ${isActive ? color + "44" : "rgba(198,145,76,0.06)"}`,
+                color: isActive ? color : "var(--text-faint)",
+                border: `1px solid ${isActive ? color + "44" : "var(--gold-bg-soft)"}`,
               }}
             >
               {label}
@@ -348,8 +348,8 @@ export default function Clients() {
       {/* ── Grid ── */}
       {sorted.length === 0 ? (
         <div className="text-center py-20">
-          <Users size={40} className="mx-auto mb-3" style={{ color: "#3A3A42" }} />
-          <p className="mb-4" style={{ color: "#9A9AA0" }}>لا يوجد عملاء</p>
+          <Users size={40} className="mx-auto mb-3" style={{ color: "var(--border-1)" }} />
+          <p className="mb-4" style={{ color: "var(--text-soft)" }}>لا يوجد عملاء</p>
           <button onClick={() => setShowAdd(true)} className="btn-gold px-6 py-3 text-sm">أضف أول عميل</button>
         </div>
       ) : (
@@ -374,13 +374,13 @@ export default function Clients() {
                     {/* Avatar initial */}
                     <div
                       className="flex items-center justify-center rounded-xl font-cairo font-bold flex-shrink-0"
-                      style={{ width: 38, height: 38, background: cfg?.bg || "rgba(198,145,76,0.1)", color: cfg?.color || "#C6914C", fontSize: 16 }}
+                      style={{ width: 38, height: 38, background: cfg?.bg || "var(--gold-bg)", color: cfg?.color || "var(--gold-2)", fontSize: 16 }}
                     >
                       {client.full_name?.charAt(0) || "؟"}
                     </div>
                     <div>
-                      <p className="font-cairo font-bold" style={{ fontSize: 14, color: "#F5F5F5", lineHeight: 1.2 }}>{client.full_name}</p>
-                      {client.code && <p style={{ fontSize: 10, color: "#5A5A62" }}>{client.code}</p>}
+                      <p className="font-cairo font-bold" style={{ fontSize: 14, color: "var(--text-strong)", lineHeight: 1.2 }}>{client.full_name}</p>
+                      {client.code && <p style={{ fontSize: 10, color: "var(--text-faint)" }}>{client.code}</p>}
                     </div>
                   </div>
                   {/* Sentiment badge */}
@@ -395,7 +395,7 @@ export default function Clients() {
                 </div>
 
                 {/* Score bar */}
-                <div style={{ height: 3, borderRadius: 999, background: "rgba(255,255,255,0.05)", marginBottom: 12 }}>
+                <div style={{ height: 3, borderRadius: 999, background: "var(--overlay-soft)", marginBottom: 12 }}>
                   <div style={{
                     height: "100%", borderRadius: 999,
                     background: sentCfg.color,
@@ -407,12 +407,12 @@ export default function Clients() {
                 {/* Category + details */}
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   {client.category && (
-                    <span className="status-pill" style={{ fontSize: 10, padding: "2px 8px", background: cfg?.bg || "rgba(198,145,76,0.1)", color: cfg?.color || "#C6914C" }}>
+                    <span className="status-pill" style={{ fontSize: 10, padding: "2px 8px", background: cfg?.bg || "var(--gold-bg)", color: cfg?.color || "var(--gold-2)" }}>
                       {client.category}
                     </span>
                   )}
                   {client.budget && (
-                    <span style={{ fontSize: 11, color: "#A78BFA" }}>{client.budget}</span>
+                    <span style={{ fontSize: 11, color: "var(--purple-ai)" }}>{client.budget}</span>
                   )}
                 </div>
 
@@ -420,13 +420,13 @@ export default function Clients() {
                   <p style={{ fontSize: 12, color: "#7A7A82", direction: "ltr", textAlign: "right" }}>{client.phone}</p>
                 )}
                 {(client.city || client.district) && (
-                  <p style={{ fontSize: 12, color: "#5A5A62" }}>
+                  <p style={{ fontSize: 12, color: "var(--text-faint)" }}>
                     <MapPin size={11} style={{ display: "inline", marginLeft: 3 }} />
                     {[client.district, client.city].filter(Boolean).join(" — ")}
                   </p>
                 )}
                 {client.notes && (
-                  <p className="mt-2 line-clamp-1" style={{ fontSize: 11, color: "#5A5A62" }}>{client.notes}</p>
+                  <p className="mt-2 line-clamp-1" style={{ fontSize: 11, color: "var(--text-faint)" }}>{client.notes}</p>
                 )}
 
                 {/* Footer */}
@@ -434,7 +434,7 @@ export default function Clients() {
                   <Link
                     href={`/dashboard/clients/${client.id}`}
                     className="flex items-center gap-1 no-underline text-xs font-medium transition"
-                    style={{ color: "#C6914C" }}
+                    style={{ color: "var(--gold-2)" }}
                     onClick={e => e.stopPropagation()}
                   >
                     فتح الملف <ChevronLeft size={12} />
@@ -445,7 +445,7 @@ export default function Clients() {
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center gap-1 no-underline text-xs transition"
-                      style={{ color: "#5A5A62" }}
+                      style={{ color: "var(--text-faint)" }}
                       onClick={e => e.stopPropagation()}
                     >
                       <WAIcon /> واتساب
@@ -464,26 +464,26 @@ export default function Clients() {
           <div className="fixed inset-0 z-40" style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }} onClick={() => setSelected(null)} />
           <div
             className="fixed top-0 left-0 bottom-0 z-50 overflow-y-auto fade-up"
-            style={{ width: "min(420px, 100vw)", background: "#0D0D10", borderRight: "1px solid rgba(198,145,76,0.12)" }}
+            style={{ width: "min(420px, 100vw)", background: "#0D0D10", borderRight: "1px solid var(--gold-bg)" }}
           >
             {/* Drawer header */}
             <div
               className="flex items-center justify-between px-5 py-4 sticky top-0"
-              style={{ background: "#0D0D10", borderBottom: "1px solid rgba(198,145,76,0.1)" }}
+              style={{ background: "#0D0D10", borderBottom: "1px solid var(--gold-bg)" }}
             >
               <div className="flex items-center gap-2">
                 {!editMode && (
                   <button onClick={() => setEditMode(true)} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition"
-                    style={{ background: "rgba(198,145,76,0.08)", color: "#C6914C" }}>
+                    style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)" }}>
                     <Pencil size={13} /> تعديل
                   </button>
                 )}
                 <button onClick={handleDelete} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition"
-                  style={{ background: "rgba(248,113,113,0.08)", color: "#F87171" }}>
+                  style={{ background: "rgba(248,113,113,0.08)", color: "var(--danger)" }}>
                   <Trash2 size={13} /> حذف
                 </button>
               </div>
-              <button onClick={() => setSelected(null)} style={{ color: "#5A5A62", background: "none", border: "none", cursor: "pointer" }}>
+              <button onClick={() => setSelected(null)} style={{ color: "var(--text-faint)", background: "none", border: "none", cursor: "pointer" }}>
                 <X size={20} />
               </button>
             </div>
@@ -492,27 +492,27 @@ export default function Clients() {
               {!editMode ? (
                 <div className="space-y-4">
                   {/* Profile header */}
-                  <div className="flex items-center gap-4 p-4 rounded-xl" style={{ background: "rgba(198,145,76,0.05)", border: "1px solid rgba(198,145,76,0.1)" }}>
+                  <div className="flex items-center gap-4 p-4 rounded-xl" style={{ background: "rgba(198,145,76,0.05)", border: "1px solid var(--gold-bg)" }}>
                     <div
                       className="flex items-center justify-center rounded-xl font-cairo font-black flex-shrink-0"
-                      style={{ width: 52, height: 52, background: CAT_CFG[selected.category]?.bg || "rgba(198,145,76,0.1)", color: CAT_CFG[selected.category]?.color || "#C6914C", fontSize: 22 }}
+                      style={{ width: 52, height: 52, background: CAT_CFG[selected.category]?.bg || "var(--gold-bg)", color: CAT_CFG[selected.category]?.color || "var(--gold-2)", fontSize: 22 }}
                     >
                       {selected.full_name?.charAt(0) || "؟"}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-cairo font-bold" style={{ fontSize: 18, color: "#F5F5F5" }}>{selected.full_name}</h3>
+                      <h3 className="font-cairo font-bold" style={{ fontSize: 18, color: "var(--text-strong)" }}>{selected.full_name}</h3>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {selected.category && (
                           <span className="status-pill" style={{ fontSize: 10, padding: "2px 8px", background: CAT_CFG[selected.category]?.bg, color: CAT_CFG[selected.category]?.color }}>
                             {selected.category}
                           </span>
                         )}
-                        {selected.code && <span style={{ fontSize: 11, color: "#5A5A62" }}>{selected.code}</span>}
+                        {selected.code && <span style={{ fontSize: 11, color: "var(--text-faint)" }}>{selected.code}</span>}
                       </div>
                     </div>
                     <div className="text-center">
                       <div className="font-cairo font-bold" style={{ fontSize: 20, color: scoreColor(leadScore(selected)) }}>{leadScore(selected)}</div>
-                      <div style={{ fontSize: 9, color: "#5A5A62" }}>Lead Score</div>
+                      <div style={{ fontSize: 9, color: "var(--text-faint)" }}>Lead Score</div>
                     </div>
                   </div>
 
@@ -521,14 +521,14 @@ export default function Clients() {
                     const cur = effectiveSentiment(selected);
                     const isManual = selected.sentiment === "hot" || selected.sentiment === "warm" || selected.sentiment === "cold";
                     return (
-                      <div className="p-4 rounded-xl" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.08)" }}>
+                      <div className="p-4 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
                         <div className="flex items-center justify-between mb-3">
-                          <span style={{ fontSize: 12, color: "#5A5A62", fontWeight: 600 }}>مستوى الاهتمام</span>
+                          <span style={{ fontSize: 12, color: "var(--text-faint)", fontWeight: 600 }}>مستوى الاهتمام</span>
                           {isManual && (
                             <button
                               onClick={() => updateSentiment(null)}
                               disabled={updatingSentiment}
-                              style={{ fontSize: 10, color: "#5A5A62", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+                              style={{ fontSize: 10, color: "var(--text-faint)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
                             >
                               تلقائي
                             </button>
@@ -547,8 +547,8 @@ export default function Clients() {
                                 className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl font-bold text-xs transition"
                                 style={{
                                   background: isActive ? sc.bg : "rgba(255,255,255,0.02)",
-                                  color: isActive ? sc.color : "#5A5A62",
-                                  border: `1.5px solid ${isActive ? sc.color + "55" : "rgba(255,255,255,0.05)"}`,
+                                  color: isActive ? sc.color : "var(--text-faint)",
+                                  border: `1.5px solid ${isActive ? sc.color + "55" : "var(--overlay-soft)"}`,
                                   cursor: updatingSentiment ? "not-allowed" : "pointer",
                                   opacity: updatingSentiment ? 0.6 : 1,
                                 }}
@@ -560,7 +560,7 @@ export default function Clients() {
                           })}
                         </div>
                         {!isManual && (
-                          <p style={{ fontSize: 10, color: "#3A3A42", marginTop: 8, textAlign: "center" }}>
+                          <p style={{ fontSize: 10, color: "var(--border-1)", marginTop: 8, textAlign: "center" }}>
                             تلقائي من درجة الاهتمام ({leadScore(selected)} نقطة)
                           </p>
                         )}
@@ -570,30 +570,30 @@ export default function Clients() {
 
                   {/* Info */}
                   {selected.phone && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                      <Phone size={15} style={{ color: "#C6914C" }} />
-                      <a href={`tel:${selected.phone}`} className="text-sm no-underline flex-1" style={{ color: "#F5F5F5", direction: "ltr" }}>{selected.phone}</a>
+                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                      <Phone size={15} style={{ color: "var(--gold-2)" }} />
+                      <a href={`tel:${selected.phone}`} className="text-sm no-underline flex-1" style={{ color: "var(--text-strong)", direction: "ltr" }}>{selected.phone}</a>
                     </div>
                   )}
                   {(selected.city || selected.district) && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                      <MapPin size={15} style={{ color: "#C6914C" }} />
+                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                      <MapPin size={15} style={{ color: "var(--gold-2)" }} />
                       <p className="text-sm">{[selected.district, selected.city].filter(Boolean).join(" — ")}</p>
                     </div>
                   )}
                   {selected.budget && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                      <TrendingUp size={15} style={{ color: "#A78BFA" }} />
+                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                      <TrendingUp size={15} style={{ color: "var(--purple-ai)" }} />
                       <div>
-                        <p style={{ fontSize: 11, color: "#5A5A62" }}>الميزانية</p>
-                        <p className="font-cairo font-bold text-sm" style={{ color: "#A78BFA" }}>{selected.budget}</p>
+                        <p style={{ fontSize: 11, color: "var(--text-faint)" }}>الميزانية</p>
+                        <p className="font-cairo font-bold text-sm" style={{ color: "var(--purple-ai)" }}>{selected.budget}</p>
                       </div>
                     </div>
                   )}
                   {selected.notes && (
-                    <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "#16161A" }}>
-                      <StickyNote size={15} style={{ color: "#C6914C", marginTop: 2, flexShrink: 0 }} />
-                      <p className="text-sm leading-relaxed" style={{ color: "#9A9AA0" }}>{selected.notes}</p>
+                    <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                      <StickyNote size={15} style={{ color: "var(--gold-2)", marginTop: 2, flexShrink: 0 }} />
+                      <p className="text-sm leading-relaxed" style={{ color: "var(--text-soft)" }}>{selected.notes}</p>
                     </div>
                   )}
 
@@ -604,7 +604,7 @@ export default function Clients() {
                         href={`https://wa.me/${selected.phone.replace(/\D/g, "")}`}
                         target="_blank" rel="noreferrer"
                         className="flex items-center justify-center gap-2 py-3 rounded-xl no-underline font-bold text-sm transition"
-                        style={{ background: "#16A34A", color: "#fff" }}
+                        style={{ background: "var(--success-4)", color: "#fff" }}
                       >
                         <WAIcon /> واتساب
                       </a>
@@ -612,7 +612,7 @@ export default function Clients() {
                     {selected.phone && (
                       <a href={`tel:${selected.phone}`}
                         className="flex items-center justify-center gap-2 py-3 rounded-xl no-underline font-bold text-sm transition"
-                        style={{ background: "rgba(198,145,76,0.1)", color: "#C6914C", border: "1px solid rgba(198,145,76,0.2)" }}>
+                        style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)" }}>
                         <Phone size={14} /> اتصال
                       </a>
                     )}
@@ -622,7 +622,7 @@ export default function Clients() {
                   <Link
                     href={`/dashboard/clients/${selected.id}`}
                     className="flex items-center justify-center gap-2 py-3 rounded-xl no-underline text-sm font-bold transition"
-                    style={{ background: "rgba(198,145,76,0.06)", border: "1px solid rgba(198,145,76,0.12)", color: "#C6914C" }}
+                    style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--gold-2)" }}
                   >
                     <MessageCircle size={14} />
                     فتح الملف الكامل مع السجل
@@ -640,25 +640,25 @@ export default function Clients() {
                     { label: "الميزانية",     key: "budget",    type: "text" },
                   ].map(f => (
                     <div key={f.key}>
-                      <label className="block text-sm text-[#9A9AA0] mb-2">{f.label}</label>
+                      <label className="block text-sm text-[var(--text-soft)] mb-2">{f.label}</label>
                       <input
                         type={f.type} dir={(f as any).dir}
                         value={(editForm as any)[f.key]}
                         onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))}
-                        className={inp} style={{ color: "#F5F5F5" }}
+                        className={inp} style={{ color: "var(--text-strong)" }}
                       />
                     </div>
                   ))}
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">الفئة</label>
-                    <select value={editForm.category} onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))} className={inp} style={{ color: "#F5F5F5" }}>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">الفئة</label>
+                    <select value={editForm.category} onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }}>
                       <option value="">اختر...</option>
                       {Object.keys(CAT_CFG).map(c => <option key={c}>{c}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">ملاحظات</label>
-                    <textarea value={editForm.notes} onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))} rows={3} className={inp} style={{ color: "#F5F5F5" }} />
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">ملاحظات</label>
+                    <textarea value={editForm.notes} onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))} rows={3} className={inp} style={{ color: "var(--text-strong)" }} />
                   </div>
                   <div className="flex gap-3 pt-2">
                     <button onClick={handleSaveEdit} disabled={saving} className="btn-gold flex-1 py-3 text-sm disabled:opacity-50">

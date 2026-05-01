@@ -10,21 +10,21 @@ const docTypes = ["عقد بيع", "عقد إيجار", "توكيل", "عقد و
 const statusOpts = ["نشط", "منتهي", "معلق", "ملغي"];
 
 const typeColors: Record<string, string> = {
-  "عقد بيع":     "#C18D4A",
-  "عقد إيجار":   "#4ADE80",
-  "توكيل":        "#A78BFA",
+  "عقد بيع":     "var(--gold-2)",
+  "عقد إيجار":   "var(--success)",
+  "توكيل":        "var(--purple-ai)",
   "عقد وساطة":   "#FB923C",
-  "شهادة":        "#FACC15",
-  "وثيقة هوية":  "#9A9AA0",
-  "تصريح":       "#F87171",
-  "أخرى":         "#5A5A62",
+  "شهادة":        "var(--warning)",
+  "وثيقة هوية":  "var(--text-soft)",
+  "تصريح":       "var(--danger)",
+  "أخرى":         "var(--text-faint)",
 };
 
 const statusColors: Record<string, string> = {
   "نشط":   "bg-green-900/30 text-green-400",
   "منتهي": "bg-red-900/30 text-red-400",
   "معلق":  "bg-yellow-900/30 text-yellow-400",
-  "ملغي":  "bg-[rgba(90,90,98,0.2)] text-[#9A9AA0]",
+  "ملغي":  "bg-[rgba(90,90,98,0.2)] text-[var(--text-soft)]",
 };
 
 const emptyForm = {
@@ -115,12 +115,12 @@ export default function DocumentsPage() {
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">الوثائق القانونية</h2>
-          <p className="text-sm" style={{ color: "#5A5A62" }}>إدارة العقود والوثائق الرسمية</p>
+          <p className="text-sm" style={{ color: "var(--text-faint)" }}>إدارة العقود والوثائق الرسمية</p>
         </div>
         <button
           onClick={() => { resetForm(); setShowForm(true); }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition"
-          style={{ background: "linear-gradient(135deg, #C18D4A, #A68A3A)", color: "#0A0A0C" }}
+          style={{ background: "linear-gradient(135deg, var(--gold-2), #A68A3A)", color: "var(--bg-page)" }}
         >
           <Plus size={16} />
           إضافة وثيقة
@@ -131,10 +131,10 @@ export default function DocumentsPage() {
       {stats.length > 0 && (
         <div className="flex gap-2 flex-wrap mb-5">
           {stats.map(s => (
-            <div key={s.type} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm" style={{ background: "#16161A", border: "1px solid rgba(193,141,74,0.1)" }}>
-              <div className="w-2 h-2 rounded-full" style={{ background: typeColors[s.type] || "#9A9AA0" }} />
-              <span style={{ color: "#9A9AA0" }}>{s.type}</span>
-              <span className="font-bold" style={{ color: "#F5F5F5" }}>{s.count}</span>
+            <div key={s.type} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm" style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.1)" }}>
+              <div className="w-2 h-2 rounded-full" style={{ background: typeColors[s.type] || "var(--text-soft)" }} />
+              <span style={{ color: "var(--text-soft)" }}>{s.type}</span>
+              <span className="font-bold" style={{ color: "var(--text-strong)" }}>{s.count}</span>
             </div>
           ))}
         </div>
@@ -143,23 +143,23 @@ export default function DocumentsPage() {
       {/* بحث وفلاتر */}
       <div className="flex gap-2 mb-5 flex-wrap">
         <div className="relative flex-1" style={{ minWidth: 200 }}>
-          <Search size={15} className="absolute right-3 top-3" style={{ color: "#5A5A62" }} />
+          <Search size={15} className="absolute right-3 top-3" style={{ color: "var(--text-faint)" }} />
           <input
             type="text" value={search} onChange={e => setSearch(e.target.value)}
             placeholder="ابحث بالاسم أو الطرف أو الرقم..."
             className="w-full rounded-xl pr-9 pl-4 py-2.5 text-sm focus:outline-none"
-            style={{ background: "#16161A", border: "1px solid rgba(193,141,74,0.12)", color: "#F5F5F5" }}
+            style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.12)", color: "var(--text-strong)" }}
           />
         </div>
         <select value={filterType} onChange={e => setFilterType(e.target.value)}
           className="rounded-xl px-3 py-2.5 text-sm focus:outline-none"
-          style={{ background: "#16161A", border: "1px solid rgba(193,141,74,0.12)", color: "#9A9AA0" }}>
+          style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.12)", color: "var(--text-soft)" }}>
           <option value="all">كل الأنواع</option>
           {docTypes.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
           className="rounded-xl px-3 py-2.5 text-sm focus:outline-none"
-          style={{ background: "#16161A", border: "1px solid rgba(193,141,74,0.12)", color: "#9A9AA0" }}>
+          style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.12)", color: "var(--text-soft)" }}>
           <option value="all">كل الحالات</option>
           {statusOpts.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
@@ -167,21 +167,21 @@ export default function DocumentsPage() {
 
       {/* قائمة الوثائق */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20 rounded-2xl" style={{ background: "#16161A", border: "1px solid rgba(193,141,74,0.08)" }}>
-          <FileText size={40} className="mx-auto mb-3" style={{ color: "#3A3A42" }} />
-          <p className="text-sm" style={{ color: "#5A5A62" }}>{docs.length === 0 ? "لا توجد وثائق — أضف وثيقتك الأولى" : "لا توجد نتائج مطابقة"}</p>
+        <div className="text-center py-20 rounded-2xl" style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.08)" }}>
+          <FileText size={40} className="mx-auto mb-3" style={{ color: "var(--border-1)" }} />
+          <p className="text-sm" style={{ color: "var(--text-faint)" }}>{docs.length === 0 ? "لا توجد وثائق — أضف وثيقتك الأولى" : "لا توجد نتائج مطابقة"}</p>
         </div>
       ) : (
         <div className="space-y-2">
           {filtered.map(doc => {
-            const col = typeColors[doc.doc_type] || "#9A9AA0";
+            const col = typeColors[doc.doc_type] || "var(--text-soft)";
             const isExpired = doc.expiry_date && new Date(doc.expiry_date) < new Date();
             return (
               <div
                 key={doc.id}
                 onClick={() => setSelected(doc)}
                 className="rounded-xl p-4 cursor-pointer transition flex items-center gap-4"
-                style={{ background: "#16161A", border: `1px solid ${selected?.id === doc.id ? "rgba(193,141,74,0.3)" : "rgba(193,141,74,0.08)"}` }}
+                style={{ background: "var(--bg-surface-1)", border: `1px solid ${selected?.id === doc.id ? "rgba(193,141,74,0.3)" : "rgba(193,141,74,0.08)"}` }}
               >
                 {/* أيقونة النوع */}
                 <div className="rounded-xl flex items-center justify-center flex-shrink-0" style={{ width: 40, height: 40, background: col + "18" }}>
@@ -190,16 +190,16 @@ export default function DocumentsPage() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-sm truncate" style={{ color: "#F5F5F5" }}>{doc.title}</span>
+                    <span className="font-semibold text-sm truncate" style={{ color: "var(--text-strong)" }}>{doc.title}</span>
                     <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: col + "18", color: col }}>{doc.doc_type}</span>
                     {doc.status && <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[doc.status] || ""}`}>{doc.status}</span>}
                     {isExpired && <span className="text-xs px-2 py-0.5 rounded-full bg-red-900/30 text-red-400">منتهية الصلاحية</span>}
                   </div>
                   <div className="flex items-center gap-3 mt-1 flex-wrap">
-                    {doc.related_party && <span className="text-xs flex items-center gap-1" style={{ color: "#9A9AA0" }}><Users size={11} />{doc.related_party}</span>}
-                    {doc.doc_number && <span className="text-xs" style={{ color: "#5A5A62" }}>#{doc.doc_number}</span>}
-                    {doc.issue_date && <span className="text-xs flex items-center gap-1" style={{ color: "#5A5A62" }}><Calendar size={11} />{doc.issue_date}</span>}
-                    {doc.expiry_date && <span className="text-xs" style={{ color: isExpired ? "#F87171" : "#5A5A62" }}>ينتهي: {doc.expiry_date}</span>}
+                    {doc.related_party && <span className="text-xs flex items-center gap-1" style={{ color: "var(--text-soft)" }}><Users size={11} />{doc.related_party}</span>}
+                    {doc.doc_number && <span className="text-xs" style={{ color: "var(--text-faint)" }}>#{doc.doc_number}</span>}
+                    {doc.issue_date && <span className="text-xs flex items-center gap-1" style={{ color: "var(--text-faint)" }}><Calendar size={11} />{doc.issue_date}</span>}
+                    {doc.expiry_date && <span className="text-xs" style={{ color: isExpired ? "var(--danger)" : "var(--text-faint)" }}>ينتهي: {doc.expiry_date}</span>}
                   </div>
                 </div>
 
@@ -207,18 +207,18 @@ export default function DocumentsPage() {
                   {doc.doc_url && (
                     <a href={doc.doc_url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
                       className="flex items-center justify-center rounded-lg transition"
-                      style={{ width: 32, height: 32, background: "rgba(193,141,74,0.08)", color: "#C18D4A" }}>
+                      style={{ width: 32, height: 32, background: "rgba(193,141,74,0.08)", color: "var(--gold-2)" }}>
                       <ExternalLink size={14} />
                     </a>
                   )}
                   <button onClick={e => { e.stopPropagation(); openEdit(doc); }}
                     className="rounded-lg transition text-xs px-2 py-1"
-                    style={{ background: "rgba(193,141,74,0.08)", color: "#C18D4A" }}>
+                    style={{ background: "rgba(193,141,74,0.08)", color: "var(--gold-2)" }}>
                     تعديل
                   </button>
                   <button onClick={e => { e.stopPropagation(); handleDelete(doc.id); }}
                     className="rounded-lg transition"
-                    style={{ width: 32, height: 32, background: "rgba(248,113,113,0.08)", color: "#F87171", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    style={{ width: 32, height: 32, background: "rgba(248,113,113,0.08)", color: "var(--danger)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -231,10 +231,10 @@ export default function DocumentsPage() {
       {/* نافذة الإضافة/التعديل */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}>
-          <div className="w-full rounded-2xl overflow-y-auto" style={{ maxWidth: 560, maxHeight: "90vh", background: "#16161A", border: "1px solid rgba(193,141,74,0.2)" }}>
+          <div className="w-full rounded-2xl overflow-y-auto" style={{ maxWidth: 560, maxHeight: "90vh", background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.2)" }}>
             <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: "rgba(193,141,74,0.1)" }}>
               <h3 className="font-bold">{editingId ? "تعديل الوثيقة" : "إضافة وثيقة جديدة"}</h3>
-              <button onClick={() => { setShowForm(false); resetForm(); }} style={{ color: "#5A5A62", background: "none", border: "none", cursor: "pointer" }}><X size={20} /></button>
+              <button onClick={() => { setShowForm(false); resetForm(); }} style={{ color: "var(--text-faint)", background: "none", border: "none", cursor: "pointer" }}><X size={20} /></button>
             </div>
             <div className="p-5 space-y-4">
               {[
@@ -244,32 +244,32 @@ export default function DocumentsPage() {
                 { label: "رابط الوثيقة (URL)", key: "doc_url", type: "url", placeholder: "https://..." },
               ].map(f => (
                 <div key={f.key}>
-                  <label className="block text-xs mb-1.5" style={{ color: "#9A9AA0" }}>{f.label}</label>
+                  <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>{f.label}</label>
                   <input
                     type={f.type}
                     value={(form as any)[f.key]}
                     onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
                     placeholder={f.placeholder}
                     className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
-                    style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }}
+                    style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(193,141,74,0.15)", color: "var(--text-strong)" }}
                   />
                 </div>
               ))}
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs mb-1.5" style={{ color: "#9A9AA0" }}>نوع الوثيقة</label>
+                  <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>نوع الوثيقة</label>
                   <select value={form.doc_type} onChange={e => setForm(p => ({ ...p, doc_type: e.target.value }))}
                     className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none"
-                    style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }}>
+                    style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(193,141,74,0.15)", color: "var(--text-strong)" }}>
                     {docTypes.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs mb-1.5" style={{ color: "#9A9AA0" }}>الحالة</label>
+                  <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>الحالة</label>
                   <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))}
                     className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none"
-                    style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }}>
+                    style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(193,141,74,0.15)", color: "var(--text-strong)" }}>
                     {statusOpts.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
@@ -277,36 +277,36 @@ export default function DocumentsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs mb-1.5" style={{ color: "#9A9AA0" }}>تاريخ الإصدار</label>
+                  <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>تاريخ الإصدار</label>
                   <input type="date" value={form.issue_date} onChange={e => setForm(p => ({ ...p, issue_date: e.target.value }))}
                     className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none"
-                    style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }} />
+                    style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(193,141,74,0.15)", color: "var(--text-strong)" }} />
                 </div>
                 <div>
-                  <label className="block text-xs mb-1.5" style={{ color: "#9A9AA0" }}>تاريخ الانتهاء</label>
+                  <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>تاريخ الانتهاء</label>
                   <input type="date" value={form.expiry_date} onChange={e => setForm(p => ({ ...p, expiry_date: e.target.value }))}
                     className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none"
-                    style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }} />
+                    style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(193,141,74,0.15)", color: "var(--text-strong)" }} />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs mb-1.5" style={{ color: "#9A9AA0" }}>ملاحظات</label>
+                <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>ملاحظات</label>
                 <textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
                   rows={3} placeholder="أي ملاحظات إضافية..."
                   className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none resize-none"
-                  style={{ background: "#1C1C22", border: "1px solid rgba(193,141,74,0.15)", color: "#F5F5F5" }} />
+                  style={{ background: "var(--bg-surface-2)", border: "1px solid rgba(193,141,74,0.15)", color: "var(--text-strong)" }} />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button onClick={handleSave}
                   className="flex-1 py-3 rounded-xl font-bold text-sm transition"
-                  style={{ background: "linear-gradient(135deg, #C18D4A, #A68A3A)", color: "#0A0A0C" }}>
+                  style={{ background: "linear-gradient(135deg, var(--gold-2), #A68A3A)", color: "var(--bg-page)" }}>
                   {editingId ? "حفظ التعديلات" : "إضافة الوثيقة"}
                 </button>
                 <button onClick={() => { setShowForm(false); resetForm(); }}
                   className="px-5 py-3 rounded-xl text-sm transition"
-                  style={{ background: "#1C1C22", color: "#9A9AA0", border: "1px solid rgba(193,141,74,0.12)" }}>
+                  style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", border: "1px solid rgba(193,141,74,0.12)" }}>
                   إلغاء
                 </button>
               </div>

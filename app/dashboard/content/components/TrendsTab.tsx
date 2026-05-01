@@ -99,8 +99,8 @@ export default function TrendsTab({
   const trendColor: Record<string, string> = {
     "صاعد بقوة": "text-green-400 bg-green-900/30",
     "صاعد": "text-green-300 bg-green-900/20",
-    "مستقر مرتفع": "text-[#C6914C] bg-[rgba(198,145,76,0.1)]",
-    "مستقر": "text-[#9A9AA0] bg-[#1C1C22]",
+    "مستقر مرتفع": "text-[var(--gold-2)] bg-[var(--gold-bg)]",
+    "مستقر": "text-[var(--text-soft)] bg-[var(--bg-surface-2)]",
   };
 
   return (
@@ -109,7 +109,7 @@ export default function TrendsTab({
         <h3 className="text-lg sm:text-xl font-bold mb-1">
           ترندات ومناسبات عقارية
         </h3>
-        <p className="text-[#9A9AA0] text-xs sm:text-sm hidden sm:block">
+        <p className="text-[var(--text-soft)] text-xs sm:text-sm hidden sm:block">
           أفكار محتوى مرتبطة بالسوق والمناسبات
         </p>
       </div>
@@ -121,9 +121,9 @@ export default function TrendsTab({
           onChange={(e) => setActiveSection(e.target.value)}
           className="w-full rounded-xl px-4 py-3 text-sm font-medium focus:outline-none"
           style={{
-            background: "#16161A",
+            background: "var(--bg-surface-1)",
             border: "1px solid rgba(198,145,76,0.25)",
-            color: "#F5F5F5",
+            color: "var(--text-strong)",
           }}
         >
           {sections.map((s) => (
@@ -143,8 +143,8 @@ export default function TrendsTab({
             className={
               "flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition whitespace-nowrap " +
               (activeSection === s.id
-                ? "bg-[#C6914C] text-white"
-                : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white")
+                ? "bg-[var(--gold-2)] text-white"
+                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white")
             }
           >
             <span>{s.icon}</span>
@@ -162,9 +162,9 @@ export default function TrendsTab({
               onChange={(e) => setSelectedMonth(Number(e.target.value))}
               className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none"
               style={{
-                background: "#16161A",
-                border: "1px solid rgba(198,145,76,0.15)",
-                color: "#F5F5F5",
+                background: "var(--bg-surface-1)",
+                border: "1px solid var(--gold-bg-hover)",
+                color: "var(--text-strong)",
               }}
             >
               {arabicMonths.map((m, idx) => (
@@ -182,8 +182,8 @@ export default function TrendsTab({
                 className={
                   "px-3 py-2 rounded-lg text-xs transition whitespace-nowrap " +
                   (selectedMonth === idx + 1
-                    ? "bg-[#C6914C] text-white"
-                    : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white")
+                    ? "bg-[var(--gold-2)] text-white"
+                    : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white")
                 }
               >
                 {m}
@@ -194,7 +194,7 @@ export default function TrendsTab({
             {(saudiEvents[selectedMonth] || []).map((event, idx) => (
               <div
                 key={idx}
-                className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 hover:border-[#C6914C] transition"
+                className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-2)] transition"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <span
@@ -202,21 +202,21 @@ export default function TrendsTab({
                       "text-xs px-2 py-1 rounded " +
                       (event.type === "مناسبة"
                         ? "bg-purple-900/30 text-purple-400"
-                        : "bg-[rgba(198,145,76,0.1)] text-[#C6914C]")
+                        : "bg-[var(--gold-bg)] text-[var(--gold-2)]")
                     }
                   >
                     {event.type}
                   </span>
-                  <span className="text-xs text-[#5A5A62]">{event.date}</span>
+                  <span className="text-xs text-[var(--text-faint)]">{event.date}</span>
                 </div>
                 <h4 className="font-bold mb-2">{event.title}</h4>
-                <p className="text-[#9A9AA0] text-sm mb-4">
+                <p className="text-[var(--text-soft)] text-sm mb-4">
                   {event.contentIdea}
                 </p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => onSendToFactory(event.contentIdea)}
-                    className="text-xs bg-[#C6914C] hover:bg-[#A6743A] px-3 py-1.5 rounded-lg transition"
+                    className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
                   >
                     أرسل لمصنع المحتوى
                   </button>
@@ -224,7 +224,7 @@ export default function TrendsTab({
                     onClick={() =>
                       generateIdeas(event.title + " — " + event.contentIdea)
                     }
-                    className="text-xs bg-[#1C1C22] hover:bg-[#2A2A32] px-3 py-1.5 rounded-lg transition"
+                    className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
                   >
                     ولّد أفكار AI
                   </button>
@@ -241,7 +241,7 @@ export default function TrendsTab({
           {marketTopics.map((topic, idx) => (
             <div
               key={idx}
-              className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 hover:border-[#C6914C] transition"
+              className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-2)] transition"
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-2xl">{topic.icon}</span>
@@ -250,13 +250,13 @@ export default function TrendsTab({
               <div className="flex gap-2">
                 <button
                   onClick={() => onSendToFactory(topic.title)}
-                  className="text-xs bg-[#C6914C] hover:bg-[#A6743A] px-3 py-1.5 rounded-lg transition"
+                  className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
                 >
                   أرسل لمصنع المحتوى
                 </button>
                 <button
                   onClick={() => generateIdeas(topic.title)}
-                  className="text-xs bg-[#1C1C22] hover:bg-[#2A2A32] px-3 py-1.5 rounded-lg transition"
+                  className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
                 >
                   ولّد أفكار AI
                 </button>
@@ -272,26 +272,26 @@ export default function TrendsTab({
           {riyadhTrendingAreas.map((area, idx) => (
             <div
               key={idx}
-              className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 hover:border-[#C6914C] transition"
+              className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-2)] transition"
             >
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-bold">{area.name}</h4>
                 <span
                   className={
                     "text-xs px-2 py-1 rounded " +
-                    (trendColor[area.trend] || "bg-[#1C1C22] text-[#9A9AA0]")
+                    (trendColor[area.trend] || "bg-[var(--bg-surface-2)] text-[var(--text-soft)]")
                   }
                 >
                   {area.trend}
                 </span>
               </div>
-              <p className="text-[#9A9AA0] text-sm mb-3">{area.reason}</p>
+              <p className="text-[var(--text-soft)] text-sm mb-3">{area.reason}</p>
               <div className="flex gap-2">
                 <button
                   onClick={() =>
                     onSendToFactory("محتوى عن " + area.name + " — " + area.reason)
                   }
-                  className="text-xs bg-[#C6914C] hover:bg-[#A6743A] px-3 py-1.5 rounded-lg transition"
+                  className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
                 >
                   أرسل لمصنع المحتوى
                 </button>
@@ -299,7 +299,7 @@ export default function TrendsTab({
                   onClick={() =>
                     generateIdeas(area.name + " في الرياض — " + area.reason)
                   }
-                  className="text-xs bg-[#1C1C22] hover:bg-[#2A2A32] px-3 py-1.5 rounded-lg transition"
+                  className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
                 >
                   ولّد أفكار AI
                 </button>
@@ -312,8 +312,8 @@ export default function TrendsTab({
       {/* توليد أفكار AI */}
       {activeSection === "generate" && (
         <div>
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-4 sm:p-5 mb-6">
-            <h4 className="font-bold text-[#C6914C] text-sm mb-4">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4 sm:p-5 mb-6">
+            <h4 className="font-bold text-[var(--gold-2)] text-sm mb-4">
               توليد أفكار محتوى بالذكاء الاصطناعي
             </h4>
             <div className="flex gap-2 mb-4 flex-wrap">
@@ -324,7 +324,7 @@ export default function TrendsTab({
                   const prov = providers.find((p) => p.id === e.target.value);
                   if (prov) setAiModel(prov.models[0].id);
                 }}
-                className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]"
+                className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)]"
                 style={{ minWidth: 100 }}
               >
                 {providers.map((p) => (
@@ -336,7 +336,7 @@ export default function TrendsTab({
               <select
                 value={aiModel}
                 onChange={(e) => setAiModel(e.target.value)}
-                className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]"
+                className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)]"
                 style={{ minWidth: 120 }}
               >
                 {providers
@@ -353,7 +353,7 @@ export default function TrendsTab({
                 value={customTopic}
                 onChange={(e) => setCustomTopic(e.target.value)}
                 placeholder="اكتب موضوع أو ترند..."
-                className="flex-1 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]"
+                className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && customTopic.trim())
                     generateIdeas(customTopic);
@@ -367,8 +367,8 @@ export default function TrendsTab({
                 className={
                   "w-full sm:w-auto px-5 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 " +
                   (generating
-                    ? "bg-[#2A2A32] text-[#9A9AA0]"
-                    : "bg-[#C6914C] hover:bg-[#A6743A] text-white")
+                    ? "bg-[var(--bg-surface-3)] text-[var(--text-soft)]"
+                    : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white")
                 }
               >
                 {generating ? (
@@ -389,9 +389,9 @@ export default function TrendsTab({
             <div className="text-center py-12">
               <Loader2
                 size={40}
-                className="text-[#C6914C] animate-spin mx-auto mb-4"
+                className="text-[var(--gold-2)] animate-spin mx-auto mb-4"
               />
-              <p className="text-[#9A9AA0]">
+              <p className="text-[var(--text-soft)]">
                 الذكاء الاصطناعي يولّد أفكار محتوى...
               </p>
             </div>
@@ -405,7 +405,7 @@ export default function TrendsTab({
               {generatedIdeas.map((idea, idx) => (
                 <div
                   key={idx}
-                  className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-4 hover:border-[rgba(198,145,76,0.15)] transition"
+                  className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4 hover:border-[var(--gold-bg-hover)] transition"
                 >
                   <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap mb-3">
                     {idea}
@@ -415,13 +415,13 @@ export default function TrendsTab({
                       onClick={() =>
                         onSendToFactory(idea.split("\n")[0])
                       }
-                      className="text-xs bg-[#C6914C] hover:bg-[#A6743A] px-3 py-1.5 rounded-lg transition"
+                      className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
                     >
                       أرسل لمصنع المحتوى
                     </button>
                     <button
                       onClick={() => copyIdea(idx, idea)}
-                      className="text-xs bg-[#1C1C22] hover:bg-[#2A2A32] px-3 py-1.5 rounded-lg transition"
+                      className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
                     >
                       {copiedIdx === idx ? "نُسخ ✓" : "نسخ"}
                     </button>

@@ -11,15 +11,15 @@ const priorities = ["منخفض", "متوسط", "مرتفع", "عاجل"];
 const statuses = ["جديد", "قيد التنفيذ", "قيد المراجعة", "مكتملة"];
 
 const priorityConfig: Record<string, { color: string; bg: string; dot: string }> = {
-  "منخفض": { color: "text-[#9A9AA0]", bg: "bg-[rgba(154,154,160,0.1)]", dot: "bg-[#9A9AA0]" },
+  "منخفض": { color: "text-[var(--text-soft)]", bg: "bg-[rgba(154,154,160,0.1)]", dot: "bg-[var(--text-soft)]" },
   "متوسط": { color: "text-yellow-400", bg: "bg-[rgba(250,204,21,0.1)]", dot: "bg-yellow-400" },
   "مرتفع": { color: "text-orange-400", bg: "bg-[rgba(251,146,60,0.1)]", dot: "bg-orange-400" },
   "عاجل": { color: "text-red-400", bg: "bg-[rgba(248,113,113,0.1)]", dot: "bg-red-400" },
 };
 
 const statusConfig: Record<string, { color: string; bg: string }> = {
-  "جديد": { color: "text-[#C18D4A]", bg: "bg-[rgba(193,141,74,0.1)]" },
-  "قيد التنفيذ": { color: "text-[#C6914C]", bg: "bg-[rgba(198,145,76,0.1)]" },
+  "جديد": { color: "text-[var(--gold-2)]", bg: "bg-[rgba(193,141,74,0.1)]" },
+  "قيد التنفيذ": { color: "text-[var(--gold-2)]", bg: "bg-[var(--gold-bg)]" },
   "قيد المراجعة": { color: "text-purple-400", bg: "bg-[rgba(192,132,252,0.1)]" },
   "مكتملة": { color: "text-green-400", bg: "bg-[rgba(74,222,128,0.1)]" },
 };
@@ -169,9 +169,9 @@ export default function TasksPage() {
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">المهام</h2>
-          <p style={{ color:'#5A5A62', fontSize:14 }}>تتبع مهامك ومتابعاتك العقارية</p>
+          <p style={{ color:'var(--text-faint)', fontSize:14 }}>تتبع مهامك ومتابعاتك العقارية</p>
         </div>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-[#0A0A0C] text-sm" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)' }}>
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-[var(--bg-page)] text-sm" style={{ background:'linear-gradient(135deg, var(--gold-2), var(--gold-3))' }}>
           <Plus size={16} /> مهمة جديدة
         </button>
       </div>
@@ -179,17 +179,17 @@ export default function TasksPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-6">
         {[
-          { label: "الإجمالي", value: stats.total, color: "#C6914C", icon: CheckSquare },
-          { label: "جديدة", value: stats.new, color: "#C18D4A", icon: Circle },
-          { label: "قيد التنفيذ", value: stats.inProgress, color: "#C6914C", icon: Clock },
-          { label: "مكتملة", value: stats.done, color: "#4ADE80", icon: CheckCircle },
-          { label: "متأخرة", value: stats.overdue, color: "#F87171", icon: AlertTriangle },
+          { label: "الإجمالي", value: stats.total, color: "var(--gold-2)", icon: CheckSquare },
+          { label: "جديدة", value: stats.new, color: "var(--gold-2)", icon: Circle },
+          { label: "قيد التنفيذ", value: stats.inProgress, color: "var(--gold-2)", icon: Clock },
+          { label: "مكتملة", value: stats.done, color: "var(--success)", icon: CheckCircle },
+          { label: "متأخرة", value: stats.overdue, color: "var(--danger)", icon: AlertTriangle },
         ].map((s, i) => (
-          <div key={i} className="rounded-xl p-2 sm:p-4 flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-3" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)' }}>
+          <div key={i} className="rounded-xl p-2 sm:p-4 flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-3" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)' }}>
             <s.icon size={16} className="sm:w-5 sm:h-5" style={{ color: s.color }} />
             <div className="text-center sm:text-right">
               <div className="text-lg sm:text-xl font-bold" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-xs" style={{ color:'#5A5A62', fontSize:11 }}>{s.label}</div>
+              <div className="text-xs" style={{ color:'var(--text-faint)', fontSize:11 }}>{s.label}</div>
             </div>
           </div>
         ))}
@@ -198,21 +198,21 @@ export default function TasksPage() {
       {/* Controls */}
       <div className="flex flex-wrap gap-2 sm:gap-3 mb-6">
         <div className="relative w-full sm:flex-1 sm:min-w-0" style={{ minWidth: 0 }}>
-          <Search size={16} className="absolute right-3 top-3" style={{ color:'#5A5A62' }} />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث في المهام..." className="w-full rounded-lg pr-10 pl-4 py-2.5 text-sm focus:outline-none" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5' }} />
+          <Search size={16} className="absolute right-3 top-3" style={{ color:'var(--text-faint)' }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث في المهام..." className="w-full rounded-lg pr-10 pl-4 py-2.5 text-sm focus:outline-none" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)', color:'var(--text-strong)' }} />
         </div>
         <div className="flex gap-2 flex-1">
-          <select value={filterPriority} onChange={e => setFilterPriority(e.target.value)} className="flex-1 rounded-lg px-2 py-2.5 text-xs sm:text-sm focus:outline-none" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5', minWidth: 0 }}>
+          <select value={filterPriority} onChange={e => setFilterPriority(e.target.value)} className="flex-1 rounded-lg px-2 py-2.5 text-xs sm:text-sm focus:outline-none" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)', color:'var(--text-strong)', minWidth: 0 }}>
             <option value="all">كل الأولويات</option>
             {priorities.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
-          <select value={filterType} onChange={e => setFilterType(e.target.value)} className="flex-1 rounded-lg px-2 py-2.5 text-xs sm:text-sm focus:outline-none" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', color:'#F5F5F5', minWidth: 0 }}>
+          <select value={filterType} onChange={e => setFilterType(e.target.value)} className="flex-1 rounded-lg px-2 py-2.5 text-xs sm:text-sm focus:outline-none" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)', color:'var(--text-strong)', minWidth: 0 }}>
             <option value="all">كل الأنواع</option>
             {taskTypes.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
-          <div className="flex rounded-lg overflow-hidden flex-shrink-0" style={{ border:'1px solid rgba(198,145,76,0.12)' }}>
+          <div className="flex rounded-lg overflow-hidden flex-shrink-0" style={{ border:'1px solid var(--gold-bg)' }}>
             {([["list","قائمة",List],["kanban","كانبان",LayoutGrid],["calendar","تقويم",Calendar]] as [string,string,any][]).map(([id,label,Icon]) => (
-              <button key={id} onClick={() => setView(id as any)} className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs transition" style={{ background: view === id ? 'rgba(198,145,76,0.15)' : '#16161A', color: view === id ? '#C6914C' : '#5A5A62' }}>
+              <button key={id} onClick={() => setView(id as any)} className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs transition" style={{ background: view === id ? 'var(--gold-bg-hover)' : 'var(--bg-surface-1)', color: view === id ? 'var(--gold-2)' : 'var(--text-faint)' }}>
                 <Icon size={14} /><span className="hidden sm:inline ml-1">{label}</span>
               </button>
             ))}
@@ -224,8 +224,8 @@ export default function TasksPage() {
       {view === "list" && (
         <div>
           {filtered.length === 0 ? (
-            <div className="text-center py-16" style={{ color:'#5A5A62' }}>
-              <CheckSquare size={40} className="mx-auto mb-3" style={{ color:'#3A3A42' }} />
+            <div className="text-center py-16" style={{ color:'var(--text-faint)' }}>
+              <CheckSquare size={40} className="mx-auto mb-3" style={{ color:'var(--border-1)' }} />
               <p>لا توجد مهام</p>
             </div>
           ) : (
@@ -233,21 +233,21 @@ export default function TasksPage() {
               {/* Mobile Cards */}
               <div className="md:hidden space-y-2">
                 {filtered.map(task => {
-                  const pColorMap: Record<string, string> = { "عاجل":"#F87171","مرتفع":"#FB923C","متوسط":"#FACC15","منخفض":"#9A9AA0" };
-                  const pColor = pColorMap[task.priority] || "#5A5A62";
+                  const pColorMap: Record<string, string> = { "عاجل":"var(--danger)","مرتفع":"#FB923C","متوسط":"var(--warning)","منخفض":"var(--text-soft)" };
+                  const pColor = pColorMap[task.priority] || "var(--text-faint)";
                   const overdue = isOverdue(task);
                   return (
-                    <div key={task.id} className="rounded-xl p-4 flex gap-3" style={{ background:'#16161A', borderRight:`3px solid ${pColor}`, border:`1px solid rgba(198,145,76,0.1)`, borderRightWidth:3, borderRightColor:pColor }}>
+                    <div key={task.id} className="rounded-xl p-4 flex gap-3" style={{ background:'var(--bg-surface-1)', borderRight:`3px solid ${pColor}`, border:`1px solid var(--gold-bg)`, borderRightWidth:3, borderRightColor:pColor }}>
                       <button onClick={() => toggleDone(task)} className="flex-shrink-0 mt-0.5">
-                        {task.status === "مكتملة" ? <CheckCircle size={22} style={{ color:'#4ADE80' }} /> : <Circle size={22} style={{ color:'#5A5A62' }} />}
+                        {task.status === "مكتملة" ? <CheckCircle size={22} style={{ color:'var(--success)' }} /> : <Circle size={22} style={{ color:'var(--text-faint)' }} />}
                       </button>
                       <div className="flex-1 min-w-0" onClick={() => openEdit(task)}>
-                        <p className={"font-medium text-sm mb-1 " + (task.status === "مكتملة" ? "line-through" : "")} style={{ color: task.status === "مكتملة" ? '#5A5A62' : '#F5F5F5' }}>{task.title}</p>
-                        {task.notes && <p className="text-xs mb-2 line-clamp-2" style={{ color:'#5A5A62' }}>{task.notes}</p>}
+                        <p className={"font-medium text-sm mb-1 " + (task.status === "مكتملة" ? "line-through" : "")} style={{ color: task.status === "مكتملة" ? 'var(--text-faint)' : 'var(--text-strong)' }}>{task.title}</p>
+                        {task.notes && <p className="text-xs mb-2 line-clamp-2" style={{ color:'var(--text-faint)' }}>{task.notes}</p>}
                         <div className="flex items-center gap-2 flex-wrap">
-                          {task.task_type && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background:'rgba(198,145,76,0.08)', color:'#9A9AA0' }}>{task.task_type}</span>}
+                          {task.task_type && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background:'var(--gold-bg-soft)', color:'var(--text-soft)' }}>{task.task_type}</span>}
                           {task.priority && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: pColor + "18", color: pColor }}>{task.priority}</span>}
-                          {task.due_date && <span className={"text-xs font-medium " + (overdue ? "text-red-400" : "")} style={{ color: overdue ? undefined : '#5A5A62' }}>{overdue ? "⚠ " : ""}{formatDate(task.due_date)}</span>}
+                          {task.due_date && <span className={"text-xs font-medium " + (overdue ? "text-red-400" : "")} style={{ color: overdue ? undefined : 'var(--text-faint)' }}>{overdue ? "⚠ " : ""}{formatDate(task.due_date)}</span>}
                         </div>
                       </div>
                       <div className="flex flex-col gap-2 flex-shrink-0">
@@ -255,8 +255,8 @@ export default function TasksPage() {
                           {statuses.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                         <div className="flex gap-1 justify-end">
-                          <button onClick={() => openEdit(task)} style={{ color:'#5A5A62', padding:4 }}><Pencil size={13} /></button>
-                          <button onClick={() => deleteTask(task.id)} style={{ color:'#5A5A62', padding:4 }}><Trash2 size={13} /></button>
+                          <button onClick={() => openEdit(task)} style={{ color:'var(--text-faint)', padding:4 }}><Pencil size={13} /></button>
+                          <button onClick={() => deleteTask(task.id)} style={{ color:'var(--text-faint)', padding:4 }}><Trash2 size={13} /></button>
                         </div>
                       </div>
                     </div>
@@ -265,26 +265,26 @@ export default function TasksPage() {
               </div>
 
               {/* Desktop Table */}
-              <div className="hidden md:block rounded-xl overflow-hidden" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)' }}>
+              <div className="hidden md:block rounded-xl overflow-hidden" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)' }}>
                 <div className="overflow-x-auto">
                 <table className="w-full" style={{ minWidth: 560 }}>
                   <thead>
-                    <tr style={{ borderBottom:'1px solid rgba(198,145,76,0.08)' }}>
+                    <tr style={{ borderBottom:'1px solid var(--gold-bg-soft)' }}>
                       {["","المهمة","النوع","الأولوية","التاريخ","الحالة",""].map((h,i) => (
-                        <th key={i} className="text-right px-4 py-3 text-xs font-medium" style={{ color:'#5A5A62' }}>{h}</th>
+                        <th key={i} className="text-right px-4 py-3 text-xs font-medium" style={{ color:'var(--text-faint)' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {filtered.map(task => (
                       <tr key={task.id} className="transition" style={{ borderBottom:'1px solid rgba(198,145,76,0.05)' }}>
-                        <td className="px-4 py-3 w-10"><button onClick={() => toggleDone(task)}>{task.status === "مكتملة" ? <CheckCircle size={20} style={{ color:'#4ADE80' }} /> : <Circle size={20} style={{ color:'#5A5A62' }} />}</button></td>
-                        <td className="px-4 py-3"><span className={"text-sm font-medium " + (task.status === "مكتملة" ? "line-through" : "")} style={{ color: task.status === "مكتملة" ? '#5A5A62' : '#F5F5F5' }}>{task.title}</span>{task.notes && <p className="text-xs mt-0.5" style={{ color:'#5A5A62' }}>{task.notes}</p>}</td>
-                        <td className="px-4 py-3 text-xs" style={{ color:'#9A9AA0' }}>{task.task_type || "—"}</td>
+                        <td className="px-4 py-3 w-10"><button onClick={() => toggleDone(task)}>{task.status === "مكتملة" ? <CheckCircle size={20} style={{ color:'var(--success)' }} /> : <Circle size={20} style={{ color:'var(--text-faint)' }} />}</button></td>
+                        <td className="px-4 py-3"><span className={"text-sm font-medium " + (task.status === "مكتملة" ? "line-through" : "")} style={{ color: task.status === "مكتملة" ? 'var(--text-faint)' : 'var(--text-strong)' }}>{task.title}</span>{task.notes && <p className="text-xs mt-0.5" style={{ color:'var(--text-faint)' }}>{task.notes}</p>}</td>
+                        <td className="px-4 py-3 text-xs" style={{ color:'var(--text-soft)' }}>{task.task_type || "—"}</td>
                         <td className="px-4 py-3">{task.priority && <span className={"text-xs px-2 py-1 rounded-lg " + (priorityConfig[task.priority]?.color || "") + " " + (priorityConfig[task.priority]?.bg || "")}>{task.priority}</span>}</td>
-                        <td className="px-4 py-3"><span className={"text-xs " + (isOverdue(task) ? "text-red-400 font-medium" : "")} style={{ color: isOverdue(task) ? undefined : '#9A9AA0' }}>{formatDate(task.due_date) || "—"}</span></td>
+                        <td className="px-4 py-3"><span className={"text-xs " + (isOverdue(task) ? "text-red-400 font-medium" : "")} style={{ color: isOverdue(task) ? undefined : 'var(--text-soft)' }}>{formatDate(task.due_date) || "—"}</span></td>
                         <td className="px-4 py-3"><select value={task.status} onChange={e => updateStatus(task.id, e.target.value)} className={"text-xs px-2 py-1 rounded-lg border-0 focus:outline-none " + (statusConfig[task.status]?.color || "") + " " + (statusConfig[task.status]?.bg || "")} style={{ background: undefined }}>{statuses.map(s => <option key={s} value={s}>{s}</option>)}</select></td>
-                        <td className="px-4 py-3"><div className="flex gap-2"><button onClick={() => openEdit(task)} style={{ color:'#5A5A62' }}><Pencil size={14} /></button><button onClick={() => deleteTask(task.id)} style={{ color:'#5A5A62' }}><Trash2 size={14} /></button></div></td>
+                        <td className="px-4 py-3"><div className="flex gap-2"><button onClick={() => openEdit(task)} style={{ color:'var(--text-faint)' }}><Pencil size={14} /></button><button onClick={() => deleteTask(task.id)} style={{ color:'var(--text-faint)' }}><Trash2 size={14} /></button></div></td>
                       </tr>
                     ))}
                   </tbody>
@@ -311,32 +311,32 @@ export default function TasksPage() {
             const statusTasks = filtered.filter(t => t.status === status);
             const conf = statusConfig[status];
             return (
-              <div key={status} className="kanban-col rounded-xl" style={{ background:'#111114', border:'1px solid rgba(198,145,76,0.08)', padding:12 }}>
+              <div key={status} className="kanban-col rounded-xl" style={{ background:'var(--bg-deep)', border:'1px solid var(--gold-bg-soft)', padding:12 }}>
                 <div className="flex items-center justify-between mb-3 px-1">
                   <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: conf?.color.includes('C18D4A') ? '#C18D4A' : conf?.color.includes('C9A84C') || conf?.color.includes('C6914C') ? '#C6914C' : conf?.color.includes('purple') ? '#C084FC' : '#4ADE80' }}></div>
-                    <span className="text-sm font-bold" style={{ color:'#F5F5F5' }}>{status}</span>
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: conf?.color.includes('C18D4A') ? 'var(--gold-2)' : conf?.color.includes('C9A84C') || conf?.color.includes('C6914C') ? 'var(--gold-2)' : conf?.color.includes('purple') ? '#C084FC' : 'var(--success)' }}></div>
+                    <span className="text-sm font-bold" style={{ color:'var(--text-strong)' }}>{status}</span>
                   </div>
-                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ background:'rgba(198,145,76,0.08)', color:'#5A5A62' }}>{statusTasks.length}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ background:'var(--gold-bg-soft)', color:'var(--text-faint)' }}>{statusTasks.length}</span>
                 </div>
                 <div className="space-y-2">
                   {statusTasks.map(task => (
-                    <div key={task.id} className="rounded-xl p-3 transition cursor-pointer" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.08)' }} onClick={() => openEdit(task)}>
+                    <div key={task.id} className="rounded-xl p-3 transition cursor-pointer" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg-soft)' }} onClick={() => openEdit(task)}>
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h4 className="text-sm font-medium flex-1" style={{ color:'#F5F5F5' }}>{task.title}</h4>
+                        <h4 className="text-sm font-medium flex-1" style={{ color:'var(--text-strong)' }}>{task.title}</h4>
                         <button onClick={e => { e.stopPropagation(); toggleDone(task); }}>
-                          {task.status === "مكتملة" ? <CheckCircle size={16} style={{ color:'#4ADE80' }} /> : <Circle size={16} style={{ color:'#5A5A62' }} />}
+                          {task.status === "مكتملة" ? <CheckCircle size={16} style={{ color:'var(--success)' }} /> : <Circle size={16} style={{ color:'var(--text-faint)' }} />}
                         </button>
                       </div>
-                      {task.notes && <p className="text-xs mb-2" style={{ color:'#5A5A62' }}>{task.notes}</p>}
+                      {task.notes && <p className="text-xs mb-2" style={{ color:'var(--text-faint)' }}>{task.notes}</p>}
                       <div className="flex items-center gap-2 flex-wrap">
-                        {task.task_type && <span className="text-xs px-1.5 py-0.5 rounded" style={{ background:'rgba(198,145,76,0.06)', color:'#9A9AA0' }}>{task.task_type}</span>}
+                        {task.task_type && <span className="text-xs px-1.5 py-0.5 rounded" style={{ background:'var(--gold-bg-soft)', color:'var(--text-soft)' }}>{task.task_type}</span>}
                         {task.priority && <span className={"text-xs px-1.5 py-0.5 rounded " + (priorityConfig[task.priority]?.bg || "")} style={{ color: priorityConfig[task.priority]?.color.replace('text-','') }}>{task.priority}</span>}
-                        {task.due_date && <span className={"text-xs " + (isOverdue(task) ? "text-red-400" : "")} style={{ color: isOverdue(task) ? undefined : '#5A5A62' }}>{formatDate(task.due_date)}</span>}
+                        {task.due_date && <span className={"text-xs " + (isOverdue(task) ? "text-red-400" : "")} style={{ color: isOverdue(task) ? undefined : 'var(--text-faint)' }}>{formatDate(task.due_date)}</span>}
                       </div>
                     </div>
                   ))}
-                  <button onClick={() => { resetForm(); setForm(f => ({...f, status})); setShowForm(true); }} className="w-full py-2 rounded-lg text-xs transition" style={{ color:'#5A5A62', border:'1px dashed rgba(198,145,76,0.12)' }}>+ إضافة مهمة</button>
+                  <button onClick={() => { resetForm(); setForm(f => ({...f, status})); setShowForm(true); }} className="w-full py-2 rounded-lg text-xs transition" style={{ color:'var(--text-faint)', border:'1px dashed var(--gold-bg)' }}>+ إضافة مهمة</button>
                 </div>
               </div>
             );
@@ -347,15 +347,15 @@ export default function TasksPage() {
       {/* ═══ CALENDAR VIEW ═══ */}
       {view === "calendar" && (
         <div className="overflow-x-auto">
-          <div className="rounded-xl overflow-hidden" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.12)', minWidth: 360 }}>
-            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom:'1px solid rgba(198,145,76,0.08)' }}>
-              <button onClick={() => { const d = new Date(calendarDate); d.setMonth(d.getMonth() - 1); setCalendarDate(d); }} style={{ color:'#9A9AA0' }}><ChevronRight size={20} /></button>
+          <div className="rounded-xl overflow-hidden" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg)', minWidth: 360 }}>
+            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom:'1px solid var(--gold-bg-soft)' }}>
+              <button onClick={() => { const d = new Date(calendarDate); d.setMonth(d.getMonth() - 1); setCalendarDate(d); }} style={{ color:'var(--text-soft)' }}><ChevronRight size={20} /></button>
               <span className="font-bold">{arabicMonths[calendarDate.getMonth()]} {calendarDate.getFullYear()}</span>
-              <button onClick={() => { const d = new Date(calendarDate); d.setMonth(d.getMonth() + 1); setCalendarDate(d); }} style={{ color:'#9A9AA0' }}><ChevronLeft size={20} /></button>
+              <button onClick={() => { const d = new Date(calendarDate); d.setMonth(d.getMonth() + 1); setCalendarDate(d); }} style={{ color:'var(--text-soft)' }}><ChevronLeft size={20} /></button>
             </div>
-            <div className="grid grid-cols-7" style={{ borderBottom:'1px solid rgba(198,145,76,0.08)' }}>
+            <div className="grid grid-cols-7" style={{ borderBottom:'1px solid var(--gold-bg-soft)' }}>
               {arabicDays.map((d, i) => (
-                <div key={d} className="text-center py-2 font-medium" style={{ color:'#5A5A62', fontSize: 11 }}>
+                <div key={d} className="text-center py-2 font-medium" style={{ color:'var(--text-faint)', fontSize: 11 }}>
                   <span className="hidden sm:inline">{d}</span>
                   <span className="sm:hidden">{arabicDaysShort[i]}</span>
                 </div>
@@ -368,14 +368,14 @@ export default function TasksPage() {
                 const isToday = dateStr === todayStr;
                 return (
                   <div key={idx} className="cal-cell p-1" style={{ borderLeft:'1px solid rgba(198,145,76,0.05)', borderBottom:'1px solid rgba(198,145,76,0.05)', background: item.current ? 'transparent' : 'rgba(10,10,12,0.5)', minHeight: 64 }}>
-                    <div className="cal-day-num text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full" style={{ background: isToday ? '#C6914C' : 'transparent', color: isToday ? '#0A0A0C' : item.current ? '#9A9AA0' : '#3A3A42', fontSize: 11 }}>{item.day}</div>
+                    <div className="cal-day-num text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full" style={{ background: isToday ? 'var(--gold-2)' : 'transparent', color: isToday ? 'var(--bg-page)' : item.current ? 'var(--text-soft)' : 'var(--border-1)', fontSize: 11 }}>{item.day}</div>
                     {dayTasks.slice(0, 1).map(t => (
-                      <div key={t.id} onClick={() => openEdit(t)} className="cal-task text-xs rounded px-1 py-0.5 mb-0.5 truncate cursor-pointer" style={{ background: 'rgba(198,145,76,0.1)', color: t.status === "مكتملة" ? '#5A5A62' : '#F5F5F5', fontSize: 9 }}>
+                      <div key={t.id} onClick={() => openEdit(t)} className="cal-task text-xs rounded px-1 py-0.5 mb-0.5 truncate cursor-pointer" style={{ background: 'var(--gold-bg)', color: t.status === "مكتملة" ? 'var(--text-faint)' : 'var(--text-strong)', fontSize: 9 }}>
                         <span className="hidden sm:inline">{t.title}</span>
                         <span className="sm:hidden">●</span>
                       </div>
                     ))}
-                    {dayTasks.length > 1 && <div style={{ color:'#5A5A62', fontSize: 9 }}>+{dayTasks.length - 1}</div>}
+                    {dayTasks.length > 1 && <div style={{ color:'var(--text-faint)', fontSize: 9 }}>+{dayTasks.length - 1}</div>}
                   </div>
                 );
               })}
@@ -394,54 +394,54 @@ export default function TasksPage() {
       {/* ═══ FORM MODAL ═══ */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => { setShowForm(false); resetForm(); }}>
-          <div className="rounded-2xl max-w-lg w-full p-6" style={{ background:'#16161A', border:'1px solid rgba(198,145,76,0.15)' }} dir="rtl" onClick={e => e.stopPropagation()}>
+          <div className="rounded-2xl max-w-lg w-full p-6" style={{ background:'var(--bg-surface-1)', border:'1px solid var(--gold-bg-hover)' }} dir="rtl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg">{editingId ? "تعديل المهمة" : "مهمة جديدة"}</h3>
-              <button onClick={() => { setShowForm(false); resetForm(); }} style={{ color:'#5A5A62' }}><X size={18} /></button>
+              <button onClick={() => { setShowForm(false); resetForm(); }} style={{ color:'var(--text-faint)' }}><X size={18} /></button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>عنوان المهمة *</label>
-                <input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }} placeholder="مثال: متابعة عميل حي النرجس" />
+                <label className="block text-sm mb-2" style={{ color:'var(--text-soft)' }}>عنوان المهمة *</label>
+                <input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'var(--bg-surface-2)', border:'1px solid var(--gold-bg-hover)', color:'var(--text-strong)' }} placeholder="مثال: متابعة عميل حي النرجس" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>النوع</label>
-                  <select value={form.task_type} onChange={e => setForm({...form, task_type: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }}>
+                  <label className="block text-sm mb-2" style={{ color:'var(--text-soft)' }}>النوع</label>
+                  <select value={form.task_type} onChange={e => setForm({...form, task_type: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'var(--bg-surface-2)', border:'1px solid var(--gold-bg-hover)', color:'var(--text-strong)' }}>
                     <option value="">اختر...</option>
                     {taskTypes.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>الأولوية</label>
-                  <select value={form.priority} onChange={e => setForm({...form, priority: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }}>
+                  <label className="block text-sm mb-2" style={{ color:'var(--text-soft)' }}>الأولوية</label>
+                  <select value={form.priority} onChange={e => setForm({...form, priority: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'var(--bg-surface-2)', border:'1px solid var(--gold-bg-hover)', color:'var(--text-strong)' }}>
                     {priorities.map(p => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>تاريخ الاستحقاق</label>
-                  <input type="date" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }} />
+                  <label className="block text-sm mb-2" style={{ color:'var(--text-soft)' }}>تاريخ الاستحقاق</label>
+                  <input type="date" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'var(--bg-surface-2)', border:'1px solid var(--gold-bg-hover)', color:'var(--text-strong)' }} />
                 </div>
                 <div>
-                  <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>الحالة</label>
-                  <select value={form.status} onChange={e => setForm({...form, status: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }}>
+                  <label className="block text-sm mb-2" style={{ color:'var(--text-soft)' }}>الحالة</label>
+                  <select value={form.status} onChange={e => setForm({...form, status: e.target.value})} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'var(--bg-surface-2)', border:'1px solid var(--gold-bg-hover)', color:'var(--text-strong)' }}>
                     {statuses.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-sm mb-2" style={{ color:'#9A9AA0' }}>ملاحظات</label>
-                <textarea value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} rows={3} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'#1C1C22', border:'1px solid rgba(198,145,76,0.15)', color:'#F5F5F5' }} placeholder="تفاصيل إضافية..." />
+                <label className="block text-sm mb-2" style={{ color:'var(--text-soft)' }}>ملاحظات</label>
+                <textarea value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} rows={3} className="w-full rounded-lg px-4 py-3 text-sm focus:outline-none" style={{ background:'var(--bg-surface-2)', border:'1px solid var(--gold-bg-hover)', color:'var(--text-strong)' }} placeholder="تفاصيل إضافية..." />
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={handleSave} className="flex-1 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 text-[#0A0A0C]" style={{ background:'linear-gradient(135deg, #C6914C, #A6743A)' }}>
+              <button onClick={handleSave} className="flex-1 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 text-[var(--bg-page)]" style={{ background:'linear-gradient(135deg, var(--gold-2), var(--gold-3))' }}>
                 <Save size={18} /> {editingId ? "حفظ التعديلات" : "إضافة المهمة"}
               </button>
-              {editingId && <button onClick={() => { deleteTask(editingId); setShowForm(false); resetForm(); }} className="px-4 py-3 rounded-xl transition" style={{ background:'rgba(248,113,113,0.1)', color:'#F87171' }}>حذف</button>}
-              <button onClick={() => { setShowForm(false); resetForm(); }} className="px-6 py-3 rounded-xl transition" style={{ background:'#1C1C22', color:'#9A9AA0' }}>إلغاء</button>
+              {editingId && <button onClick={() => { deleteTask(editingId); setShowForm(false); resetForm(); }} className="px-4 py-3 rounded-xl transition" style={{ background:'rgba(248,113,113,0.1)', color:'var(--danger)' }}>حذف</button>}
+              <button onClick={() => { setShowForm(false); resetForm(); }} className="px-6 py-3 rounded-xl transition" style={{ background:'var(--bg-surface-2)', color:'var(--text-soft)' }}>إلغاء</button>
             </div>
           </div>
         </div>

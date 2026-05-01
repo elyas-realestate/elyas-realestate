@@ -10,14 +10,14 @@ import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
 
 const STATUS_CFG: Record<string, { color: string; bg: string; icon: any }> = {
-  "غير مدفوعة":   { color: "#F87171", bg: "rgba(248,113,113,0.1)", icon: AlertCircle },
-  "مدفوعة جزئياً": { color: "#FACC15", bg: "rgba(250,204,21,0.1)",  icon: Clock       },
-  "مدفوعة":        { color: "#4ADE80", bg: "rgba(74,222,128,0.1)",  icon: CheckCircle },
-  "ملغاة":         { color: "#5A5A62", bg: "rgba(90,90,98,0.08)",   icon: X           },
+  "غير مدفوعة":   { color: "var(--danger)", bg: "rgba(248,113,113,0.1)", icon: AlertCircle },
+  "مدفوعة جزئياً": { color: "var(--warning)", bg: "rgba(250,204,21,0.1)",  icon: Clock       },
+  "مدفوعة":        { color: "var(--success)", bg: "rgba(74,222,128,0.1)",  icon: CheckCircle },
+  "ملغاة":         { color: "var(--text-faint)", bg: "rgba(90,90,98,0.08)",   icon: X           },
 };
 
-const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#3A3A42] focus:outline-none focus:border-[#C6914C] transition";
-const lbl = "block text-xs font-semibold text-[#9A9AA0] mb-2 tracking-wide";
+const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
+const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-wide";
 
 function fmtNum(n: number) {
   if (!n) return "0";
@@ -141,12 +141,12 @@ export default function InvoicesPage() {
 
   if (missingTable) return (
     <div dir="rtl" style={{ maxWidth: 520, margin: "60px auto", textAlign: "center" }}>
-      <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-        <Receipt size={28} style={{ color: "#C6914C" }} />
+      <div style={{ width: 64, height: 64, borderRadius: 18, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+        <Receipt size={28} style={{ color: "var(--gold-2)" }} />
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 12 }}>يلزم تفعيل جدول الفواتير</h2>
-      <p style={{ fontSize: 13, color: "#9A9AA0", lineHeight: 1.8 }}>
-        شغّل <code style={{ background: "#1C1C22", padding: "2px 8px", borderRadius: 6, color: "#C6914C" }}>supabase/009_quotations_invoices.sql</code> في Supabase → SQL Editor
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 12 }}>يلزم تفعيل جدول الفواتير</h2>
+      <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8 }}>
+        شغّل <code style={{ background: "var(--bg-surface-2)", padding: "2px 8px", borderRadius: 6, color: "var(--gold-2)" }}>supabase/009_quotations_invoices.sql</code> في Supabase → SQL Editor
       </p>
     </div>
   );
@@ -156,11 +156,11 @@ export default function InvoicesPage() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">الفواتير</h2>
-          <p style={{ color: "#5A5A62", fontSize: 13 }}>إصدار فواتير وتتبع الدفعات</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>إصدار فواتير وتتبع الدفعات</p>
         </div>
         <button onClick={() => setShowForm(v => !v)}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition"
-          style={{ background: "linear-gradient(135deg,#C6914C,#A6743A)", color: "#0A0A0C", fontSize: 14, border: "none", cursor: "pointer" }}>
+          style={{ background: "linear-gradient(135deg,var(--gold-2),var(--gold-3))", color: "var(--bg-page)", fontSize: 14, border: "none", cursor: "pointer" }}>
           <Plus size={16} /> فاتورة جديدة
         </button>
       </div>
@@ -168,13 +168,13 @@ export default function InvoicesPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "إجمالي الفواتير", val: kpis.total, color: "#C6914C" },
-          { label: "غير مدفوعة", val: kpis.unpaidCount, color: "#F87171" },
-          { label: "مبالغ مستحقة", val: fmtNum(kpis.unpaidAmount) + " ر.س", color: "#FACC15" },
-          { label: "إجمالي المحصّل", val: fmtNum(kpis.paidAmount) + " ر.س", color: "#4ADE80" },
+          { label: "إجمالي الفواتير", val: kpis.total, color: "var(--gold-2)" },
+          { label: "غير مدفوعة", val: kpis.unpaidCount, color: "var(--danger)" },
+          { label: "مبالغ مستحقة", val: fmtNum(kpis.unpaidAmount) + " ر.س", color: "var(--warning)" },
+          { label: "إجمالي المحصّل", val: fmtNum(kpis.paidAmount) + " ر.س", color: "var(--success)" },
         ].map((k, i) => (
-          <div key={i} className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
-            <p style={{ fontSize: 11, color: "#5A5A62", marginBottom: 6 }}>{k.label}</p>
+          <div key={i} className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
+            <p style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 6 }}>{k.label}</p>
             <p className="font-cairo font-bold" style={{ fontSize: 22, color: k.color }}>{k.val}</p>
           </div>
         ))}
@@ -182,10 +182,10 @@ export default function InvoicesPage() {
 
       {/* Add Form */}
       {showForm && (
-        <div className="rounded-2xl p-6" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.18)" }}>
+        <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.18)" }}>
           <div className="flex items-center justify-between mb-5">
-            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#C6914C", letterSpacing: 1 }}>فاتورة جديدة</h3>
-            <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", color: "#5A5A62", cursor: "pointer" }}><X size={18} /></button>
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1 }}>فاتورة جديدة</h3>
+            <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer" }}><X size={18} /></button>
           </div>
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -219,7 +219,7 @@ export default function InvoicesPage() {
             <div className="flex gap-3">
               <button onClick={addInvoice} disabled={saving}
                 className="flex items-center gap-2 px-7 py-3 rounded-xl font-bold transition disabled:opacity-50"
-                style={{ background: "linear-gradient(135deg,#C6914C,#A6743A)", color: "#0A0A0C", fontSize: 14, cursor: "pointer", border: "none" }}>
+                style={{ background: "linear-gradient(135deg,var(--gold-2),var(--gold-3))", color: "var(--bg-page)", fontSize: 14, cursor: "pointer", border: "none" }}>
                 <Check size={16} /> {saving ? "جاري الحفظ..." : "إصدار الفاتورة"}
               </button>
             </div>
@@ -229,9 +229,9 @@ export default function InvoicesPage() {
 
       {/* Invoices List */}
       {invoices.length === 0 ? (
-        <div className="rounded-2xl py-20 text-center" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.09)" }}>
-          <Receipt size={40} style={{ color: "rgba(198,145,76,0.2)", margin: "0 auto 14px", display: "block" }} />
-          <p style={{ color: "#5A5A62", fontSize: 14 }}>لا توجد فواتير</p>
+        <div className="rounded-2xl py-20 text-center" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
+          <Receipt size={40} style={{ color: "var(--gold-bg-hover)", margin: "0 auto 14px", display: "block" }} />
+          <p style={{ color: "var(--text-faint)", fontSize: 14 }}>لا توجد فواتير</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -241,42 +241,42 @@ export default function InvoicesPage() {
             const total = (inv.amount || 0) + (inv.vat_amount || 0);
             const overdue = inv.due_date && new Date(inv.due_date) < new Date() && inv.status === "غير مدفوعة";
             return (
-              <div key={inv.id} className="rounded-2xl p-5" style={{ background: "#16161A", border: overdue ? "1px solid rgba(248,113,113,0.25)" : "1px solid rgba(198,145,76,0.09)" }}>
+              <div key={inv.id} className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: overdue ? "1px solid rgba(248,113,113,0.25)" : "1px solid var(--gold-bg-soft)" }}>
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span style={{ fontSize: 11, color: "#5A5A62", fontFamily: "monospace" }}>{inv.invoice_number || "—"}</span>
-                      <h4 style={{ fontSize: 15, fontWeight: 700, color: "#E5E5E5" }}>{inv.title}</h4>
+                      <span style={{ fontSize: 11, color: "var(--text-faint)", fontFamily: "monospace" }}>{inv.invoice_number || "—"}</span>
+                      <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)" }}>{inv.title}</h4>
                       <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ fontSize: 11, fontWeight: 600, background: cfg.bg, color: cfg.color }}>
                         <StatusIcon size={11} />
                         {inv.status}
                       </span>
-                      {overdue && <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 6, background: "rgba(248,113,113,0.08)", color: "#F87171" }}>⚠ متأخرة</span>}
+                      {overdue && <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 6, background: "rgba(248,113,113,0.08)", color: "var(--danger)" }}>⚠ متأخرة</span>}
                     </div>
-                    <div className="flex gap-4 flex-wrap" style={{ fontSize: 12, color: "#5A5A62" }}>
+                    <div className="flex gap-4 flex-wrap" style={{ fontSize: 12, color: "var(--text-faint)" }}>
                       {inv.client_name && <span>👤 {inv.client_name}</span>}
                       {inv.due_date && <span>📅 {new Date(inv.due_date).toLocaleDateString("ar-SA")}</span>}
                       {inv.vat_amount > 0 && <span>🧾 ضريبة: {fmtNum(inv.vat_amount)} ر.س</span>}
                     </div>
                   </div>
                   <div className="text-left">
-                    <p className="font-cairo font-bold" style={{ fontSize: 20, color: inv.status === "مدفوعة" ? "#4ADE80" : "#C6914C" }}>
+                    <p className="font-cairo font-bold" style={{ fontSize: 20, color: inv.status === "مدفوعة" ? "var(--success)" : "var(--gold-2)" }}>
                       {fmtNum(total)} <span style={{ fontSize: 12 }}>ر.س</span>
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-2 mt-4 pt-3 flex-wrap" style={{ borderTop: "1px solid rgba(198,145,76,0.06)" }}>
+                <div className="flex gap-2 mt-4 pt-3 flex-wrap" style={{ borderTop: "1px solid var(--gold-bg-soft)" }}>
                   {inv.status === "غير مدفوعة" && (
                     <button onClick={() => markPaid(inv.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                      style={{ background: "rgba(74,222,128,0.08)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.2)", cursor: "pointer" }}>
+                      style={{ background: "rgba(74,222,128,0.08)", color: "var(--success)", border: "1px solid rgba(74,222,128,0.2)", cursor: "pointer" }}>
                       <CreditCard size={11} /> تسجيل دفع
                     </button>
                   )}
                   {inv.status === "غير مدفوعة" && (
                     <button onClick={() => sendWhatsappReminder(inv)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                      style={{ background: overdue ? "rgba(74,222,128,0.12)" : "rgba(74,222,128,0.05)", color: "#25D366", border: "1px solid rgba(74,222,128,0.2)", cursor: "pointer" }}
+                      style={{ background: overdue ? "rgba(74,222,128,0.12)" : "rgba(74,222,128,0.05)", color: "var(--whatsapp)", border: "1px solid rgba(74,222,128,0.2)", cursor: "pointer" }}
                       title={overdue ? "إرسال تذكير واتساب — فاتورة متأخرة" : "إرسال تذكير واتساب"}>
                       <MessageCircle size={11} /> {overdue ? "تذكير متأخرة" : "تذكير واتساب"}
                     </button>
@@ -284,19 +284,19 @@ export default function InvoicesPage() {
                   <button
                     onClick={() => window.open(`/api/pdf?type=invoice&id=${inv.id}`, "_blank")}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                    style={{ background: "rgba(96,165,250,0.06)", color: "#60A5FA", border: "1px solid rgba(96,165,250,0.15)", cursor: "pointer" }}>
+                    style={{ background: "rgba(96,165,250,0.06)", color: "var(--info)", border: "1px solid rgba(96,165,250,0.15)", cursor: "pointer" }}>
                     <Printer size={11} /> PDF
                   </button>
                   <button
                     onClick={() => window.open(`/api/zatca-xml?id=${inv.id}`, "_blank")}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                    style={{ background: "rgba(52,211,153,0.06)", color: "#34D399", border: "1px solid rgba(52,211,153,0.15)", cursor: "pointer" }}
+                    style={{ background: "rgba(52,211,153,0.06)", color: "var(--success-2)", border: "1px solid rgba(52,211,153,0.15)", cursor: "pointer" }}
                     title="تصدير XML متوافق مع ZATCA Phase 2">
                     <FileCode size={11} /> XML
                   </button>
                   <button onClick={() => deleteInvoice(inv.id)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                    style={{ background: "rgba(248,113,113,0.04)", color: "#F87171", border: "1px solid rgba(248,113,113,0.1)", cursor: "pointer", marginRight: "auto" }}>
+                    style={{ background: "rgba(248,113,113,0.04)", color: "var(--danger)", border: "1px solid rgba(248,113,113,0.1)", cursor: "pointer", marginRight: "auto" }}>
                     <Trash2 size={11} /> حذف
                   </button>
                 </div>

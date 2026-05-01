@@ -66,7 +66,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
     <div>
       <div className="mb-6">
         <h3 className="text-xl font-bold mb-2">المسودات</h3>
-        <p className="text-[#9A9AA0] text-sm">
+        <p className="text-[var(--text-soft)] text-sm">
           جميع المحتوى المُنتج — عدّل، انسخ، أو غيّر الحالة
         </p>
       </div>
@@ -86,8 +86,8 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
             className={
               "px-4 py-2 rounded-lg text-sm transition " +
               (filter === v
-                ? "bg-[#C6914C] text-white"
-                : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white")
+                ? "bg-[var(--gold-2)] text-white"
+                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white")
             }
           >
             {l} ({sc[v] || 0})
@@ -96,7 +96,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-20 text-[#5A5A62]">
+        <div className="text-center py-20 text-[var(--text-faint)]">
           لا يوجد محتوى بعد
         </div>
       ) : (
@@ -104,24 +104,24 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
           {filtered.map((d) => (
             <div
               key={d.id}
-              className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 hover:border-[rgba(198,145,76,0.15)] transition"
+              className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-bg-hover)] transition"
             >
               <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   {d.main_channel && (
-                    <span className="text-xs bg-[rgba(198,145,76,0.1)] text-[#C6914C] px-2 py-1 rounded">
+                    <span className="text-xs bg-[var(--gold-bg)] text-[var(--gold-2)] px-2 py-1 rounded">
                       {d.main_channel}
                     </span>
                   )}
                   {d.content_format && (
-                    <span className="text-xs bg-[#1C1C22] text-[#9A9AA0] px-2 py-1 rounded">
+                    <span className="text-xs bg-[var(--bg-surface-2)] text-[var(--text-soft)] px-2 py-1 rounded">
                       {d.content_format}
                     </span>
                   )}
                   <select
                     value={d.status}
                     onChange={(e) => updateStatus(d.id, e.target.value)}
-                    className="text-xs bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded px-2 py-1 focus:outline-none focus:border-[#C6914C]"
+                    className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded px-2 py-1 focus:outline-none focus:border-[var(--gold-2)]"
                   >
                     <option value="مسودة">مسودة</option>
                     <option value="جاهز">جاهز</option>
@@ -139,7 +139,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                       </button>
                       <button
                         onClick={() => setEditingId("")}
-                        className="text-xs text-[#5A5A62] flex items-center gap-1"
+                        className="text-xs text-[var(--text-faint)] flex items-center gap-1"
                       >
                         <X size={12} /> إلغاء
                       </button>
@@ -151,7 +151,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                           setEditingId(d.id);
                           setEditText(d.main_text);
                         }}
-                        className="text-xs text-[#5A5A62] hover:text-[#C6914C] flex items-center gap-1"
+                        className="text-xs text-[var(--text-faint)] hover:text-[var(--gold-2)] flex items-center gap-1"
                       >
                         <Pencil size={12} /> تعديل
                       </button>
@@ -162,14 +162,14 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                         {copiedId === d.id ? (
                           <span className="text-green-400">نُسخ ✓</span>
                         ) : (
-                          <span className="text-[#5A5A62] hover:text-white">
+                          <span className="text-[var(--text-faint)] hover:text-white">
                             نسخ
                           </span>
                         )}
                       </button>
                       <button
                         onClick={() => deleteDraft(d.id)}
-                        className="text-xs text-[#5A5A62] hover:text-red-400 flex items-center gap-1"
+                        className="text-xs text-[var(--text-faint)] hover:text-red-400 flex items-center gap-1"
                       >
                         <Trash2 size={12} /> حذف
                       </button>
@@ -182,14 +182,14 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
                   rows={5}
-                  className="w-full bg-[#1C1C22] border border-[#C6914C] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none"
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-2)] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none"
                 />
               ) : (
                 <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
                   {d.main_text}
                 </p>
               )}
-              <div className="flex gap-2 mt-3 text-xs text-[#5A5A62]">
+              <div className="flex gap-2 mt-3 text-xs text-[var(--text-faint)]">
                 {d.content_goal && <span>{d.content_goal}</span>}
                 {d.created_at && (
                   <span>

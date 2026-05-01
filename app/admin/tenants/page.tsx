@@ -22,9 +22,9 @@ type Tenant = {
 };
 
 const PLAN_META: Record<string, { label: string; color: string; bg: string }> = {
-  free:  { label: "مجاني",   color: "#71717A", bg: "rgba(113,113,122,0.08)" },
-  basic: { label: "أساسي",   color: "#C6914C", bg: "rgba(198,145,76,0.10)"  },
-  pro:   { label: "احترافي", color: "#E8B86D", bg: "rgba(232,184,109,0.10)" },
+  free:  { label: "مجاني",   color: "var(--text-ghost)", bg: "rgba(113,113,122,0.08)" },
+  basic: { label: "أساسي",   color: "var(--gold-2)", bg: "var(--gold-bg)"  },
+  pro:   { label: "احترافي", color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)" },
 };
 
 export default function TenantsPage() {
@@ -70,13 +70,13 @@ export default function TenantsPage() {
       {/* Header */}
       <div style={{ marginBottom: 24, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4 }}>المستأجرون (Tenants)</h1>
-          <p style={{ fontSize: 13, color: "#52525B" }}>{loading ? "…" : `${filtered.length} من ${tenants.length}`} وسيط</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>المستأجرون (Tenants)</h1>
+          <p style={{ fontSize: 13, color: "var(--text-disabled)" }}>{loading ? "…" : `${filtered.length} من ${tenants.length}`} وسيط</p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.18)", color: "#A78BFA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}
+          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.18)", color: "var(--purple-ai)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}
         >
           <RefreshCw size={14} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
           تحديث
@@ -87,17 +87,17 @@ export default function TenantsPage() {
       {/* Filters */}
       <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
         <div style={{ position: "relative", flex: "1 1 260px", minWidth: 200 }}>
-          <Search size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "#52525B" }} />
+          <Search size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-disabled)" }} />
           <input
             placeholder="بحث بالاسم، الـ slug، أو البريد…"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            style={{ width: "100%", padding: "10px 36px 10px 14px", background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none" }}
+            style={{ width: "100%", padding: "10px 36px 10px 14px", background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 9, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none" }}
           />
         </div>
 
         <select value={planFilter} onChange={e => setPlanFilter(e.target.value)}
-          style={{ padding: "10px 12px", background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", cursor: "pointer" }}>
+          style={{ padding: "10px 12px", background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 9, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", cursor: "pointer" }}>
           <option value="all">كل الخطط</option>
           <option value="free">مجاني</option>
           <option value="basic">أساسي</option>
@@ -105,7 +105,7 @@ export default function TenantsPage() {
         </select>
 
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-          style={{ padding: "10px 12px", background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", cursor: "pointer" }}>
+          style={{ padding: "10px 12px", background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 9, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", cursor: "pointer" }}>
           <option value="all">كل الحالات</option>
           <option value="active">نشط</option>
           <option value="suspended">معلّق</option>
@@ -114,17 +114,17 @@ export default function TenantsPage() {
 
       {error && (
         <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
-          <AlertCircle size={14} style={{ color: "#F87171" }} />
-          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+          <AlertCircle size={14} style={{ color: "var(--danger)" }} />
+          <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
       {/* Table */}
-      <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden" }}>
+      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, overflow: "hidden" }}>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 900 }}>
             <thead>
-              <tr style={{ background: "#141418", color: "#71717A", textAlign: "right" }}>
+              <tr style={{ background: "#141418", color: "var(--text-ghost)", textAlign: "right" }}>
                 <th style={{ padding: "12px 14px", fontWeight: 600, fontSize: 12 }}>الوسيط</th>
                 <th style={{ padding: "12px 14px", fontWeight: 600, fontSize: 12 }}>الخطة</th>
                 <th style={{ padding: "12px 14px", fontWeight: 600, fontSize: 12, textAlign: "center" }}>عقارات</th>
@@ -146,35 +146,35 @@ export default function TenantsPage() {
                   </tr>
                 ))
               ) : filtered.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: 32, textAlign: "center", color: "#52525B" }}>لا توجد نتائج مطابقة</td></tr>
+                <tr><td colSpan={8} style={{ padding: 32, textAlign: "center", color: "var(--text-disabled)" }}>لا توجد نتائج مطابقة</td></tr>
               ) : (
                 filtered.map(t => {
                   const meta = PLAN_META[t.plan] || PLAN_META.free;
                   return (
                     <tr key={t.id} style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                       <td style={{ padding: "12px 14px" }}>
-                        <div style={{ fontWeight: 600, color: "#E4E4E7" }}>{t.broker_name || t.slug}</div>
-                        <div style={{ fontSize: 11, color: "#52525B", direction: "ltr", textAlign: "right" }}>/{t.slug}</div>
-                        {t.owner_email && <div style={{ fontSize: 10, color: "#3F3F46", marginTop: 2 }}>{t.owner_email}</div>}
+                        <div style={{ fontWeight: 600, color: "var(--text-on-dark)" }}>{t.broker_name || t.slug}</div>
+                        <div style={{ fontSize: 11, color: "var(--text-disabled)", direction: "ltr", textAlign: "right" }}>/{t.slug}</div>
+                        {t.owner_email && <div style={{ fontSize: 10, color: "var(--border-1)", marginTop: 2 }}>{t.owner_email}</div>}
                       </td>
                       <td style={{ padding: "12px 14px" }}>
                         <span style={{ fontSize: 11, fontWeight: 600, color: meta.color, background: meta.bg, padding: "3px 9px", borderRadius: 6 }}>
                           {meta.label}
                         </span>
                       </td>
-                      <td style={{ padding: "12px 14px", textAlign: "center", color: "#D4D4D8" }}>{t.property_count}</td>
-                      <td style={{ padding: "12px 14px", textAlign: "center", color: "#D4D4D8" }}>{t.client_count}</td>
-                      <td style={{ padding: "12px 14px", textAlign: "center", color: "#D4D4D8" }}>{t.deal_count}</td>
-                      <td style={{ padding: "12px 14px", color: "#A1A1AA", fontSize: 12, whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "12px 14px", textAlign: "center", color: "var(--text-secondary)" }}>{t.property_count}</td>
+                      <td style={{ padding: "12px 14px", textAlign: "center", color: "var(--text-secondary)" }}>{t.client_count}</td>
+                      <td style={{ padding: "12px 14px", textAlign: "center", color: "var(--text-secondary)" }}>{t.deal_count}</td>
+                      <td style={{ padding: "12px 14px", color: "var(--text-muted)", fontSize: 12, whiteSpace: "nowrap" }}>
                         {new Date(t.created_at).toLocaleDateString("ar-SA")}
                       </td>
                       <td style={{ padding: "12px 14px" }}>
                         {t.is_active ? (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, color: "#4ADE80" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, color: "var(--success)" }}>
                             <CheckCircle2 size={12} /> نشط
                           </span>
                         ) : (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, color: "#F87171" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, color: "var(--danger)" }}>
                             <XCircle size={12} /> معلّق
                           </span>
                         )}
@@ -182,7 +182,7 @@ export default function TenantsPage() {
                       <td style={{ padding: "12px 14px", textAlign: "left" }}>
                         <Link
                           href={`/admin/tenants/${t.id}`}
-                          style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, color: "#A78BFA", padding: "5px 10px", borderRadius: 7, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.15)" }}
+                          style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--purple-ai)", padding: "5px 10px", borderRadius: 7, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.15)" }}
                         >
                           <ChevronLeft size={12} /> تفاصيل
                         </Link>

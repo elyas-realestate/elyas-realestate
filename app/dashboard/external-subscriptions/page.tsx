@@ -91,45 +91,45 @@ export default function ExternalSubscriptionsPage() {
     return diff;
   };
 
-  const inpMenu = "w-full bg-[#1E293B] border border-[#10B98125] rounded-xl px-4 py-3 text-sm text-[#F8FAFC] placeholder:text-[#64748B] focus:outline-none focus:border-[#10B981] transition";
-  const lblMenu = "block text-xs font-semibold text-[#94A3B8] mb-2 tracking-wide";
+  const inpMenu = "w-full bg-[var(--bg-surface-2)] border border-[var(--success-3)25] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--text-ghost)] focus:outline-none focus:border-[var(--success-3)] transition";
+  const lblMenu = "block text-xs font-semibold text-[var(--text-muted)] mb-2 tracking-wide";
 
-  if (loading) return <div dir="rtl" className="p-10 text-center text-[#94A3B8] font-cairo">جاري التحميل...</div>;
+  if (loading) return <div dir="rtl" className="p-10 text-center text-[var(--text-muted)] font-cairo">جاري التحميل...</div>;
 
   return (
     <div dir="rtl" className="space-y-6">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold font-cairo mb-1">متابعة اشتراكات التطبيقات المساعدة</h2>
-          <p className="text-[#64748B] text-sm">تتبع مصروفات وتجديدات منصات كـ (عقار، ديل، تويتر إكس) وغيرها</p>
+          <p className="text-[var(--text-ghost)] text-sm">تتبع مصروفات وتجديدات منصات كـ (عقار، ديل، تويتر إكس) وغيرها</p>
         </div>
         <button onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition"
-          style={{ background: "#10B981", color: "#020617", fontSize: 14, border: "none", cursor: "pointer" }}>
+          style={{ background: "var(--success-3)", color: "var(--bg-page)", fontSize: 14, border: "none", cursor: "pointer" }}>
           <Plus size={16} /> إضافة اشتراك
         </button>
       </div>
 
       {/* KPI */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-2xl p-5 bg-[#0F172A] border border-[#10B98120]">
-          <p className="text-xs text-[#94A3B8] mb-2">إجمالي التكلفة التقديرية (شهرياً)</p>
+        <div className="rounded-2xl p-5 bg-[var(--bg-surface-1)] border border-[var(--success-3)20]">
+          <p className="text-xs text-[var(--text-muted)] mb-2">إجمالي التكلفة التقديرية (شهرياً)</p>
           <div className="flex items-center gap-2">
             <SARIcon size={16} color="accent" />
-            <p className="font-cairo font-bold text-2xl text-[#10B981]">{totalCostMonthly.toFixed(0)}</p>
+            <p className="font-cairo font-bold text-2xl text-[var(--success-3)]">{totalCostMonthly.toFixed(0)}</p>
           </div>
         </div>
-        <div className="rounded-2xl p-5 bg-[#0F172A] border border-[#10B98120]">
-          <p className="text-xs text-[#94A3B8] mb-2">الاشتراكات النشطة</p>
-          <p className="font-cairo font-bold text-2xl text-[#F8FAFC]">{activeCount}</p>
+        <div className="rounded-2xl p-5 bg-[var(--bg-surface-1)] border border-[var(--success-3)20]">
+          <p className="text-xs text-[var(--text-muted)] mb-2">الاشتراكات النشطة</p>
+          <p className="font-cairo font-bold text-2xl text-[var(--text-strong)]">{activeCount}</p>
         </div>
       </div>
 
       {showForm && (
-        <div className="rounded-2xl p-6 bg-[#0F172A] border border-[#10B98130] animate-fade-in">
+        <div className="rounded-2xl p-6 bg-[var(--bg-surface-1)] border border-[var(--success-3)30] animate-fade-in">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-bold text-[#10B981]">تفاصيل الاشتراك الجديد</h3>
-            <button onClick={() => setShowForm(false)} className="text-[#64748B] hover:text-white"><X size={18} /></button>
+            <h3 className="text-sm font-bold text-[var(--success-3)]">تفاصيل الاشتراك الجديد</h3>
+            <button onClick={() => setShowForm(false)} className="text-[var(--text-ghost)] hover:text-white"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
@@ -165,18 +165,18 @@ export default function ExternalSubscriptionsPage() {
             </div>
           </div>
           <div className="mt-5 flex gap-3">
-            <button onClick={addSub} disabled={saving} className="flex items-center gap-2 px-7 py-3 rounded-xl font-bold bg-[#10B981] text-[#020617] disabled:opacity-50">
+            <button onClick={addSub} disabled={saving} className="flex items-center gap-2 px-7 py-3 rounded-xl font-bold bg-[var(--success-3)] text-[var(--bg-page)] disabled:opacity-50">
               {saving ? "جاري الحفظ..." : "إضافة للتتبع"} 
             </button>
-            <button onClick={() => setShowForm(false)} className="px-5 py-3 rounded-xl text-[#94A3B8] border border-[#10B98120]">إلغاء</button>
+            <button onClick={() => setShowForm(false)} className="px-5 py-3 rounded-xl text-[var(--text-muted)] border border-[var(--success-3)20]">إلغاء</button>
           </div>
         </div>
       )}
 
       {subs.length === 0 && !loading && (
-        <div className="rounded-2xl py-20 text-center bg-[#0F172A] border border-[#10B98120]">
-          <Smartphone size={40} className="text-[#10B98150] mx-auto mb-4" />
-          <p className="text-sm text-[#94A3B8] mb-4">لاتوجد اشتراكات حالياً، أضف المنصات التي تدفع لها دورياً</p>
+        <div className="rounded-2xl py-20 text-center bg-[var(--bg-surface-1)] border border-[var(--success-3)20]">
+          <Smartphone size={40} className="text-[var(--success-3)50] mx-auto mb-4" />
+          <p className="text-sm text-[var(--text-muted)] mb-4">لاتوجد اشتراكات حالياً، أضف المنصات التي تدفع لها دورياً</p>
         </div>
       )}
 
@@ -188,46 +188,46 @@ export default function ExternalSubscriptionsPage() {
             const isExpired = daysLeft !== null && daysLeft < 0;
 
             return (
-              <div key={sub.id} className={`rounded-xl p-5 border relative overflow-hidden ${isUrgent ? 'border-[#FBBF2480] bg-[#1E293B]' : isExpired ? 'border-[#F8717180] bg-[#1E293B]' : 'border-[#10B98120] bg-[#0F172A]'}`}>
+              <div key={sub.id} className={`rounded-xl p-5 border relative overflow-hidden ${isUrgent ? 'border-[var(--warning-2)80] bg-[var(--bg-surface-2)]' : isExpired ? 'border-[var(--danger)80] bg-[var(--bg-surface-2)]' : 'border-[var(--success-3)20] bg-[var(--bg-surface-1)]'}`}>
                 {isUrgent && (
-                  <div className="absolute top-0 right-0 left-0 bg-[#FBBF2420] text-[#FBBF24] text-[10px] text-center font-bold py-1">يحين التجديد قريباً!</div>
+                  <div className="absolute top-0 right-0 left-0 bg-[var(--warning-2)20] text-[var(--warning-2)] text-[10px] text-center font-bold py-1">يحين التجديد قريباً!</div>
                 )}
                 {isExpired && (
-                  <div className="absolute top-0 right-0 left-0 bg-[#F8717120] text-[#F87171] text-[10px] text-center font-bold py-1">انتهى الاشتراك!</div>
+                  <div className="absolute top-0 right-0 left-0 bg-[var(--danger)20] text-[var(--danger)] text-[10px] text-center font-bold py-1">انتهى الاشتراك!</div>
                 )}
                 
                 <div className="flex justify-between items-start mt-2">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#1E293B] border border-[#10B98120] flex items-center justify-center">
-                      <Smartphone size={18} className="text-[#10B981]" />
+                    <div className="w-10 h-10 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--success-3)20] flex items-center justify-center">
+                      <Smartphone size={18} className="text-[var(--success-3)]" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-[#F8FAFC]">{sub.app_name}</h4>
-                      <p className="text-[11px] text-[#94A3B8]">{sub.plan_name}</p>
+                      <h4 className="font-bold text-[var(--text-strong)]">{sub.app_name}</h4>
+                      <p className="text-[11px] text-[var(--text-muted)]">{sub.plan_name}</p>
                     </div>
                   </div>
-                  <button onClick={() => deleteSub(sub.id)} className="text-[#64748B] hover:text-[#F87171]">
+                  <button onClick={() => deleteSub(sub.id)} className="text-[var(--text-ghost)] hover:text-[var(--danger)]">
                     <Trash2 size={14} />
                   </button>
                 </div>
 
-                <div className="flex justify-between items-end pb-3 mb-3 border-b border-[#10B98115]">
+                <div className="flex justify-between items-end pb-3 mb-3 border-b border-[var(--success-3)15]">
                   <div>
-                    <p className="text-[10px] text-[#64748B] mb-1">التكلفة</p>
-                    <p className="font-bold text-[#10B981] font-cairo">
+                    <p className="text-[10px] text-[var(--text-ghost)] mb-1">التكلفة</p>
+                    <p className="font-bold text-[var(--success-3)] font-cairo">
                       {sub.cost} <SARIcon size={10} color="accent" />
-                      <span className="text-[10px] text-[#64748B] font-normal mr-1">/ {sub.billing_cycle === 'yearly' ? 'سنوي' : 'شهري'}</span>
+                      <span className="text-[10px] text-[var(--text-ghost)] font-normal mr-1">/ {sub.billing_cycle === 'yearly' ? 'سنوي' : 'شهري'}</span>
                     </p>
                   </div>
                   <div className="text-left">
-                    <p className="text-[10px] text-[#64748B] mb-1">تاريخ الانتهاء</p>
-                    <p className="text-sm font-semibold text-[#F8FAFC] font-sans" dir="ltr">{sub.end_date}</p>
+                    <p className="text-[10px] text-[var(--text-ghost)] mb-1">تاريخ الانتهاء</p>
+                    <p className="text-sm font-semibold text-[var(--text-strong)] font-sans" dir="ltr">{sub.end_date}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <BellRing size={12} className={isUrgent ? 'text-[#FBBF24]' : isExpired ? 'text-[#F87171]' : 'text-[#64748B]'} />
-                  <span className={`text-[11px] font-bold ${isUrgent ? 'text-[#FBBF24]' : isExpired ? 'text-[#F87171]' : 'text-[#94A3B8]'}`}>
+                  <BellRing size={12} className={isUrgent ? 'text-[var(--warning-2)]' : isExpired ? 'text-[var(--danger)]' : 'text-[var(--text-ghost)]'} />
+                  <span className={`text-[11px] font-bold ${isUrgent ? 'text-[var(--warning-2)]' : isExpired ? 'text-[var(--danger)]' : 'text-[var(--text-muted)]'}`}>
                     {isExpired ? 'متأخر الدفع' : daysLeft !== null ? `باقي ${daysLeft} يوماً` : 'غير محدد'}
                   </span>
                 </div>

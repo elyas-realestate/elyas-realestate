@@ -117,7 +117,7 @@ export default function WhatsAppSettings() {
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "#34D399", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={28} style={{ color: "var(--success-2)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -128,14 +128,14 @@ export default function WhatsAppSettings() {
   return (
     <div>
       <Link href="/dashboard/whatsapp/inbox"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
         <ArrowRight size={12} /> WhatsApp
       </Link>
 
-      <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-        <SettingsIcon size={20} style={{ color: "#34D399" }} /> إعدادات WhatsApp Business API
+      <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+        <SettingsIcon size={20} style={{ color: "var(--success-2)" }} /> إعدادات WhatsApp Business API
       </h1>
-      <p style={{ fontSize: 13, color: "#71717A", marginBottom: 22 }}>
+      <p style={{ fontSize: 13, color: "var(--text-ghost)", marginBottom: 22 }}>
         ربط رقم WhatsApp Business عبر Meta Cloud API لتفعيل الإرسال الفعلي والرد التلقائي
       </p>
 
@@ -146,12 +146,12 @@ export default function WhatsAppSettings() {
         border: `1px solid ${configured ? "rgba(74,222,128,0.2)" : "rgba(232,184,109,0.2)"}`,
         display: "flex", alignItems: "center", gap: 10,
       }}>
-        {configured ? <CheckCircle2 size={18} style={{ color: "#4ADE80" }} /> : <AlertCircle size={18} style={{ color: "#E8B86D" }} />}
+        {configured ? <CheckCircle2 size={18} style={{ color: "var(--success)" }} /> : <AlertCircle size={18} style={{ color: "var(--gold-1)" }} />}
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: configured ? "#4ADE80" : "#E8B86D" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: configured ? "var(--success)" : "var(--gold-1)" }}>
             {configured && config.is_active ? "WhatsApp Business مفعَّل ويرسل عبر Meta" : configured ? "الإعدادات محفوظة — فعّل الخدمة لبدء الإرسال" : "الإعدادات غير مكتملة"}
           </div>
-          <div style={{ fontSize: 11, color: "#A1A1AA", marginTop: 3 }}>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 3 }}>
             {configured
               ? "الرسائل تُرسل عبر Meta API. لما تختفي الإعدادات أو تُعطَّل، يرجع النظام لـ wa.me كبديل."
               : "حالياً النظام يستخدم wa.me لكل رسائل WhatsApp (يفتح المحادثة في جوّالك يدوياً)."
@@ -167,7 +167,7 @@ export default function WhatsAppSettings() {
         style={{
           display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 8,
           background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
-          color: "#60A5FA", fontSize: 12, marginBottom: 18, textDecoration: "none",
+          color: "var(--info)", fontSize: 12, marginBottom: 18, textDecoration: "none",
         }}>
         <BookOpen size={13} /> دليل إعداد Meta خطوة بخطوة <ExternalLink size={11} />
       </Link>
@@ -194,7 +194,7 @@ export default function WhatsAppSettings() {
                   placeholder={config.access_token_enc ? "•••••••• (محفوظ، اتركه فارغاً للإبقاء)" : "EAAGm..."}
                 />
                 <button type="button" onClick={() => setShowToken(s => !s)}
-                  style={{ position: "absolute", insetInlineStart: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#71717A", cursor: "pointer", padding: 4 }}>
+                  style={{ position: "absolute", insetInlineStart: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "var(--text-ghost)", cursor: "pointer", padding: 4 }}>
                   {showToken ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
@@ -210,7 +210,7 @@ export default function WhatsAppSettings() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
             <Field label="رابط الـ Webhook (انسخه إلى Meta)" hint="ضعه في Meta Business Manager → Webhooks → Callback URL">
               <div style={{ display: "flex", gap: 8 }}>
-                <input value={webhookUrl} readOnly style={{ ...inputStyle, flex: 1, color: "#34D399", direction: "ltr", textAlign: "left" }} />
+                <input value={webhookUrl} readOnly style={{ ...inputStyle, flex: 1, color: "var(--success-2)", direction: "ltr", textAlign: "left" }} />
                 <button onClick={() => copy(webhookUrl, "الرابط")} style={btnInline}>نسخ</button>
               </div>
             </Field>
@@ -225,11 +225,11 @@ export default function WhatsAppSettings() {
               </div>
             </Field>
             <div style={{ padding: 12, background: "rgba(232,184,109,0.05)", border: "1px solid rgba(232,184,109,0.15)", borderRadius: 8 }}>
-              <div style={{ fontSize: 11, color: "#E8B86D", fontWeight: 600, marginBottom: 4 }}>⚠ تذكير</div>
-              <div style={{ fontSize: 11, color: "#A1A1AA", lineHeight: 1.7 }}>
+              <div style={{ fontSize: 11, color: "var(--gold-1)", fontWeight: 600, marginBottom: 4 }}>⚠ تذكير</div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.7 }}>
                 نفس قيمة Verify Token يجب إضافتها كمتغير بيئة في Vercel:
                 <br />
-                <code style={{ background: "#0A0A0C", padding: "1px 6px", borderRadius: 4, fontSize: 10, direction: "ltr", display: "inline-block", marginTop: 4 }}>META_WEBHOOK_VERIFY_TOKEN</code>
+                <code style={{ background: "var(--bg-page)", padding: "1px 6px", borderRadius: 4, fontSize: 10, direction: "ltr", display: "inline-block", marginTop: 4 }}>META_WEBHOOK_VERIFY_TOKEN</code>
               </div>
             </div>
           </div>
@@ -242,8 +242,8 @@ export default function WhatsAppSettings() {
               type="checkbox" id="auto_reply"
               checked={config.auto_reply_enabled !== false}
               onChange={e => setConfig(c => ({ ...c, auto_reply_enabled: e.target.checked }))}
-              style={{ marginTop: 2, accentColor: "#A78BFA", width: 16, height: 16 }} />
-            <label htmlFor="auto_reply" style={{ flex: 1, fontSize: 13, color: "#E4E4E7", lineHeight: 1.7, cursor: "pointer" }}>
+              style={{ marginTop: 2, accentColor: "var(--purple-ai)", width: 16, height: 16 }} />
+            <label htmlFor="auto_reply" style={{ flex: 1, fontSize: 13, color: "var(--text-on-dark)", lineHeight: 1.7, cursor: "pointer" }}>
               تفعيل الرد التلقائي — يُرد على رسائل العملاء الواردة باستخدام AI، ويبحث في عقاراتك المنشورة لاقتراح ٣ مطابقات.
             </label>
           </div>
@@ -269,8 +269,8 @@ export default function WhatsAppSettings() {
               type="checkbox"
               checked={!!config.is_active}
               onChange={e => setConfig(c => ({ ...c, is_active: e.target.checked }))}
-              style={{ marginTop: 2, accentColor: "#4ADE80", width: 16, height: 16 }} />
-            <span style={{ flex: 1, fontSize: 13, color: "#E4E4E7", lineHeight: 1.7 }}>
+              style={{ marginTop: 2, accentColor: "var(--success)", width: 16, height: 16 }} />
+            <span style={{ flex: 1, fontSize: 13, color: "var(--text-on-dark)", lineHeight: 1.7 }}>
               تفعيل WhatsApp Business — كل الرسائل تُرسل عبر Meta API. عند التعطيل، يستخدم النظام wa.me كبديل.
             </span>
           </label>
@@ -280,8 +280,8 @@ export default function WhatsAppSettings() {
         <button onClick={save} disabled={saving}
           style={{
             padding: "13px", borderRadius: 10,
-            background: "linear-gradient(135deg, #34D399, #10B981)",
-            color: "#0A0A0C", border: "none",
+            background: "linear-gradient(135deg, var(--success-2), var(--success-3))",
+            color: "var(--bg-page)", border: "none",
             fontSize: 14, fontWeight: 700, cursor: "pointer",
             fontFamily: "'Tajawal', sans-serif",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -297,9 +297,9 @@ export default function WhatsAppSettings() {
 
 function Card({ title, icon: Icon, children }: { title: string; icon: typeof Bot; children: React.ReactNode }) {
   return (
-    <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: 18 }}>
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
-        <Icon size={15} style={{ color: "#34D399" }} /> {title}
+    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, padding: 18 }}>
+      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon size={15} style={{ color: "var(--success-2)" }} /> {title}
       </h2>
       {children}
     </div>
@@ -309,22 +309,22 @@ function Card({ title, icon: Icon, children }: { title: string; icon: typeof Bot
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-      <span style={{ fontSize: 12, color: "#A1A1AA" }}>{label}</span>
+      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{label}</span>
       {children}
-      {hint && <span style={{ fontSize: 10, color: "#52525B", lineHeight: 1.6 }}>{hint}</span>}
+      {hint && <span style={{ fontSize: 10, color: "var(--text-disabled)", lineHeight: 1.6 }}>{hint}</span>}
     </div>
   );
 }
 
 const inputStyle: React.CSSProperties = {
-  padding: "9px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: 8, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
+  padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)",
+  borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
   outline: "none", width: "100%",
 };
 
 const btnInline: React.CSSProperties = {
   padding: "9px 14px", borderRadius: 8,
   background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)",
-  color: "#34D399", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
+  color: "var(--success-2)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
   whiteSpace: "nowrap",
 };

@@ -46,14 +46,14 @@ const SITE_SECTIONS = [
 ];
 
 const COLOR_DEFAULTS = {
-  color_accent:         "#C6914C",
-  color_accent_dark:    "#A6743A",
-  color_bg_primary:     "#0A0A0C",
-  color_bg_secondary:   "#111114",
-  color_bg_card:        "#16161A",
-  color_text_primary:   "#F5F5F5",
-  color_text_secondary: "#9A9AA0",
-  color_text_muted:     "#5A5A62",
+  color_accent:         "var(--gold-2)",
+  color_accent_dark:    "var(--gold-3)",
+  color_bg_primary:     "var(--bg-page)",
+  color_bg_secondary:   "var(--bg-deep)",
+  color_bg_card:        "var(--bg-surface-1)",
+  color_text_primary:   "var(--text-strong)",
+  color_text_secondary: "var(--text-soft)",
+  color_text_muted:     "var(--text-faint)",
   font_size_hero:            "clamp(2.4rem, 5.5vw, 4.2rem)",
   font_size_section_title:   "clamp(1.8rem, 3.5vw, 2.6rem)",
   font_size_body:            "15px",
@@ -78,10 +78,10 @@ const COLOR_GROUPS = [
 ];
 
 const QUICK_THEMES = [
-  { name: "الذهبي الداكن",  emoji: "🟤", colors: { color_accent:"#C6914C", color_accent_dark:"#A6743A", color_bg_primary:"#0A0A0C", color_bg_secondary:"#111114", color_bg_card:"#16161A", color_text_primary:"#F5F5F5", color_text_secondary:"#9A9AA0", color_text_muted:"#5A5A62" }},
+  { name: "الذهبي الداكن",  emoji: "🟤", colors: { color_accent:"var(--gold-2)", color_accent_dark:"var(--gold-3)", color_bg_primary:"var(--bg-page)", color_bg_secondary:"var(--bg-deep)", color_bg_card:"var(--bg-surface-1)", color_text_primary:"var(--text-strong)", color_text_secondary:"var(--text-soft)", color_text_muted:"var(--text-faint)" }},
   { name: "الأزرق الملكي",  emoji: "🔵", colors: { color_accent:"#5B8DEF", color_accent_dark:"#3B6DCF", color_bg_primary:"#08090F", color_bg_secondary:"#0E1020", color_bg_card:"#131526", color_text_primary:"#F0F4FF", color_text_secondary:"#8A95B0", color_text_muted:"#525870" }},
-  { name: "الأخضر الفاخر",  emoji: "🟢", colors: { color_accent:"#4ADE80", color_accent_dark:"#2AB860", color_bg_primary:"#060C0A", color_bg_secondary:"#0A1510", color_bg_card:"#101A14", color_text_primary:"#F0FFF4", color_text_secondary:"#7AA886", color_text_muted:"#4A6854" }},
-  { name: "البنفسجي",        emoji: "🟣", colors: { color_accent:"#A78BFA", color_accent_dark:"#7C5FD4", color_bg_primary:"#080810", color_bg_secondary:"#0F0F1A", color_bg_card:"#141420", color_text_primary:"#F5F0FF", color_text_secondary:"#9590A8", color_text_muted:"#555068" }},
+  { name: "الأخضر الفاخر",  emoji: "🟢", colors: { color_accent:"var(--success)", color_accent_dark:"#2AB860", color_bg_primary:"#060C0A", color_bg_secondary:"#0A1510", color_bg_card:"#101A14", color_text_primary:"#F0FFF4", color_text_secondary:"#7AA886", color_text_muted:"#4A6854" }},
+  { name: "البنفسجي",        emoji: "🟣", colors: { color_accent:"var(--purple-ai)", color_accent_dark:"#7C5FD4", color_bg_primary:"#080810", color_bg_secondary:"#0F0F1A", color_bg_card:"#141420", color_text_primary:"#F5F0FF", color_text_secondary:"#9590A8", color_text_muted:"#555068" }},
 ];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -299,13 +299,13 @@ export default function Settings() {
   }
 
   // ─── Styles ───────────────────────────────────────────────────────────────
-  const inputClass = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C] transition";
+  const inputClass = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--gold-2)] transition";
 
   function SaveBtn({ onClick }: { onClick: () => void }) {
     return (
       <button onClick={onClick} disabled={saving}
         className={"flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition " +
-          (saved ? "bg-green-600 text-white" : "bg-[#C6914C] hover:bg-[#A6743A] text-[#0A0A0C]")}>
+          (saved ? "bg-green-600 text-white" : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-[var(--bg-page)]")}>
         {saved ? <><Check size={15}/> تم الحفظ</> : saving ? <><Loader2 size={15} className="animate-spin"/> جاري...</> : <><Save size={15}/> حفظ التغييرات</>}
       </button>
     );
@@ -350,11 +350,11 @@ export default function Settings() {
       <h2 className="text-2xl font-bold mb-6">الإعدادات</h2>
 
       {/* ── Main Tabs ── */}
-      <div className="flex gap-1 mb-8 border-b border-[rgba(198,145,76,0.12)] overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+      <div className="flex gap-1 mb-8 border-b border-[var(--gold-bg)] overflow-x-auto" style={{ scrollbarWidth: "none" }}>
         {MAIN_TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={"flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap " +
-              (tab === t.id ? "border-[#C6914C] text-white" : "border-transparent text-[#9A9AA0] hover:text-white")}>
+              (tab === t.id ? "border-[var(--gold-2)] text-white" : "border-transparent text-[var(--text-soft)] hover:text-white")}>
             <t.icon size={15} />{t.label}
           </button>
         ))}
@@ -364,17 +364,17 @@ export default function Settings() {
       {/* ════════════════════ TAB: الملف الشخصي ════════════════════ */}
       {tab === "profile" && (
         <div className="max-w-xl">
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-            <h3 className="font-bold text-lg text-[#C6914C]">المعلومات الشخصية</h3>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+            <h3 className="font-bold text-lg text-[var(--gold-2)]">المعلومات الشخصية</h3>
 
             {/* Avatar */}
             <div className="flex items-center gap-5">
               <div onClick={() => fileInputRef.current?.click()}
                 className="relative cursor-pointer group flex-shrink-0" style={{ width:76, height:76 }}>
-                <div className="w-full h-full rounded-full overflow-hidden border-2 border-dashed border-[#3A3A42] group-hover:border-[#C6914C] transition" style={{ background:"#1C1C22" }}>
+                <div className="w-full h-full rounded-full overflow-hidden border-2 border-dashed border-[var(--border-1)] group-hover:border-[var(--gold-2)] transition" style={{ background:"var(--bg-surface-2)" }}>
                   {profile.photo_url
                     ? <img src={profile.photo_url} alt="صورة" className="w-full h-full object-cover" />
-                    : <div className="w-full h-full flex items-center justify-center"><User size={30} className="text-[#5A5A62]" /></div>}
+                    : <div className="w-full h-full flex items-center justify-center"><User size={30} className="text-[var(--text-faint)]" /></div>}
                 </div>
                 <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition" style={{ background:"rgba(0,0,0,0.5)" }}>
                   {uploadingPhoto ? <Loader2 size={20} className="text-white animate-spin"/> : <Camera size={20} className="text-white"/>}
@@ -382,7 +382,7 @@ export default function Settings() {
               </div>
               <div>
                 <p className="text-sm font-medium mb-1">صورة الملف الشخصي</p>
-                <p className="text-xs text-[#5A5A62] mb-2">JPG أو PNG — حجم أقصاه 3MB</p>
+                <p className="text-xs text-[var(--text-faint)] mb-2">JPG أو PNG — حجم أقصاه 3MB</p>
                 {profile.photo_url && (
                   <button className="text-xs text-red-400 hover:text-red-300 transition" onClick={async () => {
                     await supabase.from("broker_identity").update({ photo_url: null }).not("id","is",null);
@@ -396,26 +396,26 @@ export default function Settings() {
 
             {/* Fields */}
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الاسم</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الاسم</label>
               <input value={profile.name} onChange={e => setProfile(p => ({...p, name: e.target.value}))} className={inputClass} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">البريد الإلكتروني <span className="text-[#5A5A62]">(بريد الحساب)</span></label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">البريد الإلكتروني <span className="text-[var(--text-faint)]">(بريد الحساب)</span></label>
               <input value={profile.email} disabled className={inputClass + " opacity-50 cursor-not-allowed"} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">بريد الإشعارات</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">بريد الإشعارات</label>
               <input value={profile.contact_email} onChange={e => setProfile(p => ({...p, contact_email: e.target.value}))}
                 className={inputClass} placeholder="notifications@example.com" type="email" dir="ltr" />
-              <p className="text-xs text-[#5A5A62] mt-1">يُستخدم لاستقبال إشعارات الطلبات الجديدة — اتركه فارغاً لإيقاف الإشعارات</p>
+              <p className="text-xs text-[var(--text-faint)] mt-1">يُستخدم لاستقبال إشعارات الطلبات الجديدة — اتركه فارغاً لإيقاف الإشعارات</p>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الجنس</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الجنس</label>
               <div className="flex gap-6">
                 {[{v:"male",l:"ذكر"},{v:"female",l:"أنثى"}].map(opt => (
                   <label key={opt.v} className="flex items-center gap-2 cursor-pointer">
                     <input type="radio" name="gender" value={opt.v} checked={profile.gender === opt.v}
-                      onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[#C6914C]" />
+                      onChange={e => setProfile(p => ({...p, gender: e.target.value}))} className="accent-[var(--gold-2)]" />
                     <span className="text-sm">{opt.l}</span>
                   </label>
                 ))}
@@ -433,8 +433,8 @@ export default function Settings() {
           {/* Mobile section selector */}
           <div className="md:hidden mb-4">
             <select value={siteSection} onChange={e => { setSiteSection(e.target.value); setSelectedPage(""); }}
-              className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.2)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C]"
-              style={{ color:"#F5F5F5" }}>
+              className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]"
+              style={{ color:"var(--text-strong)" }}>
               {SITE_SECTIONS.map(sec => <option key={sec.id} value={sec.id}>{sec.label}</option>)}
             </select>
           </div>
@@ -445,7 +445,7 @@ export default function Settings() {
               {SITE_SECTIONS.map(sec => (
                 <button key={sec.id} onClick={() => { setSiteSection(sec.id); setSelectedPage(""); }}
                   className={"w-full text-right flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition " +
-                    (siteSection === sec.id ? "bg-[#C6914C] text-white" : "text-[#9A9AA0] hover:text-white hover:bg-[#16161A]")}>
+                    (siteSection === sec.id ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)] hover:text-white hover:bg-[var(--bg-surface-1)]")}>
                   <sec.icon size={15} />{sec.label}
                 </button>
               ))}
@@ -456,18 +456,18 @@ export default function Settings() {
 
               {/* ── معلومات عامة ── */}
               {siteSection === "general" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-                  <h3 className="font-bold text-[#C6914C] text-lg">معلومات عامة</h3>
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+                  <h3 className="font-bold text-[var(--gold-2)] text-lg">معلومات عامة</h3>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">اسم الموقع / اسمك</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">اسم الموقع / اسمك</label>
                     <input value={s.site_name || ""} onChange={e => sc("site_name", e.target.value)} className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">منطقة التغطية</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">منطقة التغطية</label>
                     <input value={s.coverage_text || ""} onChange={e => sc("coverage_text", e.target.value)} className={inputClass} placeholder="مثال: شمال وشرق الرياض" />
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">نص زر تسجيل الدخول</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">نص زر تسجيل الدخول</label>
                     <input value={s.login_link_text || ""} onChange={e => sc("login_link_text", e.target.value)} className={inputClass} placeholder="دخول الفريق" />
                   </div>
                   <SaveBtn onClick={handleSaveSettings} />
@@ -476,22 +476,22 @@ export default function Settings() {
 
               {/* ── الهوية البصرية ── */}
               {siteSection === "identity" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-6">
-                  <h3 className="font-bold text-[#C6914C] text-lg">الهوية البصرية</h3>
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-6">
+                  <h3 className="font-bold text-[var(--gold-2)] text-lg">الهوية البصرية</h3>
                   {/* Logo */}
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-3">شعار الموقع</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-3">شعار الموقع</label>
                     <div className="flex items-start gap-4">
-                      <div className="w-24 h-24 bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        {s.site_logo ? <img src={s.site_logo} alt="الشعار" className="w-full h-full object-contain p-1" /> : <Image size={26} className="text-[#5A5A62]" />}
+                      <div className="w-24 h-24 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {s.site_logo ? <img src={s.site_logo} alt="الشعار" className="w-full h-full object-contain p-1" /> : <Image size={26} className="text-[var(--text-faint)]" />}
                       </div>
                       <div className="flex-1">
-                        <label className={"flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] text-[#9A9AA0] w-fit " + (uploadingLogo ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2A2A32]")}>
+                        <label className={"flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] w-fit " + (uploadingLogo ? "opacity-50 cursor-not-allowed" : "hover:bg-[var(--bg-surface-3)]")}>
                           <Upload size={14} />
                           {uploadingLogo ? "جاري الرفع..." : "رفع شعار"}
                           <input type="file" accept="image/*" className="hidden" disabled={uploadingLogo} onChange={e => { const f = e.target.files?.[0]; if (f) handleLogoUpload(f); }} />
                         </label>
-                        <p className="text-[#5A5A62] text-xs mt-2">PNG أو SVG — الحجم المثالي 200×200px</p>
+                        <p className="text-[var(--text-faint)] text-xs mt-2">PNG أو SVG — الحجم المثالي 200×200px</p>
                         {logoError && <p className="text-red-400 text-xs mt-2">{logoError}</p>}
                         {s.site_logo && (
                           <button onClick={() => sc("site_logo", "")} className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 mt-2 transition">
@@ -502,7 +502,7 @@ export default function Settings() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">رقم رخصة فال <span className="text-[#5A5A62]">(يظهر في الموقع)</span></label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">رقم رخصة فال <span className="text-[var(--text-faint)]">(يظهر في الموقع)</span></label>
                     <input value={s.fal_license || ""} onChange={e => sc("fal_license", e.target.value)} className={inputClass} placeholder="مثال: 1100000000" maxLength={10} dir="ltr" />
                   </div>
                   <SaveBtn onClick={handleSaveSettings} />
@@ -511,25 +511,25 @@ export default function Settings() {
 
               {/* ── القسم الرئيسي ── */}
               {siteSection === "hero" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-                  <h3 className="font-bold text-[#C6914C] text-lg">القسم الرئيسي (Hero)</h3>
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+                  <h3 className="font-bold text-[var(--gold-2)] text-lg">القسم الرئيسي (Hero)</h3>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">الشارة العلوية <span className="text-[#5A5A62]">(النص الصغير فوق العنوان)</span></label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">الشارة العلوية <span className="text-[var(--text-faint)]">(النص الصغير فوق العنوان)</span></label>
                     <input value={s.hero_badge || ""} onChange={e => sc("hero_badge", e.target.value)} className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">العنوان الرئيسي</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">العنوان الرئيسي</label>
                     <input value={s.hero_title || ""} onChange={e => sc("hero_title", e.target.value)} className={inputClass + " text-lg font-bold"} />
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">الوصف التعريفي</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">الوصف التعريفي</label>
                     <textarea value={s.hero_subtitle || ""} onChange={e => sc("hero_subtitle", e.target.value)} rows={3} className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-sm text-[#9A9AA0] mb-2">صورة الخلفية (رابط URL)</label>
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">صورة الخلفية (رابط URL)</label>
                     <input value={s.hero_image || ""} onChange={e => sc("hero_image", e.target.value)} className={inputClass + " text-sm"} dir="ltr" placeholder="https://images.unsplash.com/..." />
                     {s.hero_image && (
-                      <div className="mt-3 rounded-lg overflow-hidden border border-[rgba(198,145,76,0.15)]" style={{ height:140 }}>
+                      <div className="mt-3 rounded-lg overflow-hidden border border-[var(--gold-bg-hover)]" style={{ height:140 }}>
                         <img src={s.hero_image} alt="معاينة" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                       </div>
                     )}
@@ -540,38 +540,38 @@ export default function Settings() {
 
               {/* ── روابط القائمة ── */}
               {siteSection === "navbar" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
                     <div>
-                      <h3 className="font-bold text-[#C6914C] text-lg">روابط القائمة العلوية</h3>
-                      <p className="text-[#5A5A62] text-sm mt-1">الروابط اللي تظهر في النافبار</p>
+                      <h3 className="font-bold text-[var(--gold-2)] text-lg">روابط القائمة العلوية</h3>
+                      <p className="text-[var(--text-faint)] text-sm mt-1">الروابط اللي تظهر في النافبار</p>
                     </div>
                     <button onClick={() => sc("navbar_links", [...(s.navbar_links||[]), {label:"",href:"/",type:"link"}])}
-                      className="text-sm bg-[#1C1C22] hover:bg-[#2A2A32] px-4 py-2 rounded-lg transition flex items-center gap-2">
+                      className="text-sm bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition flex items-center gap-2">
                       <Plus size={13} /> إضافة رابط
                     </button>
                   </div>
                   <div className="space-y-3">
                     {(s.navbar_links || []).map((link: any, i: number) => (
-                      <div key={i} className="bg-[#1C1C22] rounded-xl p-4">
+                      <div key={i} className="bg-[var(--bg-surface-2)] rounded-xl p-4">
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-[#5A5A62]">رابط {i+1}</span>
+                          <span className="text-sm text-[var(--text-faint)]">رابط {i+1}</span>
                           <button onClick={() => sc("navbar_links", s.navbar_links.filter((_:any,j:number)=>j!==i))} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1">
                             <Trash2 size={11}/> حذف
                           </button>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <div>
-                            <label className="block text-xs text-[#5A5A62] mb-1">النص</label>
-                            <input value={link.label||""} onChange={e=>navChange(i,"label",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" placeholder="الرئيسية"/>
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">النص</label>
+                            <input value={link.label||""} onChange={e=>navChange(i,"label",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm" placeholder="الرئيسية"/>
                           </div>
                           <div>
-                            <label className="block text-xs text-[#5A5A62] mb-1">الرابط</label>
-                            <input value={link.href||""} onChange={e=>navChange(i,"href",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm" dir="ltr" placeholder="/"/>
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">الرابط</label>
+                            <input value={link.href||""} onChange={e=>navChange(i,"href",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm" dir="ltr" placeholder="/"/>
                           </div>
                           <div>
-                            <label className="block text-xs text-[#5A5A62] mb-1">النوع</label>
-                            <select value={link.type||"link"} onChange={e=>navChange(i,"type",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm">
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">النوع</label>
+                            <select value={link.type||"link"} onChange={e=>navChange(i,"type",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm">
                               <option value="link">رابط صفحة</option>
                               <option value="anchor">رابط قسم (#)</option>
                               <option value="cta">زر بارز (CTA)</option>
@@ -587,9 +587,9 @@ export default function Settings() {
 
               {/* ── إظهار / إخفاء الأقسام ── */}
               {siteSection === "sections" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
-                  <h3 className="font-bold text-[#C6914C] text-lg mb-2">إظهار / إخفاء أقسام الصفحة الرئيسية</h3>
-                  <p className="text-[#5A5A62] text-sm mb-5">تحكّم بالأقسام اللي تبيها تظهر</p>
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
+                  <h3 className="font-bold text-[var(--gold-2)] text-lg mb-2">إظهار / إخفاء أقسام الصفحة الرئيسية</h3>
+                  <p className="text-[var(--text-faint)] text-sm mb-5">تحكّم بالأقسام اللي تبيها تظهر</p>
                   <div className="space-y-3">
                     {[
                       { field:"show_why_section",        label:"قسم لماذا تختارنا",      desc:"البطاقات اللي تشرح مميزاتك" },
@@ -597,13 +597,13 @@ export default function Settings() {
                       { field:"show_services_section",   label:"قسم الخدمات",            desc:"بطاقات خدماتك العقارية" },
                       { field:"show_cta_section",        label:"قسم التواصل (CTA)",      desc:"صندوق التواصل مع أزرار الواتساب والاتصال" },
                     ].map(item => (
-                      <div key={item.field} className="flex items-center justify-between bg-[#1C1C22] rounded-xl p-4">
+                      <div key={item.field} className="flex items-center justify-between bg-[var(--bg-surface-2)] rounded-xl p-4">
                         <div>
                           <h4 className="font-medium text-sm">{item.label}</h4>
-                          <p className="text-[#5A5A62] text-xs mt-1">{item.desc}</p>
+                          <p className="text-[var(--text-faint)] text-xs mt-1">{item.desc}</p>
                         </div>
                         <button onClick={() => sc(item.field, !s[item.field])}
-                          className={"w-14 h-8 rounded-full transition relative " + (s[item.field]!==false ? "bg-[#C6914C]" : "bg-[#2A2A32]")}>
+                          className={"w-14 h-8 rounded-full transition relative " + (s[item.field]!==false ? "bg-[var(--gold-2)]" : "bg-[var(--bg-surface-3)]")}>
                           <div className={"w-6 h-6 bg-white rounded-full absolute top-1 transition-all " + (s[item.field]!==false ? "left-1" : "right-1")} />
                         </button>
                       </div>
@@ -615,34 +615,34 @@ export default function Settings() {
 
               {/* ── الخدمات ── */}
               {siteSection === "services" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className="font-bold text-[#C6914C] text-lg">الخدمات</h3>
+                    <h3 className="font-bold text-[var(--gold-2)] text-lg">الخدمات</h3>
                     <button onClick={() => sc("services", [...(s.services||[]), {title:"",desc:"",icon:"🏠"}])}
-                      className="text-sm bg-[#1C1C22] hover:bg-[#2A2A32] px-4 py-2 rounded-lg transition flex items-center gap-2">
+                      className="text-sm bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition flex items-center gap-2">
                       <Plus size={13}/> إضافة خدمة
                     </button>
                   </div>
                   <div className="space-y-4">
                     {(s.services||[]).map((svc:any,i:number)=>(
-                      <div key={i} className="bg-[#1C1C22] rounded-xl p-4 space-y-3">
+                      <div key={i} className="bg-[var(--bg-surface-2)] rounded-xl p-4 space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#5A5A62]">خدمة {i+1}</span>
+                          <span className="text-sm text-[var(--text-faint)]">خدمة {i+1}</span>
                           <button onClick={() => sc("services", s.services.filter((_:any,j:number)=>j!==i))} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"><Trash2 size={11}/> حذف</button>
                         </div>
                         <div className="flex gap-3">
                           <div style={{width:52,flexShrink:0}}>
-                            <label className="block text-xs text-[#5A5A62] mb-1">الأيقونة</label>
-                            <input value={svc.icon||""} onChange={e=>svcChange(i,"icon",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]"/>
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">الأيقونة</label>
+                            <input value={svc.icon||""} onChange={e=>svcChange(i,"icon",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[var(--gold-2)]"/>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <label className="block text-xs text-[#5A5A62] mb-1">اسم الخدمة</label>
-                            <input value={svc.title||""} onChange={e=>svcChange(i,"title",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm"/>
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">اسم الخدمة</label>
+                            <input value={svc.title||""} onChange={e=>svcChange(i,"title",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
                           </div>
                         </div>
                         <div>
-                          <label className="block text-xs text-[#5A5A62] mb-1">وصف الخدمة</label>
-                          <textarea value={svc.desc||""} onChange={e=>svcChange(i,"desc",e.target.value)} rows={2} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm"/>
+                          <label className="block text-xs text-[var(--text-faint)] mb-1">وصف الخدمة</label>
+                          <textarea value={svc.desc||""} onChange={e=>svcChange(i,"desc",e.target.value)} rows={2} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
                         </div>
                       </div>
                     ))}
@@ -653,34 +653,34 @@ export default function Settings() {
 
               {/* ── لماذا تختارنا ── */}
               {siteSection === "why" && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className="font-bold text-[#C6914C] text-lg">لماذا تختارنا</h3>
+                    <h3 className="font-bold text-[var(--gold-2)] text-lg">لماذا تختارنا</h3>
                     <button onClick={() => sc("why_cards", [...(s.why_cards||[]), {title:"",desc:"",icon:"✨"}])}
-                      className="text-sm bg-[#1C1C22] hover:bg-[#2A2A32] px-4 py-2 rounded-lg transition flex items-center gap-2">
+                      className="text-sm bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition flex items-center gap-2">
                       <Plus size={13}/> إضافة بطاقة
                     </button>
                   </div>
                   <div className="space-y-4">
                     {(s.why_cards||[]).map((card:any,i:number)=>(
-                      <div key={i} className="bg-[#1C1C22] rounded-xl p-4 space-y-3">
+                      <div key={i} className="bg-[var(--bg-surface-2)] rounded-xl p-4 space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#5A5A62]">بطاقة {i+1}</span>
+                          <span className="text-sm text-[var(--text-faint)]">بطاقة {i+1}</span>
                           <button onClick={() => sc("why_cards", s.why_cards.filter((_:any,j:number)=>j!==i))} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"><Trash2 size={11}/> حذف</button>
                         </div>
                         <div className="flex gap-3">
                           <div style={{width:52,flexShrink:0}}>
-                            <label className="block text-xs text-[#5A5A62] mb-1">الأيقونة</label>
-                            <input value={card.icon||""} onChange={e=>whyChange(i,"icon",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[#C6914C]"/>
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">الأيقونة</label>
+                            <input value={card.icon||""} onChange={e=>whyChange(i,"icon",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[var(--gold-2)]"/>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <label className="block text-xs text-[#5A5A62] mb-1">العنوان</label>
-                            <input value={card.title||""} onChange={e=>whyChange(i,"title",e.target.value)} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm"/>
+                            <label className="block text-xs text-[var(--text-faint)] mb-1">العنوان</label>
+                            <input value={card.title||""} onChange={e=>whyChange(i,"title",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
                           </div>
                         </div>
                         <div>
-                          <label className="block text-xs text-[#5A5A62] mb-1">الوصف</label>
-                          <textarea value={card.desc||""} onChange={e=>whyChange(i,"desc",e.target.value)} rows={2} className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 focus:outline-none focus:border-[#C6914C] text-sm"/>
+                          <label className="block text-xs text-[var(--text-faint)] mb-1">الوصف</label>
+                          <textarea value={card.desc||""} onChange={e=>whyChange(i,"desc",e.target.value)} rows={2} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
                         </div>
                       </div>
                     ))}
@@ -692,26 +692,26 @@ export default function Settings() {
               {/* ── الصفحات الثابتة ── */}
               {siteSection === "pages" && !selectedPage && (
                 <div>
-                  <h3 className="font-bold text-[#C6914C] text-lg mb-2">الصفحات الثابتة</h3>
-                  <p className="text-[#5A5A62] text-sm mb-5">تعديل نصوص الصفحات في موقعك</p>
+                  <h3 className="font-bold text-[var(--gold-2)] text-lg mb-2">الصفحات الثابتة</h3>
+                  <p className="text-[var(--text-faint)] text-sm mb-5">تعديل نصوص الصفحات في موقعك</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {STATIC_PAGES.map(page => (
                       <button key={page.key} onClick={() => setSelectedPage(page.key)}
-                        className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 text-right hover:border-[#C6914C] transition">
-                        <h4 className="font-bold text-[#C6914C]">{page.label}</h4>
+                        className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 text-right hover:border-[var(--gold-2)] transition">
+                        <h4 className="font-bold text-[var(--gold-2)]">{page.label}</h4>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
               {siteSection === "pages" && selectedPage && (
-                <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
+                <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className="font-bold text-[#C6914C]">{STATIC_PAGES.find(p=>p.key===selectedPage)?.label}</h3>
-                    <button onClick={() => setSelectedPage("")} className="text-[#9A9AA0] hover:text-white text-sm transition">← رجوع</button>
+                    <h3 className="font-bold text-[var(--gold-2)]">{STATIC_PAGES.find(p=>p.key===selectedPage)?.label}</h3>
+                    <button onClick={() => setSelectedPage("")} className="text-[var(--text-soft)] hover:text-white text-sm transition">← رجوع</button>
                   </div>
                   <textarea value={s[selectedPage]||""} onChange={e=>sc(selectedPage,e.target.value)} rows={12}
-                    className="w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 focus:outline-none focus:border-[#C6914C]"
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--gold-2)]"
                     placeholder="اكتب محتوى الصفحة هنا..." />
                   <div className="mt-4"><SaveBtn onClick={handleSaveSettings} /></div>
                 </div>
@@ -720,21 +720,21 @@ export default function Settings() {
               {/* ── التواصل والفوتر ── */}
               {siteSection === "cta" && (
                 <div className="space-y-5">
-                  <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-                    <h3 className="font-bold text-[#C6914C] text-lg">قسم التواصل (CTA)</h3>
+                  <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+                    <h3 className="font-bold text-[var(--gold-2)] text-lg">قسم التواصل (CTA)</h3>
                     <div>
-                      <label className="block text-sm text-[#9A9AA0] mb-2">عنوان قسم التواصل</label>
+                      <label className="block text-sm text-[var(--text-soft)] mb-2">عنوان قسم التواصل</label>
                       <input value={s.cta_title||""} onChange={e=>sc("cta_title",e.target.value)} className={inputClass} />
                     </div>
                     <div>
-                      <label className="block text-sm text-[#9A9AA0] mb-2">وصف قسم التواصل</label>
+                      <label className="block text-sm text-[var(--text-soft)] mb-2">وصف قسم التواصل</label>
                       <textarea value={s.cta_subtitle||""} onChange={e=>sc("cta_subtitle",e.target.value)} rows={2} className={inputClass} />
                     </div>
                   </div>
-                  <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-                    <h3 className="font-bold text-[#C6914C] text-lg">الفوتر</h3>
+                  <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+                    <h3 className="font-bold text-[var(--gold-2)] text-lg">الفوتر</h3>
                     <div>
-                      <label className="block text-sm text-[#9A9AA0] mb-2">نص الفوتر التعريفي</label>
+                      <label className="block text-sm text-[var(--text-soft)] mb-2">نص الفوتر التعريفي</label>
                       <textarea value={s.footer_text||""} onChange={e=>sc("footer_text",e.target.value)} rows={3} className={inputClass} />
                     </div>
                   </div>
@@ -755,11 +755,11 @@ export default function Settings() {
 
           {/* Header row */}
           <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
-            <p className="text-[#5A5A62] text-sm">غيّر الألوان والخطوط وشاهد النتيجة مباشرة</p>
+            <p className="text-[var(--text-faint)] text-sm">غيّر الألوان والخطوط وشاهد النتيجة مباشرة</p>
             <div className="flex items-center gap-2">
               <button onClick={resetDesign}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm transition"
-                style={{ background:"#16161A", border:"1px solid rgba(198,145,76,0.12)", color:"#9A9AA0" }}>
+                style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg)", color:"var(--text-soft)" }}>
                 <RotateCcw size={13}/> إعادة الضبط
               </button>
               <SaveBtn onClick={handleSaveSettings} />
@@ -770,22 +770,22 @@ export default function Settings() {
 
             {/* Live Preview */}
             <div className="order-2 lg:order-1">
-              <div className="rounded-xl overflow-hidden sticky top-20" style={{ border:"1px solid rgba(198,145,76,0.15)" }}>
+              <div className="rounded-xl overflow-hidden sticky top-20" style={{ border:"1px solid var(--gold-bg-hover)" }}>
                 {/* Browser chrome */}
-                <div className="flex items-center justify-between px-4 py-2.5" style={{ background:"#1C1C22", borderBottom:"1px solid rgba(198,145,76,0.08)" }}>
+                <div className="flex items-center justify-between px-4 py-2.5" style={{ background:"var(--bg-surface-2)", borderBottom:"1px solid var(--gold-bg-soft)" }}>
                   <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ background:"#F87171" }}/>
-                    <div className="w-3 h-3 rounded-full" style={{ background:"#FBBF24" }}/>
-                    <div className="w-3 h-3 rounded-full" style={{ background:"#4ADE80" }}/>
+                    <div className="w-3 h-3 rounded-full" style={{ background:"var(--danger)" }}/>
+                    <div className="w-3 h-3 rounded-full" style={{ background:"var(--warning-2)" }}/>
+                    <div className="w-3 h-3 rounded-full" style={{ background:"var(--success)" }}/>
                   </div>
-                  <span className="text-xs font-bold" style={{ color:"#C6914C" }}>معاينة مباشرة</span>
-                  <div className="flex bg-[#0A0A0C] rounded-lg overflow-hidden border border-[rgba(198,145,76,0.12)]">
-                    <button onClick={()=>setMobilePreview(false)} className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + (!mobilePreview?"text-[#C6914C]":"text-[#5A5A62]")} style={{ background:!mobilePreview?"rgba(198,145,76,0.12)":"transparent" }}><Monitor size={12}/> ديسكتوب</button>
-                    <button onClick={()=>setMobilePreview(true)}  className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + ( mobilePreview?"text-[#C6914C]":"text-[#5A5A62]")} style={{ background: mobilePreview?"rgba(198,145,76,0.12)":"transparent" }}><Smartphone size={12}/> موبايل</button>
+                  <span className="text-xs font-bold" style={{ color:"var(--gold-2)" }}>معاينة مباشرة</span>
+                  <div className="flex bg-[var(--bg-page)] rounded-lg overflow-hidden border border-[var(--gold-bg)]">
+                    <button onClick={()=>setMobilePreview(false)} className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + (!mobilePreview?"text-[var(--gold-2)]":"text-[var(--text-faint)]")} style={{ background:!mobilePreview?"var(--gold-bg)":"transparent" }}><Monitor size={12}/> ديسكتوب</button>
+                    <button onClick={()=>setMobilePreview(true)}  className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + ( mobilePreview?"text-[var(--gold-2)]":"text-[var(--text-faint)]")} style={{ background: mobilePreview?"var(--gold-bg)":"transparent" }}><Smartphone size={12}/> موبايل</button>
                   </div>
                 </div>
-                <div style={{ background:"#1C1C22", padding:mobilePreview?"16px":"0", minHeight:500, overflowY:"auto" }}>
-                  <div style={{ background:bgPrimary, fontFamily:"'Tajawal', sans-serif", width:mobilePreview?375:"100%", margin:mobilePreview?"0 auto":"0", borderRadius:mobilePreview?16:0, overflow:"hidden", border:mobilePreview?"1px solid rgba(198,145,76,0.2)":"none" }} dir="rtl">
+                <div style={{ background:"var(--bg-surface-2)", padding:mobilePreview?"16px":"0", minHeight:500, overflowY:"auto" }}>
+                  <div style={{ background:bgPrimary, fontFamily:"'Tajawal', sans-serif", width:mobilePreview?375:"100%", margin:mobilePreview?"0 auto":"0", borderRadius:mobilePreview?16:0, overflow:"hidden", border:mobilePreview?"1px solid var(--gold-bg-hover)":"none" }} dir="rtl">
                     {/* Navbar */}
                     <div className="flex items-center justify-between" style={{ padding:"12px 20px", background:bgCard, borderBottom:`1px solid ${accent}20` }}>
                       <div className="flex items-center gap-2">
@@ -842,7 +842,7 @@ export default function Settings() {
                 {[{id:"colors",label:"الألوان",icon:<Palette size={14}/>},{id:"fonts",label:"الخطوط",icon:<Type size={14}/>}].map(t=>(
                   <button key={t.id} onClick={()=>setDesignTab(t.id as "colors"|"fonts")}
                     className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition flex-1 justify-center"
-                    style={{ background:designTab===t.id?"rgba(198,145,76,0.15)":"#16161A", color:designTab===t.id?"#C6914C":"#5A5A62", border:"1px solid "+(designTab===t.id?"rgba(198,145,76,0.3)":"rgba(198,145,76,0.12)") }}>
+                    style={{ background:designTab===t.id?"var(--gold-bg-hover)":"var(--bg-surface-1)", color:designTab===t.id?"var(--gold-2)":"var(--text-faint)", border:"1px solid "+(designTab===t.id?"var(--gold-bg-strong)":"var(--gold-bg)") }}>
                     {t.icon}{t.label}
                   </button>
                 ))}
@@ -851,8 +851,8 @@ export default function Settings() {
               {designTab === "colors" && (
                 <div className="space-y-3">
                   {/* Quick themes */}
-                  <div className="rounded-xl p-4" style={{ background:"#16161A", border:"1px solid rgba(198,145,76,0.12)" }}>
-                    <h4 className="text-xs font-bold mb-3" style={{ color:"#C6914C" }}>ثيمات سريعة</h4>
+                  <div className="rounded-xl p-4" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg)" }}>
+                    <h4 className="text-xs font-bold mb-3" style={{ color:"var(--gold-2)" }}>ثيمات سريعة</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {QUICK_THEMES.map(theme=>(
                         <button key={theme.name} onClick={()=>applyTheme(theme)}
@@ -866,8 +866,8 @@ export default function Settings() {
                   </div>
                   {/* Color groups */}
                   {COLOR_GROUPS.map(group=>(
-                    <div key={group.id} className="rounded-xl overflow-hidden" style={{ background:"#16161A", border:"1px solid rgba(198,145,76,0.12)" }}>
-                      <button onClick={()=>toggleCollapse(group.id)} className="w-full flex items-center justify-between px-4 py-3 text-sm font-bold transition hover:bg-[rgba(198,145,76,0.04)]" style={{ color:"#C6914C" }}>
+                    <div key={group.id} className="rounded-xl overflow-hidden" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg)" }}>
+                      <button onClick={()=>toggleCollapse(group.id)} className="w-full flex items-center justify-between px-4 py-3 text-sm font-bold transition hover:bg-[rgba(198,145,76,0.04)]" style={{ color:"var(--gold-2)" }}>
                         <span>{group.label}</span>
                         {collapsed[group.id]?<ChevronDown size={15}/>:<ChevronUp size={15}/>}
                       </button>
@@ -876,16 +876,16 @@ export default function Settings() {
                           {group.fields.map(field=>{
                             const val = s[field.key]||(COLOR_DEFAULTS as any)[field.key];
                             return (
-                              <div key={field.key} className="flex items-center gap-3 p-3 rounded-lg" style={{ background:"#1C1C22" }}>
+                              <div key={field.key} className="flex items-center gap-3 p-3 rounded-lg" style={{ background:"var(--bg-surface-2)" }}>
                                 <label className="relative cursor-pointer flex-shrink-0">
                                   <input type="color" value={val} onChange={e=>sc(field.key,e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"/>
-                                  <div className="w-9 h-9 rounded-lg border-2 transition" style={{ background:val, borderColor:"rgba(198,145,76,0.3)" }}/>
+                                  <div className="w-9 h-9 rounded-lg border-2 transition" style={{ background:val, borderColor:"var(--gold-bg-strong)" }}/>
                                 </label>
                                 <div className="flex-1 min-w-0">
-                                  <div className="text-xs font-medium truncate" style={{ color:"#F5F5F5" }}>{field.label}</div>
-                                  <div className="text-xs" style={{ color:"#5A5A62" }}>{field.desc}</div>
+                                  <div className="text-xs font-medium truncate" style={{ color:"var(--text-strong)" }}>{field.label}</div>
+                                  <div className="text-xs" style={{ color:"var(--text-faint)" }}>{field.desc}</div>
                                 </div>
-                                <input type="text" value={val} onChange={e=>sc(field.key,e.target.value)} maxLength={9} className="w-20 text-center text-xs rounded-lg px-2 py-1.5 focus:outline-none font-mono" style={{ background:"#0A0A0C", border:"1px solid rgba(198,145,76,0.12)", color:"#9A9AA0" }} dir="ltr"/>
+                                <input type="text" value={val} onChange={e=>sc(field.key,e.target.value)} maxLength={9} className="w-20 text-center text-xs rounded-lg px-2 py-1.5 focus:outline-none font-mono" style={{ background:"var(--bg-page)", border:"1px solid var(--gold-bg)", color:"var(--text-soft)" }} dir="ltr"/>
                               </div>
                             );
                           })}
@@ -899,10 +899,10 @@ export default function Settings() {
               {designTab === "fonts" && (
                 <div className="space-y-3">
                   {/* Sliders */}
-                  <div className="rounded-xl p-4 space-y-5" style={{ background:"#16161A", border:"1px solid rgba(198,145,76,0.12)" }}>
+                  <div className="rounded-xl p-4 space-y-5" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg)" }}>
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold" style={{ color:"#C6914C" }}>أحجام النصوص</h4>
-                      <button onClick={()=>{ sc("font_size_body",COLOR_DEFAULTS.font_size_body); sc("font_size_small",COLOR_DEFAULTS.font_size_small); }} className="flex items-center gap-1 text-xs" style={{ color:"#5A5A62" }}><RotateCcw size={10}/> استعادة</button>
+                      <h4 className="text-xs font-bold" style={{ color:"var(--gold-2)" }}>أحجام النصوص</h4>
+                      <button onClick={()=>{ sc("font_size_body",COLOR_DEFAULTS.font_size_body); sc("font_size_small",COLOR_DEFAULTS.font_size_small); }} className="flex items-center gap-1 text-xs" style={{ color:"var(--text-faint)" }}><RotateCcw size={10}/> استعادة</button>
                     </div>
                     {[
                       { key:"font_size_body",  label:"حجم النص العادي",  desc:"الأوصاف والفقرات", min:12, max:20, def:15 },
@@ -913,31 +913,31 @@ export default function Settings() {
                         <div key={field.key}>
                           <div className="flex justify-between items-center mb-2">
                             <div>
-                              <span className="text-sm font-medium" style={{ color:"#F5F5F5" }}>{field.label}</span>
-                              <span className="text-xs mr-2" style={{ color:"#5A5A62" }}>{field.desc}</span>
+                              <span className="text-sm font-medium" style={{ color:"var(--text-strong)" }}>{field.label}</span>
+                              <span className="text-xs mr-2" style={{ color:"var(--text-faint)" }}>{field.desc}</span>
                             </div>
-                            <span className="text-sm font-bold font-mono" style={{ color:"#C6914C" }}>{val}px</span>
+                            <span className="text-sm font-bold font-mono" style={{ color:"var(--gold-2)" }}>{val}px</span>
                           </div>
                           <input type="range" min={field.min} max={field.max} step={1} value={val} onChange={e=>sc(field.key, e.target.value+"px")}
-                            className="w-full h-1.5 rounded-full appearance-none cursor-pointer" style={{ accentColor:"#C6914C" }}/>
+                            className="w-full h-1.5 rounded-full appearance-none cursor-pointer" style={{ accentColor:"var(--gold-2)" }}/>
                         </div>
                       );
                     })}
                   </div>
                   {/* Heading presets */}
-                  <div className="rounded-xl p-4 space-y-4" style={{ background:"#16161A", border:"1px solid rgba(198,145,76,0.12)" }}>
+                  <div className="rounded-xl p-4 space-y-4" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg)" }}>
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold" style={{ color:"#C6914C" }}>أحجام العناوين</h4>
-                      <button onClick={()=>{ sc("font_size_hero",COLOR_DEFAULTS.font_size_hero); sc("font_size_section_title",COLOR_DEFAULTS.font_size_section_title); }} className="flex items-center gap-1 text-xs" style={{ color:"#5A5A62" }}><RotateCcw size={10}/> استعادة</button>
+                      <h4 className="text-xs font-bold" style={{ color:"var(--gold-2)" }}>أحجام العناوين</h4>
+                      <button onClick={()=>{ sc("font_size_hero",COLOR_DEFAULTS.font_size_hero); sc("font_size_section_title",COLOR_DEFAULTS.font_size_section_title); }} className="flex items-center gap-1 text-xs" style={{ color:"var(--text-faint)" }}><RotateCcw size={10}/> استعادة</button>
                     </div>
                     {[
                       { key:"font_size_hero",         label:"العنوان الرئيسي (Hero)", desc:"العنوان الكبير في أعلى الصفحة", presets:[{l:"صغير",v:"clamp(2rem,4vw,3rem)"},{l:"متوسط",v:"clamp(2.4rem,5.5vw,4.2rem)"},{l:"كبير",v:"clamp(3rem,6vw,5rem)"}] },
                       { key:"font_size_section_title", label:"عناوين الأقسام",         desc:"لماذا تختارنا، الخدمات...",   presets:[{l:"صغير",v:"clamp(1.4rem,2.5vw,2rem)"},{l:"متوسط",v:"clamp(1.8rem,3.5vw,2.6rem)"},{l:"كبير",v:"clamp(2.2rem,4vw,3.2rem)"}] },
                     ].map(field=>(
-                      <div key={field.key} className="p-3 rounded-lg space-y-2" style={{ background:"#1C1C22" }}>
+                      <div key={field.key} className="p-3 rounded-lg space-y-2" style={{ background:"var(--bg-surface-2)" }}>
                         <div>
-                          <div className="text-sm font-medium" style={{ color:"#F5F5F5" }}>{field.label}</div>
-                          <div className="text-xs" style={{ color:"#5A5A62" }}>{field.desc}</div>
+                          <div className="text-sm font-medium" style={{ color:"var(--text-strong)" }}>{field.label}</div>
+                          <div className="text-xs" style={{ color:"var(--text-faint)" }}>{field.desc}</div>
                         </div>
                         <div className="flex gap-2">
                           {field.presets.map(p=>{
@@ -945,7 +945,7 @@ export default function Settings() {
                             return (
                               <button key={p.v} onClick={()=>sc(field.key,p.v)}
                                 className="flex-1 py-2 rounded-lg text-xs font-medium transition"
-                                style={{ background:active?"rgba(198,145,76,0.15)":"#0A0A0C", color:active?"#C6914C":"#5A5A62", border:"1px solid "+(active?"rgba(198,145,76,0.3)":"rgba(198,145,76,0.08)") }}>
+                                style={{ background:active?"var(--gold-bg-hover)":"var(--bg-page)", color:active?"var(--gold-2)":"var(--text-faint)", border:"1px solid "+(active?"var(--gold-bg-strong)":"var(--gold-bg-soft)") }}>
                                 {p.l}
                               </button>
                             );
@@ -965,26 +965,26 @@ export default function Settings() {
       {/* ════════════════════ TAB: التواصل ════════════════════ */}
       {tab === "contact" && settings && (
         <div className="max-w-2xl space-y-5">
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-            <h3 className="font-bold text-[#C6914C] text-lg">معلومات التواصل العامة</h3>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+            <h3 className="font-bold text-[var(--gold-2)] text-lg">معلومات التواصل العامة</h3>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">رقم الجوال <span className="text-[#5A5A62]">(مع مفتاح الدولة)</span></label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم الجوال <span className="text-[var(--text-faint)]">(مع مفتاح الدولة)</span></label>
               <input value={s.phone||""} onChange={e=>sc("phone",e.target.value)} className={inputClass} placeholder="+966501234567" dir="ltr"/>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">رقم الواتساب <span className="text-[#5A5A62]">(بدون + — مثال: 966501234567)</span></label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم الواتساب <span className="text-[var(--text-faint)]">(بدون + — مثال: 966501234567)</span></label>
               <input value={s.whatsapp||""} onChange={e=>sc("whatsapp",e.target.value)} className={inputClass} placeholder="966501234567" dir="ltr"/>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">البريد الإلكتروني العام <span className="text-[#5A5A62]">(يظهر في الموقع)</span></label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">البريد الإلكتروني العام <span className="text-[var(--text-faint)]">(يظهر في الموقع)</span></label>
               <input value={s.email||""} onChange={e=>sc("email",e.target.value)} className={inputClass} placeholder="info@example.com" dir="ltr"/>
             </div>
           </div>
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-4">
-            <h3 className="font-bold text-[#C6914C] text-lg">حسابات السوشال ميديا</h3>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-4">
+            <h3 className="font-bold text-[var(--gold-2)] text-lg">حسابات السوشال ميديا</h3>
             {SOCIAL_PLATFORMS.map(p => (
               <div key={p.key}>
-                <label className="block text-sm text-[#9A9AA0] mb-2">{p.label}</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-2">{p.label}</label>
                 <input value={s[p.key]||""} onChange={e=>sc(p.key,e.target.value)} className={inputClass} placeholder={p.placeholder} dir="ltr"/>
               </div>
             ))}
@@ -999,62 +999,62 @@ export default function Settings() {
         <div className="max-w-2xl space-y-6">
 
           {/* رابطك الشخصي */}
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.2)] rounded-xl p-6">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl p-6">
             <div className="flex items-center gap-2 mb-1">
-              <Link2 size={17} className="text-[#C6914C]"/>
+              <Link2 size={17} className="text-[var(--gold-2)]"/>
               <h3 className="font-bold text-lg">رابطك الشخصي</h3>
             </div>
-            <p className="text-[#5A5A62] text-sm mb-5">هذا هو رابط صفحتك التي يراها عملاؤك — يجب أن يكون فريداً وباللغة الإنجليزية</p>
+            <p className="text-[var(--text-faint)] text-sm mb-5">هذا هو رابط صفحتك التي يراها عملاؤك — يجب أن يكون فريداً وباللغة الإنجليزية</p>
             {slug && (
-              <a href={`/${slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 mb-4 text-sm no-underline" style={{ color:"#C6914C" }}>
-                <span className="text-[#5A5A62]">waseet-pro.com/</span>
+              <a href={`/${slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 mb-4 text-sm no-underline" style={{ color:"var(--gold-2)" }}>
+                <span className="text-[var(--text-faint)]">waseet-pro.com/</span>
                 <span className="font-bold">{slug}</span>
-                <span style={{ fontSize:11, background:"rgba(198,145,76,0.1)", border:"1px solid rgba(198,145,76,0.2)", padding:"2px 8px", borderRadius:6 }}>فتح ↗</span>
+                <span style={{ fontSize:11, background:"var(--gold-bg)", border:"1px solid var(--gold-bg-hover)", padding:"2px 8px", borderRadius:6 }}>فتح ↗</span>
               </a>
             )}
             <div className="flex gap-2 items-center">
               <div className="flex-1 relative">
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A5A62] text-sm select-none pointer-events-none">waseet-pro.com/</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-faint)] text-sm select-none pointer-events-none">waseet-pro.com/</span>
                 <input value={slugInput} onChange={e=>handleSlugChange(e.target.value)} placeholder="your-slug" dir="ltr" className={inputClass + " pr-32"} style={{ paddingRight:"8.5rem" }}/>
               </div>
               <button onClick={handleSaveSlug} disabled={savingSlug || slugStatus !== "available" || slugInput === slug}
                 className="px-4 py-3 rounded-lg text-sm font-medium transition disabled:opacity-40"
-                style={{ background:"rgba(198,145,76,0.15)", border:"1px solid rgba(198,145,76,0.25)", color:"#C6914C", whiteSpace:"nowrap" }}>
+                style={{ background:"var(--gold-bg-hover)", border:"1px solid rgba(198,145,76,0.25)", color:"var(--gold-2)", whiteSpace:"nowrap" }}>
                 {savingSlug ? <Loader2 size={15} className="animate-spin"/> : "حفظ"}
               </button>
             </div>
             {slugStatus !== "idle" && slugInput !== slug && (
-              <div className={`flex items-center gap-2 mt-2 text-sm ${slugStatus==="available"?"text-emerald-400":slugStatus==="checking"?"text-[#9A9AA0]":"text-red-400"}`}>
+              <div className={`flex items-center gap-2 mt-2 text-sm ${slugStatus==="available"?"text-emerald-400":slugStatus==="checking"?"text-[var(--text-soft)]":"text-red-400"}`}>
                 {slugStatus==="checking" && <Loader2 size={12} className="animate-spin"/>}
                 {slugStatus==="available" && <CheckCircle2 size={12}/>}
                 {(slugStatus==="taken"||slugStatus==="invalid") && <XCircle size={12}/>}
                 <span>{slugStatus==="checking"?"جاري الفحص...":slugMsg}</span>
               </div>
             )}
-            <p className="text-[#5A5A62] text-xs mt-3">أحرف إنجليزية صغيرة وأرقام وشرطة (-) فقط — 3 إلى 40 حرفاً</p>
+            <p className="text-[var(--text-faint)] text-xs mt-3">أحرف إنجليزية صغيرة وأرقام وشرطة (-) فقط — 3 إلى 40 حرفاً</p>
           </div>
 
           {/* الشهادات والتراخيص */}
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6 space-y-5">
-            <h3 className="font-bold text-lg text-[#C6914C]">الشهادات والتراخيص</h3>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
+            <h3 className="font-bold text-lg text-[var(--gold-2)]">الشهادات والتراخيص</h3>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">رقم السجل التجاري / الرقم الموحد</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم السجل التجاري / الرقم الموحد</label>
               <input value={licenses.commercial_register} onChange={e=>setLicenses(l=>({...l,commercial_register:e.target.value}))} className={inputClass} placeholder="مثال: 1010000000" maxLength={10} dir="ltr"/>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">رقم وثيقة العمل الحر</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم وثيقة العمل الحر</label>
               <input value={licenses.freelance_doc} onChange={e=>setLicenses(l=>({...l,freelance_doc:e.target.value}))} className={inputClass} placeholder="أدخل رقم وثيقة العمل الحر" dir="ltr"/>
             </div>
 
             {/* ── ZATCA Compliance ── */}
-            <div className="pt-4 border-t border-[rgba(198,145,76,0.12)]">
+            <div className="pt-4 border-t border-[var(--gold-bg)]">
               <div className="flex items-center gap-2 mb-3">
                 <h4 className="font-bold text-sm text-emerald-400">امتثال فاتورة ZATCA</h4>
                 <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">إلزامي للشركات المُسجّلة بضريبة القيمة المضافة</span>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-[#9A9AA0] mb-2">الرقم الضريبي (15 رقم)</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-2">الرقم الضريبي (15 رقم)</label>
                   <input
                     value={licenses.vat_number}
                     onChange={e=>setLicenses(l=>({...l,vat_number:e.target.value.replace(/\D/g,'').slice(0,15)}))}
@@ -1064,7 +1064,7 @@ export default function Settings() {
                     dir="ltr"
                     inputMode="numeric"
                   />
-                  <p className="text-[#5A5A62] text-xs mt-1">
+                  <p className="text-[var(--text-faint)] text-xs mt-1">
                     {licenses.vat_number && (/^3\d{13}3$/.test(licenses.vat_number) ? "✅ صيغة صحيحة" : "⚠️ يجب أن يبدأ وينتهي بـ 3 ويكون 15 رقم")}
                     {!licenses.vat_number && "يظهر في رأس الفواتير + رمز QR ZATCA"}
                   </p>
@@ -1076,7 +1076,7 @@ export default function Settings() {
                     onChange={e=>setLicenses(l=>({...l,zatca_enabled:e.target.checked}))}
                     className="w-4 h-4 accent-emerald-500"
                   />
-                  <span className="text-sm text-[#9A9AA0]">تفعيل QR ZATCA وتصدير XML في الفواتير</span>
+                  <span className="text-sm text-[var(--text-soft)]">تفعيل QR ZATCA وتصدير XML في الفواتير</span>
                 </label>
               </div>
             </div>
@@ -1085,14 +1085,14 @@ export default function Settings() {
           </div>
 
           {/* الفريق */}
-          <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-6">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="font-bold text-lg">الفريق</h3>
-              <button className="bg-[#C6914C] hover:bg-[#A6743A] px-4 py-2 rounded-lg text-sm transition">دعوة عضو جديد</button>
+              <button className="bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-4 py-2 rounded-lg text-sm transition">دعوة عضو جديد</button>
             </div>
             <table className="w-full" style={{ minWidth:320 }}>
               <thead>
-                <tr className="text-[#9A9AA0] text-sm border-b border-[rgba(198,145,76,0.12)]">
+                <tr className="text-[var(--text-soft)] text-sm border-b border-[var(--gold-bg)]">
                   <th className="text-right pb-3">الاسم</th>
                   <th className="text-right pb-3">الصلاحية</th>
                   <th className="text-right pb-3">تاريخ الانضمام</th>
@@ -1101,8 +1101,8 @@ export default function Settings() {
               <tbody>
                 <tr>
                   <td className="py-4">{profile.name || "—"}</td>
-                  <td className="py-4"><span className="bg-[rgba(198,145,76,0.1)] text-[#C6914C] text-xs px-2 py-1 rounded">مالك</span></td>
-                  <td className="py-4 text-[#9A9AA0] text-sm">المؤسس</td>
+                  <td className="py-4"><span className="bg-[var(--gold-bg)] text-[var(--gold-2)] text-xs px-2 py-1 rounded">مالك</span></td>
+                  <td className="py-4 text-[var(--text-soft)] text-sm">المؤسس</td>
                 </tr>
               </tbody>
             </table>

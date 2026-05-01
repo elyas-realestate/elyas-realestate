@@ -160,7 +160,7 @@ export default function NewContractPage() {
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "#C6914C", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={28} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -169,18 +169,18 @@ export default function NewContractPage() {
   return (
     <div>
       <Link href="/dashboard/contracts"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 14 }}>
+        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 14 }}>
         <ArrowRight size={12} /> العقود
       </Link>
 
-      <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 16 }}>
+      <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 16 }}>
         {selected ? `إنشاء ${selected.title}` : "اختر قالب العقد"}
       </h1>
 
       {error && (
         <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-          <AlertCircle size={14} style={{ color: "#F87171", display: "inline", marginInlineEnd: 8 }} />
-          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+          <AlertCircle size={14} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+          <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
@@ -192,25 +192,25 @@ export default function NewContractPage() {
             return (
               <button key={t.id} onClick={() => pickTemplate(t)}
                 style={{
-                  background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)",
+                  background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)",
                   borderRadius: 13, padding: 18, textAlign: "right", cursor: "pointer",
                   fontFamily: "'Tajawal', sans-serif", transition: "all 0.2s",
                 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(198,145,76,0.4)"; e.currentTarget.style.background = "#141418"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.background = "#0F0F12"; }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(198,145,76,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-                  <Icon size={18} style={{ color: "#C6914C" }} />
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--overlay-mid)"; e.currentTarget.style.background = "var(--bg-deep)"; }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--gold-bg)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                  <Icon size={18} style={{ color: "var(--gold-2)" }} />
                 </div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "#E4E4E7", marginBottom: 4 }}>{t.title}</div>
-                <div style={{ fontSize: 12, color: "#71717A" }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 4 }}>{t.title}</div>
+                <div style={{ fontSize: 12, color: "var(--text-ghost)" }}>
                   {t.variables.length} حقل قابل للتخصيص
-                  {t.is_system && <span style={{ marginInlineStart: 8, fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "rgba(74,222,128,0.1)", color: "#4ADE80" }}>قالب نظام</span>}
+                  {t.is_system && <span style={{ marginInlineStart: 8, fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "rgba(74,222,128,0.1)", color: "var(--success)" }}>قالب نظام</span>}
                 </div>
               </button>
             );
           })}
           {templates.length === 0 && (
-            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40, color: "#52525B" }}>
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40, color: "var(--text-disabled)" }}>
               لا قوالب متاحة
             </div>
           )}
@@ -219,11 +219,11 @@ export default function NewContractPage() {
         // ─────── خطوة 2: ملء الحقول ───────
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 16 }}>
           {/* العمود الأيمن: النموذج */}
-          <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 18 }}>
+          <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 18 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: "#A1A1AA" }}>الحقول</h2>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)" }}>الحقول</h2>
               <button onClick={() => { setSelected(null); setValues({}); }}
-                style={{ fontSize: 12, color: "#71717A", background: "none", border: "none", cursor: "pointer" }}>
+                style={{ fontSize: 12, color: "var(--text-ghost)", background: "none", border: "none", cursor: "pointer" }}>
                 تغيير القالب
               </button>
             </div>
@@ -231,8 +231,8 @@ export default function NewContractPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {selected.variables.map(v => (
                 <label key={v.name} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                  <span style={{ fontSize: 12, color: "#A1A1AA" }}>
-                    {v.label} {v.required && <span style={{ color: "#F87171" }}>*</span>}
+                  <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                    {v.label} {v.required && <span style={{ color: "var(--danger)" }}>*</span>}
                   </span>
                   {v.type === "textarea" ? (
                     <textarea
@@ -256,8 +256,8 @@ export default function NewContractPage() {
             <button onClick={handleCreate} disabled={creating}
               style={{
                 marginTop: 18, width: "100%", padding: "12px",
-                background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
-                color: "#0A0A0C", border: "none", borderRadius: 9,
+                background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
+                color: "var(--bg-page)", border: "none", borderRadius: 9,
                 fontSize: 14, fontWeight: 700, cursor: creating ? "not-allowed" : "pointer",
                 fontFamily: "'Tajawal', sans-serif",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -269,7 +269,7 @@ export default function NewContractPage() {
           </div>
 
           {/* العمود الأيسر: المعاينة */}
-          <div style={{ background: "#FAFAFA", color: "#000", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 24, maxHeight: "85vh", overflowY: "auto", direction: "rtl" }}>
+          <div style={{ background: "#FAFAFA", color: "#000", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 24, maxHeight: "85vh", overflowY: "auto", direction: "rtl" }}>
             <div className="contract-preview"
               dangerouslySetInnerHTML={{ __html: fillTemplate(selected.body_html, values) }}
               style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.8 }} />
@@ -290,7 +290,7 @@ export default function NewContractPage() {
 }
 
 const inputStyle: React.CSSProperties = {
-  padding: "9px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: 8, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
+  padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)",
+  borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
   outline: "none", width: "100%",
 };

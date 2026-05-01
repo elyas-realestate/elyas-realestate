@@ -20,9 +20,9 @@ export default function SARIcon({
   style?: React.CSSProperties;
 }) {
   const colorMap: Record<string, string> = {
-    accent: "#C6914C",
-    secondary: "#A1A1AA",
-    muted: "#71717A",
+    accent: "var(--gold-2)",
+    secondary: "var(--text-muted)",
+    muted: "var(--text-ghost)",
   };
 
   const textColor = colorMap[color] || color;

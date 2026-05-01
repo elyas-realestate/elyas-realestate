@@ -6,8 +6,8 @@ export default function NotFound() {
       className="min-h-screen flex flex-col items-center justify-center"
       dir="rtl"
       style={{
-        background: "#0A0A0C",
-        color: "#F5F5F5",
+        background: "var(--bg-page)",
+        color: "var(--text-strong)",
         fontFamily: "'Tajawal', sans-serif",
       }}
     >
@@ -29,7 +29,7 @@ export default function NotFound() {
           fontSize: "clamp(96px, 20vw, 180px)",
           fontWeight: 900,
           lineHeight: 1,
-          background: "linear-gradient(135deg, #C6914C 0%, #A6743A 60%, #2A2018 100%)",
+          background: "linear-gradient(135deg, var(--gold-2) 0%, var(--gold-3) 60%, #2A2018 100%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
@@ -43,11 +43,11 @@ export default function NotFound() {
       <div className="fade-up-delay text-center" style={{ marginTop: 24, maxWidth: 360, padding: "0 24px" }}>
         <h1
           className="font-kufi"
-          style={{ fontSize: 22, fontWeight: 700, color: "#F5F5F5", marginBottom: 12 }}
+          style={{ fontSize: 22, fontWeight: 700, color: "var(--text-strong)", marginBottom: 12 }}
         >
           الصفحة غير موجودة
         </h1>
-        <p style={{ fontSize: 15, color: "#9A9AA0", lineHeight: 1.7, marginBottom: 32 }}>
+        <p style={{ fontSize: 15, color: "var(--text-soft)", lineHeight: 1.7, marginBottom: 32 }}>
           يبدو أن الرابط الذي تبحث عنه لم يعد موجوداً أو تم نقله.
         </p>
 
@@ -60,8 +60,8 @@ export default function NotFound() {
               justifyContent: "center",
               padding: "12px 28px",
               borderRadius: 10,
-              background: "linear-gradient(135deg, #C6914C, #A6743A)",
-              color: "#0A0A0C",
+              background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              color: "var(--bg-page)",
               fontWeight: 700,
               fontSize: 15,
               textDecoration: "none",
@@ -78,9 +78,9 @@ export default function NotFound() {
               justifyContent: "center",
               padding: "12px 28px",
               borderRadius: 10,
-              background: "rgba(198,145,76,0.08)",
-              border: "1px solid rgba(198,145,76,0.2)",
-              color: "#C6914C",
+              background: "var(--gold-bg-soft)",
+              border: "1px solid var(--gold-bg-hover)",
+              color: "var(--gold-2)",
               fontWeight: 600,
               fontSize: 15,
               textDecoration: "none",
@@ -95,7 +95,7 @@ export default function NotFound() {
       {/* Subtle brand */}
       <div
         className="fade-up-delay font-kufi"
-        style={{ marginTop: 64, fontSize: 12, color: "#3A3A42", fontWeight: 700, letterSpacing: 1 }}
+        style={{ marginTop: 64, fontSize: 12, color: "var(--border-1)", fontWeight: 700, letterSpacing: 1 }}
       >
         وسيط برو
       </div>

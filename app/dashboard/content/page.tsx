@@ -34,7 +34,7 @@ export default function ContentAI() {
         <h2 className="text-xl sm:text-2xl font-bold mb-1">
           وكيل المحتوى العقاري
         </h2>
-        <p className="text-[#9A9AA0] text-xs sm:text-sm hidden sm:block">
+        <p className="text-[var(--text-soft)] text-xs sm:text-sm hidden sm:block">
           منصة ذكاء اصطناعي متكاملة لصناعة المحتوى العقاري — من الفكرة إلى
           النشر
         </p>
@@ -47,9 +47,9 @@ export default function ContentAI() {
           onChange={(e) => switchTab(e.target.value)}
           className="w-full rounded-xl px-4 py-3 text-sm font-medium focus:outline-none"
           style={{
-            background: "#16161A",
+            background: "var(--bg-surface-1)",
             border: "1px solid rgba(198,145,76,0.25)",
-            color: "#F5F5F5",
+            color: "var(--text-strong)",
           }}
         >
           {tabs.map((tab) => (
@@ -59,7 +59,7 @@ export default function ContentAI() {
           ))}
         </select>
         {activeTabData && (
-          <p className="text-xs text-[#5A5A62] mt-1.5 px-1">
+          <p className="text-xs text-[var(--text-faint)] mt-1.5 px-1">
             {activeTabData.desc}
           </p>
         )}
@@ -77,8 +77,8 @@ export default function ContentAI() {
             className={
               "flex items-center gap-1.5 rounded-xl font-medium transition whitespace-nowrap text-sm px-4 py-3 " +
               (activeTab === tab.id
-                ? "bg-[#C6914C] text-white"
-                : "bg-[#16161A] border border-[rgba(198,145,76,0.12)] text-[#9A9AA0] hover:text-white hover:border-[rgba(198,145,76,0.15)]")
+                ? "bg-[var(--gold-2)] text-white"
+                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-white hover:border-[var(--gold-bg-hover)]")
             }
           >
             <tab.icon size={14} />

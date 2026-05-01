@@ -32,16 +32,16 @@ type Approval = {
 };
 
 const SEVERITY_META: Record<string, { color: string; bg: string; label: string }> = {
-  info:     { color: "#60A5FA", bg: "rgba(96,165,250,0.10)",  label: "معلومة" },
-  warning:  { color: "#E8B86D", bg: "rgba(232,184,109,0.10)", label: "تحذير" },
-  critical: { color: "#F87171", bg: "rgba(239,68,68,0.10)",   label: "حرج" },
+  info:     { color: "var(--info)", bg: "rgba(96,165,250,0.10)",  label: "معلومة" },
+  warning:  { color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", label: "تحذير" },
+  critical: { color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   label: "حرج" },
 };
 
 const STATUS_META: Record<string, { color: string; bg: string; label: string }> = {
-  pending:  { color: "#FBBF24", bg: "rgba(251,191,36,0.10)",  label: "قيد المراجعة" },
-  approved: { color: "#4ADE80", bg: "rgba(74,222,128,0.10)",  label: "موافَق" },
-  rejected: { color: "#F87171", bg: "rgba(239,68,68,0.10)",   label: "مرفوض" },
-  modified: { color: "#A78BFA", bg: "rgba(167,139,250,0.10)", label: "معدَّل" },
+  pending:  { color: "var(--warning-2)", bg: "rgba(251,191,36,0.10)",  label: "قيد المراجعة" },
+  approved: { color: "var(--success)", bg: "rgba(74,222,128,0.10)",  label: "موافَق" },
+  rejected: { color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   label: "مرفوض" },
+  modified: { color: "var(--purple-ai)", bg: "rgba(167,139,250,0.10)", label: "معدَّل" },
 };
 
 export default function CEOApprovalsPage() {
@@ -122,7 +122,7 @@ export default function CEOApprovalsPage() {
             <span style={{ fontSize: 13 }}>لوحة CEO</span>
           </Link>
           <div style={{ width: 1, height: 20, background: "#374151" }} />
-          <ShieldCheck size={26} color="#FBBF24" />
+          <ShieldCheck size={26} color="var(--warning-2)" />
           <div>
             <h1 style={{ fontSize: 22, fontWeight: 700, color: "#F9FAFB", margin: 0 }}>
               بوابات الموافقة
@@ -139,7 +139,7 @@ export default function CEOApprovalsPage() {
             display: "flex", alignItems: "center", gap: 6,
             padding: "8px 14px", borderRadius: 8,
             background: "rgba(96,165,250,0.10)", border: "1px solid rgba(96,165,250,0.30)",
-            color: "#60A5FA", fontSize: 13, cursor: "pointer",
+            color: "var(--info)", fontSize: 13, cursor: "pointer",
           }}
         >
           <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
@@ -155,7 +155,7 @@ export default function CEOApprovalsPage() {
           padding: "10px 16px", borderRadius: 10,
           background: pendingCount > 0 ? "rgba(251,191,36,0.10)" : "rgba(74,222,128,0.10)",
           border: `1px solid ${pendingCount > 0 ? "rgba(251,191,36,0.30)" : "rgba(74,222,128,0.30)"}`,
-          color: pendingCount > 0 ? "#FBBF24" : "#4ADE80",
+          color: pendingCount > 0 ? "var(--warning-2)" : "var(--success)",
           fontSize: 13, fontWeight: 600,
         }}>
           {pendingCount > 0 ? `${pendingCount} قرار ينتظر اعتمادك` : "لا توجد طلبات معلَّقة"}
@@ -170,7 +170,7 @@ export default function CEOApprovalsPage() {
                 padding: "8px 14px", borderRadius: 8,
                 background: filter === f ? "rgba(167,139,250,0.15)" : "transparent",
                 border: `1px solid ${filter === f ? "rgba(167,139,250,0.30)" : "#374151"}`,
-                color: filter === f ? "#A78BFA" : "#9CA3AF",
+                color: filter === f ? "var(--purple-ai)" : "#9CA3AF",
                 fontSize: 12, cursor: "pointer", fontWeight: 600,
               }}
             >
@@ -185,7 +185,7 @@ export default function CEOApprovalsPage() {
         <div style={{
           padding: 14, marginBottom: 16, borderRadius: 10,
           background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.30)",
-          color: "#FBBF24", fontSize: 13, lineHeight: 1.7,
+          color: "var(--warning-2)", fontSize: 13, lineHeight: 1.7,
         }}>
           <div style={{ fontWeight: 700, marginBottom: 4 }}>إعدادات الخادم ناقصة</div>
           <div>{envWarning}</div>
@@ -269,7 +269,7 @@ export default function CEOApprovalsPage() {
                       {item.is_expired && item.status === "pending" && (
                         <span style={{
                           fontSize: 10, padding: "2px 6px", borderRadius: 4,
-                          background: "rgba(239,68,68,0.10)", color: "#F87171", fontWeight: 600,
+                          background: "rgba(239,68,68,0.10)", color: "var(--danger)", fontWeight: 600,
                         }}>
                           منتهي
                         </span>
@@ -294,7 +294,7 @@ export default function CEOApprovalsPage() {
                         })}
                       </span>
                       {amount !== null && (
-                        <span style={{ color: "#FBBF24", fontWeight: 600 }}>
+                        <span style={{ color: "var(--warning-2)", fontWeight: 600 }}>
                           {amount.toLocaleString("ar-SA")} ر.س
                         </span>
                       )}
@@ -400,7 +400,7 @@ export default function CEOApprovalsPage() {
                             style={{
                               padding: "8px 16px", borderRadius: 6,
                               background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.40)",
-                              color: "#4ADE80", fontSize: 13, fontWeight: 600,
+                              color: "var(--success)", fontSize: 13, fontWeight: 600,
                               cursor: busyId === item.id ? "wait" : "pointer",
                               display: "flex", alignItems: "center", gap: 6,
                             }}
@@ -414,7 +414,7 @@ export default function CEOApprovalsPage() {
                             style={{
                               padding: "8px 16px", borderRadius: 6,
                               background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.30)",
-                              color: "#F87171", fontSize: 13, fontWeight: 600,
+                              color: "var(--danger)", fontSize: 13, fontWeight: 600,
                               cursor: busyId === item.id ? "wait" : "pointer",
                               display: "flex", alignItems: "center", gap: 6,
                             }}
@@ -428,7 +428,7 @@ export default function CEOApprovalsPage() {
                             style={{
                               padding: "8px 16px", borderRadius: 6,
                               background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.30)",
-                              color: "#A78BFA", fontSize: 13, fontWeight: 600,
+                              color: "var(--purple-ai)", fontSize: 13, fontWeight: 600,
                               cursor: busyId === item.id ? "wait" : "pointer",
                               display: "flex", alignItems: "center", gap: 6,
                             }}

@@ -36,20 +36,20 @@ export default function ModelSelector({
   const currentProvider2 = providers.find((p) => p.id === provider2);
 
   const selectClass =
-    "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C6914C]";
+    "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)]";
 
   return (
-    <div className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-4 space-y-3">
+    <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4 space-y-3">
       <div className="flex items-center gap-2 mb-1">
-        <Cpu size={14} className="text-[#C6914C]" />
-        <h4 className="font-bold text-[#C6914C] text-sm">
+        <Cpu size={14} className="text-[var(--gold-2)]" />
+        <h4 className="font-bold text-[var(--gold-2)] text-sm">
           {label || "إعدادات النموذج"}
         </h4>
       </div>
 
       {showMode && setMode && (
         <div>
-          <label className="block text-xs text-[#5A5A62] mb-2">
+          <label className="block text-xs text-[var(--text-faint)] mb-2">
             وضع التشغيل
           </label>
           <div className="space-y-1">
@@ -60,13 +60,13 @@ export default function ModelSelector({
                 className={
                   "w-full text-right px-3 py-2 rounded-lg text-sm transition " +
                   (mode === m.id
-                    ? "bg-[#C6914C]/20 border border-[rgba(198,145,76,0.2)] text-[#C6914C]"
-                    : "bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] text-[#9A9AA0] hover:text-white")
+                    ? "bg-[var(--gold-2)]/20 border border-[var(--gold-bg-hover)] text-[var(--gold-2)]"
+                    : "bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-white")
                 }
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-medium">{m.name}</span>
-                  <span className="text-xs text-[#5A5A62] hidden sm:inline">
+                  <span className="text-xs text-[var(--text-faint)] hidden sm:inline">
                     {m.desc}
                   </span>
                 </div>
@@ -77,7 +77,7 @@ export default function ModelSelector({
       )}
 
       <div>
-        <label className="block text-xs text-[#5A5A62] mb-2">
+        <label className="block text-xs text-[var(--text-faint)] mb-2">
           {mode === "chain"
             ? "شركة النموذج الكاتب"
             : mode === "compare"
@@ -102,7 +102,7 @@ export default function ModelSelector({
       </div>
 
       <div>
-        <label className="block text-xs text-[#5A5A62] mb-2">
+        <label className="block text-xs text-[var(--text-faint)] mb-2">
           {mode === "chain"
             ? "النموذج الكاتب"
             : mode === "compare"
@@ -126,8 +126,8 @@ export default function ModelSelector({
         setProvider2 &&
         setModel2 && (
           <>
-            <div className="border-t border-[rgba(198,145,76,0.15)] pt-3">
-              <label className="block text-xs text-[#5A5A62] mb-2">
+            <div className="border-t border-[var(--gold-bg-hover)] pt-3">
+              <label className="block text-xs text-[var(--text-faint)] mb-2">
                 {mode === "chain"
                   ? "شركة النموذج المراجع"
                   : "شركة النموذج الثاني"}
@@ -149,7 +149,7 @@ export default function ModelSelector({
               </select>
             </div>
             <div>
-              <label className="block text-xs text-[#5A5A62] mb-2">
+              <label className="block text-xs text-[var(--text-faint)] mb-2">
                 {mode === "chain"
                   ? "النموذج المراجع"
                   : "النموذج الثاني"}

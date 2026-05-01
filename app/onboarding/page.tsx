@@ -124,7 +124,7 @@ export default function OnboardingPage() {
   if (!authChecked) {
     return (
       <div style={wrapperStyle}>
-        <Loader2 size={32} style={{ color: "#C6914C", animation: "spin 1s linear infinite" }} />
+        <Loader2 size={32} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -140,19 +140,19 @@ export default function OnboardingPage() {
       `}</style>
 
       <Toaster position="top-center" dir="rtl" toastOptions={{
-        style: { background: "#18181B", border: "1px solid rgba(198,145,76,0.25)", color: "#F4F4F5", fontFamily: "'Tajawal', sans-serif" },
+        style: { background: "var(--bg-surface-2)", border: "1px solid rgba(198,145,76,0.25)", color: "var(--text-primary)", fontFamily: "'Tajawal', sans-serif" },
       }} />
 
       <div style={{ maxWidth: 720, width: "100%" }}>
         {/* Logo + welcome */}
         <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, #C6914C, #8A5F2E)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14, fontFamily: "'Noto Kufi Arabic', serif", fontSize: 26, fontWeight: 800, color: "#0A0A0C" }}>
+          <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14, fontFamily: "'Noto Kufi Arabic', serif", fontSize: 26, fontWeight: 800, color: "var(--bg-page)" }}>
             و
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: "#F4F4F5", marginBottom: 6, fontFamily: "'Noto Kufi Arabic', serif" }}>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: "var(--text-primary)", marginBottom: 6, fontFamily: "'Noto Kufi Arabic', serif" }}>
             أهلاً بك في وسيط برو
           </h1>
-          <p style={{ fontSize: 14, color: "#A1A1AA" }}>
+          <p style={{ fontSize: 14, color: "var(--text-muted)" }}>
             ٣ خطوات سريعة (دقيقتين) لتجهيز منصّتك
           </p>
         </div>
@@ -163,8 +163,8 @@ export default function OnboardingPage() {
             <div key={n} style={{ display: "flex", alignItems: "center", gap: 14 }}>
               <div style={{
                 width: 32, height: 32, borderRadius: "50%",
-                background: step >= (n as Step) ? "linear-gradient(135deg, #C6914C, #8A5F2E)" : "#1C1C1E",
-                color: step >= (n as Step) ? "#0A0A0C" : "#52525B",
+                background: step >= (n as Step) ? "linear-gradient(135deg, var(--gold-2), var(--gold-4))" : "#1C1C1E",
+                color: step >= (n as Step) ? "var(--bg-page)" : "var(--text-disabled)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 13, fontWeight: 800, fontFamily: "'Noto Kufi Arabic', serif",
                 transition: "all 0.3s",
@@ -172,24 +172,24 @@ export default function OnboardingPage() {
                 {step > n ? <CheckCircle2 size={16} /> : n}
               </div>
               {n < 3 && (
-                <div style={{ width: 60, height: 2, background: step > n ? "#C6914C" : "#1C1C1E", transition: "background 0.3s" }} />
+                <div style={{ width: 60, height: 2, background: step > n ? "var(--gold-2)" : "#1C1C1E", transition: "background 0.3s" }} />
               )}
             </div>
           ))}
         </div>
 
         {/* Step content */}
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 28, animation: "fadeIn 0.4s ease-out" }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 16, padding: 28, animation: "fadeIn 0.4s ease-out" }}>
 
           {step === 1 && (
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: "rgba(198,145,76,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Building size={17} style={{ color: "#C6914C" }} />
+                <div style={{ width: 36, height: 36, borderRadius: 9, background: "var(--gold-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Building size={17} style={{ color: "var(--gold-2)" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "#F4F4F5" }}>هويتك المهنية</h2>
-                  <p style={{ fontSize: 12, color: "#71717A", marginTop: 2 }}>كيف تظهر للعملاء وللذكاء الاصطناعي</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>هويتك المهنية</h2>
+                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>كيف تظهر للعملاء وللذكاء الاصطناعي</p>
                 </div>
               </div>
 
@@ -223,11 +223,11 @@ export default function OnboardingPage() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 9, background: "rgba(232,184,109,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Crown size={17} style={{ color: "#E8B86D" }} />
+                  <Crown size={17} style={{ color: "var(--gold-1)" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "#F4F4F5" }}>اختر خطتك</h2>
-                  <p style={{ fontSize: 12, color: "#71717A", marginTop: 2 }}>تقدر تغيرها أي وقت من الإعدادات</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>اختر خطتك</h2>
+                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>تقدر تغيرها أي وقت من الإعدادات</p>
                 </div>
               </div>
 
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
                   price="0 ر.س"
                   features={["٥ عقارات", "١٠ عملاء", "صفحة عقاري عامة"]}
                   recommended={false}
-                  color="#71717A"
+                  color="var(--text-ghost)"
                 />
                 <PlanCard
                   selected={selectedPlan === "basic"}
@@ -250,7 +250,7 @@ export default function OnboardingPage() {
                   price="199 ر.س / شهر"
                   features={["٥٠ عقار + عملاء غير محدودين", "٣ موظفين AI (تسويق + متابعة + محلل)", "العقود الإلكترونية + ZATCA"]}
                   recommended
-                  color="#C6914C"
+                  color="var(--gold-2)"
                 />
                 <PlanCard
                   selected={selectedPlan === "pro"}
@@ -260,11 +260,11 @@ export default function OnboardingPage() {
                   price="499 ر.س / شهر"
                   features={["كل شي بدون حدود", "٤ موظفين AI (مع موظف الاستقبال)", "WhatsApp Business API + فريق ١٠"]}
                   recommended={false}
-                  color="#E8B86D"
+                  color="var(--gold-1)"
                 />
               </div>
 
-              <div style={{ marginTop: 14, padding: 12, background: "rgba(96,165,250,0.05)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 8, fontSize: 12, color: "#A1A1AA" }}>
+              <div style={{ marginTop: 14, padding: 12, background: "rgba(96,165,250,0.05)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 8, fontSize: 12, color: "var(--text-muted)" }}>
                 💡 ابدأ بالمجاني وجرّب المنصة. تقدر ترقّي خطتك من <strong>الإعدادات → الاشتراك</strong> في أي وقت.
               </div>
             </div>
@@ -274,11 +274,11 @@ export default function OnboardingPage() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 9, background: "rgba(167,139,250,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Bot size={17} style={{ color: "#A78BFA" }} />
+                  <Bot size={17} style={{ color: "var(--purple-ai)" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "#F4F4F5" }}>تفعيل الموظفين الذكيين</h2>
-                  <p style={{ fontSize: 12, color: "#71717A", marginTop: 2 }}>يبدأون العمل تلقائياً عنك</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>تفعيل الموظفين الذكيين</h2>
+                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>يبدأون العمل تلقائياً عنك</p>
                 </div>
               </div>
 
@@ -288,23 +288,23 @@ export default function OnboardingPage() {
                   title="موظف التسويق"
                   desc="يولّد ٣ منشورات يومياً لأحدث عقاراتك (تويتر/إنستجرام/واتساب) — تراجعها وتنشرها"
                   schedule="يومياً 10ص"
-                  color="#C6914C"
+                  color="var(--gold-2)"
                 />
                 <ToggleCard
                   enabled={enableFollowup} onChange={setEnableFollowup}
                   title="موظف المتابعة"
                   desc="يكتب رسائل واتساب مخصّصة للعملاء الباردين الذين لم تتواصل معهم منذ 14+ يوم"
                   schedule="يومياً 6م"
-                  color="#34D399"
+                  color="var(--success-2)"
                 />
                 <ToggleCard
                   enabled={enableAnalyst} onChange={setEnableAnalyst}
                   title="محلل البيانات"
                   desc="تقرير أسبوعي بالأرقام والتوصيات لتحسين أدائك في الأسبوع القادم"
                   schedule="أسبوعياً — الأحد 9ص"
-                  color="#A78BFA"
+                  color="var(--purple-ai)"
                 />
-                <div style={{ padding: 12, background: "rgba(96,165,250,0.05)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 9, fontSize: 12, color: "#A1A1AA" }}>
+                <div style={{ padding: 12, background: "rgba(96,165,250,0.05)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 9, fontSize: 12, color: "var(--text-muted)" }}>
                   📱 <strong>موظف الاستقبال</strong> (يرد على واتساب تلقائياً) متاح بعد ربط Meta Business — تقدر تفعّله لاحقاً.
                 </div>
               </div>
@@ -333,7 +333,7 @@ export default function OnboardingPage() {
 
         {/* Skip link */}
         <div style={{ textAlign: "center", marginTop: 18 }}>
-          <button onClick={() => router.replace("/dashboard")} style={{ background: "none", border: "none", color: "#52525B", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+          <button onClick={() => router.replace("/dashboard")} style={{ background: "none", border: "none", color: "var(--text-disabled)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
             تخطٍّ الإعداد والذهاب للداشبورد
           </button>
         </div>
@@ -350,13 +350,13 @@ function PlanCard({ selected, onClick, icon: Icon, name, price, features, recomm
     <button onClick={onClick}
       style={{
         textAlign: "right", padding: 16, borderRadius: 11,
-        background: selected ? `${color}10` : "#18181B",
-        border: `2px solid ${selected ? color : "rgba(255,255,255,0.06)"}`,
+        background: selected ? `${color}10` : "var(--bg-surface-2)",
+        border: `2px solid ${selected ? color : "var(--overlay-mid)"}`,
         cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
         position: "relative", transition: "all 0.2s",
       }}>
       {recommended && (
-        <span style={{ position: "absolute", top: -10, insetInlineStart: 14, fontSize: 10, padding: "2px 9px", borderRadius: 100, background: color, color: "#0A0A0C", fontWeight: 700 }}>
+        <span style={{ position: "absolute", top: -10, insetInlineStart: 14, fontSize: 10, padding: "2px 9px", borderRadius: 100, background: color, color: "var(--bg-page)", fontWeight: 700 }}>
           الأكثر طلباً
         </span>
       )}
@@ -366,13 +366,13 @@ function PlanCard({ selected, onClick, icon: Icon, name, price, features, recomm
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: "#E4E4E7" }}>{name}</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)" }}>{name}</span>
             <span style={{ fontSize: 14, fontWeight: 700, color }}>{price}</span>
           </div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 3 }}>
             {features.map((f, i) => (
-              <li key={i} style={{ fontSize: 11.5, color: "#A1A1AA", display: "flex", alignItems: "center", gap: 5 }}>
-                <CheckCircle2 size={11} style={{ color: "#4ADE80", flexShrink: 0 }} /> {f}
+              <li key={i} style={{ fontSize: 11.5, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 5 }}>
+                <CheckCircle2 size={11} style={{ color: "var(--success)", flexShrink: 0 }} /> {f}
               </li>
             ))}
           </ul>
@@ -390,17 +390,17 @@ function ToggleCard({ enabled, onChange, title, desc, schedule, color }: {
     <button onClick={() => onChange(!enabled)}
       style={{
         textAlign: "right", padding: 14, borderRadius: 10,
-        background: enabled ? `${color}08` : "#18181B",
-        border: `1px solid ${enabled ? `${color}33` : "rgba(255,255,255,0.05)"}`,
+        background: enabled ? `${color}08` : "var(--bg-surface-2)",
+        border: `1px solid ${enabled ? `${color}33` : "var(--overlay-soft)"}`,
         cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
         display: "flex", alignItems: "flex-start", gap: 12,
       }}>
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7" }}>{title}</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{title}</span>
           <span style={{ fontSize: 10, color: color, background: `${color}15`, padding: "2px 7px", borderRadius: 4 }}>{schedule}</span>
         </div>
-        <p style={{ fontSize: 12, color: "#A1A1AA", lineHeight: 1.7 }}>{desc}</p>
+        <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.7 }}>{desc}</p>
       </div>
       <div style={{
         width: 38, height: 22, borderRadius: 11, position: "relative",
@@ -418,17 +418,17 @@ function ToggleCard({ enabled, onChange, title, desc, schedule, color }: {
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: "block", fontSize: 12, color: "#A1A1AA", marginBottom: 5 }}>{label}</label>
+      <label style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 5 }}>{label}</label>
       {children}
-      {hint && <div style={{ fontSize: 10, color: "#52525B", marginTop: 4 }}>{hint}</div>}
+      {hint && <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 4 }}>{hint}</div>}
     </div>
   );
 }
 
 const wrapperStyle: React.CSSProperties = {
   minHeight: "100vh",
-  background: "radial-gradient(ellipse at top, rgba(198,145,76,0.06) 0%, #09090B 65%)",
-  color: "#E4E4E7",
+  background: "radial-gradient(ellipse at top, var(--gold-bg-soft) 0%, #09090B 65%)",
+  color: "var(--text-on-dark)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -437,22 +437,22 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "10px 12px", background: "#18181B",
-  border: "1px solid rgba(255,255,255,0.06)", borderRadius: 9,
-  color: "#E4E4E7", fontSize: 14, fontFamily: "'Tajawal', sans-serif",
+  width: "100%", padding: "10px 12px", background: "var(--bg-surface-2)",
+  border: "1px solid var(--overlay-mid)", borderRadius: 9,
+  color: "var(--text-on-dark)", fontSize: 14, fontFamily: "'Tajawal', sans-serif",
   outline: "none",
 };
 
 const btnPrimary: React.CSSProperties = {
   display: "flex", alignItems: "center", gap: 7, padding: "11px 22px", borderRadius: 10,
-  background: "linear-gradient(135deg, #C6914C, #8A5F2E)",
-  color: "#0A0A0C", border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer",
+  background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
+  color: "var(--bg-page)", border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer",
   fontFamily: "'Tajawal', sans-serif",
 };
 
 const btnSecondary: React.CSSProperties = {
   display: "flex", alignItems: "center", gap: 7, padding: "11px 18px", borderRadius: 10,
-  background: "rgba(255,255,255,0.04)", color: "#A1A1AA",
-  border: "1px solid rgba(255,255,255,0.08)", fontSize: 13, cursor: "pointer",
+  background: "rgba(255,255,255,0.04)", color: "var(--text-muted)",
+  border: "1px solid var(--overlay-mid)", fontSize: 13, cursor: "pointer",
   fontFamily: "'Tajawal', sans-serif",
 };

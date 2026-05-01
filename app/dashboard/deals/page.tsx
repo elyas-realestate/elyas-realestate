@@ -9,16 +9,16 @@ import { exportToCSV, DEALS_EXPORT_HEADERS } from "@/lib/export";
 
 // ── المراحل بالترتيب ──
 const STAGES = [
-  { id: "استفسار",  color: "#71717A", bg: "rgba(113,113,122,0.12)", light: "rgba(113,113,122,0.06)" },
-  { id: "معاينة",   color: "#C6914C", bg: "rgba(198,145,76,0.12)",  light: "rgba(198,145,76,0.06)"  },
+  { id: "استفسار",  color: "var(--text-ghost)", bg: "rgba(113,113,122,0.12)", light: "rgba(113,113,122,0.06)" },
+  { id: "معاينة",   color: "var(--gold-2)", bg: "var(--gold-bg)",  light: "var(--gold-bg-soft)"  },
   { id: "تفاوض",    color: "#EAB308", bg: "rgba(234,179,8,0.12)",   light: "rgba(234,179,8,0.06)"   },
-  { id: "توقيع",    color: "#A78BFA", bg: "rgba(167,139,250,0.12)", light: "rgba(167,139,250,0.06)" },
-  { id: "مكتملة",   color: "#4ADE80", bg: "rgba(74,222,128,0.12)",  light: "rgba(74,222,128,0.06)"  },
-  { id: "ملغاة",    color: "#F87171", bg: "rgba(248,113,113,0.12)", light: "rgba(248,113,113,0.06)" },
+  { id: "توقيع",    color: "var(--purple-ai)", bg: "rgba(167,139,250,0.12)", light: "rgba(167,139,250,0.06)" },
+  { id: "مكتملة",   color: "var(--success)", bg: "rgba(74,222,128,0.12)",  light: "rgba(74,222,128,0.06)"  },
+  { id: "ملغاة",    color: "var(--danger)", bg: "rgba(248,113,113,0.12)", light: "rgba(248,113,113,0.06)" },
 ];
 
 const PRIORITY_COLOR: Record<string, string> = {
-  "منخفض": "#52525B", "متوسط": "#C6914C", "مرتفع": "#EAB308", "عاجل": "#F87171",
+  "منخفض": "var(--text-disabled)", "متوسط": "var(--gold-2)", "مرتفع": "#EAB308", "عاجل": "var(--danger)",
 };
 
 export default function Deals() {
@@ -95,7 +95,7 @@ export default function Deals() {
   const totalValue = deals.filter(d => d.current_stage === "مكتملة").reduce((s, d) => s + (d.target_value || 0), 0);
   const pipelineValue = deals.filter(d => !["مكتملة","ملغاة"].includes(d.current_stage)).reduce((s, d) => s + (d.target_value || 0), 0);
 
-  const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#C6914C] text-[#F5F5F5]";
+  const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)] text-[var(--text-strong)]";
 
   if (loading) return (
     <div dir="rtl" className="p-4">
@@ -114,25 +114,25 @@ export default function Deals() {
       <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">الصفقات</h2>
-          <p className="text-sm" style={{ color: "#5A5A62" }}>
+          <p className="text-sm" style={{ color: "var(--text-faint)" }}>
             {deals.length} صفقة · pipeline{" "}
-            <span style={{ color: "#C6914C" }}>{formatSAR(pipelineValue, { short: true })}</span>
+            <span style={{ color: "var(--gold-2)" }}>{formatSAR(pipelineValue, { short: true })}</span>
             {" "}· مكتملة{" "}
-            <span style={{ color: "#4ADE80" }}>{formatSAR(totalValue, { short: true })}</span>
+            <span style={{ color: "var(--success)" }}>{formatSAR(totalValue, { short: true })}</span>
           </p>
         </div>
         <div className="flex items-center gap-2">
           {/* View toggle */}
-          <div style={{ display: "flex", background: "#1C1C22", border: "1px solid rgba(198,145,76,0.12)", borderRadius: 9, padding: 3, gap: 2 }}>
+          <div style={{ display: "flex", background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", borderRadius: 9, padding: 3, gap: 2 }}>
             <button
               onClick={() => setView("kanban")}
-              style={{ padding: "6px 10px", borderRadius: 7, background: view === "kanban" ? "rgba(198,145,76,0.15)" : "transparent", color: view === "kanban" ? "#C6914C" : "#5A5A62", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, transition: "all 0.2s" }}
+              style={{ padding: "6px 10px", borderRadius: 7, background: view === "kanban" ? "var(--gold-bg-hover)" : "transparent", color: view === "kanban" ? "var(--gold-2)" : "var(--text-faint)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, transition: "all 0.2s" }}
             >
               <LayoutGrid size={14} /> كانبان
             </button>
             <button
               onClick={() => setView("list")}
-              style={{ padding: "6px 10px", borderRadius: 7, background: view === "list" ? "rgba(198,145,76,0.15)" : "transparent", color: view === "list" ? "#C6914C" : "#5A5A62", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, transition: "all 0.2s" }}
+              style={{ padding: "6px 10px", borderRadius: 7, background: view === "list" ? "var(--gold-bg-hover)" : "transparent", color: view === "list" ? "var(--gold-2)" : "var(--text-faint)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 12, transition: "all 0.2s" }}
             >
               <List size={14} /> قائمة
             </button>
@@ -140,7 +140,7 @@ export default function Deals() {
           <button
             onClick={() => exportToCSV(filtered, DEALS_EXPORT_HEADERS, "صفقات")}
             disabled={filtered.length === 0}
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#9A9AA0", fontSize: 13, cursor: "pointer" }}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-soft)", fontSize: 13, cursor: "pointer" }}
             title="تصدير إلى Excel / CSV"
           >
             <Download size={14} />
@@ -149,7 +149,7 @@ export default function Deals() {
           <button
             onClick={() => setShowAdd(v => !v)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-sm"
-            style={{ background: showAdd ? "#1C1C22" : "linear-gradient(135deg, #C6914C, #A6743A)", color: showAdd ? "#9A9AA0" : "#0A0A0C", border: showAdd ? "1px solid rgba(198,145,76,0.15)" : "none" }}
+            style={{ background: showAdd ? "var(--bg-surface-2)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: showAdd ? "var(--text-soft)" : "var(--bg-page)", border: showAdd ? "1px solid var(--gold-bg-hover)" : "none" }}
           >
             {showAdd ? <><X size={16} /> إلغاء</> : <><Plus size={16} /> صفقة جديدة</>}
           </button>
@@ -158,45 +158,45 @@ export default function Deals() {
 
       {/* ── Add Form ── */}
       {showAdd && (
-        <form onSubmit={handleSubmit} className="bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-xl p-5 mb-6">
-          <h3 className="font-bold mb-4" style={{ color: "#C6914C", fontSize: 12, letterSpacing: 1 }}>صفقة جديدة</h3>
+        <form onSubmit={handleSubmit} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 mb-6">
+          <h3 className="font-bold mb-4" style={{ color: "var(--gold-2)", fontSize: 12, letterSpacing: 1 }}>صفقة جديدة</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm text-[#9A9AA0] mb-2">عنوان الصفقة *</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">عنوان الصفقة *</label>
               <input name="title" value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} required className={inp} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">نوع الصفقة</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">نوع الصفقة</label>
               <select className={inp} value={form.deal_type} onChange={e => setForm(f => ({...f, deal_type: e.target.value}))}>
                 <option value="">اختر...</option>
                 <option>بيع</option><option>إيجار</option><option>استثمار</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">المرحلة</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">المرحلة</label>
               <select className={inp} value={form.current_stage} onChange={e => setForm(f => ({...f, current_stage: e.target.value}))}>
                 {STAGES.map(s => <option key={s.id}>{s.id}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">العقار</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">العقار</label>
               <select className={inp} value={form.property_id} onChange={e => setForm(f => ({...f, property_id: e.target.value}))}>
                 <option value="">اختر...</option>
                 {properties.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الأولوية</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الأولوية</label>
               <select className={inp} value={form.priority} onChange={e => setForm(f => ({...f, priority: e.target.value}))}>
                 <option>منخفض</option><option>متوسط</option><option>مرتفع</option><option>عاجل</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">قيمة الصفقة (ر.س)</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">قيمة الصفقة (ر.س)</label>
               <input type="number" className={inp} dir="ltr" value={form.target_value} onChange={e => setForm(f => ({...f, target_value: e.target.value}))} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <label className="block text-sm text-[var(--text-soft)] mb-2" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span>العمولة المتوقعة (ر.س)</span>
                 {form.target_value && (
                   <div style={{ display: "flex", gap: 4 }}>
@@ -205,7 +205,7 @@ export default function Deals() {
                         key={pct}
                         type="button"
                         onClick={() => setForm(f => ({ ...f, expected_commission: String(Math.round(Number(f.target_value) * pct / 100)) }))}
-                        style={{ fontSize: 10, padding: "2px 7px", borderRadius: 5, background: "rgba(198,145,76,0.1)", border: "1px solid rgba(198,145,76,0.2)", color: "#C6914C", cursor: "pointer" }}
+                        style={{ fontSize: 10, padding: "2px 7px", borderRadius: 5, background: "var(--gold-bg)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", cursor: "pointer" }}
                       >
                         {pct}%
                       </button>
@@ -216,20 +216,20 @@ export default function Deals() {
               <input type="number" className={inp} dir="ltr" value={form.expected_commission} onChange={e => setForm(f => ({...f, expected_commission: e.target.value}))} placeholder="أو اختر نسبة أعلاه" />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">تاريخ الإغلاق المتوقع</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">تاريخ الإغلاق المتوقع</label>
               <input type="date" className={inp} value={form.expected_close_date} onChange={e => setForm(f => ({...f, expected_close_date: e.target.value}))} />
             </div>
             <div>
-              <label className="block text-sm text-[#9A9AA0] mb-2">الإجراء التالي</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">الإجراء التالي</label>
               <input className={inp} value={form.next_action} onChange={e => setForm(f => ({...f, next_action: e.target.value}))} />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm text-[#9A9AA0] mb-2">ملخص</label>
+              <label className="block text-sm text-[var(--text-soft)] mb-2">ملخص</label>
               <textarea rows={2} className={inp} value={form.summary} onChange={e => setForm(f => ({...f, summary: e.target.value}))} />
             </div>
             <div className="sm:col-span-2 flex gap-3">
-              <button type="submit" className="bg-[#C6914C] px-6 py-2.5 rounded-lg font-bold text-sm text-[#0A0A0C]">حفظ</button>
-              <button type="button" onClick={() => setShowAdd(false)} className="px-6 py-2.5 rounded-lg text-sm" style={{ background: "#1C1C22", color: "#9A9AA0" }}>إلغاء</button>
+              <button type="submit" className="bg-[var(--gold-2)] px-6 py-2.5 rounded-lg font-bold text-sm text-[var(--bg-page)]">حفظ</button>
+              <button type="button" onClick={() => setShowAdd(false)} className="px-6 py-2.5 rounded-lg text-sm" style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)" }}>إلغاء</button>
             </div>
           </div>
         </form>
@@ -237,11 +237,11 @@ export default function Deals() {
 
       {/* ── Search ── */}
       <div className="relative mb-5">
-        <Search size={16} className="absolute right-3 top-3.5 text-[#9A9AA0]" />
+        <Search size={16} className="absolute right-3 top-3.5 text-[var(--text-soft)]" />
         <input
           type="text" placeholder="ابحث عن صفقة..."
           value={search} onChange={e => setSearch(e.target.value)}
-          className="w-full bg-[#16161A] border border-[rgba(198,145,76,0.12)] rounded-lg pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-[#C6914C] text-[#F5F5F5]"
+          className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)] text-[var(--text-strong)]"
         />
       </div>
 
@@ -259,8 +259,8 @@ export default function Deals() {
                 onDrop={() => onDrop(stage.id)}
                 style={{
                   minWidth: 240, width: 240, flexShrink: 0,
-                  background: isDragTarget ? stage.light : "#0F0F12",
-                  border: `1px solid ${isDragTarget ? stage.color + "40" : "rgba(255,255,255,0.05)"}`,
+                  background: isDragTarget ? stage.light : "var(--bg-deep)",
+                  border: `1px solid ${isDragTarget ? stage.color + "40" : "var(--overlay-soft)"}`,
                   borderRadius: 14,
                   transition: "all 0.2s",
                   display: "flex", flexDirection: "column",
@@ -273,12 +273,12 @@ export default function Deals() {
                       <div style={{ width: 8, height: 8, borderRadius: "50%", background: stage.color, flexShrink: 0 }} />
                       <span style={{ fontSize: 13, fontWeight: 700, color: stage.color }}>{stage.id}</span>
                     </div>
-                    <span style={{ fontSize: 11, color: "#52525B", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 99, padding: "2px 8px" }}>
+                    <span style={{ fontSize: 11, color: "var(--text-disabled)", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)", borderRadius: 99, padding: "2px 8px" }}>
                       {stageDeals.length}
                     </span>
                   </div>
                   {stageValue > 0 && (
-                    <div style={{ fontSize: 11, color: "#52525B" }}>
+                    <div style={{ fontSize: 11, color: "var(--text-disabled)" }}>
                       {formatSAR(stageValue, { short: true })}
                     </div>
                   )}
@@ -298,7 +298,7 @@ export default function Deals() {
                     />
                   ))}
                   {stageDeals.length === 0 && (
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 60, fontSize: 12, color: isDragTarget ? stage.color : "#3A3A42" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 60, fontSize: 12, color: isDragTarget ? stage.color : "var(--border-1)" }}>
                       {isDragTarget ? "أفلت هنا ↓" : "لا توجد صفقات"}
                     </div>
                   )}
@@ -311,8 +311,8 @@ export default function Deals() {
         /* ══════════════ LIST VIEW ══════════════ */
         filtered.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-lg mb-4" style={{ color: "#9A9AA0" }}>لا توجد صفقات بعد</p>
-            <button onClick={() => setShowAdd(true)} className="px-6 py-3 rounded-xl font-bold text-sm text-[#0A0A0C]" style={{ background: "linear-gradient(135deg, #C6914C, #A6743A)" }}>
+            <p className="text-lg mb-4" style={{ color: "var(--text-soft)" }}>لا توجد صفقات بعد</p>
+            <button onClick={() => setShowAdd(true)} className="px-6 py-3 rounded-xl font-bold text-sm text-[var(--bg-page)]" style={{ background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))" }}>
               أضف أول صفقة
             </button>
           </div>
@@ -321,15 +321,15 @@ export default function Deals() {
             {filtered.map(deal => {
               const stage = STAGES.find(s => s.id === deal.current_stage);
               return (
-                <div key={deal.id} style={{ background: "#16161A", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: stage?.color || "#52525B", flexShrink: 0 }} />
+                <div key={deal.id} style={{ background: "var(--bg-surface-1)", border: "1px solid var(--overlay-soft)", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: stage?.color || "var(--text-disabled)", flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 120 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: "#E4E4E7" }}>{deal.title}</div>
-                    {deal.next_action && <div style={{ fontSize: 11, color: "#52525B", marginTop: 2 }}>{deal.next_action}</div>}
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text-on-dark)" }}>{deal.title}</div>
+                    {deal.next_action && <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 2 }}>{deal.next_action}</div>}
                   </div>
-                  <span style={{ fontSize: 11, color: stage?.color || "#52525B", background: stage?.bg || "transparent", padding: "3px 10px", borderRadius: 99, whiteSpace: "nowrap" }}>{deal.current_stage || "—"}</span>
-                  {deal.target_value && <span style={{ fontSize: 13, fontWeight: 600, color: "#4ADE80", whiteSpace: "nowrap" }}>{formatSAR(deal.target_value, { short: true })}</span>}
-                  {deal.priority && <span style={{ fontSize: 11, color: PRIORITY_COLOR[deal.priority] || "#52525B", whiteSpace: "nowrap" }}>{deal.priority}</span>}
+                  <span style={{ fontSize: 11, color: stage?.color || "var(--text-disabled)", background: stage?.bg || "transparent", padding: "3px 10px", borderRadius: 99, whiteSpace: "nowrap" }}>{deal.current_stage || "—"}</span>
+                  {deal.target_value && <span style={{ fontSize: 13, fontWeight: 600, color: "var(--success)", whiteSpace: "nowrap" }}>{formatSAR(deal.target_value, { short: true })}</span>}
+                  {deal.priority && <span style={{ fontSize: 11, color: PRIORITY_COLOR[deal.priority] || "var(--text-disabled)", whiteSpace: "nowrap" }}>{deal.priority}</span>}
                   {/* Quick stage nav */}
                   <div style={{ display: "flex", gap: 4, marginRight: "auto" }}>
                     {STAGES.map(s => (
@@ -375,8 +375,8 @@ function KanbanCard({ deal, stages, onMove, onDragStart, onDragEnd, isDragging }
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       style={{
-        background: isDragging ? "#1C1C22" : "#16161A",
-        border: `1px solid ${isDragging ? "rgba(198,145,76,0.3)" : "rgba(255,255,255,0.05)"}`,
+        background: isDragging ? "var(--bg-surface-2)" : "var(--bg-surface-1)",
+        border: `1px solid ${isDragging ? "var(--gold-bg-strong)" : "var(--overlay-soft)"}`,
         borderRadius: 10,
         padding: "12px 12px 10px",
         cursor: "grab",
@@ -387,20 +387,20 @@ function KanbanCard({ deal, stages, onMove, onDragStart, onDragEnd, isDragging }
     >
       {/* Title row */}
       <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
-        <GripVertical size={13} style={{ color: "#3A3A42", flexShrink: 0, marginTop: 2 }} />
-        <span style={{ fontSize: 13, fontWeight: 600, color: "#E4E4E7", lineHeight: 1.3, flex: 1 }}>{deal.title}</span>
+        <GripVertical size={13} style={{ color: "var(--border-1)", flexShrink: 0, marginTop: 2 }} />
+        <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)", lineHeight: 1.3, flex: 1 }}>{deal.title}</span>
       </div>
 
       {/* Meta */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 10 }}>
         {deal.deal_type && (
-          <span style={{ fontSize: 10, color: "#9A9AA0", background: "#1C1C22", padding: "2px 7px", borderRadius: 5 }}>{deal.deal_type}</span>
+          <span style={{ fontSize: 10, color: "var(--text-soft)", background: "var(--bg-surface-2)", padding: "2px 7px", borderRadius: 5 }}>{deal.deal_type}</span>
         )}
         {deal.priority && (
-          <span style={{ fontSize: 10, color: PRIORITY_COLOR[deal.priority] || "#52525B", background: "rgba(255,255,255,0.04)", padding: "2px 7px", borderRadius: 5 }}>{deal.priority}</span>
+          <span style={{ fontSize: 10, color: PRIORITY_COLOR[deal.priority] || "var(--text-disabled)", background: "rgba(255,255,255,0.04)", padding: "2px 7px", borderRadius: 5 }}>{deal.priority}</span>
         )}
         {deal.target_value && (
-          <span style={{ fontSize: 10, color: "#4ADE80", background: "rgba(74,222,128,0.06)", padding: "2px 7px", borderRadius: 5 }}>
+          <span style={{ fontSize: 10, color: "var(--success)", background: "rgba(74,222,128,0.06)", padding: "2px 7px", borderRadius: 5 }}>
             {formatSAR(deal.target_value, { short: true })}
           </span>
         )}
@@ -408,14 +408,14 @@ function KanbanCard({ deal, stages, onMove, onDragStart, onDragEnd, isDragging }
 
       {/* Due date */}
       {daysLeft !== null && (
-        <div style={{ fontSize: 10, color: daysLeft < 0 ? "#F87171" : daysLeft <= 3 ? "#EAB308" : "#52525B", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ fontSize: 10, color: daysLeft < 0 ? "var(--danger)" : daysLeft <= 3 ? "#EAB308" : "var(--text-disabled)", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
           <span>{daysLeft < 0 ? `⚠ تأخر ${Math.abs(daysLeft)} يوم` : daysLeft === 0 ? "⚠ اليوم" : `📅 ${daysLeft} يوم`}</span>
         </div>
       )}
 
       {/* Next action */}
       {deal.next_action && (
-        <div style={{ fontSize: 10, color: "#5A5A62", marginBottom: 8, lineHeight: 1.4 }}>{deal.next_action}</div>
+        <div style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 8, lineHeight: 1.4 }}>{deal.next_action}</div>
       )}
 
       {/* Stage navigation */}

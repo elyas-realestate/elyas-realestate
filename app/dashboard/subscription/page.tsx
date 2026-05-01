@@ -14,7 +14,7 @@ const PLANS = [
     price: 0,
     period: "",
     icon: Gift,
-    color: "#9A9AA0",
+    color: "var(--text-soft)",
     desc: "للبدء وتجربة المنصة",
     limits: { properties: 5, clients: 10, ai_requests: 0, documents: false },
     features: [
@@ -34,7 +34,7 @@ const PLANS = [
     price: 99,
     period: "شهرياً",
     icon: Zap,
-    color: "#C6914C",
+    color: "var(--gold-2)",
     desc: "للوسيط النشط",
     badge: "الأكثر طلباً",
     limits: { properties: 50, clients: -1, ai_requests: 50, documents: true },
@@ -55,7 +55,7 @@ const PLANS = [
     price: 249,
     period: "شهرياً",
     icon: Crown,
-    color: "#E8B86D",
+    color: "var(--gold-1)",
     desc: "بدون قيود للمحترف",
     limits: { properties: -1, clients: -1, ai_requests: -1, documents: true },
     features: [
@@ -204,23 +204,23 @@ export default function SubscriptionPage() {
       {/* ── Header ── */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-1">خطط الاشتراك</h2>
-        <p style={{ color: "#9A9AA0", fontSize: 14 }}>اختر الخطة المناسبة لنشاطك العقاري</p>
+        <p style={{ color: "var(--text-soft)", fontSize: 14 }}>اختر الخطة المناسبة لنشاطك العقاري</p>
       </div>
 
       {/* ── الخطة الحالية + الاستهلاك ── */}
-      <div className="mb-8 rounded-xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.15)" }}>
+      <div className="mb-8 rounded-xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-hover)" }}>
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
           <div className="flex items-center gap-3">
             <div style={{ width: 42, height: 42, borderRadius: 11, background: `${activePlan.color}18`, border: `1px solid ${activePlan.color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <activePlan.icon size={20} style={{ color: activePlan.color }} />
             </div>
             <div>
-              <p style={{ fontSize: 12, color: "#5A5A62", marginBottom: 2 }}>خطتك الحالية</p>
+              <p style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 2 }}>خطتك الحالية</p>
               <p className="font-bold" style={{ color: activePlan.color, fontSize: 18 }}>{activePlan.name}</p>
             </div>
           </div>
           {currentPlan !== "free" && (
-            <span style={{ fontSize: 12, color: "#4ADE80", background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 100, padding: "5px 14px" }}>نشطة ✓</span>
+            <span style={{ fontSize: 12, color: "var(--success)", background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 100, padding: "5px 14px" }}>نشطة ✓</span>
           )}
         </div>
 
@@ -251,19 +251,19 @@ export default function SubscriptionPage() {
             const pct = item.limit <= 0 ? 100 : Math.min((item.used / item.limit) * 100, 100);
             const isUnlimited = item.limit === -1;
             const isBlocked   = item.limit === 0;
-            const barColor = isBlocked ? "#3A3A42" : pct >= 90 ? "#EF4444" : pct >= 70 ? "#F59E0B" : "#4ADE80";
+            const barColor = isBlocked ? "var(--border-1)" : pct >= 90 ? "#EF4444" : pct >= 70 ? "#F59E0B" : "var(--success)";
             return (
-              <div key={i} className="rounded-lg p-3" style={{ background: "#1C1C22" }}>
+              <div key={i} className="rounded-lg p-3" style={{ background: "var(--bg-surface-2)" }}>
                 <div className="flex justify-between items-center mb-2">
-                  <span style={{ fontSize: 12, color: "#9A9AA0" }}>{item.label}</span>
-                  <span style={{ fontSize: 11, color: isBlocked ? "#3A3A42" : "#F5F5F5", fontWeight: 600 }}>
+                  <span style={{ fontSize: 12, color: "var(--text-soft)" }}>{item.label}</span>
+                  <span style={{ fontSize: 11, color: isBlocked ? "var(--border-1)" : "var(--text-strong)", fontWeight: 600 }}>
                     {isBlocked ? "—" : isUnlimited ? `${item.used}` : `${item.used}/${item.limit}`}
                   </span>
                 </div>
-                <div style={{ height: 4, background: "#2A2A32", borderRadius: 2, overflow: "hidden" }}>
+                <div style={{ height: 4, background: "var(--bg-surface-3)", borderRadius: 2, overflow: "hidden" }}>
                   <div style={{ width: `${isBlocked ? 0 : pct}%`, height: "100%", background: barColor, borderRadius: 2, transition: "width 0.5s ease" }} />
                 </div>
-                <p style={{ fontSize: 10, color: "#5A5A62", marginTop: 4 }}>
+                <p style={{ fontSize: 10, color: "var(--text-faint)", marginTop: 4 }}>
                   {isBlocked ? "غير متاح في خطتك" : isUnlimited ? "غير محدود" : `${Math.round(pct)}% مستخدم`}
                 </p>
               </div>
@@ -284,15 +284,15 @@ export default function SubscriptionPage() {
               key={plan.id}
               className="rounded-xl p-6 flex flex-col"
               style={{
-                background: "#16161A",
-                border: isCurrent ? `1px solid ${plan.color}50` : "1px solid rgba(198,145,76,0.12)",
+                background: "var(--bg-surface-1)",
+                border: isCurrent ? `1px solid ${plan.color}50` : "1px solid var(--gold-bg)",
                 position: "relative",
                 boxShadow: isCurrent ? `0 0 32px ${plan.color}10` : "none",
               }}
             >
               {/* Badge */}
               {"badge" in plan && plan.badge && (
-                <div style={{ position: "absolute", top: -12, right: 20, fontSize: 11, fontWeight: 700, color: "#0A0A0C", background: "linear-gradient(135deg, #C6914C, #A6743A)", padding: "4px 12px", borderRadius: 100 }}>
+                <div style={{ position: "absolute", top: -12, right: 20, fontSize: 11, fontWeight: 700, color: "var(--bg-page)", background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", padding: "4px 12px", borderRadius: 100 }}>
                   {plan.badge}
                 </div>
               )}
@@ -308,19 +308,19 @@ export default function SubscriptionPage() {
                   <PlanIcon size={20} style={{ color: plan.color }} />
                 </div>
                 <div>
-                  <h3 className="font-bold" style={{ fontSize: 17, color: "#F5F5F5" }}>{plan.name}</h3>
-                  <p style={{ fontSize: 12, color: "#5A5A62" }}>{plan.desc}</p>
+                  <h3 className="font-bold" style={{ fontSize: 17, color: "var(--text-strong)" }}>{plan.name}</h3>
+                  <p style={{ fontSize: 12, color: "var(--text-faint)" }}>{plan.desc}</p>
                 </div>
               </div>
 
               {/* السعر */}
-              <div className="mb-5 pb-5" style={{ borderBottom: "1px solid rgba(198,145,76,0.1)" }}>
+              <div className="mb-5 pb-5" style={{ borderBottom: "1px solid var(--gold-bg)" }}>
                 {plan.price === 0 ? (
-                  <span className="font-bold" style={{ fontSize: 26, color: "#F5F5F5" }}>مجاناً</span>
+                  <span className="font-bold" style={{ fontSize: 26, color: "var(--text-strong)" }}>مجاناً</span>
                 ) : (
                   <div className="flex items-end gap-1">
                     <span className="font-bold" style={{ fontSize: 28, color: plan.color }}>{plan.price}</span>
-                    <span style={{ fontSize: 13, color: "#5A5A62", marginBottom: 4 }}>ر.س / شهر</span>
+                    <span style={{ fontSize: 13, color: "var(--text-faint)", marginBottom: 4 }}>ر.س / شهر</span>
                   </div>
                 )}
               </div>
@@ -330,11 +330,11 @@ export default function SubscriptionPage() {
                 {plan.features.map((feat, i) => (
                   <li key={i} className="flex items-center gap-2" style={{ fontSize: 13 }}>
                     {feat.included ? (
-                      <Check size={14} style={{ color: "#4ADE80", flexShrink: 0 }} />
+                      <Check size={14} style={{ color: "var(--success)", flexShrink: 0 }} />
                     ) : (
-                      <X size={14} style={{ color: "#3A3A42", flexShrink: 0 }} />
+                      <X size={14} style={{ color: "var(--border-1)", flexShrink: 0 }} />
                     )}
-                    <span style={{ color: feat.included ? "#D4D4D8" : "#3A3A42", textDecoration: feat.included ? "none" : "line-through" }}>
+                    <span style={{ color: feat.included ? "var(--text-secondary)" : "var(--border-1)", textDecoration: feat.included ? "none" : "line-through" }}>
                       {feat.label}
                     </span>
                   </li>
@@ -362,11 +362,11 @@ export default function SubscriptionPage() {
                   background: isCurrent
                     ? `${plan.color}15`
                     : plan.id === "basic"
-                    ? "linear-gradient(135deg, #C6914C, #A6743A)"
+                    ? "linear-gradient(135deg, var(--gold-2), var(--gold-3))"
                     : plan.id === "pro"
-                    ? "linear-gradient(135deg, #E8B86D, #C6914C)"
-                    : "#1C1C22",
-                  color: isCurrent ? plan.color : plan.id === "free" ? "#9A9AA0" : "#0A0A0C",
+                    ? "linear-gradient(135deg, var(--gold-1), var(--gold-2))"
+                    : "var(--bg-surface-2)",
+                  color: isCurrent ? plan.color : plan.id === "free" ? "var(--text-soft)" : "var(--bg-page)",
                   opacity: isUpgrading !== null && !isUpgrading ? 0.5 : 1,
                 }}
               >
@@ -386,10 +386,10 @@ export default function SubscriptionPage() {
       </div>
 
       {/* ── ملاحظة ── */}
-      <div className="rounded-xl p-4" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.1)" }}>
-        <p style={{ fontSize: 13, color: "#5A5A62", lineHeight: 1.7 }}>
-          <span style={{ color: "#C6914C", fontWeight: 600 }}>ملاحظة:</span>{" "}
-          الدفع عبر بوابة Moyasar — تأكد من إضافة <code style={{ background: "rgba(198,145,76,0.1)", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>MOYASAR_SECRET_KEY</code> في متغيرات البيئة.
+      <div className="rounded-xl p-4" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}>
+        <p style={{ fontSize: 13, color: "var(--text-faint)", lineHeight: 1.7 }}>
+          <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>ملاحظة:</span>{" "}
+          الدفع عبر بوابة Moyasar — تأكد من إضافة <code style={{ background: "var(--gold-bg)", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>MOYASAR_SECRET_KEY</code> في متغيرات البيئة.
         </p>
       </div>
 
@@ -398,26 +398,26 @@ export default function SubscriptionPage() {
         <>
           <div className="fixed inset-0 z-50" style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }} onClick={() => !paying && setPayModal(null)} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl p-6" style={{ background: "#111114", border: "1px solid rgba(198,145,76,0.2)" }} onClick={e => e.stopPropagation()}>
+            <div className="w-full max-w-md rounded-2xl p-6" style={{ background: "var(--bg-deep)", border: "1px solid var(--gold-bg-hover)" }} onClick={e => e.stopPropagation()}>
               {/* Header */}
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
-                  <CreditCard size={18} style={{ color: "#C6914C" }} />
-                  <h3 className="font-bold" style={{ fontSize: 16, color: "#F5F5F5" }}>
+                  <CreditCard size={18} style={{ color: "var(--gold-2)" }} />
+                  <h3 className="font-bold" style={{ fontSize: 16, color: "var(--text-strong)" }}>
                     ادفع واشترك — {PLAN_PRICES[payModal.plan]?.label}
                   </h3>
                 </div>
-                <button onClick={() => setPayModal(null)} style={{ background: "none", border: "none", color: "#5A5A62", cursor: "pointer" }}>
+                <button onClick={() => setPayModal(null)} style={{ background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer" }}>
                   <X size={18} />
                 </button>
               </div>
 
               {/* Billing toggle */}
-              <div className="flex gap-2 mb-5 p-1 rounded-xl" style={{ background: "#1C1C22" }}>
+              <div className="flex gap-2 mb-5 p-1 rounded-xl" style={{ background: "var(--bg-surface-2)" }}>
                 {(["monthly", "yearly"] as const).map(b => (
                   <button key={b} onClick={() => setPayModal(m => m ? { ...m, billing: b } : null)}
                     className="flex-1 py-2 rounded-lg text-sm font-bold transition"
-                    style={{ background: payModal.billing === b ? "rgba(198,145,76,0.15)" : "transparent", color: payModal.billing === b ? "#C6914C" : "#5A5A62", border: "none", cursor: "pointer" }}>
+                    style={{ background: payModal.billing === b ? "var(--gold-bg-hover)" : "transparent", color: payModal.billing === b ? "var(--gold-2)" : "var(--text-faint)", border: "none", cursor: "pointer" }}>
                     {b === "monthly"
                       ? `شهري — ${PLAN_PRICES[payModal.plan]?.monthly} ر.س`
                       : `سنوي — ${PLAN_PRICES[payModal.plan]?.yearly} ر.س`}
@@ -431,11 +431,11 @@ export default function SubscriptionPage() {
                 { key: "card_number", label: "رقم البطاقة",      placeholder: "4111 1111 1111 1111", dir: "ltr" as const },
               ].map(f => (
                 <div key={f.key} className="mb-3">
-                  <label style={{ display: "block", fontSize: 11, color: "#9A9AA0", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--text-soft)", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
                   <input value={(payForm as any)[f.key]} onChange={e => setPayForm(p => ({ ...p, [f.key]: e.target.value }))}
                     placeholder={f.placeholder} dir={f.dir}
                     className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition"
-                    style={{ background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", color: "#F5F5F5" }} />
+                    style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)" }} />
                 </div>
               ))}
               <div className="grid grid-cols-3 gap-3 mb-5">
@@ -445,21 +445,21 @@ export default function SubscriptionPage() {
                   { key: "card_year",  label: "السنة",  placeholder: "2027" },
                 ].map(f => (
                   <div key={f.key}>
-                    <label style={{ display: "block", fontSize: 11, color: "#9A9AA0", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
+                    <label style={{ display: "block", fontSize: 11, color: "var(--text-soft)", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
                     <input value={(payForm as any)[f.key]} onChange={e => setPayForm(p => ({ ...p, [f.key]: e.target.value }))}
                       placeholder={f.placeholder} dir="ltr"
                       className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none transition"
-                      style={{ background: "#1C1C22", border: "1px solid rgba(198,145,76,0.15)", color: "#F5F5F5" }} />
+                      style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)" }} />
                   </div>
                 ))}
               </div>
 
               <button onClick={handlePay} disabled={paying}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition"
-                style={{ background: paying ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", border: "none", cursor: paying ? "not-allowed" : "pointer" }}>
+                style={{ background: paying ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", border: "none", cursor: paying ? "not-allowed" : "pointer" }}>
                 {paying ? <><Loader2 size={15} className="animate-spin" /> جارٍ الدفع...</> : <><Lock size={14} /> ادفع بأمان الآن</>}
               </button>
-              <p style={{ fontSize: 11, color: "#3A3A42", textAlign: "center", marginTop: 10 }}>
+              <p style={{ fontSize: 11, color: "var(--border-1)", textAlign: "center", marginTop: 10 }}>
                 مُؤمَّن بواسطة Moyasar · SSL
               </p>
             </div>

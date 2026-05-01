@@ -10,8 +10,8 @@ import {
 import { toast } from "sonner";
 import { applyWatermark } from "@/lib/watermark";
 
-const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#3A3A42] focus:outline-none focus:border-[#C6914C] transition";
-const lbl = "block text-xs font-semibold text-[#9A9AA0] mb-2 tracking-wide";
+const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
+const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-wide";
 
 type ExtractedData = {
   title: string;
@@ -162,25 +162,25 @@ export default function SmartAddProperty() {
   }
 
   const confidencePct = extracted ? Math.round(extracted.confidence * 100) : 0;
-  const confidenceColor = confidencePct >= 80 ? "#4ADE80" : confidencePct >= 50 ? "#FACC15" : "#F87171";
+  const confidenceColor = confidencePct >= 80 ? "var(--success)" : confidencePct >= 50 ? "var(--warning)" : "var(--danger)";
 
   return (
     <div dir="rtl">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 mb-6" style={{ color: "#5A5A62", fontSize: 13 }}>
-        <Link href="/dashboard/properties" className="hover:text-[#C6914C] transition no-underline" style={{ color: "#5A5A62" }}>العقارات</Link>
+      <div className="flex items-center gap-2 mb-6" style={{ color: "var(--text-faint)", fontSize: 13 }}>
+        <Link href="/dashboard/properties" className="hover:text-[var(--gold-2)] transition no-underline" style={{ color: "var(--text-faint)" }}>العقارات</Link>
         <ArrowRight size={14} />
-        <span style={{ color: "#F5F5F5" }}>إضافة ذكية بالـ AI</span>
+        <span style={{ color: "var(--text-strong)" }}>إضافة ذكية بالـ AI</span>
       </div>
 
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center justify-center rounded-xl"
-          style={{ width: 44, height: 44, background: "linear-gradient(135deg, rgba(198,145,76,0.15), rgba(168,93,255,0.1))", border: "1px solid rgba(198,145,76,0.2)" }}>
-          <Brain size={22} style={{ color: "#C6914C" }} />
+          style={{ width: 44, height: 44, background: "linear-gradient(135deg, var(--gold-bg-hover), rgba(168,93,255,0.1))", border: "1px solid var(--gold-bg-hover)" }}>
+          <Brain size={22} style={{ color: "var(--gold-2)" }} />
         </div>
         <div>
           <h2 className="text-xl font-bold">إضافة عقار ذكية</h2>
-          <p style={{ color: "#5A5A62", fontSize: 13 }}>ارفع صور أو أرسل نص وسيقوم الذكاء الاصطناعي بملء البيانات تلقائياً</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>ارفع صور أو أرسل نص وسيقوم الذكاء الاصطناعي بملء البيانات تلقائياً</p>
         </div>
       </div>
 
@@ -192,17 +192,17 @@ export default function SmartAddProperty() {
           { num: 3, label: "الحفظ", active: step === "saving" },
         ].map((s, i) => (
           <div key={s.num} className="flex items-center gap-2">
-            {i > 0 && <div style={{ width: 40, height: 1, background: s.active || step === "saving" ? "#C6914C" : "#2A2A32" }} />}
+            {i > 0 && <div style={{ width: 40, height: 1, background: s.active || step === "saving" ? "var(--gold-2)" : "var(--bg-surface-3)" }} />}
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center rounded-full" style={{
                 width: 28, height: 28, fontSize: 12, fontWeight: 700,
-                background: s.active ? "#C6914C" : "rgba(198,145,76,0.08)",
-                color: s.active ? "#0A0A0C" : "#5A5A62",
-                border: `1px solid ${s.active ? "#C6914C" : "rgba(198,145,76,0.15)"}`,
+                background: s.active ? "var(--gold-2)" : "var(--gold-bg-soft)",
+                color: s.active ? "var(--bg-page)" : "var(--text-faint)",
+                border: `1px solid ${s.active ? "var(--gold-2)" : "var(--gold-bg-hover)"}`,
               }}>
                 {step === "saving" && s.num <= 2 ? <Check size={12} /> : s.num}
               </div>
-              <span style={{ fontSize: 12, color: s.active ? "#C6914C" : "#5A5A62", fontWeight: 600 }}>{s.label}</span>
+              <span style={{ fontSize: 12, color: s.active ? "var(--gold-2)" : "var(--text-faint)", fontWeight: 600 }}>{s.label}</span>
             </div>
           </div>
         ))}
@@ -213,8 +213,8 @@ export default function SmartAddProperty() {
         <div className="space-y-5 max-w-3xl">
 
           {/* Image Upload */}
-          <div className="rounded-2xl p-6" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.1)" }}>
-            <h3 style={{ fontSize: 12, fontWeight: 700, color: "#C6914C", letterSpacing: 1.5, marginBottom: 16, textTransform: "uppercase" }}>
+          <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+            <h3 style={{ fontSize: 12, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1.5, marginBottom: 16, textTransform: "uppercase" }}>
               <ImageIcon size={14} style={{ display: "inline", marginLeft: 6, verticalAlign: "middle" }} />
               صور العقار
             </h3>
@@ -230,20 +230,20 @@ export default function SmartAddProperty() {
               onDrop={e => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}
               className="flex flex-col items-center justify-center gap-3 rounded-xl transition-all"
               style={{
-                border: "2px dashed " + (isDragging ? "#C6914C" : "rgba(198,145,76,0.25)"),
+                border: "2px dashed " + (isDragging ? "var(--gold-2)" : "rgba(198,145,76,0.25)"),
                 padding: "36px 20px",
-                background: isDragging ? "rgba(198,145,76,0.08)" : "rgba(198,145,76,0.03)",
+                background: isDragging ? "var(--gold-bg-soft)" : "rgba(198,145,76,0.03)",
                 cursor: "pointer",
               }}>
-              <Upload size={24} style={{ color: "#C6914C" }} />
-              <p style={{ color: "#F5F5F5", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
-              <p style={{ color: "#5A5A62", fontSize: 12 }}>JPG, PNG — حتى 5 صور</p>
+              <Upload size={24} style={{ color: "var(--gold-2)" }} />
+              <p style={{ color: "var(--text-strong)", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
+              <p style={{ color: "var(--text-faint)", fontSize: 12 }}>JPG, PNG — حتى 5 صور</p>
             </div>
 
             {images.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4">
                 {images.map((img, i) => (
-                  <div key={i} className="relative rounded-xl overflow-hidden group" style={{ height: 80, background: "#1C1C22" }}>
+                  <div key={i} className="relative rounded-xl overflow-hidden group" style={{ height: 80, background: "var(--bg-surface-2)" }}>
                     <img src={img} alt="" className="w-full h-full object-cover" />
                     <button onClick={() => removeImage(i)}
                       className="absolute top-1 left-1 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
@@ -257,8 +257,8 @@ export default function SmartAddProperty() {
           </div>
 
           {/* Text Input */}
-          <div className="rounded-2xl p-6" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.1)" }}>
-            <h3 style={{ fontSize: 12, fontWeight: 700, color: "#C6914C", letterSpacing: 1.5, marginBottom: 16, textTransform: "uppercase" }}>
+          <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+            <h3 style={{ fontSize: 12, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1.5, marginBottom: 16, textTransform: "uppercase" }}>
               <FileText size={14} style={{ display: "inline", marginLeft: 6, verticalAlign: "middle" }} />
               النص أو التفاصيل
             </h3>
@@ -270,7 +270,7 @@ export default function SmartAddProperty() {
               placeholder="أدخل أي معلومات عن العقار هنا... مثال:&#10;فيلا 5 غرف في حي النرجس بالرياض&#10;مساحة 400 متر، السعر 2 مليون ريال&#10;أو الصق رسالة واتساب أو إعلان عقاري..."
               style={{ resize: "vertical" }}
             />
-            <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 6 }}>
+            <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 6 }}>
               يمكنك إدخال النص بأي صيغة — رسالة واتساب، إعلان، تفاصيل مرتبة أو عشوائية
             </p>
           </div>
@@ -281,8 +281,8 @@ export default function SmartAddProperty() {
             disabled={analyzing || (!textInput.trim() && images.length === 0)}
             className="flex items-center justify-center gap-3 w-full py-4 rounded-xl font-bold text-base transition disabled:opacity-40"
             style={{
-              background: analyzing ? "rgba(198,145,76,0.2)" : "linear-gradient(135deg, #C6914C, #A6743A)",
-              color: analyzing ? "#C6914C" : "#0A0A0C",
+              background: analyzing ? "var(--gold-bg-hover)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              color: analyzing ? "var(--gold-2)" : "var(--bg-page)",
               border: "none",
               cursor: analyzing ? "not-allowed" : "pointer",
             }}
@@ -305,7 +305,7 @@ export default function SmartAddProperty() {
             style={{ background: `${confidenceColor}08`, border: `1px solid ${confidenceColor}25` }}>
             <div className="flex items-center gap-3">
               <Zap size={16} style={{ color: confidenceColor }} />
-              <span style={{ fontSize: 13, color: "#E5E5E5", fontWeight: 600 }}>دقة الاستخراج</span>
+              <span style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 600 }}>دقة الاستخراج</span>
             </div>
             <span className="font-cairo font-bold" style={{ fontSize: 18, color: confidenceColor }}>
               {confidencePct}%
@@ -313,10 +313,10 @@ export default function SmartAddProperty() {
           </div>
 
           {/* Editable Fields */}
-          <div className="rounded-2xl p-6" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.1)" }}>
+          <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
             <div className="flex items-center gap-2 mb-5">
-              <Edit3 size={14} style={{ color: "#C6914C" }} />
-              <h3 style={{ fontSize: 13, fontWeight: 700, color: "#C6914C" }}>راجع وعدّل البيانات المستخرجة</h3>
+              <Edit3 size={14} style={{ color: "var(--gold-2)" }} />
+              <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--gold-2)" }}>راجع وعدّل البيانات المستخرجة</h3>
             </div>
 
             <div className="space-y-4">
@@ -390,8 +390,8 @@ export default function SmartAddProperty() {
 
           {/* Image preview */}
           {images.length > 0 && (
-            <div className="rounded-2xl p-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.1)" }}>
-              <p style={{ fontSize: 12, fontWeight: 600, color: "#9A9AA0", marginBottom: 12 }}>
+            <div className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-soft)", marginBottom: 12 }}>
                 <Eye size={13} style={{ display: "inline", marginLeft: 4, verticalAlign: "middle" }} />
                 {images.length} صور سيتم رفعها
               </p>
@@ -411,7 +411,7 @@ export default function SmartAddProperty() {
               onClick={handleSave}
               disabled={saving}
               className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold transition disabled:opacity-50"
-              style={{ background: "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", fontSize: 15, border: "none", cursor: "pointer" }}
+              style={{ background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", fontSize: 15, border: "none", cursor: "pointer" }}
             >
               <Save size={18} />
               {saving ? "جاري الحفظ..." : "حفظ العقار"}
@@ -419,7 +419,7 @@ export default function SmartAddProperty() {
             <button
               onClick={() => setStep("upload")}
               className="px-6 py-3.5 rounded-xl text-sm font-medium transition"
-              style={{ background: "#1C1C22", color: "#9A9AA0", border: "1px solid rgba(198,145,76,0.1)", cursor: "pointer" }}
+              style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", border: "1px solid var(--gold-bg)", cursor: "pointer" }}
             >
               العودة للتعديل
             </button>
@@ -431,11 +431,11 @@ export default function SmartAddProperty() {
       {step === "saving" && (
         <div className="max-w-md mx-auto text-center py-20">
           <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-            style={{ background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)" }}>
-            <Loader2 size={28} className="animate-spin" style={{ color: "#C6914C" }} />
+            style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)" }}>
+            <Loader2 size={28} className="animate-spin" style={{ color: "var(--gold-2)" }} />
           </div>
           <h3 className="text-lg font-bold mb-2">جاري حفظ العقار...</h3>
-          <p style={{ color: "#5A5A62", fontSize: 13 }}>يتم رفع الصور وحفظ البيانات</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>يتم رفع الصور وحفظ البيانات</p>
         </div>
       )}
     </div>

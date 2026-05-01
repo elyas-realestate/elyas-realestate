@@ -5,14 +5,14 @@ import { Save, Check, RotateCcw, Palette, Type, Monitor, Smartphone, ChevronDown
 
 
 const defaults = {
-  color_accent:         "#C6914C",
-  color_accent_dark:    "#A6743A",
-  color_bg_primary:     "#0A0A0C",
-  color_bg_secondary:   "#111114",
-  color_bg_card:        "#16161A",
-  color_text_primary:   "#F5F5F5",
-  color_text_secondary: "#9A9AA0",
-  color_text_muted:     "#5A5A62",
+  color_accent:         "var(--gold-2)",
+  color_accent_dark:    "var(--gold-3)",
+  color_bg_primary:     "var(--bg-page)",
+  color_bg_secondary:   "var(--bg-deep)",
+  color_bg_card:        "var(--bg-surface-1)",
+  color_text_primary:   "var(--text-strong)",
+  color_text_secondary: "var(--text-soft)",
+  color_text_muted:     "var(--text-faint)",
   font_size_hero:        "clamp(2.4rem, 5.5vw, 4.2rem)",
   font_size_section_title: "clamp(1.8rem, 3.5vw, 2.6rem)",
   font_size_body:        "15px",
@@ -52,7 +52,7 @@ const quickThemes = [
   {
     name: "الذهبي الداكن",
     emoji: "🟤",
-    colors: { color_accent: "#C6914C", color_accent_dark: "#A6743A", color_bg_primary: "#0A0A0C", color_bg_secondary: "#111114", color_bg_card: "#16161A", color_text_primary: "#F5F5F5", color_text_secondary: "#9A9AA0", color_text_muted: "#5A5A62" },
+    colors: { color_accent: "var(--gold-2)", color_accent_dark: "var(--gold-3)", color_bg_primary: "var(--bg-page)", color_bg_secondary: "var(--bg-deep)", color_bg_card: "var(--bg-surface-1)", color_text_primary: "var(--text-strong)", color_text_secondary: "var(--text-soft)", color_text_muted: "var(--text-faint)" },
   },
   {
     name: "الأزرق الملكي",
@@ -62,12 +62,12 @@ const quickThemes = [
   {
     name: "الأخضر الفاخر",
     emoji: "🟢",
-    colors: { color_accent: "#4ADE80", color_accent_dark: "#2AB860", color_bg_primary: "#060C0A", color_bg_secondary: "#0A1510", color_bg_card: "#101A14", color_text_primary: "#F0FFF4", color_text_secondary: "#7AA886", color_text_muted: "#4A6854" },
+    colors: { color_accent: "var(--success)", color_accent_dark: "#2AB860", color_bg_primary: "#060C0A", color_bg_secondary: "#0A1510", color_bg_card: "#101A14", color_text_primary: "#F0FFF4", color_text_secondary: "#7AA886", color_text_muted: "#4A6854" },
   },
   {
     name: "البنفسجي",
     emoji: "🟣",
-    colors: { color_accent: "#A78BFA", color_accent_dark: "#7C5FD4", color_bg_primary: "#080810", color_bg_secondary: "#0F0F1A", color_bg_card: "#141420", color_text_primary: "#F5F0FF", color_text_secondary: "#9590A8", color_text_muted: "#555068" },
+    colors: { color_accent: "var(--purple-ai)", color_accent_dark: "#7C5FD4", color_bg_primary: "#080810", color_bg_secondary: "#0F0F1A", color_bg_card: "#141420", color_text_primary: "#F5F0FF", color_text_secondary: "#9590A8", color_text_muted: "#555068" },
   },
 ];
 
@@ -180,13 +180,13 @@ export default function VisualEditorPage() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold mb-1">المحرر البصري</h2>
-          <p style={{ color: "#5A5A62", fontSize: 14 }}>غيّر الألوان والخطوط وشاهد النتيجة مباشرة</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 14 }}>غيّر الألوان والخطوط وشاهد النتيجة مباشرة</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={resetAll}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm transition"
-            style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)", color: "#9A9AA0" }}
+            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}
           >
             <RotateCcw size={14} /> إعادة ضبط المصنع
           </button>
@@ -194,7 +194,7 @@ export default function VisualEditorPage() {
             onClick={handleSave}
             disabled={saving}
             className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition"
-            style={{ background: saved ? "#22C55E" : "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C" }}
+            style={{ background: saved ? "#22C55E" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)" }}
           >
             {saved ? <><Check size={16} /> تم الحفظ</> : saving ? <><Save size={16} className="animate-spin" /> جاري...</> : <><Save size={16} /> حفظ التغييرات</>}
           </button>
@@ -206,28 +206,28 @@ export default function VisualEditorPage() {
 
         {/* ══ LEFT: Live Preview ══ */}
         <div className="order-2 lg:order-1">
-          <div className="rounded-xl overflow-hidden sticky top-20" style={{ border: "1px solid rgba(198,145,76,0.15)" }}>
+          <div className="rounded-xl overflow-hidden sticky top-20" style={{ border: "1px solid var(--gold-bg-hover)" }}>
             {/* Browser chrome */}
-            <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "#1C1C22", borderBottom: "1px solid rgba(198,145,76,0.08)" }}>
+            <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "var(--bg-surface-2)", borderBottom: "1px solid var(--gold-bg-soft)" }}>
               <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full" style={{ background: "#F87171" }} />
-                <div className="w-3 h-3 rounded-full" style={{ background: "#FBBF24" }} />
-                <div className="w-3 h-3 rounded-full" style={{ background: "#4ADE80" }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: "var(--danger)" }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: "var(--warning-2)" }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: "var(--success)" }} />
               </div>
-              <span className="text-xs font-bold" style={{ color: "#C6914C" }}>معاينة مباشرة</span>
+              <span className="text-xs font-bold" style={{ color: "var(--gold-2)" }}>معاينة مباشرة</span>
               {/* Device Toggle */}
-              <div className="flex bg-[#0A0A0C] rounded-lg overflow-hidden border border-[rgba(198,145,76,0.12)]">
+              <div className="flex bg-[var(--bg-page)] rounded-lg overflow-hidden border border-[var(--gold-bg)]">
                 <button
                   onClick={() => setMobilePreview(false)}
-                  className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + (!mobilePreview ? "text-[#C6914C]" : "text-[#5A5A62]")}
-                  style={{ background: !mobilePreview ? "rgba(198,145,76,0.12)" : "transparent" }}
+                  className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + (!mobilePreview ? "text-[var(--gold-2)]" : "text-[var(--text-faint)]")}
+                  style={{ background: !mobilePreview ? "var(--gold-bg)" : "transparent" }}
                 >
                   <Monitor size={13} /> ديسكتوب
                 </button>
                 <button
                   onClick={() => setMobilePreview(true)}
-                  className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + (mobilePreview ? "text-[#C6914C]" : "text-[#5A5A62]")}
-                  style={{ background: mobilePreview ? "rgba(198,145,76,0.12)" : "transparent" }}
+                  className={"flex items-center gap-1 px-2.5 py-1.5 text-xs transition " + (mobilePreview ? "text-[var(--gold-2)]" : "text-[var(--text-faint)]")}
+                  style={{ background: mobilePreview ? "var(--gold-bg)" : "transparent" }}
                 >
                   <Smartphone size={13} /> موبايل
                 </button>
@@ -235,7 +235,7 @@ export default function VisualEditorPage() {
             </div>
 
             {/* Preview Area */}
-            <div style={{ background: "#1C1C22", padding: mobilePreview ? "16px" : "0", minHeight: 520, overflowY: "auto" }}>
+            <div style={{ background: "var(--bg-surface-2)", padding: mobilePreview ? "16px" : "0", minHeight: 520, overflowY: "auto" }}>
               <div
                 style={{
                   background: bgPrimary,
@@ -244,7 +244,7 @@ export default function VisualEditorPage() {
                   margin: mobilePreview ? "0 auto" : "0",
                   borderRadius: mobilePreview ? 16 : 0,
                   overflow: "hidden",
-                  border: mobilePreview ? "1px solid rgba(198,145,76,0.2)" : "none",
+                  border: mobilePreview ? "1px solid var(--gold-bg-hover)" : "none",
                 }}
                 dir="rtl"
               >
@@ -325,9 +325,9 @@ export default function VisualEditorPage() {
                 onClick={() => setActiveTab(tab.id as "colors" | "fonts")}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition flex-1 justify-center"
                 style={{
-                  background: activeTab === tab.id ? "rgba(198,145,76,0.15)" : "#16161A",
-                  color: activeTab === tab.id ? "#C6914C" : "#5A5A62",
-                  border: "1px solid " + (activeTab === tab.id ? "rgba(198,145,76,0.3)" : "rgba(198,145,76,0.12)"),
+                  background: activeTab === tab.id ? "var(--gold-bg-hover)" : "var(--bg-surface-1)",
+                  color: activeTab === tab.id ? "var(--gold-2)" : "var(--text-faint)",
+                  border: "1px solid " + (activeTab === tab.id ? "var(--gold-bg-strong)" : "var(--gold-bg)"),
                 }}
               >
                 {tab.icon} {tab.label}
@@ -339,8 +339,8 @@ export default function VisualEditorPage() {
           {activeTab === "colors" && (
             <div className="space-y-3">
               {/* Quick Themes */}
-              <div className="rounded-xl p-4" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)" }}>
-                <h4 className="text-xs font-bold mb-3" style={{ color: "#C6914C" }}>ثيمات سريعة</h4>
+              <div className="rounded-xl p-4" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+                <h4 className="text-xs font-bold mb-3" style={{ color: "var(--gold-2)" }}>ثيمات سريعة</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {quickThemes.map(theme => (
                     <button
@@ -358,11 +358,11 @@ export default function VisualEditorPage() {
 
               {/* Collapsible Color Groups */}
               {colorGroups.map(group => (
-                <div key={group.id} className="rounded-xl overflow-hidden" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)" }}>
+                <div key={group.id} className="rounded-xl overflow-hidden" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
                   <button
                     onClick={() => toggleCollapse(group.id)}
                     className="w-full flex items-center justify-between px-4 py-3 text-sm font-bold transition hover:bg-[rgba(198,145,76,0.04)]"
-                    style={{ color: "#C6914C" }}
+                    style={{ color: "var(--gold-2)" }}
                   >
                     <span>{group.label}</span>
                     {collapsed[group.id] ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
@@ -372,7 +372,7 @@ export default function VisualEditorPage() {
                       {group.fields.map(field => {
                         const val = s[field.key] || (defaults as any)[field.key];
                         return (
-                          <div key={field.key} className="flex items-center gap-3 p-3 rounded-lg" style={{ background: "#1C1C22" }}>
+                          <div key={field.key} className="flex items-center gap-3 p-3 rounded-lg" style={{ background: "var(--bg-surface-2)" }}>
                             <label className="relative cursor-pointer flex-shrink-0">
                               <input
                                 type="color"
@@ -380,11 +380,11 @@ export default function VisualEditorPage() {
                                 onChange={e => handleChange(field.key, e.target.value)}
                                 className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
                               />
-                              <div className="w-9 h-9 rounded-lg border-2 transition" style={{ background: val, borderColor: "rgba(198,145,76,0.3)" }} />
+                              <div className="w-9 h-9 rounded-lg border-2 transition" style={{ background: val, borderColor: "var(--gold-bg-strong)" }} />
                             </label>
                             <div className="flex-1 min-w-0">
-                              <div className="text-xs font-medium truncate" style={{ color: "#F5F5F5" }}>{field.label}</div>
-                              <div className="text-xs" style={{ color: "#5A5A62" }}>{field.desc}</div>
+                              <div className="text-xs font-medium truncate" style={{ color: "var(--text-strong)" }}>{field.label}</div>
+                              <div className="text-xs" style={{ color: "var(--text-faint)" }}>{field.desc}</div>
                             </div>
                             <input
                               type="text"
@@ -392,7 +392,7 @@ export default function VisualEditorPage() {
                               onChange={e => handleChange(field.key, e.target.value)}
                               maxLength={9}
                               className="w-20 text-center text-xs rounded-lg px-2 py-1.5 focus:outline-none font-mono"
-                              style={{ background: "#0A0A0C", border: "1px solid rgba(198,145,76,0.12)", color: "#9A9AA0" }}
+                              style={{ background: "var(--bg-page)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}
                               dir="ltr"
                             />
                           </div>
@@ -409,13 +409,13 @@ export default function VisualEditorPage() {
           {activeTab === "fonts" && (
             <div className="space-y-3">
               {/* Sliders for px values */}
-              <div className="rounded-xl p-4 space-y-5" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)" }}>
+              <div className="rounded-xl p-4 space-y-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold" style={{ color: "#C6914C" }}>أحجام النصوص</h4>
+                  <h4 className="text-xs font-bold" style={{ color: "var(--gold-2)" }}>أحجام النصوص</h4>
                   <button
                     onClick={() => { handleChange("font_size_body", defaults.font_size_body); handleChange("font_size_small", defaults.font_size_small); }}
                     className="flex items-center gap-1 text-xs"
-                    style={{ color: "#5A5A62" }}
+                    style={{ color: "var(--text-faint)" }}
                   >
                     <RotateCcw size={11} /> استعادة
                   </button>
@@ -426,10 +426,10 @@ export default function VisualEditorPage() {
                     <div key={field.key}>
                       <div className="flex justify-between items-center mb-2">
                         <div>
-                          <span className="text-sm font-medium" style={{ color: "#F5F5F5" }}>{field.label}</span>
-                          <span className="text-xs mr-2" style={{ color: "#5A5A62" }}>{field.desc}</span>
+                          <span className="text-sm font-medium" style={{ color: "var(--text-strong)" }}>{field.label}</span>
+                          <span className="text-xs mr-2" style={{ color: "var(--text-faint)" }}>{field.desc}</span>
                         </div>
-                        <span className="text-sm font-bold font-mono" style={{ color: "#C6914C" }}>{val}px</span>
+                        <span className="text-sm font-bold font-mono" style={{ color: "var(--gold-2)" }}>{val}px</span>
                       </div>
                       <input
                         type="range"
@@ -439,9 +439,9 @@ export default function VisualEditorPage() {
                         value={val}
                         onChange={e => handleChange(field.key, e.target.value + "px")}
                         className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-                        style={{ accentColor: "#C6914C", background: `linear-gradient(to left, rgba(198,145,76,0.15) ${((val - field.min) / (field.max - field.min)) * 100}%, rgba(198,145,76,0.15) 100%)` }}
+                        style={{ accentColor: "var(--gold-2)", background: `linear-gradient(to left, var(--gold-bg-hover) ${((val - field.min) / (field.max - field.min)) * 100}%, var(--gold-bg-hover) 100%)` }}
                       />
-                      <div className="flex justify-between text-xs mt-1" style={{ color: "#3A3A42" }}>
+                      <div className="flex justify-between text-xs mt-1" style={{ color: "var(--border-1)" }}>
                         <span>{field.min}px</span>
                         <span>{field.max}px</span>
                       </div>
@@ -451,22 +451,22 @@ export default function VisualEditorPage() {
               </div>
 
               {/* Presets for clamp values */}
-              <div className="rounded-xl p-4 space-y-4" style={{ background: "#16161A", border: "1px solid rgba(198,145,76,0.12)" }}>
+              <div className="rounded-xl p-4 space-y-4" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold" style={{ color: "#C6914C" }}>أحجام العناوين</h4>
+                  <h4 className="text-xs font-bold" style={{ color: "var(--gold-2)" }}>أحجام العناوين</h4>
                   <button
                     onClick={() => { handleChange("font_size_hero", defaults.font_size_hero); handleChange("font_size_section_title", defaults.font_size_section_title); }}
                     className="flex items-center gap-1 text-xs"
-                    style={{ color: "#5A5A62" }}
+                    style={{ color: "var(--text-faint)" }}
                   >
                     <RotateCcw size={11} /> استعادة
                   </button>
                 </div>
                 {fontPresets.map(field => (
-                  <div key={field.key} className="p-3 rounded-lg space-y-2" style={{ background: "#1C1C22" }}>
+                  <div key={field.key} className="p-3 rounded-lg space-y-2" style={{ background: "var(--bg-surface-2)" }}>
                     <div>
-                      <div className="text-sm font-medium" style={{ color: "#F5F5F5" }}>{field.label}</div>
-                      <div className="text-xs" style={{ color: "#5A5A62" }}>{field.desc}</div>
+                      <div className="text-sm font-medium" style={{ color: "var(--text-strong)" }}>{field.label}</div>
+                      <div className="text-xs" style={{ color: "var(--text-faint)" }}>{field.desc}</div>
                     </div>
                     <div className="flex gap-2">
                       {field.presets.map(preset => {
@@ -477,9 +477,9 @@ export default function VisualEditorPage() {
                             onClick={() => handleChange(field.key, preset.value)}
                             className="flex-1 py-2 rounded-lg text-xs font-medium transition"
                             style={{
-                              background: active ? "rgba(198,145,76,0.15)" : "#0A0A0C",
-                              color: active ? "#C6914C" : "#5A5A62",
-                              border: "1px solid " + (active ? "rgba(198,145,76,0.3)" : "rgba(198,145,76,0.08)"),
+                              background: active ? "var(--gold-bg-hover)" : "var(--bg-page)",
+                              color: active ? "var(--gold-2)" : "var(--text-faint)",
+                              border: "1px solid " + (active ? "var(--gold-bg-strong)" : "var(--gold-bg-soft)"),
                             }}
                           >
                             {preset.label}

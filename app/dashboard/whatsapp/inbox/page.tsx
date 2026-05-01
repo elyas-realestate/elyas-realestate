@@ -144,26 +144,26 @@ export default function WhatsAppInboxPage() {
   return (
     <div>
       <Link href="/dashboard"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
         <ArrowRight size={12} /> الداشبورد
       </Link>
 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <MessageCircle size={20} style={{ color: "#34D399" }} /> WhatsApp — المحادثات
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <MessageCircle size={20} style={{ color: "var(--success-2)" }} /> WhatsApp — المحادثات
           </h1>
-          <p style={{ fontSize: 13, color: "#71717A" }}>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>
             {conversations.length} محادثة • سجل واردة وصادرة
           </p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <Link href="/dashboard/whatsapp/settings"
-            style={btnSecondary("#A78BFA", "rgba(124,58,237,0.08)")}>
+            style={btnSecondary("var(--purple-ai)", "rgba(124,58,237,0.08)")}>
             <Settings size={13} /> إعدادات Meta
           </Link>
           <button onClick={load}
-            style={btnSecondary("#A1A1AA", "rgba(255,255,255,0.04)")}>
+            style={btnSecondary("var(--text-muted)", "rgba(255,255,255,0.04)")}>
             <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
             تحديث
           </button>
@@ -173,31 +173,31 @@ export default function WhatsAppInboxPage() {
 
       {error && (
         <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-          <AlertCircle size={14} style={{ color: "#F87171", display: "inline", marginInlineEnd: 8 }} />
-          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+          <AlertCircle size={14} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+          <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
       {/* Two-column layout */}
       <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 14, height: "calc(100vh - 220px)", minHeight: 500 }}>
         {/* محادثات */}
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-          <div style={{ padding: "10px 12px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          <div style={{ padding: "10px 12px", borderBottom: "1px solid var(--overlay-soft)" }}>
             <div style={{ position: "relative" }}>
-              <Search size={13} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", color: "#52525B" }} />
+              <Search size={13} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", color: "var(--text-disabled)" }} />
               <input
                 placeholder="بحث رقم أو اسم..."
                 value={filter}
                 onChange={e => setFilter(e.target.value)}
-                style={{ width: "100%", padding: "8px 30px 8px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, color: "#E4E4E7", fontSize: 12, fontFamily: "'Tajawal', sans-serif", outline: "none" }} />
+                style={{ width: "100%", padding: "8px 30px 8px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)", borderRadius: 8, color: "var(--text-on-dark)", fontSize: 12, fontFamily: "'Tajawal', sans-serif", outline: "none" }} />
             </div>
           </div>
           <div style={{ flex: 1, overflowY: "auto" }}>
             {loading ? (
-              <div style={{ padding: 16, textAlign: "center", color: "#52525B", fontSize: 12 }}>جاري التحميل...</div>
+              <div style={{ padding: 16, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>جاري التحميل...</div>
             ) : filteredConvs.length === 0 ? (
-              <div style={{ padding: 24, textAlign: "center", color: "#52525B" }}>
-                <MessageCircle size={28} style={{ color: "#3F3F46", marginBottom: 8 }} />
+              <div style={{ padding: 24, textAlign: "center", color: "var(--text-disabled)" }}>
+                <MessageCircle size={28} style={{ color: "var(--border-1)", marginBottom: 8 }} />
                 <div style={{ fontSize: 13 }}>لا محادثات بعد</div>
                 <div style={{ fontSize: 11, marginTop: 4 }}>تظهر هنا لما يبدأ العملاء بمراسلتك على WhatsApp</div>
               </div>
@@ -213,17 +213,17 @@ export default function WhatsAppInboxPage() {
                     fontFamily: "'Tajawal', sans-serif",
                   }}>
                   <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(52,211,153,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <User size={14} style={{ color: "#34D399" }} />
+                    <User size={14} style={{ color: "var(--success-2)" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#E4E4E7", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {c.contact_name || c.contact_phone}
                     </div>
-                    <div style={{ fontSize: 11, color: "#71717A", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 2 }}>
+                    <div style={{ fontSize: 11, color: "var(--text-ghost)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 2 }}>
                       {c.last_message || "..."}
                     </div>
                   </div>
-                  <div style={{ flexShrink: 0, fontSize: 10, color: "#52525B" }}>
+                  <div style={{ flexShrink: 0, fontSize: 10, color: "var(--text-disabled)" }}>
                     {timeAgo(c.last_at)}
                   </div>
                 </button>
@@ -233,35 +233,35 @@ export default function WhatsAppInboxPage() {
         </div>
 
         {/* Thread */}
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {!selected ? (
-            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#52525B", textAlign: "center", flexDirection: "column", gap: 8 }}>
-              <MessageCircle size={36} style={{ color: "#3F3F46" }} />
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-disabled)", textAlign: "center", flexDirection: "column", gap: 8 }}>
+              <MessageCircle size={36} style={{ color: "var(--border-1)" }} />
               <div style={{ fontSize: 14 }}>اختر محادثة من القائمة</div>
             </div>
           ) : (
             <>
               {/* Header */}
-              <div style={{ padding: "12px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ padding: "12px 14px", borderBottom: "1px solid var(--overlay-soft)", display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(52,211,153,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Phone size={15} style={{ color: "#34D399" }} />
+                  <Phone size={15} style={{ color: "var(--success-2)" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#E4E4E7" }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>
                     {conversations.find(c => c.contact_phone === selected)?.contact_name || selected}
                   </div>
-                  <div style={{ fontSize: 11, color: "#71717A", direction: "ltr" }}>+{selected}</div>
+                  <div style={{ fontSize: 11, color: "var(--text-ghost)", direction: "ltr" }}>+{selected}</div>
                 </div>
               </div>
 
               {/* Messages */}
-              <div style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 8, background: "#0A0A0C" }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 8, background: "var(--bg-page)" }}>
                 {loadingThread ? (
-                  <div style={{ textAlign: "center", color: "#52525B", padding: 20 }}>
-                    <Loader2 size={20} style={{ animation: "spin 1s linear infinite", color: "#34D399" }} />
+                  <div style={{ textAlign: "center", color: "var(--text-disabled)", padding: 20 }}>
+                    <Loader2 size={20} style={{ animation: "spin 1s linear infinite", color: "var(--success-2)" }} />
                   </div>
                 ) : thread.length === 0 ? (
-                  <div style={{ textAlign: "center", color: "#52525B", padding: 20, fontSize: 12 }}>
+                  <div style={{ textAlign: "center", color: "var(--text-disabled)", padding: 20, fontSize: 12 }}>
                     لا رسائل بعد
                   </div>
                 ) : (
@@ -274,17 +274,17 @@ export default function WhatsAppInboxPage() {
                         maxWidth: "70%",
                         padding: "9px 13px",
                         borderRadius: m.direction === "inbound" ? "10px 10px 10px 3px" : "10px 10px 3px 10px",
-                        background: m.direction === "inbound" ? "#18181B" : "rgba(52,211,153,0.15)",
-                        border: m.direction === "outbound" ? "1px solid rgba(52,211,153,0.25)" : "1px solid rgba(255,255,255,0.05)",
+                        background: m.direction === "inbound" ? "var(--bg-surface-2)" : "rgba(52,211,153,0.15)",
+                        border: m.direction === "outbound" ? "1px solid rgba(52,211,153,0.25)" : "1px solid var(--overlay-soft)",
                       }}>
-                        <div style={{ fontSize: 13, color: "#E4E4E7", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+                        <div style={{ fontSize: 13, color: "var(--text-on-dark)", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
                           {m.body_text}
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 5, fontSize: 10, color: "#52525B", justifyContent: m.direction === "inbound" ? "flex-start" : "flex-end" }}>
-                          {m.ai_replied && m.direction === "inbound" && <Bot size={10} style={{ color: "#A78BFA" }} />}
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 5, fontSize: 10, color: "var(--text-disabled)", justifyContent: m.direction === "inbound" ? "flex-start" : "flex-end" }}>
+                          {m.ai_replied && m.direction === "inbound" && <Bot size={10} style={{ color: "var(--purple-ai)" }} />}
                           <span>{new Date(m.created_at).toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}</span>
                           {m.direction === "outbound" && (
-                            <span style={{ color: m.status === "read" ? "#34D399" : m.status === "delivered" ? "#60A5FA" : "#71717A" }}>
+                            <span style={{ color: m.status === "read" ? "var(--success-2)" : m.status === "delivered" ? "var(--info)" : "var(--text-ghost)" }}>
                               {m.status === "read" ? "✓✓" : m.status === "delivered" ? "✓✓" : m.status === "failed" ? "✗" : "✓"}
                             </span>
                           )}
@@ -297,7 +297,7 @@ export default function WhatsAppInboxPage() {
               </div>
 
               {/* Composer */}
-              <div style={{ padding: 12, borderTop: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 8 }}>
+              <div style={{ padding: 12, borderTop: "1px solid var(--overlay-soft)", display: "flex", gap: 8 }}>
                 <textarea
                   value={reply}
                   onChange={e => setReply(e.target.value)}
@@ -310,13 +310,13 @@ export default function WhatsAppInboxPage() {
                   rows={2}
                   placeholder="اكتب الرد... (Enter للإرسال، Shift+Enter لسطر جديد)"
                   disabled={sending}
-                  style={{ flex: 1, padding: "9px 12px", background: "#18181B", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, color: "#E4E4E7", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", resize: "none" }}
+                  style={{ flex: 1, padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)", borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none", resize: "none" }}
                 />
                 <button onClick={handleSend} disabled={!reply.trim() || sending}
                   style={{
                     padding: "0 14px", borderRadius: 8,
-                    background: reply.trim() ? "linear-gradient(135deg, #34D399, #10B981)" : "#3F3F46",
-                    color: reply.trim() ? "#0A0A0C" : "#71717A",
+                    background: reply.trim() ? "linear-gradient(135deg, var(--success-2), var(--success-3))" : "var(--border-1)",
+                    color: reply.trim() ? "var(--bg-page)" : "var(--text-ghost)",
                     border: "none", cursor: reply.trim() && !sending ? "pointer" : "not-allowed",
                     fontFamily: "'Tajawal', sans-serif",
                     display: "flex", alignItems: "center", gap: 5, opacity: sending ? 0.6 : 1,

@@ -39,16 +39,16 @@ const CHANNEL_META: Record<string, { label: string; icon: typeof Twitter; color:
   whatsapp: {
     label: "واتساب",
     icon: MessageCircle,
-    color: "#25D366",
+    color: "var(--whatsapp)",
     shareUrl: (text) => `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,
   },
 };
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string }> = {
-  pending:   { label: "بانتظار المراجعة", color: "#E8B86D", bg: "rgba(232,184,109,0.10)" },
-  approved:  { label: "معتمد",            color: "#60A5FA", bg: "rgba(96,165,250,0.10)"  },
-  rejected:  { label: "مرفوض",            color: "#F87171", bg: "rgba(239,68,68,0.10)"   },
-  published: { label: "منشور",            color: "#4ADE80", bg: "rgba(74,222,128,0.10)"  },
+  pending:   { label: "بانتظار المراجعة", color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)" },
+  approved:  { label: "معتمد",            color: "var(--info)", bg: "rgba(96,165,250,0.10)"  },
+  rejected:  { label: "مرفوض",            color: "var(--danger)", bg: "rgba(239,68,68,0.10)"   },
+  published: { label: "منشور",            color: "var(--success)", bg: "rgba(74,222,128,0.10)"  },
 };
 
 export default function MarketingQueuePage() {
@@ -181,20 +181,20 @@ export default function MarketingQueuePage() {
   return (
     <div>
       <Link href="/dashboard/ai-employees"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "#71717A", marginBottom: 12 }}>
+        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
         <ArrowRight size={12} /> موظفو AI
       </Link>
 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 18 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#F4F4F5", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <Megaphone size={20} style={{ color: "#C6914C" }} /> قائمة منشورات التسويق
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <Megaphone size={20} style={{ color: "var(--gold-2)" }} /> قائمة منشورات التسويق
           </h1>
-          <p style={{ fontSize: 13, color: "#71717A" }}>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>
             راجع المنشورات التي ولّدها موظف التسويق، اعتمدها، وانشرها على القنوات المناسبة
           </p>
         </div>
-        <button onClick={load} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#A1A1AA", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+        <button onClick={load} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-muted)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
           <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} />
           تحديث
         </button>
@@ -205,14 +205,14 @@ export default function MarketingQueuePage() {
       <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
         {["all", "pending", "approved", "published", "rejected"].map(s => {
           const isActive = statusFilter === s;
-          const m = STATUS_META[s] || { label: "الكل", color: "#A1A1AA", bg: "rgba(255,255,255,0.04)" };
+          const m = STATUS_META[s] || { label: "الكل", color: "var(--text-muted)", bg: "rgba(255,255,255,0.04)" };
           return (
             <button key={s} onClick={() => setStatusFilter(s)}
               style={{
                 padding: "8px 14px", borderRadius: 9,
                 background: isActive ? m.bg : "transparent",
-                border: `1px solid ${isActive ? m.color + "55" : "rgba(255,255,255,0.06)"}`,
-                color: isActive ? m.color : "#71717A",
+                border: `1px solid ${isActive ? m.color + "55" : "var(--overlay-mid)"}`,
+                color: isActive ? m.color : "var(--text-ghost)",
                 fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
               }}>
               {s === "all" ? "الكل" : m.label}
@@ -224,35 +224,35 @@ export default function MarketingQueuePage() {
 
       {error && (
         <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-          <AlertCircle size={14} style={{ color: "#F87171", display: "inline", marginInlineEnd: 8 }} />
-          <span style={{ fontSize: 13, color: "#F87171" }}>{error}</span>
+          <AlertCircle size={14} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+          <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
       {/* Items */}
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
-          <Loader2 size={26} style={{ color: "#C6914C", animation: "spin 1s linear infinite" }} />
+          <Loader2 size={26} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
         </div>
       ) : items.length === 0 ? (
-        <div style={{ background: "#0F0F12", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 40, textAlign: "center" }}>
-          <Megaphone size={32} style={{ color: "#3F3F46", marginBottom: 10 }} />
-          <div style={{ fontSize: 14, color: "#A1A1AA", marginBottom: 4 }}>لا منشورات بعد</div>
-          <div style={{ fontSize: 12, color: "#71717A" }}>
+        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 40, textAlign: "center" }}>
+          <Megaphone size={32} style={{ color: "var(--border-1)", marginBottom: 10 }} />
+          <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 4 }}>لا منشورات بعد</div>
+          <div style={{ fontSize: 12, color: "var(--text-ghost)" }}>
             موظف التسويق يولّد المنشورات يومياً 10ص. تأكد أن لديك عقارات منشورة في آخر 7 أيام.
           </div>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 14 }}>
           {items.map(item => {
-            const channel = CHANNEL_META[item.channel] || { label: item.channel, icon: Megaphone, color: "#A1A1AA", shareUrl: () => "" };
+            const channel = CHANNEL_META[item.channel] || { label: item.channel, icon: Megaphone, color: "var(--text-muted)", shareUrl: () => "" };
             const status = STATUS_META[item.status] || STATUS_META.pending;
             const Icon = channel.icon;
             const isBusy = busy === item.id;
 
             return (
               <div key={item.id} style={{
-                background: "#0F0F12", border: `1px solid ${status.color}22`,
+                background: "var(--bg-deep)", border: `1px solid ${status.color}22`,
                 borderRadius: 12, padding: 16, display: "flex", flexDirection: "column", gap: 12,
               }}>
                 {/* Header */}
@@ -262,8 +262,8 @@ export default function MarketingQueuePage() {
                       <Icon size={14} style={{ color: channel.color }} />
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, color: "#E4E4E7", fontWeight: 600 }}>{channel.label}</div>
-                      <div style={{ fontSize: 10, color: "#52525B" }}>{new Date(item.generated_at).toLocaleString("ar-SA", { dateStyle: "short", timeStyle: "short" })}</div>
+                      <div style={{ fontSize: 12, color: "var(--text-on-dark)", fontWeight: 600 }}>{channel.label}</div>
+                      <div style={{ fontSize: 10, color: "var(--text-disabled)" }}>{new Date(item.generated_at).toLocaleString("ar-SA", { dateStyle: "short", timeStyle: "short" })}</div>
                     </div>
                   </div>
                   <span style={{ fontSize: 10, fontWeight: 600, color: status.color, background: status.bg, padding: "3px 8px", borderRadius: 5 }}>
@@ -273,13 +273,13 @@ export default function MarketingQueuePage() {
 
                 {/* Property */}
                 {item.property && (
-                  <div style={{ fontSize: 11, color: "#71717A", padding: "6px 10px", background: "#18181B", borderRadius: 7 }}>
+                  <div style={{ fontSize: 11, color: "var(--text-ghost)", padding: "6px 10px", background: "var(--bg-surface-2)", borderRadius: 7 }}>
                     📍 {item.property.title} {item.property.district ? `— ${item.property.district}` : ""}
                   </div>
                 )}
 
                 {/* Content */}
-                <div style={{ fontSize: 13, color: "#D4D4D8", lineHeight: 1.7, whiteSpace: "pre-wrap", padding: "10px 12px", background: "#0A0A0C", borderRadius: 8, maxHeight: 200, overflow: "auto" }}>
+                <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, whiteSpace: "pre-wrap", padding: "10px 12px", background: "var(--bg-page)", borderRadius: 8, maxHeight: 200, overflow: "auto" }}>
                   {item.content}
                 </div>
 
@@ -294,7 +294,7 @@ export default function MarketingQueuePage() {
 
                 {/* Rejection reason */}
                 {item.status === "rejected" && item.rejection_reason && (
-                  <div style={{ fontSize: 11, color: "#F87171", padding: "6px 10px", background: "rgba(239,68,68,0.06)", borderRadius: 7 }}>
+                  <div style={{ fontSize: 11, color: "var(--danger)", padding: "6px 10px", background: "rgba(239,68,68,0.06)", borderRadius: 7 }}>
                     سبب الرفض: {item.rejection_reason}
                   </div>
                 )}
@@ -302,23 +302,23 @@ export default function MarketingQueuePage() {
                 {/* Published URL */}
                 {item.status === "published" && item.published_url && (
                   <a href={item.published_url} target="_blank" rel="noreferrer"
-                    style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#4ADE80", textDecoration: "none" }}>
+                    style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "var(--success)", textDecoration: "none" }}>
                     <ExternalLink size={11} /> عرض المنشور
                   </a>
                 )}
 
                 {/* Actions */}
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: "auto" }}>
-                  <button onClick={() => copyContent(item.content, item.hashtags)} style={btnSm("#A1A1AA", "rgba(255,255,255,0.04)")}>
+                  <button onClick={() => copyContent(item.content, item.hashtags)} style={btnSm("var(--text-muted)", "rgba(255,255,255,0.04)")}>
                     <Copy size={11} /> نسخ
                   </button>
 
                   {item.status === "pending" && (
                     <>
-                      <button onClick={() => approve(item.id)} disabled={isBusy} style={btnSm("#60A5FA", "rgba(96,165,250,0.1)")}>
+                      <button onClick={() => approve(item.id)} disabled={isBusy} style={btnSm("var(--info)", "rgba(96,165,250,0.1)")}>
                         <Check size={11} /> اعتماد
                       </button>
-                      <button onClick={() => reject(item.id)} disabled={isBusy} style={btnSm("#F87171", "rgba(239,68,68,0.06)")}>
+                      <button onClick={() => reject(item.id)} disabled={isBusy} style={btnSm("var(--danger)", "rgba(239,68,68,0.06)")}>
                         <X size={11} /> رفض
                       </button>
                     </>
@@ -333,12 +333,12 @@ export default function MarketingQueuePage() {
                   )}
 
                   {item.status !== "published" && (
-                    <button onClick={() => markPublished(item.id)} disabled={isBusy} style={btnSm("#4ADE80", "rgba(74,222,128,0.08)")}>
+                    <button onClick={() => markPublished(item.id)} disabled={isBusy} style={btnSm("var(--success)", "rgba(74,222,128,0.08)")}>
                       <CheckCircle2 size={11} /> تم النشر
                     </button>
                   )}
 
-                  <button onClick={() => remove(item.id)} disabled={isBusy} style={btnSm("#F87171", "rgba(239,68,68,0.04)")}>
+                  <button onClick={() => remove(item.id)} disabled={isBusy} style={btnSm("var(--danger)", "rgba(239,68,68,0.04)")}>
                     <Trash2 size={11} />
                   </button>
                 </div>

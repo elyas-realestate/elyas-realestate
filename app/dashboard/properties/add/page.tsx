@@ -22,13 +22,13 @@ const categoriesMap: Record<string, string[]> = {
 
 const offerTypes = ["بيع", "إيجار", "استثمار", "تطوير بالشراكة"];
 
-const inp = "w-full bg-[#1C1C22] border border-[rgba(198,145,76,0.15)] rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#3A3A42] focus:outline-none focus:border-[#C6914C] transition";
-const lbl = "block text-xs font-semibold text-[#9A9AA0] mb-2 tracking-wide";
+const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
+const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-wide";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#16161A] border border-[rgba(198,145,76,0.1)] rounded-2xl p-6">
-      <h3 style={{ fontSize: 12, fontWeight: 700, color: "#C6914C", letterSpacing: 1.5, marginBottom: 20, textTransform: "uppercase" }}>{title}</h3>
+    <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-2xl p-6">
+      <h3 style={{ fontSize: 12, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1.5, marginBottom: 20, textTransform: "uppercase" }}>{title}</h3>
       {children}
     </div>
   );
@@ -284,16 +284,16 @@ export default function AddProperty() {
   if (limitBlocked) {
     return (
       <div dir="rtl" style={{ maxWidth: 480, margin: "80px auto", textAlign: "center" }}>
-        <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(198,145,76,0.08)", border: "1px solid rgba(198,145,76,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-          <Lock size={26} style={{ color: "#C6914C" }} />
+        <div style={{ width: 64, height: 64, borderRadius: 18, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+          <Lock size={26} style={{ color: "var(--gold-2)" }} />
         </div>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: "#F5F5F5", marginBottom: 10 }}>تجاوزت حد خطتك</h2>
-        <p style={{ fontSize: 14, color: "#9A9AA0", lineHeight: 1.7, marginBottom: 24 }}>{limitBlocked}</p>
-        <Link href="/dashboard/subscription" style={{ display: "inline-block", padding: "12px 28px", borderRadius: 12, background: "linear-gradient(135deg, #C6914C, #A6743A)", color: "#0A0A0C", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 10 }}>تجاوزت حد خطتك</h2>
+        <p style={{ fontSize: 14, color: "var(--text-soft)", lineHeight: 1.7, marginBottom: 24 }}>{limitBlocked}</p>
+        <Link href="/dashboard/subscription" style={{ display: "inline-block", padding: "12px 28px", borderRadius: 12, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
           عرض الخطط والترقية
         </Link>
         <div style={{ marginTop: 16 }}>
-          <Link href="/dashboard/properties" style={{ fontSize: 13, color: "#5A5A62", textDecoration: "none" }}>← العودة للعقارات</Link>
+          <Link href="/dashboard/properties" style={{ fontSize: 13, color: "var(--text-faint)", textDecoration: "none" }}>← العودة للعقارات</Link>
         </div>
       </div>
     );
@@ -304,25 +304,25 @@ export default function AddProperty() {
   return (
     <div dir="rtl">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 mb-6" style={{ color: "#5A5A62", fontSize: 13 }}>
-        <Link href="/dashboard/properties" className="hover:text-[#C6914C] transition no-underline" style={{ color: "#5A5A62" }}>العقارات</Link>
+      <div className="flex items-center gap-2 mb-6" style={{ color: "var(--text-faint)", fontSize: 13 }}>
+        <Link href="/dashboard/properties" className="hover:text-[var(--gold-2)] transition no-underline" style={{ color: "var(--text-faint)" }}>العقارات</Link>
         <ArrowRight size={14} />
-        <span style={{ color: "#F5F5F5" }}>إضافة عقار جديد</span>
+        <span style={{ color: "var(--text-strong)" }}>إضافة عقار جديد</span>
       </div>
 
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="text-2xl font-bold mb-1">إضافة عقار جديد</h2>
-          <p style={{ color: "#5A5A62", fontSize: 13 }}>أدخل بيانات العقار ثم احفظ</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>أدخل بيانات العقار ثم احفظ</p>
         </div>
         <button
           type="button"
           onClick={() => set("is_published", !form.is_published)}
           className="flex items-center gap-3 px-5 py-2.5 rounded-xl transition"
           style={{
-            background: form.is_published ? "rgba(198,145,76,0.12)" : "#1C1C22",
-            border: "1px solid " + (form.is_published ? "rgba(198,145,76,0.3)" : "rgba(198,145,76,0.1)"),
-            color: form.is_published ? "#C6914C" : "#5A5A62",
+            background: form.is_published ? "var(--gold-bg)" : "var(--bg-surface-2)",
+            border: "1px solid " + (form.is_published ? "var(--gold-bg-strong)" : "var(--gold-bg)"),
+            color: form.is_published ? "var(--gold-2)" : "var(--text-faint)",
             fontSize: 13, fontWeight: 600,
           }}
         >
@@ -348,9 +348,9 @@ export default function AddProperty() {
                   <button key={t} type="button" onClick={() => set("offer_type", t)}
                     className="px-4 py-2 rounded-xl text-sm font-medium transition"
                     style={{
-                      background: form.offer_type === t ? "rgba(198,145,76,0.15)" : "#1C1C22",
-                      color: form.offer_type === t ? "#C6914C" : "#9A9AA0",
-                      border: "1px solid " + (form.offer_type === t ? "rgba(198,145,76,0.35)" : "rgba(198,145,76,0.08)"),
+                      background: form.offer_type === t ? "var(--gold-bg-hover)" : "var(--bg-surface-2)",
+                      color: form.offer_type === t ? "var(--gold-2)" : "var(--text-soft)",
+                      border: "1px solid " + (form.offer_type === t ? "rgba(198,145,76,0.35)" : "var(--gold-bg-soft)"),
                     }}>
                     {t}
                   </button>
@@ -393,7 +393,7 @@ export default function AddProperty() {
             <div>
               <label className={lbl}>رابط الموقع على الخريطة</label>
               <input name="location_url" value={form.location_url} onChange={handleChange} className={inp} placeholder="https://maps.google.com/..." dir="ltr" />
-              <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 5 }}>
+              <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 5 }}>
                 افتح Google Maps، ابحث عن الموقع، ثم انسخ الرابط من شريط العنوان
               </p>
             </div>
@@ -448,7 +448,7 @@ export default function AddProperty() {
             <div>
               <label className={lbl} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span>رقم ترخيص الإعلان العقاري</span>
-                <span style={{ color: "#5A5A62", fontWeight: 400, fontSize: 10 }}>اختياري — يبدأ بـ 71 أو 72 ويكون 10 أرقام</span>
+                <span style={{ color: "var(--text-faint)", fontWeight: 400, fontSize: 10 }}>اختياري — يبدأ بـ 71 أو 72 ويكون 10 أرقام</span>
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -462,24 +462,24 @@ export default function AddProperty() {
                     paddingLeft: 40,
                     borderColor: licSt === "ok" ? "rgba(52,211,153,0.5)"
                                : licSt === "bad" ? "rgba(248,113,113,0.5)"
-                               : "rgba(198,145,76,0.15)",
+                               : "var(--gold-bg-hover)",
                   }}
                 />
                 {licSt !== "empty" && (
                   <div style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }}>
                     {licSt === "ok"
-                      ? <CheckCircle2 size={16} style={{ color: "#34D399" }} />
-                      : <AlertCircle  size={16} style={{ color: "#F87171" }} />}
+                      ? <CheckCircle2 size={16} style={{ color: "var(--success-2)" }} />
+                      : <AlertCircle  size={16} style={{ color: "var(--danger)" }} />}
                   </div>
                 )}
               </div>
               {licSt === "bad" && (
-                <p style={{ fontSize: 11, color: "#F87171", marginTop: 5 }}>
+                <p style={{ fontSize: 11, color: "var(--danger)", marginTop: 5 }}>
                   الرقم غير صحيح — يجب أن يبدأ بـ 71 أو 72 ويتكون من 10 أرقام بالضبط
                 </p>
               )}
               {licSt === "ok" && (
-                <p style={{ fontSize: 11, color: "#34D399", marginTop: 5 }}>رقم الترخيص صحيح</p>
+                <p style={{ fontSize: 11, color: "var(--success-2)", marginTop: 5 }}>رقم الترخيص صحيح</p>
               )}
             </div>
           </div>
@@ -490,7 +490,7 @@ export default function AddProperty() {
           <div className="space-y-3">
             {/* AI button */}
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <p style={{ fontSize: 12, color: "#5A5A62" }}>
+              <p style={{ fontSize: 12, color: "var(--text-faint)" }}>
                 اكتب الوصف يدوياً أو استخدم الذكاء الاصطناعي لتوليده تلقائياً
               </p>
               <button
@@ -499,9 +499,9 @@ export default function AddProperty() {
                 disabled={aiLoading}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl transition disabled:opacity-50"
                 style={{
-                  background: "linear-gradient(135deg, rgba(198,145,76,0.15), rgba(198,145,76,0.08))",
-                  border: "1px solid rgba(198,145,76,0.3)",
-                  color: "#C6914C",
+                  background: "linear-gradient(135deg, var(--gold-bg-hover), var(--gold-bg-soft))",
+                  border: "1px solid var(--gold-bg-strong)",
+                  color: "var(--gold-2)",
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: aiLoading ? "not-allowed" : "pointer",
@@ -524,7 +524,7 @@ export default function AddProperty() {
             />
 
             {form.description && (
-              <p style={{ fontSize: 11, color: "#5A5A62", textAlign: "left" }} dir="ltr">
+              <p style={{ fontSize: 11, color: "var(--text-faint)", textAlign: "left" }} dir="ltr">
                 {form.description.length} حرف
               </p>
             )}
@@ -538,11 +538,11 @@ export default function AddProperty() {
             {/* Watermark toggle */}
             <div
               className="flex items-center justify-between rounded-xl px-4 py-3"
-              style={{ background: "rgba(198,145,76,0.04)", border: "1px solid rgba(198,145,76,0.1)" }}
+              style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}
             >
               <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#E5E5E5" }}>العلامة المائية التلقائية</p>
-                <p style={{ fontSize: 11, color: "#5A5A62", marginTop: 2 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>العلامة المائية التلقائية</p>
+                <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 2 }}>
                   يضيف "وسيط برو | {brokerName}" على الصور في 3 مواضع
                 </p>
               </div>
@@ -552,7 +552,7 @@ export default function AddProperty() {
                 className="relative rounded-full transition-all"
                 style={{
                   width: 44, height: 24,
-                  background: watermarkEnabled ? "#C6914C" : "#2A2A32",
+                  background: watermarkEnabled ? "var(--gold-2)" : "var(--bg-surface-3)",
                   border: "none",
                   cursor: "pointer",
                   flexShrink: 0,
@@ -583,31 +583,31 @@ export default function AddProperty() {
               onDrop={e => { e.preventDefault(); setIsDragging(false); handleImageUpload(e.dataTransfer.files); }}
               className="flex flex-col items-center justify-center gap-3 rounded-xl transition-all"
               style={{
-                border: "2px dashed " + (isDragging ? "#C6914C" : "rgba(198,145,76,0.25)"),
+                border: "2px dashed " + (isDragging ? "var(--gold-2)" : "rgba(198,145,76,0.25)"),
                 padding: "36px 20px",
-                background: isDragging ? "rgba(198,145,76,0.08)" : "rgba(198,145,76,0.03)",
+                background: isDragging ? "var(--gold-bg-soft)" : "rgba(198,145,76,0.03)",
                 cursor: "pointer",
                 transform: isDragging ? "scale(1.01)" : "scale(1)",
               }}>
               {uploading ? (
                 <>
                   <div className="w-7 h-7 border-2 rounded-full animate-spin"
-                    style={{ borderColor: "rgba(198,145,76,0.3)", borderTopColor: "#C6914C" }} />
-                  <span style={{ color: "#9A9AA0", fontSize: 13 }}>
+                    style={{ borderColor: "var(--gold-bg-strong)", borderTopColor: "var(--gold-2)" }} />
+                  <span style={{ color: "var(--text-soft)", fontSize: 13 }}>
                     جاري الرفع{watermarkEnabled ? " وإضافة العلامة المائية" : ""}...
                   </span>
                 </>
               ) : isDragging ? (
                 <>
-                  <Upload size={28} style={{ color: "#C6914C" }} />
-                  <p style={{ color: "#C6914C", fontSize: 14, fontWeight: 700 }}>أفلت الصور هنا</p>
+                  <Upload size={28} style={{ color: "var(--gold-2)" }} />
+                  <p style={{ color: "var(--gold-2)", fontSize: 14, fontWeight: 700 }}>أفلت الصور هنا</p>
                 </>
               ) : (
                 <>
-                  <Upload size={24} style={{ color: "#C6914C" }} />
+                  <Upload size={24} style={{ color: "var(--gold-2)" }} />
                   <div className="text-center">
-                    <p style={{ color: "#F5F5F5", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
-                    <p style={{ color: "#5A5A62", fontSize: 12, marginTop: 4 }}>
+                    <p style={{ color: "var(--text-strong)", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
+                    <p style={{ color: "var(--text-faint)", fontSize: 12, marginTop: 4 }}>
                       JPG, PNG — يمكن اختيار أكثر من صورة
                       {watermarkEnabled && " · ستُضاف العلامة المائية تلقائياً"}
                     </p>
@@ -621,11 +621,11 @@ export default function AddProperty() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {uploadedImages.map((url, i) => (
                   <div key={url} className="relative rounded-xl overflow-hidden group"
-                    style={{ height: 110, background: "#1C1C22", border: "2px solid " + (i === 0 ? "#C6914C" : "transparent") }}>
+                    style={{ height: 110, background: "var(--bg-surface-2)", border: "2px solid " + (i === 0 ? "var(--gold-2)" : "transparent") }}>
                     <img src={url} alt="" className="w-full h-full object-cover" />
                     {i === 0 && (
                       <div className="absolute top-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg font-bold"
-                        style={{ background: "#C6914C", color: "#0A0A0C" }}>رئيسية</div>
+                        style={{ background: "var(--gold-2)", color: "var(--bg-page)" }}>رئيسية</div>
                     )}
                     <button type="button" onClick={() => removeImage(url)}
                       className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
@@ -639,7 +639,7 @@ export default function AddProperty() {
                           set("main_image", url);
                         }}
                         className="absolute bottom-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
-                        style={{ background: "rgba(10,10,12,0.8)", color: "#C6914C" }}>
+                        style={{ background: "rgba(10,10,12,0.8)", color: "var(--gold-2)" }}>
                         تعيين رئيسية
                       </button>
                     )}
@@ -659,7 +659,7 @@ export default function AddProperty() {
         {/* ═══ خطأ ═══ */}
         {error && (
           <div className="rounded-xl px-4 py-3 text-sm flex items-center gap-2"
-            style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.25)", color: "#F87171" }}>
+            style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.25)", color: "var(--danger)" }}>
             <AlertCircle size={16} /> {error}
           </div>
         )}
@@ -667,14 +667,14 @@ export default function AddProperty() {
         {/* ═══ زر الحفظ ═══ */}
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={loading}
-            className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-[#0A0A0C] transition disabled:opacity-50"
-            style={{ background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, #C6914C, #A6743A)", fontSize: 15 }}>
+            className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-[var(--bg-page)] transition disabled:opacity-50"
+            style={{ background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", fontSize: 15 }}>
             <Save size={18} />
             {loading ? "جاري الحفظ..." : "حفظ العقار"}
           </button>
           <Link href="/dashboard/properties"
             className="px-6 py-3.5 rounded-xl text-sm font-medium no-underline transition"
-            style={{ background: "#1C1C22", color: "#9A9AA0", border: "1px solid rgba(198,145,76,0.1)" }}>
+            style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", border: "1px solid var(--gold-bg)" }}>
             إلغاء
           </Link>
         </div>

@@ -134,16 +134,16 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2 text-white">
-          <Shield className="h-6 w-6 text-[#C6914C]" />
+          <Shield className="h-6 w-6 text-[var(--gold-2)]" />
           الأمان والمصادقة الثنائية
         </h1>
-        <p className="text-sm text-[#8A8A92] mt-1">
+        <p className="text-sm text-[var(--text-soft)] mt-1">
           أضف طبقة حماية إضافية لحسابك برمز يتغيّر كل 30 ثانية من تطبيق المصادقة.
         </p>
       </div>
 
       {/* ── بطاقة الحالة ── */}
-      <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-6">
+      <div className="rounded-2xl bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             {stage === "enrolled" ? (
@@ -157,7 +157,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
             )}
             <div>
               <h2 className="font-bold text-white">المصادقة الثنائية (2FA)</h2>
-              <p className="text-xs text-[#8A8A92] mt-0.5">
+              <p className="text-xs text-[var(--text-soft)] mt-0.5">
                 {stage === "loading" && "…جارِ التحميل"}
                 {stage === "off" && "غير مفعّلة — حسابك محمي بكلمة المرور فقط"}
                 {stage === "enrolling" && "في انتظار تأكيد الرمز الأوّل"}
@@ -169,7 +169,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
             className={`px-3 py-1 rounded-full text-xs font-bold border ${
               stage === "enrolled"
                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                : "bg-[#1F1F24] text-[#8A8A92] border-[rgba(255,255,255,0.05)]"
+                : "bg-[var(--bg-surface-2)] text-[var(--text-soft)] border-[var(--overlay-soft)]"
             }`}
           >
             {stage === "enrolled" ? "مفعّلة" : "غير مفعّلة"}
@@ -188,7 +188,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
             <button
               onClick={startEnrollment}
               disabled={busy}
-              className="px-5 py-2.5 bg-gradient-to-r from-[#C6914C] to-[#8A5F2E] hover:from-[#d49f5c] hover:to-[#996a38] text-white font-bold rounded-xl transition-all disabled:opacity-50"
+              className="px-5 py-2.5 bg-gradient-to-r from-[var(--gold-2)] to-[var(--gold-4)] hover:from-[#d49f5c] hover:to-[#996a38] text-white font-bold rounded-xl transition-all disabled:opacity-50"
             >
               {busy ? "…جارِ التوليد" : "ابدأ تفعيل المصادقة الثنائية"}
             </button>
@@ -204,34 +204,34 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
               <div className="flex-1 space-y-4 text-white">
                 <div>
                   <h3 className="font-bold mb-1">١. امسح الرمز</h3>
-                  <p className="text-sm text-[#8A8A92]">افتح تطبيق المصادقة وامسح رمز QR.</p>
+                  <p className="text-sm text-[var(--text-soft)]">افتح تطبيق المصادقة وامسح رمز QR.</p>
                 </div>
                 <div>
-                  <p className="text-sm text-[#8A8A92] mb-2">أو أدخل السرّ يدوياً:</p>
+                  <p className="text-sm text-[var(--text-soft)] mb-2">أو أدخل السرّ يدوياً:</p>
                   <div className="flex gap-2">
-                    <code className="flex-1 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] p-2.5 rounded-lg text-xs font-mono break-all text-white">
+                    <code className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] p-2.5 rounded-lg text-xs font-mono break-all text-white">
                       {enrollment.secret}
                     </code>
                     <button
                       onClick={copySecret}
-                      className="px-3 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] rounded-lg hover:bg-[#26262C] transition"
+                      className="px-3 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] rounded-lg hover:bg-[#26262C] transition"
                     >
-                      {copiedSecret ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4 text-[#8A8A92]" />}
+                      {copiedSecret ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4 text-[var(--text-soft)]" />}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-[rgba(255,255,255,0.05)] pt-5">
+            <div className="border-t border-[var(--overlay-soft)] pt-5">
               <h3 className="font-bold text-white mb-1">٢. أدخل الرمز من التطبيق</h3>
-              <p className="text-sm text-[#8A8A92] mb-3">أدخل الرمز المكوّن من 6 أرقام الذي يظهر في تطبيقك.</p>
+              <p className="text-sm text-[var(--text-soft)] mb-3">أدخل الرمز المكوّن من 6 أرقام الذي يظهر في تطبيقك.</p>
               <div className="flex gap-2 max-w-sm">
                 <input
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="123456"
-                  className="flex-1 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] rounded-lg px-4 py-2.5 text-white font-mono text-lg text-center tracking-[0.4em] focus:border-[#C6914C] outline-none"
+                  className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] rounded-lg px-4 py-2.5 text-white font-mono text-lg text-center tracking-[0.4em] focus:border-[var(--gold-2)] outline-none"
                   maxLength={6}
                   inputMode="numeric"
                   autoFocus
@@ -239,7 +239,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
                 <button
                   onClick={verifyEnrollment}
                   disabled={busy || code.length !== 6}
-                  className="px-5 bg-gradient-to-r from-[#C6914C] to-[#8A5F2E] text-white font-bold rounded-lg disabled:opacity-50"
+                  className="px-5 bg-gradient-to-r from-[var(--gold-2)] to-[var(--gold-4)] text-white font-bold rounded-lg disabled:opacity-50"
                 >
                   {busy ? "…" : "تحقّق وفعّل"}
                 </button>
@@ -248,7 +248,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
             <button
               onClick={() => { setEnrollment(null); setCode(""); setStage("off"); }}
-              className="text-sm text-[#8A8A92] hover:text-white transition"
+              className="text-sm text-[var(--text-soft)] hover:text-white transition"
             >
               إلغاء
             </button>
@@ -287,9 +287,9 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
               هذه الرموز تُعرض مرّة واحدة فقط. استخدمها لو فقدت جهازك. كل رمز يُستخدم مرّة واحدة.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-2 bg-[#0E0E11] rounded-xl p-4 border border-[rgba(255,255,255,0.05)]">
+          <div className="grid grid-cols-2 gap-2 bg-[#0E0E11] rounded-xl p-4 border border-[var(--overlay-soft)]">
             {recoveryCodes.map((c, i) => (
-              <code key={i} className="font-mono text-sm p-2 bg-[#1F1F24] rounded text-white text-center">
+              <code key={i} className="font-mono text-sm p-2 bg-[var(--bg-surface-2)] rounded text-white text-center">
                 {c}
               </code>
             ))}
@@ -297,14 +297,14 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={copyCodes}
-              className="inline-flex items-center gap-2 px-3 py-2 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] hover:bg-[#26262C] rounded-lg text-sm text-white transition"
+              className="inline-flex items-center gap-2 px-3 py-2 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] hover:bg-[#26262C] rounded-lg text-sm text-white transition"
             >
               <Copy className="h-4 w-4" />
               نسخ الكل
             </button>
             <button
               onClick={downloadCodes}
-              className="inline-flex items-center gap-2 px-3 py-2 bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] hover:bg-[#26262C] rounded-lg text-sm text-white transition"
+              className="inline-flex items-center gap-2 px-3 py-2 bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] hover:bg-[#26262C] rounded-lg text-sm text-white transition"
             >
               <Download className="h-4 w-4" />
               تنزيل .txt
@@ -326,7 +326,7 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
           onClick={() => setShowDisableDialog(false)}
         >
           <div
-            className="bg-[#16161A] border border-[rgba(198,145,76,0.09)] rounded-2xl max-w-md w-full p-6 space-y-4"
+            className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-soft)] rounded-2xl max-w-md w-full p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -334,24 +334,24 @@ ${recoveryCodes.map((c, i) => `${i + 1}. ${c}`).join("\n")}
                 <ShieldAlert className="h-6 w-6 text-red-400" />
                 <h2 className="text-lg font-bold text-white">تعطيل المصادقة الثنائية</h2>
               </div>
-              <button onClick={() => setShowDisableDialog(false)} className="text-[#8A8A92] hover:text-white">
+              <button onClick={() => setShowDisableDialog(false)} className="text-[var(--text-soft)] hover:text-white">
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-sm text-[#8A8A92]">
+            <p className="text-sm text-[var(--text-soft)]">
               أدخل رمز TOTP حالي (6 أرقام) أو رمز استرداد لتأكيد التعطيل.
             </p>
             <input
               value={disableCode}
               onChange={(e) => setDisableCode(e.target.value)}
               placeholder="123456 أو XXXX-XXXX-XXXX"
-              className="w-full bg-[#1F1F24] border border-[rgba(255,255,255,0.05)] rounded-lg px-4 py-2.5 text-white font-mono focus:border-[#C6914C] outline-none"
+              className="w-full bg-[var(--bg-surface-2)] border border-[var(--overlay-soft)] rounded-lg px-4 py-2.5 text-white font-mono focus:border-[var(--gold-2)] outline-none"
               autoFocus
             />
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => { setShowDisableDialog(false); setDisableCode(""); }}
-                className="px-4 py-2 text-[#8A8A92] hover:text-white text-sm transition"
+                className="px-4 py-2 text-[var(--text-soft)] hover:text-white text-sm transition"
               >
                 إلغاء
               </button>
