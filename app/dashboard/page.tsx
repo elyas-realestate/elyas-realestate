@@ -230,7 +230,7 @@ export default function DashboardPage() {
                 <XAxis dataKey="name" stroke="#6A6A72" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#6A6A72" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${val / 1000}k`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0D0D10', border: '1px solid #27272F', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--sidebar-bg)', border: '1px solid #27272F', borderRadius: '12px' }}
                   itemStyle={{ fontSize: 13 }} labelStyle={{ color: 'var(--text-soft)', marginBottom: 4 }}
                 />
                 {(viewType === "all" || viewType === "buy") && (
@@ -256,7 +256,7 @@ export default function DashboardPage() {
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0D0D10', border: '1px solid #27272F', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--sidebar-bg)', border: '1px solid #27272F', borderRadius: '12px' }}
                   itemStyle={{ fontSize: 13, color: '#fff' }}
                 />
               </PieChart>

@@ -443,7 +443,7 @@ export default function EditProperty() {
                     {url !== form.main_image && i !== 0 && (
                       <button type="button" onClick={() => { setUploadedImages(prev => [url, ...prev.filter(u => u !== url)]); set("main_image", url); }}
                         className="absolute bottom-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
-                        style={{ background: "rgba(10,10,12,0.8)", color: "var(--gold-2)" }}>تعيين رئيسية</button>
+                        style={{ background: "var(--header-bg-3)", color: "var(--gold-2)" }}>تعيين رئيسية</button>
                     )}
                   </div>
                 ))}

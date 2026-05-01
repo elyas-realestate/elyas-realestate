@@ -461,15 +461,15 @@ export default function Clients() {
       {/* ═══ QUICK DRAWER ═══ */}
       {selected && (
         <>
-          <div className="fixed inset-0 z-40" style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }} onClick={() => setSelected(null)} />
+          <div className="fixed inset-0 z-40" style={{ background: "var(--modal-overlay-2)", backdropFilter: "blur(4px)" }} onClick={() => setSelected(null)} />
           <div
             className="fixed top-0 left-0 bottom-0 z-50 overflow-y-auto fade-up"
-            style={{ width: "min(420px, 100vw)", background: "#0D0D10", borderRight: "1px solid var(--gold-bg)" }}
+            style={{ width: "min(420px, 100vw)", background: "var(--sidebar-bg)", borderRight: "1px solid var(--gold-bg)" }}
           >
             {/* Drawer header */}
             <div
               className="flex items-center justify-between px-5 py-4 sticky top-0"
-              style={{ background: "#0D0D10", borderBottom: "1px solid var(--gold-bg)" }}
+              style={{ background: "var(--sidebar-bg)", borderBottom: "1px solid var(--gold-bg)" }}
             >
               <div className="flex items-center gap-2">
                 {!editMode && (

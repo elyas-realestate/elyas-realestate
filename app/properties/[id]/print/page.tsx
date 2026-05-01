@@ -36,7 +36,7 @@ export default function PropertyPrintView() {
   const heroImage = property.main_image || (property.images && property.images.length > 0 ? property.images[0] : null);
 
   return (
-    <div dir="rtl" style={{ fontFamily: "'Tajawal', sans-serif", color: "#000", background: "#fff", padding: "40px", maxWidth: "800px", margin: "0 auto" }}>
+    <div dir="rtl" style={{ fontFamily: "'Tajawal', sans-serif", color: "var(--pure-black)", background: "#fff", padding: "40px", maxWidth: "800px", margin: "0 auto" }}>
       <style>{`
         @page { size: A4; margin: 0; }
         @media print {

@@ -284,7 +284,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         style={{
           height: 60,
           padding: "0 20px",
-          background: "rgba(10,10,12,0.92)",
+          background: "var(--header-bg)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           borderBottom: "1px solid var(--gold-bg-soft)",
@@ -397,8 +397,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             style={{
               padding: "4px 14px",
               borderRadius: 7,
-              background: renewalDaysLeft === 0 ? "rgba(255,255,255,0.2)" : "rgba(10,10,12,0.18)",
-              border: `1px solid ${renewalDaysLeft === 0 ? "rgba(255,255,255,0.3)" : "rgba(10,10,12,0.25)"}`,
+              background: renewalDaysLeft === 0 ? "rgba(255,255,255,0.2)" : "var(--shadow-overlay-3)",
+              border: `1px solid ${renewalDaysLeft === 0 ? "rgba(255,255,255,0.3)" : "var(--shadow-overlay-2)"}`,
               color: renewalDaysLeft === 0 ? "#fff" : "var(--bg-page)",
               fontSize: 12,
               fontWeight: 700,
@@ -417,7 +417,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {sidebarOpen && (
           <div
             className="md:hidden fixed inset-0 z-30"
-            style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(3px)" }}
+            style={{ background: "var(--modal-overlay)", backdropFilter: "blur(3px)" }}
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -428,7 +428,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           style={{
             top: renewalDaysLeft !== null ? 98 : 60,
             width: 240,
-            background: "#0D0D10",
+            background: "var(--sidebar-bg)",
             borderLeft: "1px solid rgba(198,145,76,0.07)",
             display: "flex",
             flexDirection: "column",

@@ -66,7 +66,7 @@ export default function Login() {
         </div>
 
         {/* Form Card */}
-        <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)" }}>
+        <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px var(--shadow-overlay)" }}>
           <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 4, textAlign: "center" }}>دخول الفريق</h2>
           <p style={{ fontSize: 13, color: "var(--text-faint)", textAlign: "center", marginBottom: 28 }}>مخصص لأعضاء الفريق فقط</p>
 
@@ -125,7 +125,7 @@ export default function Login() {
             >
               {loading ? (
                 <>
-                  <div style={{ width: 16, height: 16, border: "2px solid rgba(10,10,12,0.4)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }}></div>
+                  <div style={{ width: 16, height: 16, border: "2px solid var(--shadow-overlay)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }}></div>
                   جاري الدخول...
                 </>
               ) : "دخول"}

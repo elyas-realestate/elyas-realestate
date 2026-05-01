@@ -127,7 +127,7 @@ export default function Home() {
         .accent-text { color: var(--gold-2); }
         .accent-bg { background: linear-gradient(135deg, var(--gold-2), var(--gold-3)); }
         .card-base { background: var(--bg-surface-1); border: 1px solid var(--gold-bg); border-radius: 16px; transition: all 0.3s ease; }
-        .card-base:hover { border-color: rgba(198,145,76,0.28); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+        .card-base:hover { border-color: rgba(198,145,76,0.28); transform: translateY(-3px); box-shadow: 0 12px 40px var(--shadow-overlay-2); }
         .dot-bg { background-image: radial-gradient(rgba(198,145,76,0.04) 1px, transparent 1px); background-size: 40px 40px; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
         .fade-up { animation: fadeUp 0.7s ease-out both; }
@@ -150,7 +150,7 @@ export default function Home() {
       `}</style>
 
       {/* ═══ NAVBAR ═══ */}
-      <nav style={{ position: "fixed", top: 0, right: 0, left: 0, zIndex: 50, height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: "rgba(10,10,12,0.85)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: "1px solid var(--gold-bg)" }}>
+      <nav style={{ position: "fixed", top: 0, right: 0, left: 0, zIndex: 50, height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: "var(--header-bg-2)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: "1px solid var(--gold-bg)" }}>
         {/* Logo */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div className="accent-bg font-kufi" style={{ width: 36, height: 36, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: "var(--bg-page)", flexShrink: 0 }}>و</div>

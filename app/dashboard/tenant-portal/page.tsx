@@ -70,7 +70,7 @@ function Badge({ cfg }: { cfg: { label: string; color: string } }) {
 function ModalOverlay({ onClose, children }: { onClose: () => void; children: React.ReactNode }) {
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)",
+      position: "fixed", inset: 0, background: "var(--modal-overlay-2)",
       zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center",
     }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}

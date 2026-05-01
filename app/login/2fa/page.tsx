@@ -57,7 +57,7 @@ export default function TwoFactorChallenge() {
           border: "1px solid rgba(198,145,76,0.14)",
           borderRadius: 24,
           padding: 36,
-          boxShadow: "0 24px 60px rgba(0,0,0,0.4)",
+          boxShadow: "0 24px 60px var(--shadow-overlay)",
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 24 }}>

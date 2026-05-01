@@ -162,7 +162,7 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
         </div>
 
         {/* محتوى العقد */}
-        <div style={{ background: "#FAFAFA", color: "#000", borderRadius: 12, padding: 24, marginBottom: 18 }}>
+        <div style={{ background: "#FAFAFA", color: "var(--pure-black)", borderRadius: 12, padding: 24, marginBottom: 18 }}>
           <div className="contract-body"
             dangerouslySetInnerHTML={{ __html: contract.body_html }}
             style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.9 }} />

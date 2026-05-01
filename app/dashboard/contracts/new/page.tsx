@@ -269,7 +269,7 @@ export default function NewContractPage() {
           </div>
 
           {/* العمود الأيسر: المعاينة */}
-          <div style={{ background: "#FAFAFA", color: "#000", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 24, maxHeight: "85vh", overflowY: "auto", direction: "rtl" }}>
+          <div style={{ background: "#FAFAFA", color: "var(--pure-black)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 24, maxHeight: "85vh", overflowY: "auto", direction: "rtl" }}>
             <div className="contract-preview"
               dangerouslySetInnerHTML={{ __html: fillTemplate(selected.body_html, values) }}
               style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.8 }} />

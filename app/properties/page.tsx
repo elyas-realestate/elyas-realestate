@@ -194,7 +194,7 @@ function PropertyCard({ p }: { p: any }) {
   return (
     <Link href={"/properties/" + p.id} style={{ textDecoration: "none", display: "block" }}>
       <div className="prop-card" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", borderRadius: 16, overflow: "hidden", transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)", cursor: "pointer" }}>
-        <style>{`.prop-card:hover { border-color: rgba(198,145,76,0.35); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.35); } .prop-card:hover .prop-img { transform: scale(1.06); }`}</style>
+        <style>{`.prop-card:hover { border-color: rgba(198,145,76,0.35); transform: translateY(-4px); box-shadow: 0 16px 48px var(--shadow-overlay-2); } .prop-card:hover .prop-img { transform: scale(1.06); }`}</style>
 
         {/* Image */}
         <div style={{ position: "relative", height: 220, overflow: "hidden", background: "var(--bg-surface-2)" }}>
@@ -212,7 +212,7 @@ function PropertyCard({ p }: { p: any }) {
           {/* Category badge */}
           {p.sub_category && (
             <div style={{ position: "absolute", top: 14, left: 14 }}>
-              <span style={{ background: "rgba(10,10,12,0.8)", color: "var(--text-soft)", fontSize: 11, padding: "5px 10px", borderRadius: 8, backdropFilter: "blur(8px)", fontFamily: "'Tajawal', sans-serif" }}>
+              <span style={{ background: "var(--header-bg-3)", color: "var(--text-soft)", fontSize: 11, padding: "5px 10px", borderRadius: 8, backdropFilter: "blur(8px)", fontFamily: "'Tajawal', sans-serif" }}>
                 {p.sub_category}
               </span>
             </div>

@@ -68,7 +68,7 @@ function PropertyCard({ p, accent = "var(--gold-2)" }: { p: any; accent?: string
           <a href={p.location_url} target="_blank" rel="noopener noreferrer"
             style={{
               position: "absolute", bottom: 12, left: 12,
-              background: "rgba(10,10,12,0.8)", backdropFilter: "blur(8px)",
+              background: "var(--header-bg-3)", backdropFilter: "blur(8px)",
               color: accent, fontSize: 11, fontWeight: 600,
               padding: "5px 10px", borderRadius: 8, textDecoration: "none",
               display: "flex", alignItems: "center", gap: 4,
@@ -233,7 +233,7 @@ export default function SearchPage() {
       {/* ── Header ── */}
       <header style={{
         position: "sticky", top: 0, zIndex: 40,
-        background: "rgba(10,10,12,0.95)", backdropFilter: "blur(20px)",
+        background: "var(--header-bg)", backdropFilter: "blur(20px)",
         borderBottom: "1px solid var(--gold-bg)",
         padding: "0 24px", height: 60,
         display: "flex", alignItems: "center", justifyContent: "space-between",

@@ -402,7 +402,7 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Contract body */}
       <div className="contract-print"
-        style={{ background: "#FAFAFA", color: "#000", borderRadius: 12, padding: 32, direction: "rtl" }}>
+        style={{ background: "#FAFAFA", color: "var(--pure-black)", borderRadius: 12, padding: 32, direction: "rtl" }}>
         <div className="contract-body"
           dangerouslySetInnerHTML={{ __html: contract.body_html }}
           style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.9 }} />
@@ -433,7 +433,7 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
       {/* First party signature modal */}
       {showFirstPartySign && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
+        <div style={{ position: "fixed", inset: 0, background: "var(--modal-overlay)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
           <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 14, padding: 24, maxWidth: 600, width: "100%" }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 14 }}>توقيع الطرف الأول — {contract.party_first.name}</h3>
             <SignaturePad

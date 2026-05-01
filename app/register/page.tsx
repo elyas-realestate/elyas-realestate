@@ -166,7 +166,7 @@ export default function Register() {
 
         {step === "verify" ? (
           /* ═══ شاشة التحقق ═══ */
-          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "40px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)", textAlign: "center" }}>
+          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "40px 32px", boxShadow: "0 24px 60px var(--shadow-overlay)", textAlign: "center" }}>
             <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>📧</div>
             <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 10 }}>تحقق من بريدك</h2>
             <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.7, marginBottom: 24 }}>
@@ -181,7 +181,7 @@ export default function Register() {
           </div>
         ) : (
           /* ═══ نموذج التسجيل ═══ */
-          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,0,0,0.4)" }}>
+          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px var(--shadow-overlay)" }}>
             <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 4, textAlign: "center" }}>إنشاء حساب جديد</h2>
             <p style={{ fontSize: 13, color: "var(--text-faint)", textAlign: "center", marginBottom: 28 }}>ابدأ مجاناً — بدون بطاقة ائتمان</p>
 
@@ -325,7 +325,7 @@ export default function Register() {
               >
                 {loading ? (
                   <>
-                    <div style={{ width: 16, height: 16, border: "2px solid rgba(10,10,12,0.4)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    <div style={{ width: 16, height: 16, border: "2px solid var(--shadow-overlay)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
                     جاري إنشاء الحساب...
                   </>
                 ) : "إنشاء الحساب"}

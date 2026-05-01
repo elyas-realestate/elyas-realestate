@@ -230,7 +230,7 @@ export default function DocumentsPage() {
 
       {/* نافذة الإضافة/التعديل */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "var(--modal-overlay)" }}>
           <div className="w-full rounded-2xl overflow-y-auto" style={{ maxWidth: 560, maxHeight: "90vh", background: "var(--bg-surface-1)", border: "1px solid rgba(193,141,74,0.2)" }}>
             <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: "rgba(193,141,74,0.1)" }}>
               <h3 className="font-bold">{editingId ? "تعديل الوثيقة" : "إضافة وثيقة جديدة"}</h3>

@@ -377,7 +377,7 @@ export default function Settings() {
                     ? <img src={profile.photo_url} alt="صورة" className="w-full h-full object-cover" />
                     : <div className="w-full h-full flex items-center justify-center"><User size={30} className="text-[var(--text-faint)]" /></div>}
                 </div>
-                <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition" style={{ background:"rgba(0,0,0,0.5)" }}>
+                <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition" style={{ background:"var(--shadow-overlay)" }}>
                   {uploadingPhoto ? <Loader2 size={20} className="text-white animate-spin"/> : <Camera size={20} className="text-white"/>}
                 </div>
               </div>

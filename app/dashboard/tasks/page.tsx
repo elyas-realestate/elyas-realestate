@@ -367,7 +367,7 @@ export default function TasksPage() {
                 const dayTasks = item.current ? getTasksForDate(dateStr) : [];
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} className="cal-cell p-1" style={{ borderLeft:'1px solid rgba(198,145,76,0.05)', borderBottom:'1px solid rgba(198,145,76,0.05)', background: item.current ? 'transparent' : 'rgba(10,10,12,0.5)', minHeight: 64 }}>
+                  <div key={idx} className="cal-cell p-1" style={{ borderLeft:'1px solid rgba(198,145,76,0.05)', borderBottom:'1px solid rgba(198,145,76,0.05)', background: item.current ? 'transparent' : 'var(--shadow-overlay)', minHeight: 64 }}>
                     <div className="cal-day-num text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full" style={{ background: isToday ? 'var(--gold-2)' : 'transparent', color: isToday ? 'var(--bg-page)' : item.current ? 'var(--text-soft)' : 'var(--border-1)', fontSize: 11 }}>{item.day}</div>
                     {dayTasks.slice(0, 1).map(t => (
                       <div key={t.id} onClick={() => openEdit(t)} className="cal-task text-xs rounded px-1 py-0.5 mb-0.5 truncate cursor-pointer" style={{ background: 'var(--gold-bg)', color: t.status === "مكتملة" ? 'var(--text-faint)' : 'var(--text-strong)', fontSize: 9 }}>

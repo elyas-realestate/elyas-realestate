@@ -149,7 +149,7 @@ export default function MortgagePage() {
 
       {/* ── Header ── */}
       <header style={{
-        background: "rgba(10,10,12,0.95)",
+        background: "var(--header-bg)",
         backdropFilter: "blur(20px)",
         borderBottom: "1px solid var(--gold-bg)",
         position: "sticky", top: 0, zIndex: 40,

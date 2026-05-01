@@ -185,7 +185,7 @@ export default function PropertyDetail() {
 
               {/* Counter */}
               {images.length > 1 && (
-                <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", background: "rgba(10,10,12,0.75)", color: "var(--text-soft)", fontSize: 12, padding: "5px 14px", borderRadius: 20, backdropFilter: "blur(8px)", letterSpacing: 1 }}>
+                <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", background: "var(--header-bg-4)", color: "var(--text-soft)", fontSize: 12, padding: "5px 14px", borderRadius: 20, backdropFilter: "blur(8px)", letterSpacing: 1 }}>
                   {activeImg + 1} / {images.length}
                 </div>
               )}
@@ -194,11 +194,11 @@ export default function PropertyDetail() {
               {images.length > 1 && (
                 <>
                   <button onClick={e => { e.stopPropagation(); prev(); }} className="nav-btn"
-                    style={{ position: "absolute", top: "50%", right: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "rgba(10,10,12,0.65)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
+                    style={{ position: "absolute", top: "50%", right: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "var(--header-bg-4)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
                     <ChevronRight size={20} />
                   </button>
                   <button onClick={e => { e.stopPropagation(); next(); }} className="nav-btn"
-                    style={{ position: "absolute", top: "50%", left: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "rgba(10,10,12,0.65)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
+                    style={{ position: "absolute", top: "50%", left: 16, transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", background: "var(--header-bg-4)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(8px)" }}>
                     <ChevronLeft size={20} />
                   </button>
                 </>
@@ -358,7 +358,7 @@ export default function PropertyDetail() {
 
       {/* ═══ LIGHTBOX ═══ */}
       {lightbox && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "rgba(0,0,0,0.96)", display: "flex", alignItems: "center", justifyContent: "center" }}
+        <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "var(--modal-overlay)", display: "flex", alignItems: "center", justifyContent: "center" }}
           onClick={() => setLightbox(false)}>
           <button onClick={() => setLightbox(false)}
             style={{ position: "absolute", top: 20, left: 20, width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "none", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>

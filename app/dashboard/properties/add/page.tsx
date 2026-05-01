@@ -53,7 +53,7 @@ async function applyWatermark(file: File, brokerName: string): Promise<Blob> {
       const fontSize = Math.max(16, Math.round(img.width * 0.028));
       ctx.font        = `bold ${fontSize}px Cairo, Tajawal, sans-serif`;
       ctx.fillStyle   = "rgba(255,255,255,0.55)";
-      ctx.strokeStyle = "rgba(0,0,0,0.35)";
+      ctx.strokeStyle = "var(--shadow-overlay-2)";
       ctx.lineWidth   = 2;
       ctx.textAlign   = "center";
 
@@ -639,7 +639,7 @@ export default function AddProperty() {
                           set("main_image", url);
                         }}
                         className="absolute bottom-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
-                        style={{ background: "rgba(10,10,12,0.8)", color: "var(--gold-2)" }}>
+                        style={{ background: "var(--header-bg-3)", color: "var(--gold-2)" }}>
                         تعيين رئيسية
                       </button>
                     )}
