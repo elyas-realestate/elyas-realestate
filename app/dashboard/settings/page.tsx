@@ -78,12 +78,22 @@ const COLOR_GROUPS = [
   ]},
 ];
 
-const QUICK_THEMES = [
-  { name: "الذهبي الداكن",  emoji: "🟤", colors: { color_accent:"var(--gold-2)", color_accent_dark:"var(--gold-3)", color_bg_primary:"var(--bg-page)", color_bg_secondary:"var(--bg-deep)", color_bg_card:"var(--bg-surface-1)", color_text_primary:"var(--text-strong)", color_text_secondary:"var(--text-soft)", color_text_muted:"var(--text-faint)" }},
+const QUICK_THEMES_DARK = [
+  { name: "الذهبي الداكن",  emoji: "🟤", colors: { color_accent:"#C6914C", color_accent_dark:"#A6743A", color_bg_primary:"#0A0A0C", color_bg_secondary:"#0F0F12", color_bg_card:"#16161A", color_text_primary:"#F5F5F5", color_text_secondary:"#9A9AA0", color_text_muted:"#5A5A62" }},
   { name: "الأزرق الملكي",  emoji: "🔵", colors: { color_accent:"#5B8DEF", color_accent_dark:"#3B6DCF", color_bg_primary:"#08090F", color_bg_secondary:"#0E1020", color_bg_card:"#131526", color_text_primary:"#F0F4FF", color_text_secondary:"#8A95B0", color_text_muted:"#525870" }},
-  { name: "الأخضر الفاخر",  emoji: "🟢", colors: { color_accent:"var(--success)", color_accent_dark:"#2AB860", color_bg_primary:"#060C0A", color_bg_secondary:"#0A1510", color_bg_card:"#101A14", color_text_primary:"#F0FFF4", color_text_secondary:"#7AA886", color_text_muted:"#4A6854" }},
-  { name: "البنفسجي",        emoji: "🟣", colors: { color_accent:"var(--purple-ai)", color_accent_dark:"#7C5FD4", color_bg_primary:"#080810", color_bg_secondary:"#0F0F1A", color_bg_card:"#141420", color_text_primary:"#F5F0FF", color_text_secondary:"#9590A8", color_text_muted:"#555068" }},
+  { name: "الأخضر الفاخر",  emoji: "🟢", colors: { color_accent:"#4ADE80", color_accent_dark:"#2AB860", color_bg_primary:"#060C0A", color_bg_secondary:"#0A1510", color_bg_card:"#101A14", color_text_primary:"#F0FFF4", color_text_secondary:"#7AA886", color_text_muted:"#4A6854" }},
+  { name: "البنفسجي",        emoji: "🟣", colors: { color_accent:"#A78BFA", color_accent_dark:"#7C5FD4", color_bg_primary:"#080810", color_bg_secondary:"#0F0F1A", color_bg_card:"#141420", color_text_primary:"#F5F0FF", color_text_secondary:"#9590A8", color_text_muted:"#555068" }},
 ];
+
+const QUICK_THEMES_CREAM = [
+  { name: "الكريمي الكلاسيكي", emoji: "🤎", colors: { color_accent:"#C6914C", color_accent_dark:"#A6743A", color_bg_primary:"#FAF7F2", color_bg_secondary:"#F0EBE0", color_bg_card:"#FFFFFF", color_text_primary:"#1A1206", color_text_secondary:"#5A5044", color_text_muted:"#A89E92" }},
+  { name: "الأزرق الناعم",    emoji: "💙", colors: { color_accent:"#3B6DCF", color_accent_dark:"#2952A8", color_bg_primary:"#F5F8FD", color_bg_secondary:"#EAF0F9", color_bg_card:"#FFFFFF", color_text_primary:"#0E1F3F", color_text_secondary:"#4A5876", color_text_muted:"#9AA4B8" }},
+  { name: "الأخضر الزيتوني",  emoji: "🌿", colors: { color_accent:"#15803D", color_accent_dark:"#0F5E2C", color_bg_primary:"#F6FAF6", color_bg_secondary:"#EBF3EC", color_bg_card:"#FFFFFF", color_text_primary:"#10241A", color_text_secondary:"#3F5A48", color_text_muted:"#92A599" }},
+  { name: "البنفسجي الفاتح",   emoji: "🪻", colors: { color_accent:"#7C3AED", color_accent_dark:"#5B21B6", color_bg_primary:"#F8F6FD", color_bg_secondary:"#EFEAF8", color_bg_card:"#FFFFFF", color_text_primary:"#1E1238", color_text_secondary:"#574A75", color_text_muted:"#A599BA" }},
+];
+
+// alias قديم للتوافق
+const QUICK_THEMES = QUICK_THEMES_DARK;
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -96,6 +106,7 @@ export default function Settings() {
   const [designTab, setDesignTab]   = useState<"colors" | "fonts">("colors");
   const [mobilePreview, setMobilePreview] = useState(false);
   const [collapsed, setCollapsed]   = useState<Record<string, boolean>>({});
+  const [activeTheme, setActiveTheme] = useState<"dark" | "cream">("dark");
 
   // ── Data ──────────────────────────────────────────────────────────────────
   const [profile, setProfile] = useState({
@@ -121,6 +132,19 @@ export default function Settings() {
   const slugTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { loadAll(); }, []);
+
+  // ── متابعة الثيم العالمي (داكن/كريمي) لتحديث الثيمات السريعة ──
+  useEffect(() => {
+    function readTheme() {
+      const t = (document.documentElement.getAttribute("data-theme") || "dark") as "dark" | "cream";
+      setActiveTheme(t === "cream" ? "cream" : "dark");
+    }
+    readTheme();
+    const obs = new MutationObserver(readTheme);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    window.addEventListener("storage", readTheme);
+    return () => { obs.disconnect(); window.removeEventListener("storage", readTheme); };
+  }, []);
 
   // ─── Load ─────────────────────────────────────────────────────────────────
   async function loadAll() {
@@ -286,7 +310,8 @@ export default function Settings() {
   }
 
   // ─── Design ───────────────────────────────────────────────────────────────
-  function applyTheme(theme: (typeof QUICK_THEMES)[0]) {
+  type QuickTheme = (typeof QUICK_THEMES_DARK)[0];
+  function applyTheme(theme: QuickTheme) {
     setSettings((p: any) => ({ ...p, ...theme.colors }));
   }
   function resetDesign() {
@@ -854,11 +879,25 @@ export default function Settings() {
 
               {designTab === "colors" && (
                 <div className="space-y-3">
-                  {/* Quick themes */}
+                  {/* ملاحظة توضيحية: هذه ألوان موقع الوسيط العام، ليست ثيم لوحة التحكم */}
+                  <div className="rounded-xl p-3 text-[11px] leading-relaxed" style={{ background:"var(--gold-bg-soft)", border:"1px solid var(--gold-bg)", color:"var(--text-soft)" }}>
+                    <span className="font-bold" style={{ color:"var(--gold-2)" }}>ملاحظة:</span>{" "}
+                    هذه الألوان تخص <span className="font-bold" style={{ color:"var(--text-strong)" }}>صفحتك العامة</span> (الموقع الذي يراه عملاؤك). أما ثيم لوحة التحكم (داكن/كريمي) فيُحفظ تلقائياً من{" "}
+                    <span className="font-bold" style={{ color:"var(--gold-2)" }}>المظهر</span> أعلى الصفحة. اضغط <span className="font-bold" style={{ color:"var(--gold-2)" }}>«حفظ التغييرات»</span> بعد تعديل الألوان لتطبيقها على الموقع.
+                  </div>
+
+                  {/* Quick themes — ديناميكي حسب الثيم النشط */}
                   <div className="rounded-xl p-4" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg)" }}>
-                    <h4 className="text-xs font-bold mb-3" style={{ color:"var(--gold-2)" }}>ثيمات سريعة</h4>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-xs font-bold" style={{ color:"var(--gold-2)" }}>
+                        ثيمات سريعة {activeTheme === "cream" ? "(فاتحة)" : "(داكنة)"}
+                      </h4>
+                      <span className="text-[10px]" style={{ color:"var(--text-faint)" }}>
+                        {activeTheme === "cream" ? "متوافقة مع الثيم الكريمي" : "متوافقة مع الثيم الداكن"}
+                      </span>
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
-                      {QUICK_THEMES.map(theme=>(
+                      {(activeTheme === "cream" ? QUICK_THEMES_CREAM : QUICK_THEMES_DARK).map(theme=>(
                         <button key={theme.name} onClick={()=>applyTheme(theme)}
                           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition hover:opacity-80"
                           style={{ background:theme.colors.color_bg_card, border:`1px solid ${theme.colors.color_accent}30`, color:theme.colors.color_text_primary }}>
