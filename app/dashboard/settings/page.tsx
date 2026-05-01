@@ -9,6 +9,7 @@ import {
   ChevronDown, ChevronUp, Type,
 } from "lucide-react";
 import { toast } from "sonner";
+import ThemeSwitcher from "@/app/components/ThemeSwitcher";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -752,6 +753,9 @@ export default function Settings() {
       {tab === "design" && settings && (
         <div>
           <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Noto+Kufi+Arabic:wght@700;900&display=swap');`}</style>
+
+          {/* Theme Switcher (Dark/Cream) — يُطبَّق فوراً على كل المنصّة */}
+          <ThemeSwitcher />
 
           {/* Header row */}
           <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
