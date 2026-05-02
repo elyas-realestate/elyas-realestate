@@ -27,6 +27,17 @@ type ManagerStats = {
   pending_suggestions: number; kb_items: number;
 };
 
+type ManagerReview = {
+  id: string;
+  manager_id: string;
+  summary: string;
+  highlights: string[] | null;
+  concerns: string[] | null;
+  suggestions_count: number;
+  generated_by_model: string | null;
+  created_at: string;
+};
+
 const SEVERITY_META: Record<string, { color: string; bg: string; icon: typeof Info; label: string }> = {
   info:     { color: "var(--info)", bg: "rgba(96,165,250,0.10)",  icon: Info,           label: "معلومة" },
   warning:  { color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", icon: AlertTriangle,  label: "تحذير" },
@@ -37,20 +48,23 @@ export default function CEODashboardPage() {
   const [managers, setManagers] = useState<ManagerStats[]>([]);
   const [escalations, setEscalations] = useState<Escalation[]>([]);
   const [activity, setActivity] = useState<ActivityLog[]>([]);
+  const [reviews, setReviews] = useState<ManagerReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [m, e, a] = await Promise.all([
+      const [m, e, a, r] = await Promise.all([
         supabase.rpc("org_structure_for_tenant"),
         supabase.from("org_escalations").select("*").order("created_at", { ascending: false }).limit(20),
         supabase.from("org_activity_log").select("*").order("created_at", { ascending: false }).limit(30),
+        supabase.from("manager_reviews").select("*").order("created_at", { ascending: false }).limit(15),
       ]);
       setManagers((m.data || []) as ManagerStats[]);
       setEscalations((e.data || []) as Escalation[]);
       setActivity((a.data || []) as ActivityLog[]);
+      setReviews((r.data || []) as ManagerReview[]);
     } catch (err) {
       console.error(err);
     }
@@ -93,6 +107,10 @@ export default function CEODashboardPage() {
           <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
+          <Link href="/dashboard/ceo/test-mas"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
+            <Sparkles size={13} /> اختبار المساعدين
+          </Link>
           <Link href="/dashboard/ceo/approvals"
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: pendingEscalations.length > 0 ? "rgba(248,113,113,0.10)" : "rgba(167,139,250,0.08)", border: `1px solid ${pendingEscalations.length > 0 ? "rgba(248,113,113,0.30)" : "rgba(167,139,250,0.20)"}`, color: pendingEscalations.length > 0 ? "var(--danger)" : "var(--purple-ai)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
             <AlertTriangle size={13} /> بوابات الموافقة {pendingEscalations.length > 0 ? `(${pendingEscalations.length})` : ""}
@@ -225,6 +243,52 @@ export default function CEODashboardPage() {
               <div style={{ fontSize: 10, color: "var(--text-disabled)", flexShrink: 0 }}>{timeAgo(a.created_at)}</div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* ──────── Manager Reviews — التعلّم التنظيمي اليومي ──────── */}
+      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", margin: "26px 0 10px", display: "flex", alignItems: "center", gap: 6 }}>
+        <Sparkles size={14} /> آخر مراجعات المدراء ({reviews.length})
+      </h2>
+      {reviews.length === 0 ? (
+        <div style={{ background: "var(--bg-deep)", border: "1px dashed var(--overlay-mid)", borderRadius: 10, padding: 24, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>
+          لا توجد مراجعات بعد — يولّد كل مدير مراجعة يومياً الساعة ١١م
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {reviews.slice(0, 8).map(r => {
+            const mgr = managers.find(m => m.manager_id === r.manager_id);
+            return (
+              <div key={r.id} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 10, padding: "12px 14px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 8 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)" }}>
+                    {mgr?.manager_name || r.manager_id.slice(0, 8)}
+                  </span>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    {r.suggestions_count > 0 && (
+                      <span style={{ fontSize: 10, padding: "2px 7px", borderRadius: 4, background: "var(--gold-bg-soft)", color: "var(--gold-1)" }}>
+                        {r.suggestions_count} اقتراح
+                      </span>
+                    )}
+                    <span style={{ fontSize: 10, color: "var(--text-disabled)" }}>{timeAgo(r.created_at)}</span>
+                  </div>
+                </div>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.7, margin: 0 }}>
+                  {r.summary}
+                </p>
+                {r.concerns && Array.isArray(r.concerns) && r.concerns.length > 0 && (
+                  <div style={{ marginTop: 8, padding: "6px 10px", background: "var(--danger-bg)", border: "1px solid var(--danger)", borderRadius: 6 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "var(--danger)" }}>⚠ مخاوف:</span>
+                    <ul style={{ fontSize: 11, color: "var(--text-soft)", margin: "4px 0 0", paddingInlineStart: 18 }}>
+                      {r.concerns.slice(0, 3).map((c: any, i: number) => (
+                        <li key={i}>{typeof c === "string" ? c : JSON.stringify(c).slice(0, 120)}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

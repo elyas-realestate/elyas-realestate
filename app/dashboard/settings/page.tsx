@@ -6,8 +6,9 @@ import {
   Link2, CheckCircle2, XCircle, Save, Check, RotateCcw,
   Plus, Trash2, Image, Upload, X, Eye, FileText,
   MessageSquare, Layout, Share2, Monitor, Smartphone,
-  ChevronDown, ChevronUp, Type,
+  ChevronDown, ChevronUp, Type, Bell, ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import ThemeSwitcher from "@/app/components/ThemeSwitcher";
 import ServiceIcon, { SERVICE_ICON_KEYS } from "@/app/components/ServiceIcon";
@@ -429,11 +430,12 @@ export default function Settings() {
   const smallSize   = s.font_size_small     || COLOR_DEFAULTS.font_size_small;
 
   const MAIN_TABS = [
-    { id: "profile", label: "الملف الشخصي", icon: User },
-    { id: "site",    label: "الموقع",        icon: Globe },
-    { id: "design",  label: "التصميم",       icon: Palette },
-    { id: "contact", label: "التواصل",       icon: Phone },
-    { id: "account", label: "الحساب",        icon: Building },
+    { id: "profile",       label: "الملف الشخصي", icon: User },
+    { id: "site",          label: "الموقع",        icon: Globe },
+    { id: "design",        label: "التصميم",       icon: Palette },
+    { id: "contact",       label: "التواصل",       icon: Phone },
+    { id: "notifications", label: "الإشعارات",     icon: Bell },
+    { id: "account",       label: "الحساب",        icon: Building },
   ];
 
   return (
@@ -1191,6 +1193,44 @@ export default function Settings() {
         </div>
       )}
 
+
+      {/* ════════════════════ TAB: الإشعارات ════════════════════ */}
+      {tab === "notifications" && (
+        <div className="max-w-2xl space-y-5">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--gold-bg-hover)" }}>
+                <Bell size={20} className="text-[var(--gold-2)]" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg" style={{ color: "var(--text-strong)" }}>الإشعارات والتنبيهات</h3>
+                <p className="text-xs" style={{ color: "var(--text-faint)" }}>استلام تنبيهات فورية على جوالك أو متصفحك</p>
+              </div>
+            </div>
+            <p className="text-sm mb-4" style={{ color: "var(--text-soft)", lineHeight: 1.8 }}>
+              تحكّم في إشعارات لوحة التحكم: عملاء جدد، صفقات قيد التفاوض، عقود تنتظر التوقيع، ومتابعات AI.
+              يمكنك تفعيلها على هاتفك (PWA) أو على متصفحك مباشرة.
+            </p>
+            <Link
+              href="/dashboard/settings/notifications"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold no-underline transition"
+              style={{
+                background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                color: "var(--bg-page)",
+              }}
+            >
+              <Bell size={15} /> إعدادات الإشعارات الكاملة <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="rounded-xl p-4" style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}>
+            <p className="text-xs" style={{ color: "var(--text-soft)", lineHeight: 1.7 }}>
+              💡 <strong>نصيحة:</strong> ثبّت تطبيق وسيط برو على جوالك (iOS / Android) لاستلام الإشعارات في خلفية الجهاز،
+              حتى عند إغلاق المتصفح. التثبيت يستغرق ٣٠ ثانية ولا يحتاج App Store.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ════════════════════ TAB: الحساب ════════════════════ */}
       {tab === "account" && (
