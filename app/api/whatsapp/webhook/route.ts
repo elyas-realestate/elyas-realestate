@@ -207,6 +207,34 @@ async function handleCEOMessage(
   contactName: string | undefined,
   inboundMessageId: string | null
 ) {
+  // ── K-9 Phase 2: محاولة استدعاء أداة من الأدوات السبعة قبل LLM ──
+  const { detectIntent, executeIntent } = await import("@/lib/ceo-tools");
+  const intent = detectIntent(text);
+  if (intent !== "none") {
+    const toolResult = await executeIntent(intent, tenantId, text);
+    if (toolResult) {
+      await sendText({ tenantId, toPhone: fromPhone, text: toolResult, contactName });
+      if (inboundMessageId) {
+        await admin
+          .from("whatsapp_messages")
+          .update({ ai_intent: `ceo_tool:${intent}`, ai_replied: true } as never)
+          .eq("id", inboundMessageId);
+      }
+      // تسجيل
+      const ctx0 = await buildEmployeeContext(tenantId, "ceo_assistant");
+      if (ctx0) {
+        await logEmployeeActivity({
+          tenantId,
+          employeeId: ctx0.employee.id,
+          action: `ceo_tool_${intent}`,
+          details: { from: fromPhone, text_summary: text.slice(0, 200), tool_used: intent },
+        });
+      }
+      return;
+    }
+  }
+
+  // ── fallback: LLM يولّد رداً (للأسئلة المفتوحة/غير المنظَّمة) ──
   const ctx = await buildEmployeeContext(tenantId, "ceo_assistant");
   if (!ctx) {
     await sendText({
@@ -221,7 +249,8 @@ async function handleCEOMessage(
   const userPrompt = `أمر/سؤال من الأستاذ إلياس:
 "${text}"
 
-رد بإيجاز شديد (٣ أسطر كحد أقصى)، بأسلوب سكرتير شخصي مهني، حسب توجيهاتك.`;
+رد بإيجاز شديد (٣ أسطر كحد أقصى)، بأسلوب سكرتير شخصي مهني، حسب توجيهاتك.
+لو السؤال يطلب بيانات (صفقات، عملاء، عقارات، مهام، طلبات) لكن لا تعرف الأرقام، اطلب من الأستاذ توضيح أكثر بدلاً من اختراع أرقام.`;
 
   let reply = "";
   try {
