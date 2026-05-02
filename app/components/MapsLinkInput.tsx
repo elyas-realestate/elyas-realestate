@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Loader2, MapPin, CheckCircle2, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 import { extractCoordsFromUrl, isShortMapsUrl } from "@/lib/google-maps-coords";
 
 type Props = {
@@ -39,6 +40,8 @@ export default function MapsLinkInput({ lat, lng, onChange, onClear, className }
     if (localCoords) {
       onChange(localCoords.lat, localCoords.lng);
       setLink("");
+      // toast نجاح ليرى المستخدم تأكيد
+      toast.success(`✓ استُخرجت الإحداثيات: ${localCoords.lat.toFixed(4)}, ${localCoords.lng.toFixed(4)}`);
       return;
     }
 
@@ -56,6 +59,7 @@ export default function MapsLinkInput({ lat, lng, onChange, onClear, className }
         onChange(data.lat, data.lng);
         if (data.warning) setWarning(data.warning);
         setLink("");
+        toast.success(`✓ استُخرجت الإحداثيات: ${data.lat.toFixed(4)}, ${data.lng.toFixed(4)}`);
       } catch (e: any) {
         setError(e?.message || "خطأ في الشبكة");
       } finally {

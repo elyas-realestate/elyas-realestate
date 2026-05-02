@@ -170,6 +170,26 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {optimizedHero && <link rel="preload" as="image" href={optimizedHero} />}
+      {/* حماية دفاعية: إخفاء أي عنصر يحقنه extension/script خارجي */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function(){
+              function hideInjectedElements() {
+                document.querySelectorAll('button, div, span').forEach(function(el){
+                  var t = (el.textContent || '').trim();
+                  if (t === 'Stop Claude' || t === 'Stop Claude ⊙' || t.startsWith('Stop Claude')) {
+                    el.style.setProperty('display', 'none', 'important');
+                    el.setAttribute('aria-hidden', 'true');
+                  }
+                });
+              }
+              hideInjectedElements();
+              new MutationObserver(hideInjectedElements).observe(document.body, { childList: true, subtree: true });
+            })();
+          `,
+        }}
+      />
       <div dir="rtl" style={{ background: clrBgPrimary, color: clrTextPrimary, minHeight: "100vh", fontFamily: "'Tajawal', sans-serif" }}>
         <style>{`
           .font-kufi { font-family: 'Noto Kufi Arabic', serif; }

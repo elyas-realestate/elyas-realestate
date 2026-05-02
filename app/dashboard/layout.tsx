@@ -214,28 +214,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [settingsOpen]);
 
-  // Command Palette — Cmd/Ctrl + K
-  // ملاحظة: نستعمل document + capture phase لضمان السبق على أي extension/listener
+  // Command Palette — Cmd/Ctrl + K (نسخة مبسّطة بدون stopPropagation)
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const k = (e.key || "").toLowerCase();
+      // Cmd/Ctrl + K → فتح/إغلاق
       if ((e.metaKey || e.ctrlKey) && (k === "k" || e.code === "KeyK")) {
         e.preventDefault();
-        e.stopPropagation();
         setSearchOpen(v => !v);
         setSearchQuery("");
+        return;
       }
+      // Escape → إغلاق كل popups
       if (k === "escape") {
         setSearchOpen(false);
         setSettingsOpen(false);
       }
     }
-    document.addEventListener("keydown", onKey, true);
     window.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("keydown", onKey, true);
-      window.removeEventListener("keydown", onKey);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   // cleanup realtime on unmount
