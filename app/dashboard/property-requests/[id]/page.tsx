@@ -47,14 +47,25 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
       if (priceMax)   q = q.lte("price", priceMax);
       if (priceMin)   q = q.gte("price", priceMin);
 
-      const { data, error } = await q.limit(5);
+      const { data, error } = await q.limit(10);
       if (error) {
         console.error("AI Matching error:", error);
         setMatchError(error.message);
         setMatches([]);
         return;
       }
-      setMatches(data || []);
+
+      // ترتيب: الأولوية للحي المطابق ثم الأقرب سعراً
+      const sorted = (data || []).slice().sort((a: any, b: any) => {
+        const aDist = a.district === r.district ? 0 : 1;
+        const bDist = b.district === r.district ? 0 : 1;
+        if (aDist !== bDist) return aDist - bDist;
+        // ثم الأقرب لمتوسط الميزانية
+        const target = r.budget_min && r.budget_max ? (Number(r.budget_min) + Number(r.budget_max)) / 2 : (r.budget_max || r.budget_min || 0);
+        return Math.abs((a.price || 0) - target) - Math.abs((b.price || 0) - target);
+      }).slice(0, 5);
+
+      setMatches(sorted);
     } catch (e: any) {
       console.error("AI Matching exception:", e);
       setMatchError(e?.message || "تعذّر جلب الاقتراحات");

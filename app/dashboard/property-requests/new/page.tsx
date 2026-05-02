@@ -36,8 +36,15 @@ export default function NewPropertyRequestPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    e.stopPropagation();
     if (!form.contact_name.trim() || !form.contact_phone.trim()) {
       toast.error("الاسم والجوال مطلوبان");
+      return;
+    }
+    // validation محلي للجوال السعودي (بدون HTML5 pattern الذي يمنع submit أول)
+    const cleanPhone = form.contact_phone.replace(/[\s-]/g, "");
+    if (!/^(\+?966|0)?5\d{8}$/.test(cleanPhone)) {
+      toast.error("رقم جوال سعودي غير صحيح. مثال: 0501234567");
       return;
     }
     setSaving(true);
@@ -97,7 +104,10 @@ export default function NewPropertyRequestPage() {
           <Field label="رقم الجوال *">
             <input className={inp} style={inpStyle} dir="ltr" value={form.contact_phone}
               onChange={e => set("contact_phone", e.target.value)}
-              required pattern="^(\+?966|0)?5\d{8}$" placeholder="05XXXXXXXX" />
+              required
+              inputMode="tel"
+              placeholder="05XXXXXXXX"
+              title="مثال: 0501234567 أو +966501234567" />
           </Field>
           <Field label="" full>
             <label className="flex items-center gap-2 text-sm" style={{ color: "var(--text-soft)" }}>

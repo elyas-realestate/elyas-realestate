@@ -72,6 +72,12 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('wasit_theme');if(t==='cream'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}var a=localStorage.getItem('wasit_brand_accent');var ad=localStorage.getItem('wasit_brand_accent_dark');if(a){document.documentElement.style.setProperty('--gold-1',a);}if(ad){document.documentElement.style.setProperty('--gold-2',ad);}else if(a){document.documentElement.style.setProperty('--gold-2',a);}}catch(e){}})();`,
           }}
         />
+        {/* حماية دفاعية: إخفاء عنصر "Stop Claude" يُحقَن من extensions (محدد فقط) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){function h(){document.querySelectorAll('button,[role="tooltip"]').forEach(function(el){var t=(el.textContent||'').trim();if(t==='Stop Claude'||t==='Stop Claude ⊙'||t.startsWith('Stop Claude')){el.style.setProperty('display','none','important');el.setAttribute('aria-hidden','true');}});}if(document.body){h();new MutationObserver(h).observe(document.body,{childList:true,subtree:true});}else{document.addEventListener('DOMContentLoaded',function(){h();new MutationObserver(h).observe(document.body,{childList:true,subtree:true});});}})();`,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <AnalyticsTracker />
