@@ -107,6 +107,10 @@ export default function CEODashboardPage() {
           <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
+          <Link href="/dashboard/project-tracker"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
+            📊 تتبّع المشروع
+          </Link>
           <Link href="/dashboard/ceo/operations"
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", border: "none", color: "var(--bg-page)", fontSize: 13, textDecoration: "none", fontWeight: 700, fontFamily: "'Tajawal', sans-serif" }}>
             🛡️ مركز التحكم
