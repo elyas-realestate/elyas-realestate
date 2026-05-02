@@ -14,6 +14,7 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<any[]>([]);
   const [matching, setMatching] = useState(false);
+  const [matchError, setMatchError] = useState<string | null>(null);
   const [converting, setConverting] = useState(false);
 
   useEffect(() => { load(); }, [id]);
@@ -28,16 +29,35 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
 
   async function findMatches(r: any) {
     setMatching(true);
+    setMatchError(null);
     try {
-      // local matching: نفس النوع + المدينة + الميزانية ضمن النطاق
-      let q = supabase.from("properties").select("id, title, district, city, price, offer_type, sub_category, area, rooms, images").eq("is_published", true);
-      if (r.main_category) q = q.eq("sub_category", r.main_category);
-      if (r.city) q = q.eq("city", r.city);
-      if (r.budget_max) q = q.lte("price", r.budget_max * 1.1); // هامش ١٠٪
-      if (r.budget_min) q = q.gte("price", r.budget_min * 0.9);
-      const { data } = await q.limit(5);
+      // matching محلي: نفس النوع + المدينة + الميزانية ضمن النطاق ±10%
+      // مهم: Math.round لتفادي floating-point مثل 880000.0000000001 الذي يرفضه PostgREST
+      const priceMax = r.budget_max ? Math.round(Number(r.budget_max) * 1.1) : null;
+      const priceMin = r.budget_min ? Math.round(Number(r.budget_min) * 0.9) : null;
+
+      let q = supabase
+        .from("properties")
+        .select("id, title, district, city, price, offer_type, sub_category, area, rooms, images")
+        .eq("is_published", true);
+
+      // نطابق على main_category بدل sub_category لأنها أعمّ (شقة/فيلا/أرض/...)
+      if (r.main_category) q = q.or(`sub_category.eq.${r.main_category},main_category.eq.${r.main_category}`);
+      if (r.city)     q = q.eq("city", r.city);
+      if (priceMax)   q = q.lte("price", priceMax);
+      if (priceMin)   q = q.gte("price", priceMin);
+
+      const { data, error } = await q.limit(5);
+      if (error) {
+        console.error("AI Matching error:", error);
+        setMatchError(error.message);
+        setMatches([]);
+        return;
+      }
       setMatches(data || []);
-    } catch {
+    } catch (e: any) {
+      console.error("AI Matching exception:", e);
+      setMatchError(e?.message || "تعذّر جلب الاقتراحات");
       setMatches([]);
     } finally {
       setMatching(false);
@@ -179,11 +199,17 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
 
           {matching ? (
             <div className="flex justify-center py-8"><Loader2 size={20} className="animate-spin" style={{ color: "var(--gold-2)" }} /></div>
+          ) : matchError ? (
+            <div className="text-center py-6 text-sm rounded-lg" style={{ color: "var(--danger)", background: "var(--danger-bg)", border: "1px solid var(--danger)" }}>
+              <AlertCircle size={20} style={{ color: "var(--danger)", margin: "0 auto 8px" }} />
+              تعذّر جلب الاقتراحات.<br/>
+              <button onClick={() => findMatches(req)} className="text-xs mt-2 inline-block px-3 py-1 rounded-md" style={{ background: "var(--danger)", color: "#fff", border: "none", cursor: "pointer" }}>إعادة المحاولة</button>
+            </div>
           ) : matches.length === 0 ? (
             <div className="text-center py-6 text-sm" style={{ color: "var(--text-soft)" }}>
               <AlertCircle size={20} style={{ color: "var(--text-faint)", margin: "0 auto 8px" }} />
               لا توجد عقارات في مخزونك تطابق هذا الطلب حالياً.<br/>
-              <Link href="/dashboard/properties/new" className="text-xs mt-2 inline-block" style={{ color: "var(--gold-2)" }}>أضف عقاراً جديداً</Link>
+              <Link href="/dashboard/properties/add" className="text-xs mt-2 inline-block" style={{ color: "var(--gold-2)" }}>أضف عقاراً جديداً</Link>
             </div>
           ) : (
             <div className="space-y-2">

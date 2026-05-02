@@ -25,8 +25,8 @@ async function getBrokerData(slug: string) {
       ? supabase.from("site_settings").select("*").eq("tenant_id", tenantId).single()
       : supabase.from("site_settings").select("*").limit(1).single(),
     tenantId
-      ? supabase.from("broker_identity").select("*, photo_url").eq("tenant_id", tenantId).single()
-      : supabase.from("broker_identity").select("*, photo_url").limit(1).single(),
+      ? supabase.from("broker_identity").select("*").eq("tenant_id", tenantId).single()
+      : supabase.from("broker_identity").select("*").limit(1).single(),
     tenantId
       ? supabase.from("properties")
           .select("id, title, district, city, price, offer_type, sub_category, land_area, rooms, images")
@@ -161,12 +161,17 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
     } : undefined,
   };
 
+  // تحجيم صورة Hero تلقائياً عبر معامل Unsplash لتحسين الأداء
+  const optimizedHero = heroImage && heroImage.includes("unsplash.com")
+    ? heroImage.replace(/[?&]w=\d+/, "").replace(/[?&]q=\d+/, "") + (heroImage.includes("?") ? "&" : "?") + "w=1600&q=75&auto=format&fit=crop"
+    : heroImage;
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {optimizedHero && <link rel="preload" as="image" href={optimizedHero} />}
       <div dir="rtl" style={{ background: clrBgPrimary, color: clrTextPrimary, minHeight: "100vh", fontFamily: "'Tajawal', sans-serif" }}>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
           .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
           .accent { color: ${clrAccent}; }
           .accent-bg { background: linear-gradient(135deg, ${clrAccent}, ${clrAccentDark}); }
@@ -218,7 +223,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
         {/* HERO */}
         <section className="dot-pattern" style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", paddingTop:68 }}>
           {heroImage && (
-            <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${hexToRgba(clrBgPrimary, 0.30)} 0%, ${hexToRgba(clrBgPrimary, 0.55)} 100%), url(${heroImage}) center/cover no-repeat` }} />
+            <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${hexToRgba(clrBgPrimary, 0.20)} 0%, ${hexToRgba(clrBgPrimary, 0.45)} 100%), url(${optimizedHero}) center/cover no-repeat` }} />
           )}
           <div style={{ position:"absolute", inset:0, background:`radial-gradient(ellipse at 50% 0%, color-mix(in srgb, ${clrAccent} 7%, transparent) 0%, transparent 65%)`, pointerEvents:"none" }} />
           <div className="fade-up" style={{ position:"relative", zIndex:1, textAlign:"center", maxWidth:820, padding:"0 28px" }}>
