@@ -7,7 +7,7 @@ import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
   Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network, Crown,
-  ChevronDown, ChevronUp, Briefcase, Building, Search, Command, Inbox,
+  ChevronDown, ChevronUp, Briefcase, Building, Search, Command, Inbox, Sparkles,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -22,65 +22,59 @@ type NavGroup = { id: string; title: string; icon: LucideIcon; items: NavItemDat
 
 // ═══════════════════════════════════════════════════════════════
 // PRIMARY — العناصر اليومية الأكثر استخداماً (دائماً ظاهرة)
+// مبسَّطة بناءً على تقرير CIB: من 7 إلى 5 عناصر يومية
 // ═══════════════════════════════════════════════════════════════
 const primaryItems: NavItemData[] = [
-  { label: "لوحة التحكم",     href: "/dashboard",                 icon: LayoutDashboard },
-  { label: "المهام",           href: "/dashboard/tasks",            icon: CheckSquare     },
-  { label: "العملاء",          href: "/dashboard/clients",          icon: Users           },
-  { label: "الصفقات",          href: "/dashboard/deals",            icon: TrendingUp      },
-  { label: "العقارات",         href: "/dashboard/properties",         icon: Building2       },
-  { label: "طلبات العقار",     href: "/dashboard/property-requests",  icon: Inbox           },
-  { label: "محادثات WhatsApp", href: "/dashboard/whatsapp/inbox",   icon: MessageCircle   },
+  { label: "الرئيسية",          href: "/dashboard",                  icon: LayoutDashboard },
+  { label: "العملاء",           href: "/dashboard/clients",          icon: Users           },
+  { label: "العقارات",          href: "/dashboard/properties",       icon: Building2       },
+  { label: "الذكاء الصناعي",    href: "/dashboard/ai",               icon: Sparkles        },
+  { label: "محادثات WhatsApp",  href: "/dashboard/whatsapp/inbox",   icon: MessageCircle   },
 ];
 
 // ═══════════════════════════════════════════════════════════════
 // SECONDARY — مجموعات قابلة للطي (مغلقة افتراضياً)
 // ═══════════════════════════════════════════════════════════════
+// تم إعادة هيكلة المجموعات: من 5 مجموعات إلى 4 مع نقل عناصر AI لـ /dashboard/ai
 const secondaryGroups: NavGroup[] = [
   {
-    id: "sales", title: "المبيعات والعملاء", icon: Briefcase,
+    id: "sales", title: "المبيعات", icon: Briefcase,
     items: [
-      { label: "الأهداف",         href: "/dashboard/goals",             icon: Trophy        },
-      { label: "المتابعات الذكية", href: "/dashboard/clients/followups", icon: Bot           },
-      { label: "قوالب واتساب",     href: "/dashboard/whatsapp",          icon: FileText      },
+      { label: "المهام",            href: "/dashboard/tasks",             icon: CheckSquare   },
+      { label: "الصفقات",            href: "/dashboard/deals",             icon: TrendingUp    },
+      { label: "طلبات العقار",       href: "/dashboard/property-requests", icon: Inbox         },
+      { label: "الأهداف",           href: "/dashboard/goals",             icon: Trophy        },
     ],
   },
   {
     id: "portfolio", title: "محفظة الأملاك", icon: Building,
     items: [
-      { label: "المشاريع",         href: "/dashboard/projects",         icon: Building2  },
-      { label: "بوابة المستأجر",   href: "/dashboard/tenant-portal",    icon: KeyRound   },
-      { label: "أوامر العمل",      href: "/dashboard/work-orders",      icon: Wrench     },
-      { label: "الأصول",           href: "/dashboard/assets",           icon: Package    },
-      { label: "توزيع العقارات",   href: "/dashboard/distribute",       icon: Share2     },
+      { label: "المشاريع",          href: "/dashboard/projects",         icon: Building2  },
+      { label: "بوابة المستأجر",    href: "/dashboard/tenant-portal",    icon: KeyRound   },
+      { label: "أوامر العمل",       href: "/dashboard/work-orders",      icon: Wrench     },
+      { label: "الأصول",            href: "/dashboard/assets",           icon: Package    },
+      { label: "توزيع العقارات",    href: "/dashboard/distribute",       icon: Share2     },
     ],
   },
   {
-    id: "finance", title: "المالية والتعاقد", icon: Banknote,
+    id: "finance", title: "المالية", icon: Banknote,
     items: [
-      { label: "عروض الأسعار",     href: "/dashboard/quotations", icon: FileText       },
-      { label: "العقود",           href: "/dashboard/contracts",  icon: FileSignature  },
-      { label: "الفواتير",         href: "/dashboard/invoices",   icon: CreditCard     },
-      { label: "العمولات",         href: "/dashboard/commissions",icon: Banknote       },
-      { label: "التحليل المالي",   href: "/dashboard/financial",  icon: BarChart3      },
+      { label: "عروض الأسعار",      href: "/dashboard/quotations",  icon: FileText       },
+      { label: "العقود",            href: "/dashboard/contracts",   icon: FileSignature  },
+      { label: "الفواتير",          href: "/dashboard/invoices",    icon: CreditCard     },
+      { label: "العمولات",          href: "/dashboard/commissions", icon: Banknote       },
+      { label: "التحليل المالي",     href: "/dashboard/financial",   icon: BarChart3      },
     ],
   },
   {
-    id: "marketing", title: "التسويق والمحتوى", icon: Megaphone,
+    id: "tools", title: "أدوات إضافية", icon: BarChart3,
     items: [
-      { label: "المحتوى",          href: "/dashboard/content",         icon: Megaphone },
-      { label: "التسويق",          href: "/dashboard/marketing",       icon: Target    },
-      { label: "قائمة المنشورات الذكية", href: "/dashboard/marketing/queue", icon: Bot       },
-    ],
-  },
-  {
-    id: "insights", title: "الرؤى والأدوات", icon: BarChart3,
-    items: [
-      { label: "لوحة CEO",          href: "/dashboard/ceo",                  icon: Crown      },
-      { label: "التقارير",          href: "/dashboard/reports",              icon: FileText   },
-      { label: "الوثائق",            href: "/dashboard/documents",            icon: Scale      },
-      { label: "استيراد CSV",      href: "/dashboard/import",               icon: Upload     },
-      { label: "اشتراكات التطبيقات", href: "/dashboard/external-subscriptions", icon: CreditCard },
+      { label: "المحتوى التسويقي",  href: "/dashboard/marketing",       icon: Megaphone  },
+      { label: "قوالب واتساب",      href: "/dashboard/whatsapp",        icon: FileText   },
+      { label: "التقارير",          href: "/dashboard/reports",         icon: FileText   },
+      { label: "الوثائق",           href: "/dashboard/documents",       icon: Scale      },
+      { label: "استيراد CSV",       href: "/dashboard/import",          icon: Upload     },
+      { label: "تتبّع المشروع",      href: "/dashboard/project-tracker", icon: BarChart3  },
     ],
   },
 ];
@@ -88,11 +82,9 @@ const secondaryGroups: NavGroup[] = [
 // ═══════════════════════════════════════════════════════════════
 // SETTINGS MENU — يفتح كـ Popover من زر Settings في الـ footer
 // ═══════════════════════════════════════════════════════════════
+// تم تبسيط: حذف 3 عناصر AI (نقلت لـ /dashboard/ai)
 const settingsMenu: NavItemData[] = [
   { label: "الإعدادات العامة",   href: "/dashboard/settings",                icon: Settings   },
-  { label: "فريق المساعدين الأذكياء", href: "/dashboard/organization",            icon: Network    },
-  { label: "تأسيس الذكاء",            href: "/dashboard/ai-foundation",           icon: Brain      },
-  { label: "المساعدون الأذكياء",      href: "/dashboard/ai-employees",            icon: Bot        },
   { label: "الفريق",             href: "/dashboard/team",                    icon: Users      },
   { label: "الاشتراك",           href: "/dashboard/subscription",            icon: CreditCard },
   { label: "الإشعارات",          href: "/dashboard/settings/notifications",  icon: Bell       },

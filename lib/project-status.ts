@@ -169,15 +169,16 @@ export const PHASES: Phase[] = [
   },
   {
     id: "ux-consolidation",
-    name: "توحيد تجربة الـ AI",
-    description: "II8 — دمج الصفحات المتفرقة في /dashboard/ai واحد",
-    status: "in_progress",
+    name: "توحيد تجربة الـ AI (KK)",
+    description: "دمج الصفحات المتفرقة في /dashboard/ai واحد بستة تابات",
+    status: "done",
+    completedAt: "2026-05-02",
     milestones: [
-      { code: "UX-1", name: "تحليل CIB لنقاط الإرباك", status: "in_progress" },
-      { code: "UX-2", name: "إنشاء /dashboard/ai بـ 6 تابات", status: "pending" },
-      { code: "UX-3", name: "إعادة توجيه القديم → الجديد", status: "pending" },
-      { code: "UX-4", name: "توحيد Toggle component", status: "pending" },
-      { code: "UX-5", name: "اختصار sidebar إلى 5-7 عناصر", status: "pending" },
+      { code: "UX-1", name: "تحليل CIB لنقاط الإرباك (39 رابط → 6)", status: "done" },
+      { code: "UX-2", name: "/dashboard/ai layout + hero stats + 6 tabs", status: "done" },
+      { code: "UX-3", name: "تابات: التحكم، المساعدون، الاختبار، المخرجات، الموافقات، المزوّدون", status: "done" },
+      { code: "UX-4", name: "Redirects من المسارات القديمة (ai-employees، ai-foundation، ceo/operations، ceo/test-mas)", status: "done" },
+      { code: "UX-5", name: "اختصار sidebar من 39 إلى 5 عناصر primary", status: "done" },
     ],
   },
   {
@@ -289,7 +290,7 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "theme", category: "تجربة", label: "Dark + Cream themes", done: true, blocking: true },
   { id: "rtl", category: "تجربة", label: "RTL + عربي fully supported", done: true, blocking: true },
   { id: "pwa", category: "تجربة", label: "PWA — يثبت على الجوّال", done: true, blocking: false },
-  { id: "ux-consolidation", category: "تجربة", label: "تجربة AI موحَّدة", done: false, blocking: false, note: "قيد العمل (II8)" },
+  { id: "ux-consolidation", category: "تجربة", label: "تجربة AI موحَّدة في /dashboard/ai", done: true, blocking: false },
 
   // تشغيل
   { id: "whatsapp-test", category: "تشغيل", label: "اختبار رسالة على رقم Meta التجريبي", done: false, blocking: false, note: "مرسَلة الآن، تحتاج تأكيد CIB" },
@@ -385,10 +386,10 @@ export const ACTIVE_RISKS: Risk[] = [
   },
   {
     id: "r4",
-    title: "تجربة UX متفرقة",
-    severity: "medium",
-    impact: "يربك المستخدمين الجدد + يطيل onboarding",
-    mitigation: "II8 — توحيد /dashboard/ai قيد العمل (CIB يحلل، أنا أنفّذ)",
+    title: "تجربة UX (تم حلّها)",
+    severity: "low",
+    impact: "كانت تربك المستخدمين الجدد",
+    mitigation: "✅ KK — تم توحيد /dashboard/ai بستة تابات + اختصار sidebar من 39→5",
   },
   {
     id: "r5",
