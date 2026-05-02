@@ -3,8 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import RequestForm from "./RequestForm";
+import SocialIcon from "@/app/components/SocialIcon";
+import ServiceIcon from "@/app/components/ServiceIcon";
 
-export const revalidate = 60;
+// 10 ثوان — كافٍ لتفادي ضغط القاعدة دون تأخير ملحوظ بعد تعديل الإعدادات
+export const revalidate = 10;
 
 // ══ جلب البيانات ══════════════════════════════════════════
 async function getBrokerData(slug: string) {
@@ -101,14 +104,33 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
     whatsapp:  s?.social_whatsapp  || "",
   };
 
-  const clrAccent      = s?.color_accent         || "var(--gold-2)";
-  const clrAccentDark  = s?.color_accent_dark    || "var(--gold-3)";
-  const clrBgPrimary   = s?.color_bg_primary     || "var(--bg-page)";
-  const clrBgSecondary = s?.color_bg_secondary   || "var(--bg-deep)";
-  const clrBgCard      = s?.color_bg_card        || "var(--bg-surface-1)";
-  const clrTextPrimary = s?.color_text_primary   || "var(--text-strong)";
-  const clrTextSec     = s?.color_text_secondary || "var(--text-soft)";
-  const clrTextMuted   = s?.color_text_muted     || "var(--text-faint)";
+  // helper: ينظّف القيمة لتفادي var() على الصفحة العامة (لا تملك CSS vars الداكنة)
+  const clean = (v: any, fallback: string) => {
+    if (!v || typeof v !== "string" || v.trim().startsWith("var(")) return fallback;
+    return v;
+  };
+
+  const clrAccent      = clean(s?.color_accent,         "#C6914C");
+  const clrAccentDark  = clean(s?.color_accent_dark,    "#A6743A");
+  const clrBgPrimary   = clean(s?.color_bg_primary,     "#0A0A0C");
+  const clrBgSecondary = clean(s?.color_bg_secondary,   "#0F0F12");
+  const clrBgCard      = clean(s?.color_bg_card,        "#16161A");
+  const clrTextPrimary = clean(s?.color_text_primary,   "#F5F5F5");
+  const clrTextSec     = clean(s?.color_text_secondary, "#9A9AA0");
+  const clrTextMuted   = clean(s?.color_text_muted,     "#5A5A62");
+
+  // helper: يحوّل hex → rgba بأمان (يدعم #RGB و #RRGGBB، يرجع fallback لو فشل)
+  const hexToRgba = (hex: string, alpha: number) => {
+    if (!hex || !hex.startsWith("#")) return `rgba(10,10,12,${alpha})`;
+    let h = hex.replace("#", "");
+    if (h.length === 3) h = h.split("").map(c => c + c).join("");
+    if (h.length !== 6) return `rgba(10,10,12,${alpha})`;
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(10,10,12,${alpha})`;
+    return `rgba(${r},${g},${b},${alpha})`;
+  };
   const fntHero        = s?.font_size_hero        || "clamp(2.2rem, 5vw, 3.8rem)";
   const fntSection     = s?.font_size_section_title || "clamp(1.6rem, 3vw, 2.4rem)";
   const fntBody        = s?.font_size_body        || "15px";
@@ -166,7 +188,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
         `}</style>
 
         {/* NAVBAR */}
-        <nav style={{ position:"fixed", top:0, right:0, left:0, zIndex:50, height:68, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 28px", background:`rgba(${parseInt(clrBgPrimary.slice(1,3),16)},${parseInt(clrBgPrimary.slice(3,5),16)},${parseInt(clrBgPrimary.slice(5,7),16)},0.88)`, backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", borderBottom:`1px solid color-mix(in srgb, ${clrAccent} 10%, transparent)` }}>
+        <nav style={{ position:"fixed", top:0, right:0, left:0, zIndex:50, height:68, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 28px", background:hexToRgba(clrBgPrimary, 0.88), backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", borderBottom:`1px solid color-mix(in srgb, ${clrAccent} 10%, transparent)` }}>
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>
             {siteLogo ? (
               <img src={siteLogo} alt={siteName} style={{ width:36, height:36, borderRadius:9, objectFit:"cover" }} />
@@ -177,7 +199,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
             )}
             <div style={{ lineHeight:1.2 }}>
               <span className="font-kufi" style={{ fontSize:15, fontWeight:800, color:clrTextPrimary, display:"block" }}>{siteName}</span>
-              <span style={{ fontSize:10, color:clrAccent, fontWeight:500 }}>{badge}</span>
+              {specialization && <span style={{ fontSize:10, color:clrAccent, fontWeight:500 }}>{specialization}</span>}
             </div>
           </div>
           <div className="nav-links" style={{ display:"flex", alignItems:"center", gap:28 }}>
@@ -193,7 +215,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
         {/* HERO */}
         <section className="dot-pattern" style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", paddingTop:68 }}>
           {heroImage && (
-            <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg,rgba(${parseInt(clrBgPrimary.slice(1,3),16)},${parseInt(clrBgPrimary.slice(3,5),16)},${parseInt(clrBgPrimary.slice(5,7),16)},0.35) 0%,${clrBgPrimary}f0 90%), url(${heroImage}) center/cover no-repeat` }} />
+            <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${hexToRgba(clrBgPrimary, 0.35)} 0%, ${hexToRgba(clrBgPrimary, 0.94)} 90%), url(${heroImage}) center/cover no-repeat` }} />
           )}
           <div style={{ position:"absolute", inset:0, background:`radial-gradient(ellipse at 50% 0%, color-mix(in srgb, ${clrAccent} 7%, transparent) 0%, transparent 65%)`, pointerEvents:"none" }} />
           <div className="fade-up" style={{ position:"relative", zIndex:1, textAlign:"center", maxWidth:820, padding:"0 28px" }}>
@@ -275,7 +297,9 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
               <div className="why-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))", gap:20 }}>
                 {whyCards.map((card: any, i: number) => (
                   <div key={i} className="card" style={{ padding:"32px 28px" }}>
-                    <div style={{ width:52, height:52, background:`color-mix(in srgb, ${clrAccent} 8%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 14%, transparent)`, borderRadius:13, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, fontSize:22 }}>{card.icon}</div>
+                    <div style={{ width:52, height:52, background:`color-mix(in srgb, ${clrAccent} 8%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 14%, transparent)`, borderRadius:13, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20, color: clrAccent }}>
+                      <ServiceIcon name={card.icon || "award"} size={22} />
+                    </div>
                     <h3 className="font-kufi" style={{ fontSize:17, fontWeight:700, marginBottom:10, color:clrTextPrimary }}>{card.title}</h3>
                     <p style={{ fontSize:fntBody, color:clrTextSec, lineHeight:1.8 }}>{card.desc}</p>
                   </div>
@@ -358,7 +382,9 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
               <div className="svc-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(220px, 1fr))", gap:18 }}>
                 {services.map((svc: any, i: number) => (
                   <div key={i} className="card" style={{ padding:"30px 24px", textAlign:"center" }}>
-                    <div style={{ width:58, height:58, margin:"0 auto 18px", background:`color-mix(in srgb, ${clrAccent} 6%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`, borderRadius:16, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26 }}>{svc.icon}</div>
+                    <div style={{ width:58, height:58, margin:"0 auto 18px", background:`color-mix(in srgb, ${clrAccent} 6%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`, borderRadius:16, display:"flex", alignItems:"center", justifyContent:"center", color: clrAccent }}>
+                      <ServiceIcon name={svc.icon || "home"} size={26} />
+                    </div>
                     <h3 className="font-kufi" style={{ fontSize:15, fontWeight:700, marginBottom:8, color:clrTextPrimary }}>{svc.title}</h3>
                     <p style={{ fontSize:fntSmall, color:clrTextSec, lineHeight:1.7 }}>{svc.desc}</p>
                   </div>
@@ -396,14 +422,33 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
             </div>
             {hasSocials && (
               <div style={{ display:"flex", justifyContent:"center", gap:10, flexWrap:"wrap" }}>
-                {[
-                  { key:"x", label:"X", icon:"𝕏" }, { key:"instagram", label:"Instagram", icon:"📷" },
-                  { key:"tiktok", label:"TikTok", icon:"🎵" }, { key:"snapchat", label:"Snapchat", icon:"👻" },
-                  { key:"linkedin", label:"LinkedIn", icon:"💼" }, { key:"youtube", label:"YouTube", icon:"▶️" },
-                  { key:"threads", label:"Threads", icon:"🧵" }, { key:"whatsapp", label:"WhatsApp", icon:"💬" },
-                ].filter(s => socials[s.key]).map(s => (
-                  <a key={s.key} href={socials[s.key]} target="_blank" rel="noopener noreferrer" title={s.label} style={{ width:40, height:40, borderRadius:10, background:`color-mix(in srgb, ${clrAccent} 6%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`, display:"flex", alignItems:"center", justifyContent:"center", textDecoration:"none", fontSize:16 }}>
-                    {s.icon}
+                {([
+                  { key:"x",         label:"X" },
+                  { key:"instagram", label:"Instagram" },
+                  { key:"tiktok",    label:"TikTok" },
+                  { key:"snapchat",  label:"Snapchat" },
+                  { key:"linkedin",  label:"LinkedIn" },
+                  { key:"youtube",   label:"YouTube" },
+                  { key:"threads",   label:"Threads" },
+                  { key:"facebook",  label:"Facebook" },
+                  { key:"whatsapp",  label:"WhatsApp" },
+                ] as const).filter(s => socials[s.key]).map(s => (
+                  <a
+                    key={s.key}
+                    href={socials[s.key]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={s.label}
+                    style={{
+                      width:42, height:42, borderRadius:11,
+                      background:`color-mix(in srgb, ${clrAccent} 7%, transparent)`,
+                      border:`1px solid color-mix(in srgb, ${clrAccent} 14%, transparent)`,
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                      textDecoration:"none", color:clrTextPrimary,
+                      transition:"all 0.2s",
+                    }}
+                  >
+                    <SocialIcon name={s.key} size={18} color="current" />
                   </a>
                 ))}
               </div>

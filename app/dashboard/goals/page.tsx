@@ -117,7 +117,7 @@ export default function GoalsPage() {
     return (
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-          <span style={{ fontSize: 11, color: "var(--text-soft)" }}>{value.toLocaleString("ar-SA")} / {max.toLocaleString("ar-SA")}</span>
+          <span style={{ fontSize: 11, color: "var(--text-soft)" }}>{value.toLocaleString("en-US")} / {max.toLocaleString("en-US")}</span>
           <span style={{ fontSize: 11, fontWeight: 700, color: pct >= 100 ? "var(--success)" : color }}>{pct}%</span>
         </div>
         <div style={{ height: 6, borderRadius: 3, background: "var(--bg-surface-2)", overflow: "hidden" }}>
@@ -170,7 +170,7 @@ export default function GoalsPage() {
                       <span style={{ fontSize: 12, color: "var(--text-soft)" }}>{item.label}</span>
                     </div>
                     <div style={{ fontSize: 26, fontWeight: 800, color: pct >= 100 ? "var(--success)" : "var(--text-strong)", marginBottom: 10, lineHeight: 1 }}>
-                      {item.label === "الإيراد المحقق" ? formatSAR(item.actual, { short: true }) : item.actual.toLocaleString("ar-SA")}
+                      {item.label === "الإيراد المحقق" ? formatSAR(item.actual, { short: true }) : item.actual.toLocaleString("en-US")}
                     </div>
                     {item.target > 0 ? (
                       <ProgressBar value={item.actual} max={item.target} color={item.color} />

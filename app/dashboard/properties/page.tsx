@@ -79,7 +79,7 @@ export default function Properties() {
           </button>
           <Link href="/dashboard/properties/smart-add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, var(--gold-bg-hover), rgba(168,93,255,0.08))', color:'var(--gold-2)', border: '1px solid rgba(198,145,76,0.25)' }}>
             <Sparkles size={15} />
-            إضافة ذكية AI
+            إضافة بالذكاء الاصطناعي
           </Link>
           <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition no-underline text-sm" style={{ background:'linear-gradient(135deg, var(--gold-2), var(--gold-3))', color:'var(--bg-page)' }}>
             <Plus size={16} />
@@ -175,37 +175,49 @@ export default function Properties() {
               <button
                 onClick={e => togglePublish(e, property.id, property.is_published)}
                 disabled={toggling === property.id}
-                title={property.is_published ? "انقر لتحويل لمسودة" : "انقر للنشر"}
+                title={property.is_published ? "اضغط لإيقاف النشر (تحويل لمسودة)" : "اضغط لنشر العقار في صفحتك العامة"}
                 style={{
                   position: "absolute", top: 10, left: 10, zIndex: 10,
-                  display: "flex", alignItems: "center", gap: 5,
-                  padding: "5px 10px", borderRadius: 8, border: "none",
-                  fontSize: 11, fontWeight: 700, cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 6,
+                  padding: "7px 14px", borderRadius: 9, border: "none",
+                  fontSize: 12, fontWeight: 700, cursor: "pointer",
                   fontFamily: "'Tajawal', sans-serif",
-                  background: property.is_published ? "rgba(74,222,128,0.15)" : "rgba(90,90,98,0.25)",
-                  color: property.is_published ? "var(--success)" : "var(--text-soft)",
-                  backdropFilter: "blur(8px)",
+                  background: property.is_published
+                    ? "rgba(74,222,128,0.95)"
+                    : "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
+                  color: property.is_published ? "#0A0A0C" : "#1A1206",
+                  boxShadow: property.is_published ? "0 4px 14px rgba(74,222,128,0.35)" : "0 4px 14px rgba(198,145,76,0.35)",
                   transition: "all 0.25s",
-                  opacity: toggling === property.id ? 0.5 : 1,
+                  opacity: toggling === property.id ? 0.6 : 1,
                 }}
               >
                 {toggling === property.id ? (
-                  <span style={{ width: 10, height: 10, border: "1.5px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+                  <span style={{ width: 11, height: 11, border: "1.5px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
                 ) : property.is_published ? (
-                  <Eye size={11} />
+                  <Eye size={12} />
                 ) : (
-                  <EyeOff size={11} />
+                  <Plus size={12} />
                 )}
-                {property.is_published ? "منشور" : "مسودة"}
+                {property.is_published ? "منشور" : "نشر العقار"}
               </button>
 
               {/* ── البطاقة ── */}
               <Link href={"/dashboard/properties/" + property.id} className="block rounded-xl overflow-hidden no-underline transition" style={{ background:'var(--bg-surface-1)', border:'1px solid ' + (property.is_published ? 'rgba(74,222,128,0.15)' : 'var(--gold-bg)'), color:'var(--text-strong)' }}>
-                <div className="h-44 flex items-center justify-center" style={{ background:'var(--bg-surface-2)' }}>
+                <div className="h-44 flex items-center justify-center relative overflow-hidden" style={{ background:'linear-gradient(135deg, var(--bg-surface-2), var(--bg-surface-3))' }}>
                   {(property.images?.[0] || property.main_image) ? (
                     <img src={property.images?.[0] || property.main_image} alt={property.title} className="w-full h-full object-cover" />
                   ) : (
-                    <p style={{ color:'var(--text-faint)', fontSize: 13 }}>لا توجد صورة</p>
+                    <div className="flex flex-col items-center justify-center gap-2" style={{ color:'var(--text-faint)' }}>
+                      {/* SVG illustration: مبنى عقاري بسيط */}
+                      <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect x="10" y="22" width="44" height="32" rx="2" stroke="currentColor" strokeWidth="1.6" opacity="0.55"/>
+                        <path d="M10 22 L32 8 L54 22" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" opacity="0.55"/>
+                        <rect x="18" y="32" width="8"  height="10" stroke="currentColor" strokeWidth="1.4" opacity="0.4" rx="1"/>
+                        <rect x="38" y="32" width="8"  height="10" stroke="currentColor" strokeWidth="1.4" opacity="0.4" rx="1"/>
+                        <rect x="28" y="42" width="8"  height="12" stroke="currentColor" strokeWidth="1.4" opacity="0.55" rx="1"/>
+                      </svg>
+                      <span style={{ fontSize: 11, fontWeight: 500 }}>اضغط لإضافة صور</span>
+                    </div>
                   )}
                 </div>
                 <div className="p-4">

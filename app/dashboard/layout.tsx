@@ -7,89 +7,106 @@ import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
   Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network, Crown,
+  ChevronDown, ChevronUp, Briefcase, Building, Search, Command, Inbox,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
 import LangToggle from "@/components/LangToggle";
+import BrandColorProvider from "@/app/components/BrandColorProvider";
 import { useMyRole, ROLE_LABELS, PERMS } from "@/lib/use-my-role";
 import type { LucideIcon } from "lucide-react";
 import type { PropertyRequest, Client, Deal } from "@/types/database";
 
 type NavItemData = { label: string; href: string; icon: LucideIcon };
-type NavGroup = { title: string; items: NavItemData[] };
+type NavGroup = { id: string; title: string; icon: LucideIcon; items: NavItemData[] };
 
-const menuGroups: NavGroup[] = [
-  {
-    title: "الرئيسية",
-    items: [
-      { label: "لوحة التحكم",    href: "/dashboard",           icon: LayoutDashboard },
-      { label: "لوحة CEO",       href: "/dashboard/ceo",       icon: Crown           },
-      { label: "المهام",         href: "/dashboard/tasks",     icon: CheckSquare     },
-    ]
-  },
-  {
-    title: "المبيعات والعملاء (CRM)",
-    items: [
-      { label: "العملاء",        href: "/dashboard/clients",   icon: Users           },
-      { label: "الصفقات",        href: "/dashboard/deals",     icon: TrendingUp      },
-      { label: "الأهداف",          href: "/dashboard/goals",             icon: Trophy        },
-      { label: "متابعات AI",        href: "/dashboard/clients/followups", icon: Bot           },
-      { label: "محادثات WhatsApp",  href: "/dashboard/whatsapp/inbox",    icon: MessageCircle },
-      { label: "قوالب واتساب",      href: "/dashboard/whatsapp",          icon: FileText      },
-    ]
-  },
-  {
-    title: "إدارة الأملاك",
-    items: [
-      { label: "العقارات",       href: "/dashboard/properties",       icon: Building2  },
-      { label: "المشاريع",       href: "/dashboard/projects",         icon: Building2  },
-      { label: "الطلبات",        href: "/dashboard/requests",         icon: FileText   },
-      { label: "بوابة المستأجر", href: "/dashboard/tenant-portal",    icon: KeyRound   },
-      { label: "أوامر العمل",    href: "/dashboard/work-orders",      icon: Wrench     },
-      { label: "الأصول",         href: "/dashboard/assets",           icon: Package    },
-    ]
-  },
-  {
-    title: "المالية والتعاقد",
-    items: [
-      { label: "عروض الأسعار",   href: "/dashboard/quotations", icon: FileText       },
-      { label: "العقود",         href: "/dashboard/contracts",  icon: FileSignature  },
-      { label: "الفواتير",       href: "/dashboard/invoices",   icon: CreditCard     },
-      { label: "العمولات",       href: "/dashboard/commissions",icon: Banknote       },
-      { label: "التحليل المالي", href: "/dashboard/financial",  icon: BarChart3      },
-    ]
-  },
-  {
-    title: "التسويق والمحتوى",
-    items: [
-      { label: "المحتوى",         href: "/dashboard/content",         icon: Megaphone },
-      { label: "التسويق",         href: "/dashboard/marketing",       icon: Target    },
-      { label: "قائمة منشورات AI", href: "/dashboard/marketing/queue", icon: Bot       },
-    ]
-  },
-  {
-    title: "أدوات أخرى",
-    items: [
-      { label: "توزيع العقارات", href: "/dashboard/distribute", icon: Share2         },
-      { label: "التقارير",       href: "/dashboard/reports",   icon: FileText        },
-      { label: "استيراد CSV",   href: "/dashboard/import",    icon: Upload          },
-      { label: "اشتراكات التطبيقات", href: "/dashboard/external-subscriptions", icon: CreditCard },
-      { label: "الوثائق",        href: "/dashboard/documents", icon: Scale           },
-    ]
-  }
+// ═══════════════════════════════════════════════════════════════
+// PRIMARY — العناصر اليومية الأكثر استخداماً (دائماً ظاهرة)
+// ═══════════════════════════════════════════════════════════════
+const primaryItems: NavItemData[] = [
+  { label: "لوحة التحكم",     href: "/dashboard",                 icon: LayoutDashboard },
+  { label: "المهام",           href: "/dashboard/tasks",            icon: CheckSquare     },
+  { label: "العملاء",          href: "/dashboard/clients",          icon: Users           },
+  { label: "الصفقات",          href: "/dashboard/deals",            icon: TrendingUp      },
+  { label: "العقارات",         href: "/dashboard/properties",         icon: Building2       },
+  { label: "طلبات العقار",     href: "/dashboard/property-requests",  icon: Inbox           },
+  { label: "محادثات WhatsApp", href: "/dashboard/whatsapp/inbox",   icon: MessageCircle   },
 ];
 
+// ═══════════════════════════════════════════════════════════════
+// SECONDARY — مجموعات قابلة للطي (مغلقة افتراضياً)
+// ═══════════════════════════════════════════════════════════════
+const secondaryGroups: NavGroup[] = [
+  {
+    id: "sales", title: "المبيعات والعملاء", icon: Briefcase,
+    items: [
+      { label: "الأهداف",         href: "/dashboard/goals",             icon: Trophy        },
+      { label: "المتابعات الذكية", href: "/dashboard/clients/followups", icon: Bot           },
+      { label: "قوالب واتساب",     href: "/dashboard/whatsapp",          icon: FileText      },
+    ],
+  },
+  {
+    id: "portfolio", title: "محفظة الأملاك", icon: Building,
+    items: [
+      { label: "المشاريع",         href: "/dashboard/projects",         icon: Building2  },
+      { label: "بوابة المستأجر",   href: "/dashboard/tenant-portal",    icon: KeyRound   },
+      { label: "أوامر العمل",      href: "/dashboard/work-orders",      icon: Wrench     },
+      { label: "الأصول",           href: "/dashboard/assets",           icon: Package    },
+      { label: "توزيع العقارات",   href: "/dashboard/distribute",       icon: Share2     },
+    ],
+  },
+  {
+    id: "finance", title: "المالية والتعاقد", icon: Banknote,
+    items: [
+      { label: "عروض الأسعار",     href: "/dashboard/quotations", icon: FileText       },
+      { label: "العقود",           href: "/dashboard/contracts",  icon: FileSignature  },
+      { label: "الفواتير",         href: "/dashboard/invoices",   icon: CreditCard     },
+      { label: "العمولات",         href: "/dashboard/commissions",icon: Banknote       },
+      { label: "التحليل المالي",   href: "/dashboard/financial",  icon: BarChart3      },
+    ],
+  },
+  {
+    id: "marketing", title: "التسويق والمحتوى", icon: Megaphone,
+    items: [
+      { label: "المحتوى",          href: "/dashboard/content",         icon: Megaphone },
+      { label: "التسويق",          href: "/dashboard/marketing",       icon: Target    },
+      { label: "قائمة المنشورات الذكية", href: "/dashboard/marketing/queue", icon: Bot       },
+    ],
+  },
+  {
+    id: "insights", title: "الرؤى والأدوات", icon: BarChart3,
+    items: [
+      { label: "لوحة CEO",          href: "/dashboard/ceo",                  icon: Crown      },
+      { label: "التقارير",          href: "/dashboard/reports",              icon: FileText   },
+      { label: "الوثائق",            href: "/dashboard/documents",            icon: Scale      },
+      { label: "استيراد CSV",      href: "/dashboard/import",               icon: Upload     },
+      { label: "اشتراكات التطبيقات", href: "/dashboard/external-subscriptions", icon: CreditCard },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SETTINGS MENU — يفتح كـ Popover من زر Settings في الـ footer
+// ═══════════════════════════════════════════════════════════════
 const settingsMenu: NavItemData[] = [
-  { label: "الهيكل التنظيمي AI", href: "/dashboard/organization",            icon: Network    },
+  { label: "الإعدادات العامة",   href: "/dashboard/settings",                icon: Settings   },
+  { label: "فريق المساعدين الأذكياء", href: "/dashboard/organization",            icon: Network    },
+  { label: "تأسيس الذكاء",            href: "/dashboard/ai-foundation",           icon: Brain      },
+  { label: "المساعدون الأذكياء",      href: "/dashboard/ai-employees",            icon: Bot        },
   { label: "الفريق",             href: "/dashboard/team",                    icon: Users      },
   { label: "الاشتراك",           href: "/dashboard/subscription",            icon: CreditCard },
-  { label: "تأسيس AI",           href: "/dashboard/ai-foundation",           icon: Brain      },
-  { label: "موظفو AI",           href: "/dashboard/ai-employees",            icon: Bot        },
-  { label: "التطبيق والإشعارات", href: "/dashboard/settings/notifications",  icon: Bell       },
+  { label: "الإشعارات",          href: "/dashboard/settings/notifications",  icon: Bell       },
   { label: "سجل التدقيق",        href: "/dashboard/audit",                   icon: Shield     },
   { label: "الأمان (2FA)",       href: "/dashboard/security",                icon: ShieldCheck },
-  { label: "الإعدادات",          href: "/dashboard/settings",                icon: Settings   },
 ];
+
+// كل العناصر مدمجة (للبحث السريع Command Palette)
+const allItemsForSearch = (() => {
+  const all: NavItemData[] = [...primaryItems];
+  secondaryGroups.forEach(g => all.push(...g.items));
+  all.push(...settingsMenu);
+  return all;
+})();
 
 function NavItem({
   item, isActive, badge,
@@ -152,11 +169,67 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [renewalDaysLeft, setRenewalDaysLeft] = useState<number | null>(null);
   const [renewalPlan, setRenewalPlan] = useState("");
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const settingsRef = useRef<HTMLDivElement>(null);
   const { role } = useMyRole();
 
   useEffect(() => { checkAuth(); }, []);
-  useEffect(() => { setSidebarOpen(false); }, [pathname]);
+  useEffect(() => { setSidebarOpen(false); setSettingsOpen(false); setSearchOpen(false); }, [pathname]);
+
+  // استرجاع حالة طيّ المجموعات من localStorage + فتح المجموعة التي تحوي المسار النشط
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("wasit_sidebar_groups");
+      const initial: Record<string, boolean> = saved ? JSON.parse(saved) : {};
+      // افتح المجموعة التي تحوي الصفحة النشطة تلقائياً
+      secondaryGroups.forEach(g => {
+        if (g.items.some(it => pathname === it.href || pathname.startsWith(it.href + "/"))) {
+          initial[g.id] = true;
+        }
+      });
+      setExpandedGroups(initial);
+    } catch { /* تجاهل */ }
+  }, [pathname]);
+
+  function toggleGroup(id: string) {
+    setExpandedGroups(prev => {
+      const next = { ...prev, [id]: !prev[id] };
+      try { localStorage.setItem("wasit_sidebar_groups", JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }
+
+  // اغلاق Popover الإعدادات عند الضغط خارجها
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (settingsRef.current && !settingsRef.current.contains(e.target as Node)) {
+        setSettingsOpen(false);
+      }
+    }
+    if (settingsOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [settingsOpen]);
+
+  // Command Palette — Cmd/Ctrl + K
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(v => !v);
+        setSearchQuery("");
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setSettingsOpen(false);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // cleanup realtime on unmount
   useEffect(() => {
@@ -245,8 +318,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   // Current page label
-  const allNavItems = [...menuGroups.flatMap(g => g.items), ...settingsMenu];
-  const currentPage = allNavItems.find(
+  const currentPage = allItemsForSearch.find(
     (m) => pathname === m.href || (m.href !== "/dashboard" && pathname.startsWith(m.href))
   );
 
@@ -262,6 +334,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen" dir="rtl" style={{ background: "var(--bg-page)", color: "var(--text-strong)" }}>
+      <BrandColorProvider />
       <style>{`
         .dash-sidebar {
           transform: translateX(100%);
@@ -333,7 +406,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </span>
             )}
           </Link>
-          <LangToggle />
+          {/* LangToggle مخفي على الموبايل — متاح في popover الإعدادات */}
+          <div className="hidden lg:block"><LangToggle /></div>
           <Link
             href="/search"
             target="_blank"
@@ -451,50 +525,88 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </div>
 
-            {/* New Property CTA */}
+            {/* New Property CTA — يفتح نموذج الإضافة مباشرة */}
             <div style={{ padding:"0 12px 14px" }}>
-              <Link href="/dashboard/properties" className="flex items-center justify-center gap-2 no-underline transition-all"
+              <Link href="/dashboard/properties/add" className="flex items-center justify-center gap-2 no-underline transition-all"
                 style={{ padding:"9px 12px", borderRadius:10, background:"linear-gradient(135deg,rgba(198,145,76,0.18),var(--gold-bg-soft))", border:"1px solid rgba(198,145,76,0.25)", color:"var(--gold-2)", fontSize:13, fontWeight:600 }}>
                 <Plus size={15} />
                 إضافة عقار
               </Link>
             </div>
 
+            {/* Quick Search button */}
+            <div style={{ padding:"0 12px 10px" }}>
+              <button onClick={()=>setSearchOpen(true)}
+                className="flex items-center gap-2 w-full transition-all"
+                style={{
+                  padding:"7px 10px", borderRadius:9,
+                  background:"var(--bg-surface-2)",
+                  border:"1px solid var(--gold-bg-soft)",
+                  color:"var(--text-faint)", fontSize:12,
+                  cursor:"pointer",
+                }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor="var(--gold-bg-hover)"; }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor="var(--gold-bg-soft)"; }}>
+                <Search size={13} />
+                <span style={{ flex:1, textAlign:"start" }}>بحث سريع...</span>
+                <span style={{ fontSize:10, padding:"1px 6px", borderRadius:4, background:"var(--bg-surface-3)", color:"var(--text-faint)" }}>⌘K</span>
+              </button>
+            </div>
+
             {/* Main Nav */}
             <nav style={{ flex:1, padding:"0 8px", overflowY:"auto", minHeight:0 }}>
-              {menuGroups.map((group, i) => (
-                <div key={group.title} style={{ marginBottom:12 }}>
-                  <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"var(--text-faint)", letterSpacing:"1.2px", borderTop: i>0?"1px solid var(--gold-bg-soft)":"none", paddingTop: i>0?12:0 }}>
-                    {group.title}
-                  </div>
-                  {group.items.map((item) => {
-                    const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-                    return (
-                      <NavItem key={item.href} item={item} isActive={isActive}
-                        badge={item.href === "/dashboard/requests" ? newRequests : undefined} />
-                    );
-                  })}
-                </div>
-              ))}
-
-              <div style={{ margin:"14px 0 12px" }}>
-                <div style={{ marginBottom:4, padding:"0 6px 6px", fontSize:10, fontWeight:700, color:"var(--text-faint)", letterSpacing:"1.2px", borderTop:"1px solid var(--gold-bg-soft)", paddingTop:12 }}>
-                  الإعدادات
-                </div>
-                {settingsMenu
-                  .filter((item) => {
-                    // إخفاء حسب الدور
-                    if (item.href === "/dashboard/subscription" && !PERMS.canManageBilling(role)) return false;
-                    if (item.href === "/dashboard/team"         && !PERMS.canManageTeam(role))    return false;
-                    if (item.href === "/dashboard/audit"        && !PERMS.canViewAuditLog(role))  return false;
-                    if (item.href === "/dashboard/settings"     && !PERMS.canManageSettings(role))return false;
-                    return true;
-                  })
-                  .map((item) => {
-                    const isActive = pathname === item.href || pathname.startsWith(item.href);
-                    return <NavItem key={item.href} item={item} isActive={isActive} />;
-                  })}
+              {/* PRIMARY — العناصر اليومية */}
+              <div style={{ marginBottom:14 }}>
+                {primaryItems.map((item) => {
+                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                  return (
+                    <NavItem key={item.href} item={item} isActive={isActive}
+                      badge={item.href === "/dashboard/requests" ? newRequests : undefined} />
+                  );
+                })}
               </div>
+
+              {/* SECONDARY — مجموعات قابلة للطي */}
+              {secondaryGroups.map((group) => {
+                const isExpanded = expandedGroups[group.id];
+                const hasActive = group.items.some(it => pathname === it.href || pathname.startsWith(it.href + "/"));
+                const GroupIcon = group.icon;
+                return (
+                  <div key={group.id} style={{ marginBottom:4 }}>
+                    <button
+                      onClick={() => toggleGroup(group.id)}
+                      className="flex items-center w-full transition-all"
+                      style={{
+                        padding:"8px 12px",
+                        borderRadius:9,
+                        background:"transparent",
+                        border:"none",
+                        cursor:"pointer",
+                        gap:10,
+                        color: hasActive ? "var(--gold-2)" : "var(--text-soft)",
+                        fontSize:12.5,
+                        fontWeight: hasActive ? 600 : 500,
+                        textAlign:"start",
+                      }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background="var(--gold-bg-soft)"; }}
+                      onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}>
+                      <GroupIcon size={15} style={{ color: hasActive ? "var(--gold-2)" : "var(--text-ghost)", flexShrink:0 }} />
+                      <span style={{ flex:1, lineHeight:1 }}>{group.title}</span>
+                      {isExpanded
+                        ? <ChevronUp size={13} style={{ color:"var(--text-faint)" }} />
+                        : <ChevronDown size={13} style={{ color:"var(--text-faint)" }} />}
+                    </button>
+                    {isExpanded && (
+                      <div style={{ paddingInlineStart:12, marginTop:2, marginBottom:6, borderInlineStart:"1px solid var(--gold-bg-soft)", marginInlineStart:18 }}>
+                        {group.items.map(item => {
+                          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                          return <NavItem key={item.href} item={item} isActive={isActive} />;
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </nav>
 
             {/* Super Admin Panel Link — يظهر فقط لمالك المنصة */}
@@ -518,8 +630,79 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             )}
 
+            {/* Settings button + Popover */}
+            <div ref={settingsRef} style={{ padding:"6px 12px 8px", position:"relative" }}>
+              <button
+                onClick={() => setSettingsOpen(v => !v)}
+                className="flex items-center gap-2 w-full transition-all"
+                style={{
+                  padding:"9px 12px",
+                  borderRadius:10,
+                  background: settingsOpen ? "var(--gold-bg-soft)" : "transparent",
+                  border: settingsOpen ? "1px solid var(--gold-bg-hover)" : "1px solid transparent",
+                  color: settingsOpen ? "var(--gold-2)" : "var(--text-soft)",
+                  fontSize:13, fontWeight:500,
+                  cursor:"pointer", textAlign:"start",
+                }}
+                onMouseEnter={e=>{ if(!settingsOpen) e.currentTarget.style.background="var(--gold-bg-soft)"; }}
+                onMouseLeave={e=>{ if(!settingsOpen) e.currentTarget.style.background="transparent"; }}>
+                <Settings size={15} />
+                <span style={{ flex:1 }}>الإعدادات والإدارة</span>
+                <ChevronUp size={12} style={{ transform: settingsOpen ? "rotate(0deg)" : "rotate(180deg)", transition:"transform 0.2s" }} />
+              </button>
+
+              {settingsOpen && (
+                <div
+                  style={{
+                    position:"absolute",
+                    bottom:"calc(100% - 6px)",
+                    insetInlineEnd: 12,
+                    insetInlineStart: 12,
+                    background:"var(--bg-surface-1)",
+                    border:"1px solid var(--gold-bg-hover)",
+                    borderRadius:12,
+                    padding:6,
+                    boxShadow:"var(--shadow-lg)",
+                    maxHeight:"60vh",
+                    overflowY:"auto",
+                    zIndex:50,
+                  }}>
+                  {settingsMenu
+                    .filter(item => {
+                      if (item.href === "/dashboard/subscription" && !PERMS.canManageBilling(role)) return false;
+                      if (item.href === "/dashboard/team"         && !PERMS.canManageTeam(role))    return false;
+                      if (item.href === "/dashboard/audit"        && !PERMS.canViewAuditLog(role))  return false;
+                      if (item.href === "/dashboard/settings"     && !PERMS.canManageSettings(role)) return false;
+                      return true;
+                    })
+                    .map(item => {
+                      const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                      const ItemIcon = item.icon;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setSettingsOpen(false)}
+                          className="flex items-center gap-2.5 no-underline transition-all"
+                          style={{
+                            padding:"8px 10px",
+                            borderRadius:8,
+                            color: isActive ? "var(--gold-2)" : "var(--text-soft)",
+                            background: isActive ? "var(--gold-bg-soft)" : "transparent",
+                            fontSize:12.5, fontWeight: isActive ? 600 : 500,
+                            margin:"1px 0",
+                          }}>
+                          <ItemIcon size={14} style={{ color: isActive ? "var(--gold-2)" : "var(--text-ghost)" }} />
+                          <span style={{ flex:1 }}>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                </div>
+              )}
+            </div>
+
             {/* Bottom Profile */}
-            <div style={{ padding:"12px 12px 16px", borderTop:"1px solid var(--gold-bg-soft)" }}>
+            <div style={{ padding:"6px 12px 16px", borderTop:"1px solid var(--gold-bg-soft)" }}>
               <div className="flex items-center gap-3" style={{ padding:"10px 10px", borderRadius:12, background:"rgba(198,145,76,0.04)" }}>
                 <div className="flex items-center justify-center font-cairo font-black flex-shrink-0"
                   style={{ width:34, height:34, borderRadius:9, background:"linear-gradient(135deg,var(--gold-2),var(--gold-4))", color:"var(--bg-page)", fontSize:14 }}>
@@ -565,8 +748,84 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <AIAssistant />
 
+      {/* ═══════ COMMAND PALETTE (Cmd/Ctrl + K) ═══════ */}
+      {searchOpen && (
+        <div
+          onClick={() => setSearchOpen(false)}
+          style={{
+            position:"fixed", inset:0, zIndex:100,
+            background:"var(--modal-overlay)",
+            backdropFilter:"blur(4px)",
+            display:"flex", alignItems:"flex-start", justifyContent:"center",
+            paddingTop:"15vh",
+          }}>
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background:"var(--bg-surface-1)",
+              border:"1px solid var(--gold-bg-hover)",
+              borderRadius:14,
+              width:"min(560px, 92vw)",
+              maxHeight:"70vh",
+              display:"flex", flexDirection:"column",
+              boxShadow:"var(--shadow-lg)",
+              overflow:"hidden",
+            }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10, padding:"12px 14px", borderBottom:"1px solid var(--gold-bg-soft)" }}>
+              <Search size={16} style={{ color:"var(--text-faint)" }} />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="ابحث في القائمة..."
+                style={{
+                  flex:1, background:"transparent", border:"none", outline:"none",
+                  color:"var(--text-strong)", fontSize:14,
+                  fontFamily:"inherit",
+                }}/>
+              <span style={{ fontSize:10, padding:"2px 7px", borderRadius:5, background:"var(--bg-surface-3)", color:"var(--text-faint)" }}>ESC</span>
+            </div>
+            <div style={{ overflowY:"auto", padding:6 }}>
+              {(() => {
+                const q = searchQuery.trim();
+                const items = q
+                  ? allItemsForSearch.filter(it => it.label.toLowerCase().includes(q.toLowerCase()))
+                  : allItemsForSearch;
+                if (items.length === 0) return (
+                  <div style={{ padding:20, textAlign:"center", fontSize:13, color:"var(--text-faint)" }}>
+                    لا توجد نتائج
+                  </div>
+                );
+                return items.slice(0, 12).map(item => {
+                  const ItemIcon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setSearchOpen(false)}
+                      className="flex items-center gap-3 no-underline transition-all"
+                      style={{
+                        padding:"10px 12px",
+                        borderRadius:8,
+                        color:"var(--text-strong)",
+                        fontSize:13,
+                      }}
+                      onMouseEnter={e=>{ e.currentTarget.style.background="var(--gold-bg-soft)"; }}
+                      onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; }}>
+                      <ItemIcon size={15} style={{ color:"var(--gold-2)" }} />
+                      <span style={{ flex:1 }}>{item.label}</span>
+                      <span style={{ fontSize:10, color:"var(--text-faint)", direction:"ltr" }}>{item.href}</span>
+                    </Link>
+                  );
+                });
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
       <Toaster
-        position="top-center"
+        position="top-right"
         dir="rtl"
         toastOptions={{
           style: {

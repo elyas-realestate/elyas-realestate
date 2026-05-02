@@ -66,10 +66,10 @@ export default function RootLayout({
       className={`${notoKufi.variable} ${tajawal.variable} ${cairo.variable} h-full antialiased`}
     >
       <head>
-        {/* تطبيق الثيم قبل أول render لتجنّب FOUC (وميض الألوان القديمة) */}
+        {/* تطبيق الثيم + ألوان البراند قبل أول render لتجنّب FOUC */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('wasit_theme');if(t==='cream'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('wasit_theme');if(t==='cream'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}var a=localStorage.getItem('wasit_brand_accent');var ad=localStorage.getItem('wasit_brand_accent_dark');if(a){document.documentElement.style.setProperty('--gold-1',a);}if(ad){document.documentElement.style.setProperty('--gold-2',ad);}else if(a){document.documentElement.style.setProperty('--gold-2',a);}}catch(e){}})();`,
           }}
         />
       </head>

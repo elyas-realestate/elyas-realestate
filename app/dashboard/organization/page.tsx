@@ -55,10 +55,10 @@ export default function OrganizationPage() {
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <Network size={20} style={{ color: "var(--purple-ai)" }} /> الهيكل التنظيمي
+            <Network size={20} style={{ color: "var(--purple-ai)" }} /> فريقك من المساعدين الأذكياء
           </h1>
           <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>
-            أنت CEO. كل قسم له مدير AI + موظفين تحته. اضغط على أي مدير لإدارة توجيهاته وقاعدة معرفته.
+            مساعدون متخصّصون يخدمونك في التسويق، المتابعة، التحليل، التحصيل وغيرها. اضغط على أي مساعد لتعديل توجيهاته أو قاعدة معرفته.
           </p>
         </div>
         <button onClick={load} disabled={loading}

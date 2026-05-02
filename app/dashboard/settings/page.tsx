@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import ThemeSwitcher from "@/app/components/ThemeSwitcher";
+import ServiceIcon, { SERVICE_ICON_KEYS } from "@/app/components/ServiceIcon";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -46,15 +47,17 @@ const SITE_SECTIONS = [
   { id: "cta",      label: "التواصل والفوتر",        icon: Share2 },
 ];
 
+// قيم Hex حقيقية — لأن هذه الألوان تُحفظ في DB وتُستخدم على الصفحة
+// العامة للوسيط حيث لا تتوفر CSS variables الخاصة بلوحة التحكم
 const COLOR_DEFAULTS = {
-  color_accent:         "var(--gold-2)",
-  color_accent_dark:    "var(--gold-3)",
-  color_bg_primary:     "var(--bg-page)",
-  color_bg_secondary:   "var(--bg-deep)",
-  color_bg_card:        "var(--bg-surface-1)",
-  color_text_primary:   "var(--text-strong)",
-  color_text_secondary: "var(--text-soft)",
-  color_text_muted:     "var(--text-faint)",
+  color_accent:         "#C6914C",
+  color_accent_dark:    "#A6743A",
+  color_bg_primary:     "#0A0A0C",
+  color_bg_secondary:   "#0F0F12",
+  color_bg_card:        "#16161A",
+  color_text_primary:   "#F5F5F5",
+  color_text_secondary: "#9A9AA0",
+  color_text_muted:     "#5A5A62",
   font_size_hero:            "clamp(2.4rem, 5.5vw, 4.2rem)",
   font_size_section_title:   "clamp(1.8rem, 3.5vw, 2.6rem)",
   font_size_body:            "15px",
@@ -62,9 +65,9 @@ const COLOR_DEFAULTS = {
 };
 
 const COLOR_GROUPS = [
-  { id: "accent", label: "اللون الذهبي", fields: [
-    { key: "color_accent",      label: "الذهبي الرئيسي", desc: "الأزرار والعناوين" },
-    { key: "color_accent_dark", label: "الذهبي الداكن",  desc: "تدرج الأزرار والهوفر" },
+  { id: "accent", label: "اللون المميّز", fields: [
+    { key: "color_accent",      label: "اللون الرئيسي", desc: "الأزرار والعناوين والروابط" },
+    { key: "color_accent_dark", label: "اللون الأعمق",  desc: "تدرج الأزرار والهوفر" },
   ]},
   { id: "bg", label: "الخلفيات", fields: [
     { key: "color_bg_primary",   label: "الخلفية الرئيسية", desc: "لون الخلفية الأساسي" },
@@ -124,6 +127,9 @@ export default function Settings() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingLogo, setUploadingLogo]   = useState(false);
   const [logoError, setLogoError]       = useState("");
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const [heroError, setHeroError]       = useState("");
+  const [heroDragActive, setHeroDragActive] = useState(false);
   const [slugStatus, setSlugStatus]     = useState<"idle"|"checking"|"available"|"taken"|"invalid">("idle");
   const [slugMsg, setSlugMsg]           = useState("");
   const [savingSlug, setSavingSlug]     = useState(false);
@@ -203,7 +209,16 @@ export default function Settings() {
     }
     setSaving(false);
     if (error) { toast.error("حدث خطأ أثناء الحفظ"); }
-    else       { toast.success("تم حفظ التغييرات"); flash(); }
+    else {
+      toast.success("تم حفظ التغييرات");
+      flash();
+      // تأكيد تطبيق الـ accent على لوحة التحكم بعد الحفظ
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("wasit:brand-update", {
+          detail: { accent: settings.color_accent, accentDark: settings.color_accent_dark },
+        }));
+      }
+    }
   }
 
   async function handleSaveLicenses() {
@@ -228,7 +243,18 @@ export default function Settings() {
 
   // site_settings shorthand
   function sc(field: string, value: any) {
-    setSettings((p: any) => ({ ...p, [field]: value }));
+    setSettings((p: any) => {
+      const next = { ...p, [field]: value };
+      // Live-apply accent overrides عند تعديل اللون يدوياً
+      if (field === "color_accent" || field === "color_accent_dark") {
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("wasit:brand-update", {
+            detail: { accent: next.color_accent, accentDark: next.color_accent_dark },
+          }));
+        }
+      }
+      return next;
+    });
   }
 
   // ─── Photo upload ─────────────────────────────────────────────────────────
@@ -267,6 +293,36 @@ export default function Settings() {
       else setLogoError("خطأ: " + (msg || "تعذّر رفع الشعار"));
     }
     setUploadingLogo(false);
+  }
+
+  // ─── Hero image upload ────────────────────────────────────────────────────
+  async function handleHeroUpload(file: File) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { setHeroError("الملف يجب أن يكون صورة"); return; }
+    if (file.size > 5 * 1024 * 1024) { setHeroError("حجم الصورة يجب أن يكون أقل من ٥ ميغابايت"); return; }
+    setUploadingHero(true); setHeroError("");
+    try {
+      const ext  = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `hero/hero_${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from("assets").getPublicUrl(path);
+      sc("hero_image", data.publicUrl);
+      toast.success("تم رفع صورة الخلفية");
+    } catch (e: any) {
+      const msg = e?.message || "";
+      if (msg.includes("not found") || msg.includes("Bucket")) setHeroError("الـ bucket غير موجود — أنشئ bucket اسمه 'assets' في Supabase Storage");
+      else if (msg.includes("policy") || msg.includes("permission") || msg.includes("403")) setHeroError("خطأ في الصلاحيات — راجع إعدادات Storage Policies");
+      else setHeroError("خطأ: " + (msg || "تعذّر رفع الصورة"));
+    }
+    setUploadingHero(false);
+  }
+
+  function handleHeroDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setHeroDragActive(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleHeroUpload(file);
   }
 
   // ─── Slug ─────────────────────────────────────────────────────────────────
@@ -311,8 +367,19 @@ export default function Settings() {
 
   // ─── Design ───────────────────────────────────────────────────────────────
   type QuickTheme = (typeof QUICK_THEMES_DARK)[0];
+
+  // يطبّق ألوان الـ accent على لوحة التحكم فوراً (بدون انتظار حفظ)
+  function applyAccentLive(accent?: string, accentDark?: string) {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new CustomEvent("wasit:brand-update", {
+      detail: { accent, accentDark },
+    }));
+  }
+
   function applyTheme(theme: QuickTheme) {
     setSettings((p: any) => ({ ...p, ...theme.colors }));
+    applyAccentLive(theme.colors.color_accent, theme.colors.color_accent_dark);
+    toast.success(`تم تطبيق ثيم ${theme.name} — اضغط حفظ لتأكيد التغيير`);
   }
   function resetDesign() {
     setSettings((p: any) => ({ ...p, ...COLOR_DEFAULTS }));
@@ -552,13 +619,61 @@ export default function Settings() {
                     <textarea value={s.hero_subtitle || ""} onChange={e => sc("hero_subtitle", e.target.value)} rows={3} className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-sm text-[var(--text-soft)] mb-2">صورة الخلفية (رابط URL)</label>
-                    <input value={s.hero_image || ""} onChange={e => sc("hero_image", e.target.value)} className={inputClass + " text-sm"} dir="ltr" placeholder="https://images.unsplash.com/..." />
-                    {s.hero_image && (
-                      <div className="mt-3 rounded-lg overflow-hidden border border-[var(--gold-bg-hover)]" style={{ height:140 }}>
-                        <img src={s.hero_image} alt="معاينة" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                    <label className="block text-sm text-[var(--text-soft)] mb-2">صورة الخلفية</label>
+
+                    {/* Drag & drop zone */}
+                    <div
+                      onDragOver={e => { e.preventDefault(); setHeroDragActive(true); }}
+                      onDragLeave={() => setHeroDragActive(false)}
+                      onDrop={handleHeroDrop}
+                      className="rounded-xl border-2 border-dashed transition cursor-pointer relative overflow-hidden"
+                      style={{
+                        background: heroDragActive ? "var(--gold-bg-hover)" : "var(--bg-surface-2)",
+                        borderColor: heroDragActive ? "var(--gold-1)" : "var(--gold-bg-hover)",
+                        minHeight: s.hero_image ? 180 : 140,
+                      }}
+                    >
+                      {s.hero_image && !uploadingHero && (
+                        <img src={s.hero_image} alt="معاينة" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.55 }} />
+                      )}
+                      <div className="relative flex flex-col items-center justify-center gap-2 p-6 text-center" style={{ minHeight: s.hero_image ? 180 : 140 }}>
+                        {uploadingHero ? (
+                          <>
+                            <Loader2 size={28} className="animate-spin" style={{ color:"var(--gold-1)" }} />
+                            <span className="text-sm" style={{ color:"var(--text-soft)" }}>جاري الرفع…</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload size={26} style={{ color: heroDragActive ? "var(--gold-1)" : "var(--text-soft)" }} />
+                            <div className="text-sm font-medium" style={{ color: s.hero_image ? "#FFFFFF" : "var(--text-strong)", textShadow: s.hero_image ? "0 1px 4px rgba(0,0,0,0.6)" : "none" }}>
+                              {s.hero_image ? "استبدال الصورة" : "اسحب صورة هنا أو اضغط للرفع"}
+                            </div>
+                            <div className="text-xs" style={{ color: s.hero_image ? "rgba(255,255,255,0.85)" : "var(--text-faint)", textShadow: s.hero_image ? "0 1px 3px rgba(0,0,0,0.6)" : "none" }}>
+                              JPG / PNG / WebP — حتى ٥ ميجا
+                            </div>
+                            <label className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold cursor-pointer transition" style={{ background:"var(--gold-bg-hover)", color:"var(--gold-2)", border:"1px solid var(--gold-bg-strong)" }}>
+                              <Upload size={13}/> اختيار ملف
+                              <input type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleHeroUpload(f); }}/>
+                            </label>
+                          </>
+                        )}
                       </div>
-                    )}
+                    </div>
+
+                    {heroError && <div className="text-xs mt-2" style={{ color:"var(--danger)" }}>{heroError}</div>}
+
+                    {/* OR — رابط URL خارجي */}
+                    <div className="mt-3">
+                      <label className="block text-xs mb-1" style={{ color:"var(--text-faint)" }}>أو ألصق رابط صورة (اختياري)</label>
+                      <div className="flex gap-2">
+                        <input value={s.hero_image || ""} onChange={e => sc("hero_image", e.target.value)} className={inputClass + " text-sm flex-1"} dir="ltr" placeholder="https://images.unsplash.com/..." />
+                        {s.hero_image && (
+                          <button onClick={() => sc("hero_image", "")} className="px-3 rounded-lg text-xs flex items-center gap-1 transition" style={{ background:"var(--bg-surface-2)", color:"var(--danger)", border:"1px solid var(--gold-bg)" }} title="إزالة الصورة">
+                            <X size={14}/> إزالة
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <SaveBtn onClick={handleSaveSettings} />
                 </div>
@@ -644,7 +759,7 @@ export default function Settings() {
                 <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
                     <h3 className="font-bold text-[var(--gold-2)] text-lg">الخدمات</h3>
-                    <button onClick={() => sc("services", [...(s.services||[]), {title:"",desc:"",icon:"🏠"}])}
+                    <button onClick={() => sc("services", [...(s.services||[]), {title:"",desc:"",icon:"home"}])}
                       className="text-sm bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition flex items-center gap-2">
                       <Plus size={13}/> إضافة خدمة
                     </button>
@@ -656,15 +771,35 @@ export default function Settings() {
                           <span className="text-sm text-[var(--text-faint)]">خدمة {i+1}</span>
                           <button onClick={() => sc("services", s.services.filter((_:any,j:number)=>j!==i))} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"><Trash2 size={11}/> حذف</button>
                         </div>
-                        <div className="flex gap-3">
-                          <div style={{width:52,flexShrink:0}}>
-                            <label className="block text-xs text-[var(--text-faint)] mb-1">الأيقونة</label>
-                            <input value={svc.icon||""} onChange={e=>svcChange(i,"icon",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[var(--gold-2)]"/>
+                        <div>
+                          <label className="block text-xs text-[var(--text-faint)] mb-2">الأيقونة</label>
+                          <div className="flex flex-wrap gap-1.5 mb-3 p-2 rounded-lg" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg-hover)" }}>
+                            {SERVICE_ICON_KEYS.map(key => {
+                              const isActive = (svc.icon || "home") === key;
+                              return (
+                                <button
+                                  key={key}
+                                  type="button"
+                                  onClick={() => svcChange(i, "icon", key)}
+                                  className="flex items-center justify-center transition"
+                                  title={key}
+                                  style={{
+                                    width: 36, height: 36, borderRadius: 8,
+                                    background: isActive ? "var(--gold-bg-hover)" : "transparent",
+                                    border: isActive ? "1px solid var(--gold-2)" : "1px solid transparent",
+                                    color: isActive ? "var(--gold-2)" : "var(--text-faint)",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <ServiceIcon name={key} size={18} />
+                                </button>
+                              );
+                            })}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <label className="block text-xs text-[var(--text-faint)] mb-1">اسم الخدمة</label>
-                            <input value={svc.title||""} onChange={e=>svcChange(i,"title",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
-                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[var(--text-faint)] mb-1">اسم الخدمة</label>
+                          <input value={svc.title||""} onChange={e=>svcChange(i,"title",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
                         </div>
                         <div>
                           <label className="block text-xs text-[var(--text-faint)] mb-1">وصف الخدمة</label>
@@ -682,7 +817,7 @@ export default function Settings() {
                 <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6">
                   <div className="flex items-center justify-between mb-5">
                     <h3 className="font-bold text-[var(--gold-2)] text-lg">لماذا تختارنا</h3>
-                    <button onClick={() => sc("why_cards", [...(s.why_cards||[]), {title:"",desc:"",icon:"✨"}])}
+                    <button onClick={() => sc("why_cards", [...(s.why_cards||[]), {title:"",desc:"",icon:"award"}])}
                       className="text-sm bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition flex items-center gap-2">
                       <Plus size={13}/> إضافة بطاقة
                     </button>
@@ -694,15 +829,35 @@ export default function Settings() {
                           <span className="text-sm text-[var(--text-faint)]">بطاقة {i+1}</span>
                           <button onClick={() => sc("why_cards", s.why_cards.filter((_:any,j:number)=>j!==i))} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"><Trash2 size={11}/> حذف</button>
                         </div>
-                        <div className="flex gap-3">
-                          <div style={{width:52,flexShrink:0}}>
-                            <label className="block text-xs text-[var(--text-faint)] mb-1">الأيقونة</label>
-                            <input value={card.icon||""} onChange={e=>whyChange(i,"icon",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-2 py-2 text-center text-xl focus:outline-none focus:border-[var(--gold-2)]"/>
+                        <div>
+                          <label className="block text-xs text-[var(--text-faint)] mb-2">الأيقونة</label>
+                          <div className="flex flex-wrap gap-1.5 mb-3 p-2 rounded-lg" style={{ background:"var(--bg-surface-1)", border:"1px solid var(--gold-bg-hover)" }}>
+                            {SERVICE_ICON_KEYS.map(key => {
+                              const isActive = (card.icon || "award") === key;
+                              return (
+                                <button
+                                  key={key}
+                                  type="button"
+                                  onClick={() => whyChange(i, "icon", key)}
+                                  className="flex items-center justify-center transition"
+                                  title={key}
+                                  style={{
+                                    width: 36, height: 36, borderRadius: 8,
+                                    background: isActive ? "var(--gold-bg-hover)" : "transparent",
+                                    border: isActive ? "1px solid var(--gold-2)" : "1px solid transparent",
+                                    color: isActive ? "var(--gold-2)" : "var(--text-faint)",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <ServiceIcon name={key} size={18} />
+                                </button>
+                              );
+                            })}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <label className="block text-xs text-[var(--text-faint)] mb-1">العنوان</label>
-                            <input value={card.title||""} onChange={e=>whyChange(i,"title",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
-                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[var(--text-faint)] mb-1">العنوان</label>
+                          <input value={card.title||""} onChange={e=>whyChange(i,"title",e.target.value)} className="w-full bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--gold-2)] text-sm"/>
                         </div>
                         <div>
                           <label className="block text-xs text-[var(--text-faint)] mb-1">الوصف</label>

@@ -247,7 +247,17 @@ export default function Deals() {
 
       {/* ══════════════ KANBAN VIEW ══════════════ */}
       {view === "kanban" ? (
-        <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 16, minHeight: 500 }}>
+        <div style={{
+          display: "flex",
+          gap: 12,
+          overflowX: "auto",
+          overflowY: "visible",
+          paddingBottom: 16,
+          minHeight: 500,
+          // يحدد المنطقة القابلة للتمرير الأفقي بحيث لا تكسر الصفحة
+          maxWidth: "100%",
+          scrollbarWidth: "thin",
+        }}>
           {STAGES.map(stage => {
             const stageDeals = filtered.filter(d => d.current_stage === stage.id);
             const stageValue = stageDeals.reduce((s, d) => s + (d.target_value || 0), 0);
@@ -258,9 +268,9 @@ export default function Deals() {
                 onDragOver={e => onDragOver(e, stage.id)}
                 onDrop={() => onDrop(stage.id)}
                 style={{
-                  minWidth: 240, width: 240, flexShrink: 0,
-                  background: isDragTarget ? stage.light : "var(--bg-deep)",
-                  border: `1px solid ${isDragTarget ? stage.color + "40" : "var(--overlay-soft)"}`,
+                  minWidth: 220, width: 220, flexShrink: 0,
+                  background: isDragTarget ? stage.light : "var(--bg-surface-1)",
+                  border: `1px solid ${isDragTarget ? stage.color + "40" : "var(--border-2)"}`,
                   borderRadius: 14,
                   transition: "all 0.2s",
                   display: "flex", flexDirection: "column",

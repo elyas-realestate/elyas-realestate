@@ -271,7 +271,9 @@ export default function SearchPage() {
             ابحث عن عقارك المثالي
           </h1>
           <p style={{ fontSize: 14, color: "var(--text-faint)", textAlign: "center", marginBottom: 24 }}>
-            {properties.length} عقار متاح — فلتر وابحث بسهولة
+            {properties.length > 0
+              ? `${properties.length} عقار متاح — فلتر وابحث بسهولة`
+              : "فلتر وابحث في العقارات المتاحة"}
           </p>
 
           {/* Search bar */}

@@ -88,9 +88,9 @@ export default function CEODashboardPage() {
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <Crown size={20} style={{ color: "var(--gold-1)" }} /> لوحة الرئيس التنفيذي
+            <Crown size={20} style={{ color: "var(--gold-1)" }} /> فريقك من المساعدين الأذكياء
           </h1>
-          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>نظرة شاملة على نشاط منظومتك التنظيمية + قرارات تنتظر موافقتك</p>
+          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <Link href="/dashboard/ceo/approvals"
@@ -107,10 +107,10 @@ export default function CEODashboardPage() {
 
       {/* Top KPIs */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: 10, marginBottom: 18 }}>
-        <KPI label="مدراء نشطون" value={managers.filter(m => m.manager_enabled).length} icon={Network} color="var(--purple-ai)" />
-        <KPI label="توجيهات نشطة" value={totalActiveDirectives} icon={Sparkles} color="var(--info)" />
-        <KPI label="اقتراحات تنتظرك" value={totalPendingSuggestions} icon={Bot} color={totalPendingSuggestions > 0 ? "var(--gold-1)" : "var(--text-ghost)"} highlight={totalPendingSuggestions > 0} />
-        <KPI label="قرارات تنتظرك" value={pendingEscalations.length} icon={AlertTriangle} color={pendingEscalations.length > 0 ? "var(--danger)" : "var(--text-ghost)"} highlight={pendingEscalations.length > 0} />
+        <KPI label="مساعدون نشطون"   value={managers.filter(m => m.manager_enabled).length} icon={Network} color="var(--purple-ai)" />
+        <KPI label="مهام يعملون عليها" value={totalActiveDirectives} icon={Sparkles} color="var(--info)" />
+        <KPI label="اقتراحات لمراجعتك" value={totalPendingSuggestions} icon={Bot} color={totalPendingSuggestions > 0 ? "var(--gold-1)" : "var(--text-ghost)"} highlight={totalPendingSuggestions > 0} />
+        <KPI label="قرارات تنتظرك"   value={pendingEscalations.length} icon={AlertTriangle} color={pendingEscalations.length > 0 ? "var(--danger)" : "var(--text-ghost)"} highlight={pendingEscalations.length > 0} />
       </div>
 
       {/* Pending Escalations — أعلى أولوية */}
@@ -163,7 +163,7 @@ export default function CEODashboardPage() {
 
       {/* Manager status grid */}
       <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
-        <Network size={14} /> حالة الأقسام
+        <Network size={14} /> مساعدوك حسب التخصّص
       </h2>
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
@@ -183,9 +183,9 @@ export default function CEODashboardPage() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.manager_name}</div>
                   <div style={{ fontSize: 10, color: "var(--text-ghost)", marginTop: 3, display: "flex", gap: 8 }}>
-                    <span>{m.employee_count} موظف</span>
+                    <span>{m.employee_count} متخصّص</span>
                     <span>•</span>
-                    <span>{m.active_directives} توجيه</span>
+                    <span>{m.active_directives} مهمّة</span>
                     {m.pending_suggestions > 0 && (
                       <>
                         <span>•</span>

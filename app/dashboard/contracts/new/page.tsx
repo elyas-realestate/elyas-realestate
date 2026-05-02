@@ -61,8 +61,19 @@ export default function NewContractPage() {
     setValues(initial);
   }
 
-  function fillTemplate(html: string, vars: Record<string, string>): string {
-    return html.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] || `{{${key}}}`);
+  function fillTemplate(html: string, vars: Record<string, string>, useFriendlyPlaceholder = false): string {
+    return html.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+      const val = vars[key];
+      if (val) return val;
+      // عند المعاينة: نعرض label بشري بلون رمادي بدل {{key}}
+      if (useFriendlyPlaceholder && selected) {
+        const v = selected.variables.find(x => x.name === key);
+        const label = v?.label || key;
+        return `<span class="contract-placeholder">[${label}]</span>`;
+      }
+      // عند الحفظ النهائي: نُبقي {{key}} فارغة (يُكمَل لاحقاً)
+      return `{{${key}}}`;
+    });
   }
 
   async function handleCreate() {
@@ -271,7 +282,7 @@ export default function NewContractPage() {
           {/* العمود الأيسر: المعاينة */}
           <div style={{ background: "#FAFAFA", color: "var(--pure-black)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 24, maxHeight: "85vh", overflowY: "auto", direction: "rtl" }}>
             <div className="contract-preview"
-              dangerouslySetInnerHTML={{ __html: fillTemplate(selected.body_html, values) }}
+              dangerouslySetInnerHTML={{ __html: fillTemplate(selected.body_html, values, true) }}
               style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.8 }} />
           </div>
         </div>
@@ -284,6 +295,14 @@ export default function NewContractPage() {
         .contract-preview p { margin: 8px 0; }
         .contract-preview ul { margin: 8px 0; padding-inline-start: 24px; }
         .contract-preview li { margin: 4px 0; }
+        .contract-placeholder {
+          color: #9A9AA0;
+          background: rgba(198,145,76,0.08);
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-size: 0.92em;
+          border: 1px dashed rgba(198,145,76,0.30);
+        }
       `}</style>
     </div>
   );

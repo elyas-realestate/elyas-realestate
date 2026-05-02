@@ -16,8 +16,9 @@ function calcMonthly(loan: number, annualRate: number, years: number): number {
   return loan * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
+// نستعمل الأرقام الإنجليزية بفواصل آلاف لتسهيل القراءة المالية وتجنّب اختلاط الـ glyphs
 function fmtFull(n: number) {
-  return Math.round(n).toLocaleString("ar-SA");
+  return Math.round(n).toLocaleString("en-US");
 }
 
 // ── البنوك السعودية ──────────────────────────────────────────────────────────
@@ -389,10 +390,12 @@ export default function MortgagePage() {
           </div>
         </div>
 
-        {/* Disclaimer */}
-        <div className="rounded-xl px-5 py-4 mt-8" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}>
-          <p style={{ fontSize: 11, color: "var(--text-faint)", lineHeight: 1.8 }}>
-            ⚠ <strong style={{ color: "var(--text-soft)" }}>تنبيه:</strong> هذه الحاسبة للاستئناس فقط. الأرقام الفعلية تختلف حسب سياسات البنك، التاريخ الائتماني، ونوع التمويل (ثابت/متغير). تواصل مع البنك المختص للحصول على عرض رسمي.
+        {/* Disclaimer — إخلاء مسؤولية + إشارة لساما */}
+        <div className="rounded-xl px-5 py-4 mt-8" style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}>
+          <p style={{ fontSize: 11.5, color: "var(--text-soft)", lineHeight: 1.9 }}>
+            ⚠ <strong style={{ color: "var(--text-strong)" }}>إخلاء مسؤولية:</strong> هذه أرقام إرشادية فقط ولا تُعدّ عرضاً تمويلياً رسمياً. الأرقام الفعلية تعتمد على سياسات البنك، تاريخك الائتماني، ونوع التمويل (ثابت/متغير). كذلك يخضع التمويل العقاري لضوابط <strong>البنك المركزي السعودي (ساما)</strong> ونسبة عبء الدين (DTI) المحدّدة، وقد لا يتطابق القسط الفعلي مع المحسوب هنا.
+            <br/>
+            للحصول على عرض رسمي، تواصل مباشرة مع البنك أو شركة التمويل المرخّصة.
           </p>
         </div>
       </div>

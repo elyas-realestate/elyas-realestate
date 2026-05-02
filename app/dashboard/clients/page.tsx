@@ -248,8 +248,18 @@ export default function Clients() {
               <input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required className={inp} style={{ color: "var(--text-strong)" }} />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم الجوال</label>
-              <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} dir="ltr" />
+              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم الجوال <span style={{ color:"var(--danger)" }}>*</span></label>
+              <input
+                value={form.phone}
+                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                required
+                pattern="^(\+?966|0)?5\d{8}$"
+                title="أدخل رقم سعودي صحيح، مثال: 0501234567"
+                placeholder="05XXXXXXXX"
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+                dir="ltr"
+              />
             </div>
             <div>
               <label className="block text-sm text-[var(--text-soft)] mb-2">الفئة *</label>

@@ -316,12 +316,27 @@ export default function SubscriptionPage() {
               {/* السعر */}
               <div className="mb-5 pb-5" style={{ borderBottom: "1px solid var(--gold-bg)" }}>
                 {plan.price === 0 ? (
-                  <span className="font-bold" style={{ fontSize: 26, color: "var(--text-strong)" }}>مجاناً</span>
+                  <>
+                    <span className="font-bold" style={{ fontSize: 26, color: "var(--text-strong)" }}>مجاناً</span>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 4 }}>للأبد</div>
+                  </>
                 ) : (
-                  <div className="flex items-end gap-1">
-                    <span className="font-bold" style={{ fontSize: 28, color: plan.color }}>{plan.price}</span>
-                    <span style={{ fontSize: 13, color: "var(--text-faint)", marginBottom: 4 }}>ر.س / شهر</span>
-                  </div>
+                  <>
+                    <div className="flex items-end gap-1">
+                      <span className="font-bold" style={{ fontSize: 28, color: plan.color }}>{plan.price}</span>
+                      <span style={{ fontSize: 13, color: "var(--text-faint)", marginBottom: 4 }}>ر.س / شهر</span>
+                    </div>
+                    {/* السعر السنوي بخصم ١٧٪ */}
+                    <div style={{ marginTop: 6, fontSize: 11.5, color: "var(--text-soft)", display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <span>أو</span>
+                      <strong style={{ color: "var(--gold-2)", fontSize: 12.5 }}>
+                        {Math.round(plan.price * 12 * 0.83).toLocaleString("en-US")} ر.س
+                      </strong>
+                      <span>سنوياً</span>
+                      <span style={{ background:"var(--success-bg)", color:"var(--success)", padding:"1px 6px", borderRadius:4, fontSize:10, fontWeight:700 }}>وفّر ١٧٪</span>
+                    </div>
+                    <div style={{ fontSize: 10.5, color: "var(--text-faint)", marginTop: 4 }}>الأسعار شاملة ضريبة القيمة المضافة (١٥٪)</div>
+                  </>
                 )}
               </div>
 
@@ -385,11 +400,13 @@ export default function SubscriptionPage() {
         })}
       </div>
 
-      {/* ── ملاحظة ── */}
-      <div className="rounded-xl p-4" style={{ background: "rgba(198,145,76,0.04)", border: "1px solid var(--gold-bg)" }}>
-        <p style={{ fontSize: 13, color: "var(--text-faint)", lineHeight: 1.7 }}>
-          <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>ملاحظة:</span>{" "}
-          الدفع عبر بوابة Moyasar — تأكد من إضافة <code style={{ background: "var(--gold-bg)", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>MOYASAR_SECRET_KEY</code> في متغيرات البيئة.
+      {/* ── ملاحظة الأمان ── */}
+      <div className="rounded-xl p-4" style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}>
+        <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8 }}>
+          <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>🔒 دفع آمن:</span>{" "}
+          نعتمد بوابة <strong style={{ color:"var(--text-strong)" }}>ميسر</strong> المرخّصة من البنك المركزي السعودي.
+          جميع المعاملات مشفّرة ومتوافقة مع معيار <strong>PCI-DSS</strong>.
+          الأسعار شاملة ضريبة القيمة المضافة (١٥٪).
         </p>
       </div>
 
@@ -460,7 +477,7 @@ export default function SubscriptionPage() {
                 {paying ? <><Loader2 size={15} className="animate-spin" /> جارٍ الدفع...</> : <><Lock size={14} /> ادفع بأمان الآن</>}
               </button>
               <p style={{ fontSize: 11, color: "var(--border-1)", textAlign: "center", marginTop: 10 }}>
-                مُؤمَّن بواسطة Moyasar · SSL
+                مُؤمَّن عبر بوابة ميسر · تشفير SSL
               </p>
             </div>
           </div>
