@@ -193,16 +193,34 @@ export async function GET(req: NextRequest) {
           employees_summary: Object.fromEntries(Object.entries(perEmployee).map(([, v]) => [v.name, v])),
         };
 
-        // إذا ما في نشاط، نحفظ مراجعة فاضية مختصرة
+        // إذا ما في نشاط، نولّد مراجعة مخصّصة للمدير (لا نص عام مكرر)
         if (activities.length === 0 && escalations.length === 0) {
+          const teamSize = employees.length;
+          const dirCount = mgrDirectives.length;
+          const empDirCount = empDirectives.length;
+
+          // summary مخصّصة بناءً على دور المدير + حالة فريقه
+          const customSummaries: Record<string, string> = {
+            cs_manager: `لا تواصل عملاء جدد عبر واتساب اليوم. ${teamSize} موظفون جاهزون: استقبال + تصنيف + سكرتير. توصية: راجع رسائل اليوم السابق وحدّد leads متأخرة.`,
+            marketing_manager: `لم تُنشر منشورات اليوم. الفريق (${teamSize} متخصّصون) ينتظر عقارات حديثة لإطلاق حملة. توصية: فعّل ٣ عقارات جديدة لتحريك ماكينة المحتوى.`,
+            asset_manager: `لا حركة في الأملاك اليوم. ${teamSize} متخصّصون متاحون لإيجار/صيانة/تسويق وحدات شاغرة. توصية: راجع قائمة العقارات الراكدة + أحالها لـ vacancy_filler.`,
+            financial_manager: `لا قيود محاسبية أو تحصيلات اليوم. الفريق المالي (${teamSize}) جاهز للمراجعة. توصية: شغّل المحلل المالي على آخر شهر لرصد فجوات.`,
+            dev_bizdev_manager: `لا نشاط تطويري أو فرص أعمال جديدة اليوم. ${teamSize} متخصّصون يحتاجون مهمة. توصية: أعطِ اتجاهاً واضحاً لهذا الأسبوع (تطوير ميزة جديدة أو استكشاف سوق).`,
+          };
+
+          const summary = customSummaries[mgr.code]
+            || `${mgr.name}: يومٌ هادئ. ${teamSize} موظفون نشطون، ${dirCount} توجيه استراتيجي، ${empDirCount} توجيه تشغيلي. ينتظر الفريق نشاطاً ليتفاعل معه.`;
+
           await admin.from("manager_reviews").insert({
             tenant_id: t.id,
             manager_id: mgr.id,
             period_start: periodStart,
             period_end: periodEnd,
-            summary: "لا يوجد نشاط مسجَّل للفريق خلال آخر ٢٤ ساعة.",
+            summary,
             highlights: [],
-            concerns: [],
+            concerns: teamSize > 0 && dirCount === 0 ? [
+              { title: "لا توجيهات استراتيجية", severity: "info" as const, detail: "الفريق بدون توجيهات استراتيجية حالية. اضبطها من /dashboard/organization." }
+            ] : [],
             metrics,
             suggestions_count: 0,
             generated_by_model: `${provider}:${model}`,
