@@ -105,17 +105,26 @@ export async function GET() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  const { data: employees } = await admin
+  const { data: employees, error: empErr } = await admin
     .from("ai_employees")
-    .select("code, name, ai_provider, ai_model, is_active, manager_id")
+    .select("code, name, default_ai_provider, default_ai_model, is_active, manager_id")
     .order("display_order", { ascending: true });
+
+  if (empErr) {
+    return NextResponse.json({ error: empErr.message, employees: [], total: 0, active: 0 }, { status: 500 });
+  }
 
   const { data: managers } = await admin
     .from("ai_managers")
     .select("id, code, name, department");
 
   const enriched = (employees || []).map((e: any) => ({
-    ...e,
+    code: e.code,
+    name: e.name,
+    is_active: e.is_active,
+    manager_id: e.manager_id,
+    ai_provider: e.default_ai_provider,
+    ai_model: e.default_ai_model,
     manager_name: managers?.find((m: any) => m.id === e.manager_id)?.name || null,
   }));
 
