@@ -199,7 +199,10 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
             )}
             <div style={{ lineHeight:1.2 }}>
               <span className="font-kufi" style={{ fontSize:15, fontWeight:800, color:clrTextPrimary, display:"block" }}>{siteName}</span>
-              {specialization && <span style={{ fontSize:10, color:clrAccent, fontWeight:500 }}>{specialization}</span>}
+              {identity?.fal_license
+                ? <span style={{ fontSize:10, color:clrAccent, fontWeight:500 }}>مرخّص فال — {identity.fal_license}</span>
+                : specialization && <span style={{ fontSize:10, color:clrAccent, fontWeight:500 }}>{specialization}</span>
+              }
             </div>
           </div>
           <div className="nav-links" style={{ display:"flex", alignItems:"center", gap:28 }}>
@@ -215,7 +218,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
         {/* HERO */}
         <section className="dot-pattern" style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden", paddingTop:68 }}>
           {heroImage && (
-            <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${hexToRgba(clrBgPrimary, 0.35)} 0%, ${hexToRgba(clrBgPrimary, 0.94)} 90%), url(${heroImage}) center/cover no-repeat` }} />
+            <div style={{ position:"absolute", inset:0, background:`linear-gradient(180deg, ${hexToRgba(clrBgPrimary, 0.30)} 0%, ${hexToRgba(clrBgPrimary, 0.55)} 100%), url(${heroImage}) center/cover no-repeat` }} />
           )}
           <div style={{ position:"absolute", inset:0, background:`radial-gradient(ellipse at 50% 0%, color-mix(in srgb, ${clrAccent} 7%, transparent) 0%, transparent 65%)`, pointerEvents:"none" }} />
           <div className="fade-up" style={{ position:"relative", zIndex:1, textAlign:"center", maxWidth:820, padding:"0 28px" }}>
@@ -232,7 +235,10 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
             {bioShort && <p className="d3 fade-up" style={{ fontSize:fntBody, color:clrTextSec, lineHeight:1.85, maxWidth:560, margin:"0 auto 36px" }}>{bioShort}</p>}
             {specialization && (
               <div className="d3 fade-up" style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:13, color:clrTextSec, background:`color-mix(in srgb, ${clrAccent} 6%, transparent)`, border:`1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`, borderRadius:10, padding:"7px 16px", marginBottom:32 }}>
-                🏢 {specialization}
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={clrAccent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}>
+                  <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/>
+                </svg>
+                {specialization}
                 {areas.length > 0 && <> — <span style={{ color:clrAccent }}>{areas.slice(0,3).join("، ")}</span></>}
               </div>
             )}
@@ -325,14 +331,16 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                   : properties.filter((p: any) => p.offer_type !== "إيجار" && p.offer_type !== "مشروع" && !(p.sub_category || "").includes("مشروع"));
                 if (!filtered.length) return null;
                 const labels: Record<string, {emoji: string; title: string}> = {
-                  "مشروع": { emoji: "🏢", title: "المشاريع العقارية" },
-                  "بيع":   { emoji: "🏠", title: "عقارات للبيع" },
-                  "إيجار": { emoji: "🔑", title: "عقارات للإيجار" },
+                  "مشروع": { emoji: "building", title: "المشاريع العقارية" },
+                  "بيع":   { emoji: "home",     title: "عقارات للبيع" },
+                  "إيجار": { emoji: "key",      title: "عقارات للإيجار" },
                 };
                 return (
                   <div key={type} style={{ marginBottom:60 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
-                      <span style={{ fontSize:24 }}>{labels[type].emoji}</span>
+                      <span style={{ color:clrAccent, display:"flex" }}>
+                        <ServiceIcon name={labels[type].emoji} size={22} />
+                      </span>
                       <h3 className="font-kufi" style={{ fontSize:20, fontWeight:800, color:clrTextPrimary }}>{labels[type].title}</h3>
                       <div style={{ flex:1, height:1, background:`color-mix(in srgb, ${clrAccent} 15%, transparent)` }} />
                     </div>
@@ -342,7 +350,9 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                           <div style={{ height:210, overflow:"hidden", position:"relative", background:"var(--bg-surface-2)" }}>
                             {p.images?.[0]
                               ? <img src={p.images[0]} alt={p.title} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                              : <div style={{ display:"flex", alignItems:"center", justifyContent:"center", height:"100%", fontSize:36, color:clrTextMuted }}>{labels[type].emoji}</div>
+                              : <div style={{ display:"flex", alignItems:"center", justifyContent:"center", height:"100%", color:clrTextMuted }}>
+                                  <ServiceIcon name={labels[type].emoji} size={48} />
+                                </div>
                             }
                             <span style={{ position:"absolute", top:14, right:14, background: type === "إيجار" ? "rgba(96,165,250,0.9)" : clrAccent, color: type === "إيجار" ? "#fff" : clrBgPrimary, fontSize:12, fontWeight:700, padding:"4px 12px", borderRadius:7 }}>
                               {p.offer_type || type}

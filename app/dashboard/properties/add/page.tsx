@@ -10,6 +10,7 @@ import {
 import SARIcon from "../../../components/SARIcon";
 import { checkLimit } from "@/lib/plan-limits";
 import { toast } from "sonner";
+import MapsLinkInput from "@/app/components/MapsLinkInput";
 
 
 const categoriesMap: Record<string, string[]> = {
@@ -110,6 +111,7 @@ export default function AddProperty() {
     city: "الرياض", district: "", land_area: "", built_area: "",
     rooms: "", bathrooms: "", floors: "", price: "",
     description: "", main_image: "", extra_images: "", location_url: "",
+    latitude: null as number | null, longitude: null as number | null,
     contact_phone: "", ad_license_number: "", is_published: false,
   });
 
@@ -262,6 +264,8 @@ export default function AddProperty() {
       description:   form.description,
       main_image:    form.main_image || null,
       location_url:  form.location_url || null,
+      latitude:      form.latitude,
+      longitude:     form.longitude,
       contact_phone: form.contact_phone || null,
       is_published:  form.is_published,
     };
@@ -390,13 +394,12 @@ export default function AddProperty() {
                 <input name="district" value={form.district} onChange={handleChange} required className={inp} placeholder="مثال: النرجس" />
               </div>
             </div>
-            <div>
-              <label className={lbl}>رابط الموقع على الخريطة</label>
-              <input name="location_url" value={form.location_url} onChange={handleChange} className={inp} placeholder="https://maps.google.com/..." dir="ltr" />
-              <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 5 }}>
-                افتح Google Maps، ابحث عن الموقع، ثم انسخ الرابط من شريط العنوان
-              </p>
-            </div>
+            <MapsLinkInput
+              lat={form.latitude}
+              lng={form.longitude}
+              onChange={(lat, lng) => setForm(f => ({ ...f, latitude: lat, longitude: lng, location_url: `https://www.google.com/maps?q=${lat},${lng}` }))}
+              onClear={() => setForm(f => ({ ...f, latitude: null, longitude: null, location_url: "" }))}
+            />
           </div>
         </Section>
 

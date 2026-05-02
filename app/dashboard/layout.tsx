@@ -741,7 +741,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </aside>
 
         {/* ═══════ MAIN ═══════ */}
-        <main className="dash-main flex-1" style={{ minHeight: "calc(100vh - 60px)" }}>
+        <main className="dash-main flex-1" style={{ minHeight: "calc(100vh - 60px)", minWidth: 0, maxWidth: "100%", overflowX: "hidden" }}>
           {children}
         </main>
       </div>

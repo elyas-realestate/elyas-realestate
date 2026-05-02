@@ -256,7 +256,11 @@ export default function Deals() {
           minHeight: 500,
           // يحدد المنطقة القابلة للتمرير الأفقي بحيث لا تكسر الصفحة
           maxWidth: "100%",
+          width: "100%",
+          minWidth: 0,
           scrollbarWidth: "thin",
+          // critical: يمنع flex-children من توسيع الـ parent
+          flexShrink: 0,
         }}>
           {STAGES.map(stage => {
             const stageDeals = filtered.filter(d => d.current_stage === stage.id);

@@ -227,15 +227,21 @@ export default function Clients() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           { label: "إجمالي العملاء",   value: clients.length,           color: "var(--gold-2)" },
-          { label: "🔥 ساخنون",        value: sentimentCounts.hot,      color: "var(--danger)" },
-          { label: "🌡️ دافئون",        value: sentimentCounts.warm,     color: "var(--warning)" },
-          { label: "❄️ باردون",         value: sentimentCounts.cold,     color: "var(--info)" },
-        ].map(s => (
-          <div key={s.label} className="card-luxury p-4">
-            <div className="font-cairo font-bold" style={{ fontSize: 22, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 3 }}>{s.label}</div>
-          </div>
-        ))}
+          { label: "ساخنون",        value: sentimentCounts.hot,      color: "var(--danger)",  iconKey: "hot" },
+          { label: "دافئون",        value: sentimentCounts.warm,     color: "var(--warning)", iconKey: "warm" },
+          { label: "باردون",        value: sentimentCounts.cold,     color: "var(--info)",    iconKey: "cold" },
+        ].map(s => {
+          const Icon = s.iconKey ? SENTIMENT_CFG[s.iconKey as "hot"|"warm"|"cold"]?.icon : null;
+          return (
+            <div key={s.label} className="card-luxury p-4">
+              <div className="flex items-center justify-between mb-1">
+                <div className="font-cairo font-bold" style={{ fontSize: 22, color: s.color }}>{s.value}</div>
+                {Icon && <Icon size={16} style={{ color: s.color }} />}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-faint)" }}>{s.label}</div>
+            </div>
+          );
+        })}
       </div>
 
       {/* ── Add form ── */}
@@ -331,9 +337,9 @@ export default function Clients() {
       <div className="flex gap-2 mb-5 flex-wrap">
         {([
           { key: "الكل", label: "الكل", color: "var(--text-soft)", bg: "rgba(90,90,98,0.1)" },
-          { key: "hot",  label: "🔥 ساخن", color: "var(--danger)", bg: "rgba(248,113,113,0.08)" },
-          { key: "warm", label: "🌡️ دافئ", color: "var(--warning)", bg: "rgba(250,204,21,0.08)"  },
-          { key: "cold", label: "❄️ بارد",  color: "var(--info)", bg: "rgba(96,165,250,0.08)"  },
+          { key: "hot",  label: "ساخن", color: "var(--danger)",  bg: "rgba(248,113,113,0.08)" },
+          { key: "warm", label: "دافئ", color: "var(--warning)", bg: "rgba(250,204,21,0.08)"  },
+          { key: "cold", label: "بارد", color: "var(--info)",    bg: "rgba(96,165,250,0.08)"  },
         ] as const).map(({ key, label, color, bg }) => {
           const isActive = sentimentFilter === key;
           const count = key === "الكل" ? clients.length : sentimentCounts[key as SentimentKey];
@@ -348,6 +354,10 @@ export default function Clients() {
                 border: `1px solid ${isActive ? color + "44" : "var(--gold-bg-soft)"}`,
               }}
             >
+              {key !== "الكل" && (() => {
+                const Icon = SENTIMENT_CFG[key as "hot"|"warm"|"cold"]?.icon;
+                return Icon ? <Icon size={12} /> : null;
+              })()}
               {label}
               <span style={{ fontSize: 10, opacity: 0.75 }}>({count})</span>
             </button>

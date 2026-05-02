@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import {
   ArrowRight, MessageCircle, Send, Check, X, Edit3, RefreshCw,
-  AlertCircle, Loader2, Phone, Sparkles, Trash2, Clock,
+  AlertCircle, Loader2, Phone, Sparkles, Trash2, Clock, Snowflake,
 } from "lucide-react";
 
 type FollowupItem = {
@@ -247,8 +247,8 @@ export default function FollowupsPage() {
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {item.client?.sentiment === "cold" && (
-                      <span style={{ fontSize: 10, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "3px 7px", borderRadius: 5 }}>
-                        ❄ بارد
+                      <span style={{ fontSize: 10, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "3px 7px", borderRadius: 5, display: "inline-flex", alignItems: "center", gap: 3 }}>
+                        <Snowflake size={10} /> بارد
                       </span>
                     )}
                     <span style={{ fontSize: 10, fontWeight: 600, color: status.color, background: status.bg, padding: "3px 8px", borderRadius: 5 }}>
