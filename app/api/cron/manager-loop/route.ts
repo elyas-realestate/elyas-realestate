@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { generateJSON, type AIProvider } from "@/lib/ai-call";
+import { assertSystemActive, incrementCallCount } from "@/lib/system-gate";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/manager-loop — التعلّم التنظيمي اليومي (K-8)
@@ -86,6 +87,16 @@ export async function GET(req: NextRequest) {
   const periodEnd = now.toISOString();
 
   for (const t of activeTenants) {
+    // ✨ بوّاب التشغيل
+    const gate = await assertSystemActive(t.id);
+    if (!gate.ok) {
+      await admin.from("org_activity_log").insert({
+        tenant_id: t.id, actor_kind: "system", action: "manager_loop_skipped",
+        details: { reason: gate.reason, gated: true }
+      });
+      continue;
+    }
+
     let managersProcessed = 0;
     let reviewsCreated = 0;
     let suggestionsCreated = 0;
@@ -315,6 +326,8 @@ ${escSnippet}
           errors.push(`${mgr.code}: invalid AI output`);
           continue;
         }
+
+        await incrementCallCount(t.id);
 
         // حفظ المراجعة
         const validSuggestions = (review.suggestions || []).filter(s =>

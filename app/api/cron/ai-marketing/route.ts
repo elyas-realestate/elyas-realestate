@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { generateText } from "@/lib/ai-call";
 import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
+import { assertSystemActive, incrementCallCount } from "@/lib/system-gate";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-marketing — موظف التسويق
@@ -98,6 +99,17 @@ export async function GET(req: NextRequest) {
         .from("tenants").select("is_active").eq("id", t.tenant_id).single();
       if (!tenantRow?.is_active) continue;
 
+      // 2.1) ✨ بوّاب التشغيل: master switch + daily limit
+      const gate = await assertSystemActive(t.tenant_id);
+      if (!gate.ok) {
+        results.push({ tenant_id: t.tenant_id, ok: true, inserted: 0, error: `gated:${gate.reason}` });
+        await admin.from("org_activity_log").insert({
+          tenant_id: t.tenant_id, actor_kind: "system", action: "ai_marketing_skipped",
+          details: { reason: gate.reason, gated: true }
+        });
+        continue;
+      }
+
       // 3) ✨ بناء context الموظف من التوجيهات + KB (المحرّك الجديد K-5)
       const ctx = await buildEmployeeContext(t.tenant_id, "content_creator");
       if (!ctx) {
@@ -150,6 +162,9 @@ ${propertyBrief(p)}
           }
 
           if (!content || content.length < 10) continue;
+
+          // عداد الاستدعاءات
+          await incrementCallCount(t.tenant_id);
 
           // استخراج هاشتاقات من النص (للتخزين المنفصل)
           const hashtags = Array.from(new Set(
