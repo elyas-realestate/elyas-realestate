@@ -93,6 +93,15 @@ export async function GET() {
       .order("created_at", { ascending: false })
       .limit(10);
 
+    // 5) عدّاد المخرجات (منشورات + متابعات pending)
+    const [marketingPending, followupPending] = await Promise.all([
+      admin.from("marketing_queue").select("id", { count: "exact", head: true })
+        .eq("tenant_id", tenant.id).eq("status", "pending"),
+      admin.from("followup_queue").select("id", { count: "exact", head: true })
+        .eq("tenant_id", tenant.id).eq("status", "pending"),
+    ]);
+    const outputs_count = (marketingPending.count || 0) + (followupPending.count || 0);
+
     return NextResponse.json({
       ok: true,
       tenant: {
@@ -108,6 +117,7 @@ export async function GET() {
       employees,
       activity: activity || [],
       reviews: reviews || [],
+      outputs_count,
       schedule: [
         { time: "كل ساعة",        cron: "0 * * * *",  task: "التذكيرات",       endpoint: "/api/cron/reminders" },
         { time: "٧:٠٠ ص (الرياض)", cron: "0 4 * * *",  task: "موظف التسويق",   endpoint: "/api/cron/ai-marketing" },

@@ -6,6 +6,10 @@ import {
   Settings2, Pause, Play, Zap, Calendar, Activity, FlaskConical
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+
+// حدث مشترك بين control page والـ layout لتحديث الـ hero
+const REFRESH_EVENT = "ai-hub-refresh";
 
 type Tenant = {
   id: string;
@@ -63,34 +67,62 @@ export default function ControlTab() {
     setBusy("master");
     try {
       const reason = !active ? prompt("سبب الإيقاف (اختياري):") || undefined : undefined;
-      await fetch("/api/admin/operations/master-toggle", {
+      const res = await fetch("/api/admin/operations/master-toggle", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ active, reason }),
       });
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        toast.error(j.error || "فشل تعديل النظام");
+      } else {
+        toast.success(active ? "✅ تم تشغيل النظام" : "🛑 تم إيقاف النظام");
+        window.dispatchEvent(new Event(REFRESH_EVENT));
+      }
       await load();
+    } catch (e: any) {
+      toast.error(e?.message || "خطأ غير متوقع");
     } finally { setBusy(null); }
   }
 
   async function toggleTarget(kind: "manager" | "employee", code: string, current: boolean) {
     setBusy(`${kind}:${code}`);
     try {
-      await fetch("/api/admin/operations/employee-toggle", {
+      const res = await fetch("/api/admin/operations/employee-toggle", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kind, code, enabled: !current }),
       });
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        toast.error(j.error || "فشل تعديل المساعد");
+      } else {
+        const verb = !current ? "✅ تم تشغيل" : "🛑 تم إيقاف";
+        toast.success(`${verb} ${j.target?.name || code}`);
+        window.dispatchEvent(new Event(REFRESH_EVENT));
+      }
       await load();
+    } catch (e: any) {
+      toast.error(e?.message || "خطأ غير متوقع");
     } finally { setBusy(null); }
   }
 
   async function saveLimit() {
     setBusy("limit");
     try {
-      await fetch("/api/admin/operations/limit", {
+      const res = await fetch("/api/admin/operations/limit", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ daily_call_limit: limitDraft }),
       });
-      setEditingLimit(false);
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        toast.error(j.error || "فشل تحديث الحد");
+      } else {
+        toast.success(`✅ الحد اليومي الآن ${limitDraft}`);
+        setEditingLimit(false);
+        window.dispatchEvent(new Event(REFRESH_EVENT));
+      }
       await load();
+    } catch (e: any) {
+      toast.error(e?.message || "خطأ غير متوقع");
     } finally { setBusy(null); }
   }
 

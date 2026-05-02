@@ -16,15 +16,14 @@ type StatusResp = {
   };
   managers?: Array<{ tenant_enabled: boolean }>;
   employees?: Array<{ tenant_enabled: boolean }>;
+  outputs_count?: number;
 };
 
 type ApprovalsResp = {
   pending?: any[];
 };
 
-type QueueResp = {
-  total?: number;
-};
+const REFRESH_EVENT = "ai-hub-refresh";
 
 const TABS = [
   { id: "control",    href: "/dashboard/ai/control",    label: "التحكم",    icon: Power },
@@ -39,23 +38,30 @@ export default function AILayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [status, setStatus] = useState<StatusResp | null>(null);
   const [counts, setCounts] = useState({ assistants: 0, outputs: 0, approvals: 0 });
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let alive = true;
-    Promise.all([
+  // دالة جلب البيانات — قابلة لإعادة الاستدعاء
+  async function fetchAll() {
+    const [statusRes, apr] = await Promise.all([
       fetch("/api/admin/operations/status").then(r => r.json()).catch(() => null),
       fetch("/api/org/approvals").then(r => r.json()).catch(() => ({ pending: [] })),
-      fetch("/api/marketing/queue?status=pending&count=true").then(r => r.json()).catch(() => ({ total: 0 })),
-    ]).then(([statusRes, apr, queue]: [StatusResp, ApprovalsResp, QueueResp]) => {
-      if (!alive) return;
-      setStatus(statusRes);
-      setCounts({
-        assistants: (statusRes?.employees?.length || 0) + (statusRes?.managers?.length || 0),
-        outputs: queue?.total || 0,
-        approvals: apr?.pending?.length || 0,
-      });
+    ]);
+    setStatus(statusRes);
+    setCounts({
+      assistants: (statusRes?.employees?.length || 0) + (statusRes?.managers?.length || 0),
+      outputs: statusRes?.outputs_count || 0,
+      approvals: (apr as ApprovalsResp)?.pending?.length || 0,
     });
-    return () => { alive = false; };
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchAll();
+    // استمع لأحداث التحديث من control page
+    const handler = () => fetchAll();
+    window.addEventListener(REFRESH_EVENT, handler);
+    return () => window.removeEventListener(REFRESH_EVENT, handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const t = status?.tenant;
@@ -86,23 +92,23 @@ export default function AILayout({ children }: { children: React.ReactNode }) {
       }}>
         <HeroStat
           label="حالة النظام"
-          value={isOn ? "🟢 يعمل" : "🔴 متوقف"}
-          color={isOn ? "var(--success)" : "var(--danger)"}
+          value={loading ? null : (isOn ? "🟢 يعمل" : "🔴 متوقف")}
+          color={loading ? "var(--text-faint)" : isOn ? "var(--success)" : "var(--danger)"}
         />
         <HeroStat
           label="استدعاءات اليوم"
-          value={t ? `${t.daily_call_count}/${t.daily_call_limit}` : "—"}
+          value={loading ? null : t ? `${t.daily_call_count}/${t.daily_call_limit}` : "—"}
           color={usagePct > 80 ? "var(--danger)" : usagePct > 50 ? "var(--warning)" : "var(--success)"}
-          progressPct={usagePct}
+          progressPct={loading ? 0 : usagePct}
         />
         <HeroStat
           label="المساعدون النشطون"
-          value={`${enabledAssistants}/${counts.assistants}`}
+          value={loading ? null : `${enabledAssistants}/${counts.assistants}`}
           color="var(--gold-2)"
         />
         <HeroStat
           label="الموافقات المعلَّقة"
-          value={String(counts.approvals)}
+          value={loading ? null : String(counts.approvals)}
           color={counts.approvals > 0 ? "var(--warning)" : "var(--text-faint)"}
         />
       </div>
@@ -146,16 +152,31 @@ export default function AILayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function HeroStat({ label, value, color, progressPct }: { label: string; value: string; color: string; progressPct?: number }) {
+function HeroStat({ label, value, color, progressPct }: { label: string; value: string | null; color: string; progressPct?: number }) {
   return (
     <div>
       <div className="text-xs mb-1" style={{ color: "var(--text-faint)" }}>{label}</div>
-      <div className="text-xl font-bold" style={{ color }}>{value}</div>
-      {progressPct !== undefined && (
+      {value === null ? (
+        // Skeleton أثناء التحميل
+        <div style={{
+          width: 80, height: 24, borderRadius: 4,
+          background: "var(--bg-surface-2)",
+          animation: "pulse 1.4s ease-in-out infinite",
+        }} />
+      ) : (
+        <div className="text-xl font-bold" style={{ color }}>{value}</div>
+      )}
+      {progressPct !== undefined && value !== null && (
         <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ background: "var(--bg-surface-2)" }}>
           <div className="h-full transition-all" style={{ width: `${progressPct}%`, background: color }} />
         </div>
       )}
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
     </div>
   );
 }
