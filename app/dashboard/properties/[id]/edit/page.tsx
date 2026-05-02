@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, Save, Eye, EyeOff, Check, Upload, X, Sparkles, Loader2 } from "lucide-react";
 import SARIcon from "../../../../components/SARIcon";
 import { toast } from "sonner";
+import MapsLinkInput from "@/app/components/MapsLinkInput";
 
 
 const categoriesMap: Record<string, string[]> = {
@@ -48,6 +49,7 @@ export default function EditProperty() {
     city: "", district: "", land_area: "", built_area: "",
     rooms: "", bathrooms: "", floors: "", price: "",
     description: "", main_image: "", extra_images: "", location_url: "",
+    latitude: null, longitude: null,
     contact_phone: "", ad_license_number: "", is_published: false,
   });
 
@@ -82,6 +84,8 @@ export default function EditProperty() {
         main_image:    data.main_image || "",
         extra_images:  extraImgs.join("\n"),
         location_url:  data.location_url || "",
+        latitude:      data.latitude ?? null,
+        longitude:     data.longitude ?? null,
         contact_phone:     data.contact_phone || "",
         ad_license_number: data.ad_license_number || "",
         is_published:      data.is_published || false,
@@ -187,6 +191,8 @@ export default function EditProperty() {
       description:   form.description,
       main_image:    form.main_image || null,
       location_url:  form.location_url || null,
+      latitude:      form.latitude,
+      longitude:     form.longitude,
       contact_phone: form.contact_phone || null,
       is_published:  form.is_published,
       ad_license_number: form.ad_license_number.trim() || null,
@@ -287,10 +293,12 @@ export default function EditProperty() {
                 <input name="district" value={form.district} onChange={handleChange} required className={inp} />
               </div>
             </div>
-            <div>
-              <label className={lbl}>رابط الموقع على الخريطة</label>
-              <input name="location_url" value={form.location_url} onChange={handleChange} className={inp} placeholder="https://maps.google.com/..." dir="ltr" />
-            </div>
+            <MapsLinkInput
+              lat={form.latitude}
+              lng={form.longitude}
+              onChange={(lat, lng) => setForm((f: any) => ({ ...f, latitude: lat, longitude: lng, location_url: `https://www.google.com/maps?q=${lat},${lng}` }))}
+              onClear={() => setForm((f: any) => ({ ...f, latitude: null, longitude: null, location_url: "" }))}
+            />
           </div>
         </Section>
 

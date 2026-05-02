@@ -330,7 +330,8 @@ export default function SubscriptionPage() {
                     <div style={{ marginTop: 6, fontSize: 11.5, color: "var(--text-soft)", display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                       <span>أو</span>
                       <strong style={{ color: "var(--gold-2)", fontSize: 12.5 }}>
-                        {Math.round(plan.price * 12 * 0.83).toLocaleString("en-US")} ر.س
+                        {/* السعر السنوي بخصم ١٧٪: ١٢ شهر × السعر × ٠.٨٣ */}
+                        {Math.round(plan.price * 12 * 0.83 / 10) * 10} ر.س
                       </strong>
                       <span>سنوياً</span>
                       <span style={{ background:"var(--success-bg)", color:"var(--success)", padding:"1px 6px", borderRadius:4, fontSize:10, fontWeight:700 }}>وفّر ١٧٪</span>

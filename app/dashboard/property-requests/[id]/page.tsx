@@ -38,10 +38,10 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
 
       let q = supabase
         .from("properties")
-        .select("id, title, district, city, price, offer_type, sub_category, area, rooms, images")
+        .select("id, title, district, city, price, offer_type, sub_category, main_category, built_area, land_area, rooms, images")
         .eq("is_published", true);
 
-      // نطابق على main_category بدل sub_category لأنها أعمّ (شقة/فيلا/أرض/...)
+      // نطابق على main_category أو sub_category (أيهما يحوي القيمة)
       if (r.main_category) q = q.or(`sub_category.eq.${r.main_category},main_category.eq.${r.main_category}`);
       if (r.city)     q = q.eq("city", r.city);
       if (priceMax)   q = q.lte("price", priceMax);
@@ -94,7 +94,7 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
       `🏠 ${prop.title}`,
       `📍 ${prop.city || ""}${prop.district ? " - " + prop.district : ""}`,
       prop.price ? `💰 ${formatSAR(prop.price)}` : "",
-      prop.area ? `📐 ${prop.area} م²` : "",
+      (prop.built_area || prop.land_area) ? `📐 ${prop.built_area || prop.land_area} م²` : "",
       prop.rooms ? `🛏️ ${prop.rooms} غرف` : "",
       "",
       `هل ترغب بترتيب معاينة؟`,
@@ -229,7 +229,7 @@ export default function PropertyRequestDetailPage({ params }: { params: Promise<
                     <div className="text-xs flex items-center gap-2 mt-0.5" style={{ color: "var(--text-soft)" }}>
                       {m.price && <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>{formatSAR(m.price, { short: true })}</span>}
                       {m.district && <span>📍 {m.district}</span>}
-                      {m.area && <span>{m.area}م²</span>}
+                      {(m.built_area || m.land_area) && <span>{m.built_area || m.land_area}م²</span>}
                       {m.rooms && <span>{m.rooms} غرف</span>}
                     </div>
                   </div>

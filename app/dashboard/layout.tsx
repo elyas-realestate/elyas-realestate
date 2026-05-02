@@ -215,20 +215,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [settingsOpen]);
 
   // Command Palette — Cmd/Ctrl + K
+  // ملاحظة: نستعمل document + capture phase لضمان السبق على أي extension/listener
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      const k = (e.key || "").toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && (k === "k" || e.code === "KeyK")) {
         e.preventDefault();
+        e.stopPropagation();
         setSearchOpen(v => !v);
         setSearchQuery("");
       }
-      if (e.key === "Escape") {
+      if (k === "escape") {
         setSearchOpen(false);
         setSettingsOpen(false);
       }
     }
+    document.addEventListener("keydown", onKey, true);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey, true);
+      window.removeEventListener("keydown", onKey);
+    };
   }, []);
 
   // cleanup realtime on unmount
@@ -826,7 +833,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <Toaster
         position="top-right"
-        dir="rtl"
+        dir="ltr"
+        offset={{ top: 80, right: 20 }}
         toastOptions={{
           style: {
             background: "var(--bg-surface-1)",
@@ -835,6 +843,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             fontFamily: "var(--font-tajawal), 'Tajawal', sans-serif",
             fontSize: 14,
             borderRadius: 12,
+            textAlign: "right",
+            direction: "rtl",
           },
         }}
       />
