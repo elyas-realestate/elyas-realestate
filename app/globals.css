@@ -113,7 +113,7 @@
    مستوحى من Sotheby's, Compass, Christie's
 ═══════════════════════════════════════════════════════════════ */
 
-:root,
+:root:not([data-theme="dark"]),
 [data-theme="cream"] {
   /* ── الخلفيات ── */
   --bg-page:       #FAF7F2;
