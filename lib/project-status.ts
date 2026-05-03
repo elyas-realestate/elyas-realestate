@@ -189,14 +189,15 @@ export const PHASES: Phase[] = [
   {
     id: "profile-card",
     name: "بطاقة الوسيط (Linktree-style) — MM",
-    description: "إعادة تصميم /[slug] كبطاقة احترافية + لوحة تحكم + QR + روابط بطاقات",
-    status: "pending",
+    description: "صفحة /c/[slug] احترافية + لوحة تحكم + QR + share modal مستوحاة من Bilenda",
+    status: "done",
+    completedAt: "2026-05-03",
     milestones: [
-      { code: "MM-1", name: "Migration: profile_card + cards table", status: "pending" },
-      { code: "MM-2", name: "إعادة تصميم /[slug] بأسلوب linktree-mobile-first", status: "pending" },
-      { code: "MM-3", name: "/dashboard/profile-card — لوحة التحكم بالبطاقة", status: "pending" },
-      { code: "MM-4", name: "QR code للمشاركة + زر مشاركة سريع", status: "pending" },
-      { code: "MM-5", name: "ترتيب draggable للروابط", status: "pending" },
+      { code: "MM-1", name: "Migration 035: profile_cards + profile_links + RLS + seed", status: "done" },
+      { code: "MM-2", name: "/c/[slug] page — Bilenda style (avatar, social brand colors, licenses, hours, share+QR modals, CTA)", status: "done" },
+      { code: "MM-3", name: "/dashboard/profile-card control panel (theme, sections, links)", status: "done" },
+      { code: "MM-4", name: "API routes — GET/PUT card + POST/PATCH/DELETE links", status: "done" },
+      { code: "MM-5", name: "ربط في sidebar (تحت 'أدوات إضافية')", status: "done" },
     ],
   },
   {

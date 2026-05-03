@@ -69,6 +69,7 @@ const secondaryGroups: NavGroup[] = [
   {
     id: "tools", title: "أدوات إضافية", icon: BarChart3,
     items: [
+      { label: "بطاقتي التعريفية",  href: "/dashboard/profile-card",    icon: Sparkles   },
       { label: "المحتوى التسويقي",  href: "/dashboard/marketing",       icon: Megaphone  },
       { label: "قوالب واتساب",      href: "/dashboard/whatsapp",        icon: FileText   },
       { label: "التقارير",          href: "/dashboard/reports",         icon: FileText   },
