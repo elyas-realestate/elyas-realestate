@@ -160,7 +160,7 @@ export default function ContractsPage() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 800 }}>
             <thead>
-              <tr style={{ background: "#141418", color: "var(--text-ghost)", textAlign: "right" }}>
+              <tr style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", textAlign: "right" }}>
                 <th style={{ padding: "11px 14px", fontWeight: 600, fontSize: 12 }}>الرقم</th>
                 <th style={{ padding: "11px 14px", fontWeight: 600, fontSize: 12 }}>العقد</th>
                 <th style={{ padding: "11px 14px", fontWeight: 600, fontSize: 12 }}>الفئة</th>
@@ -175,7 +175,7 @@ export default function ContractsPage() {
                 [1,2,3,4].map(i => (
                   <tr key={i} style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                     <td colSpan={7} style={{ padding: 12 }}>
-                      <div style={{ height: 24, background: "#1C1C1E", borderRadius: 6, animation: "pulse 1.5s ease-in-out infinite" }} />
+                      <div style={{ height: 24, background: "var(--bg-surface-2)", borderRadius: 6, animation: "pulse 1.5s ease-in-out infinite" }} />
                       <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
                     </td>
                   </tr>

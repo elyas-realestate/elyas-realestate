@@ -169,6 +169,19 @@ export const PHASES: Phase[] = [
     ],
   },
   {
+    id: "ux-restructure-ss",
+    name: "إعادة هيكلة شاملة بناءً على CIB audit (SS)",
+    description: "تنظيف copy-paste من بليندا + إصلاح ٤ صفحات بثيم داكن + sidebar 7 عناصر + Office Mode + /today موحَّد",
+    status: "done",
+    completedAt: "2026-05-03",
+    milestones: [
+      { code: "SS-A1", name: "حذف فئات متاجر/توصيل من مكتبة البطاقة (لا علاقة لوسيط)", status: "done" },
+      { code: "SS-A2", name: "إصلاح ٤ صفحات (work-orders, assets, team, contracts) — 250 استبدال للون", status: "done" },
+      { code: "SS-B1", name: "Sidebar من 32 إلى 7 primary + Office Mode toggle", status: "done" },
+      { code: "SS-C1", name: "/dashboard/today صفحة موحَّدة (tasks + deals + followups + requests)", status: "done" },
+    ],
+  },
+  {
     id: "ux-consolidation",
     name: "توحيد تجربة الـ AI (KK + LL)",
     description: "دمج الصفحات المتفرقة في /dashboard/ai واحد بستة تابات + إصلاح ٥ bugs من CIB",

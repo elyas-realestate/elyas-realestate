@@ -28,9 +28,9 @@ type Property = { id: string; title: string };
 
 const STATUS_CFG: Record<Asset["status"], { label: string; color: string; icon: any }> = {
   operational:       { label: "يعمل",              color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30", icon: CheckCircle2 },
-  needs_maintenance: { label: "يحتاج صيانة",        color: "text-amber-400 bg-amber-500/10 border-amber-500/30",       icon: AlertTriangle },
+  needs_maintenance: { label: "يحتاج صيانة",        color: "text-[var(--gold-1)] bg-[var(--gold-2)]/10 border-[var(--gold-bg-hover)]",       icon: AlertTriangle },
   out_of_service:    { label: "خارج الخدمة",        color: "text-red-400 bg-red-500/10 border-red-500/30",             icon: XCircle },
-  retired:           { label: "خارج الاستخدام",     color: "text-slate-400 bg-slate-500/10 border-slate-500/30",       icon: Archive },
+  retired:           { label: "خارج الاستخدام",     color: "text-[var(--text-faint)] bg-slate-500/10 border-slate-500/30",       icon: Archive },
 };
 
 const CATEGORIES = [
@@ -178,7 +178,7 @@ export default function AssetsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-strong)]">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "الأصول" }]} />
 
@@ -188,21 +188,21 @@ export default function AssetsPage() {
               <Package className="w-7 h-7 text-indigo-400" />
               سجل الأصول والفنيين
             </h1>
-            <p className="text-slate-400 text-sm mt-1">أصول العقار + فريق الصيانة</p>
+            <p className="text-[var(--text-faint)] text-sm mt-1">أصول العقار + فريق الصيانة</p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-4 border-b border-slate-800">
+        <div className="flex gap-2 mb-4 border-b border-[var(--gold-bg)]">
           <button
             onClick={() => setTab("assets")}
-            className={`px-4 py-2 font-medium border-b-2 transition ${tab === "assets" ? "border-indigo-500 text-indigo-400" : "border-transparent text-slate-400 hover:text-slate-300"}`}
+            className={`px-4 py-2 font-medium border-b-2 transition ${tab === "assets" ? "border-indigo-500 text-indigo-400" : "border-transparent text-[var(--text-faint)] hover:text-[var(--text-soft)]"}`}
           >
             <Package className="w-4 h-4 inline ml-1" /> الأصول ({assets.length})
           </button>
           <button
             onClick={() => setTab("technicians")}
-            className={`px-4 py-2 font-medium border-b-2 transition ${tab === "technicians" ? "border-indigo-500 text-indigo-400" : "border-transparent text-slate-400 hover:text-slate-300"}`}
+            className={`px-4 py-2 font-medium border-b-2 transition ${tab === "technicians" ? "border-indigo-500 text-indigo-400" : "border-transparent text-[var(--text-faint)] hover:text-[var(--text-soft)]"}`}
           >
             <Users className="w-4 h-4 inline ml-1" /> الفنيين ({techs.length})
           </button>
@@ -221,11 +221,11 @@ export default function AssetsPage() {
             </div>
 
             {loading ? (
-              <div className="text-center py-12 text-slate-400">جاري التحميل...</div>
+              <div className="text-center py-12 text-[var(--text-faint)]">جاري التحميل...</div>
             ) : assets.length === 0 ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
+              <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-12 text-center">
                 <Package className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                <p className="text-slate-400">لا يوجد أصول بعد — أضف أول أصل (مثل: مكيف، مصعد، مولّد)</p>
+                <p className="text-[var(--text-faint)]">لا يوجد أصول بعد — أضف أول أصل (مثل: مكيف، مصعد، مولّد)</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -233,34 +233,34 @@ export default function AssetsPage() {
                   const cfg = STATUS_CFG[a.status];
                   const Icon = cfg.icon;
                   return (
-                    <div key={a.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-indigo-500/30 transition">
+                    <div key={a.id} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4 hover:border-indigo-500/30 transition">
                       <div className="flex items-start justify-between mb-2">
                         <div className={`w-9 h-9 rounded-lg flex items-center justify-center border ${cfg.color}`}>
                           <Icon className="w-4 h-4" />
                         </div>
                         <div className="flex gap-1">
-                          <button onClick={() => editAsset(a)} className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-800 rounded">
+                          <button onClick={() => editAsset(a)} className="p-1.5 text-[var(--text-faint)] hover:text-indigo-400 hover:bg-[var(--bg-surface-2)] rounded">
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
-                          <button onClick={() => deleteAsset(a.id)} className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded">
+                          <button onClick={() => deleteAsset(a.id)} className="p-1.5 text-[var(--text-faint)] hover:text-red-400 hover:bg-[var(--bg-surface-2)] rounded">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
                       <div className="font-bold">{a.name}</div>
-                      <div className="text-xs text-slate-400 mt-1">
+                      <div className="text-xs text-[var(--text-faint)] mt-1">
                         {a.category} {a.brand && `— ${a.brand}`} {a.model && a.model}
                       </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         <span className={`text-xs px-2 py-0.5 rounded border ${cfg.color}`}>{cfg.label}</span>
                         {a.property_id && (
-                          <span className="text-xs px-2 py-0.5 rounded border border-slate-700 text-slate-400 flex items-center gap-1">
+                          <span className="text-xs px-2 py-0.5 rounded border border-[var(--gold-bg-hover)] text-[var(--text-faint)] flex items-center gap-1">
                             <Building2 className="w-3 h-3" /> {propTitle(a.property_id)}
                           </span>
                         )}
                       </div>
                       {a.warranty_end && (
-                        <div className="text-xs text-slate-500 mt-2">الضمان حتى: {fmtDate(a.warranty_end)}</div>
+                        <div className="text-xs text-[var(--text-faint)] mt-2">الضمان حتى: {fmtDate(a.warranty_end)}</div>
                       )}
                     </div>
                   );
@@ -283,29 +283,29 @@ export default function AssetsPage() {
             </div>
 
             {loading ? (
-              <div className="text-center py-12 text-slate-400">جاري التحميل...</div>
+              <div className="text-center py-12 text-[var(--text-faint)]">جاري التحميل...</div>
             ) : techs.length === 0 ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
+              <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-12 text-center">
                 <Users className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                <p className="text-slate-400">لا يوجد فنيين بعد — أضف أول فني لتعيينه في أوامر العمل</p>
+                <p className="text-[var(--text-faint)]">لا يوجد فنيين بعد — أضف أول فني لتعيينه في أوامر العمل</p>
               </div>
             ) : (
-              <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+              <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden">
                 {techs.map(t => (
-                  <div key={t.id} className="flex items-center gap-4 p-4 border-b border-slate-800 last:border-0">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${t.is_active ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-400" : "bg-slate-800 border-slate-700 text-slate-500"}`}>
+                  <div key={t.id} className="flex items-center gap-4 p-4 border-b border-[var(--gold-bg)] last:border-0">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${t.is_active ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-400" : "bg-[var(--bg-surface-2)] border-[var(--gold-bg-hover)] text-[var(--text-faint)]"}`}>
                       <Users className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
                       <div className="font-medium">{t.name}</div>
-                      <div className="text-sm text-slate-400">
+                      <div className="text-sm text-[var(--text-faint)]">
                         {t.specialty && <span>{t.specialty}</span>}
                         {t.phone && <span dir="ltr"> — {t.phone}</span>}
                       </div>
                     </div>
                     <button
                       onClick={() => toggleTechActive(t)}
-                      className={`text-xs px-2 py-1 rounded ${t.is_active ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" : "bg-slate-800 text-slate-400 border border-slate-700"}`}
+                      className={`text-xs px-2 py-1 rounded ${t.is_active ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" : "bg-[var(--bg-surface-2)] text-[var(--text-faint)] border border-[var(--gold-bg-hover)]"}`}
                     >
                       {t.is_active ? "نشط" : "غير نشط"}
                     </button>
@@ -323,27 +323,27 @@ export default function AssetsPage() {
       {/* Asset Form Modal */}
       {showAssetForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto" onClick={() => { setShowAssetForm(false); setEditing(null); }}>
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-xl w-full my-6" onClick={e => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl p-6 max-w-xl w-full my-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">{editing ? "تعديل أصل" : "أصل جديد"}</h2>
-              <button onClick={() => { setShowAssetForm(false); setEditing(null); }} className="p-1 hover:bg-slate-800 rounded"><X className="w-5 h-5" /></button>
+              <button onClick={() => { setShowAssetForm(false); setEditing(null); }} className="p-1 hover:bg-[var(--bg-surface-2)] rounded"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={saveAsset} className="space-y-3">
               <div>
                 <label className="block text-sm mb-1">اسم الأصل *</label>
                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" placeholder="مثال: مكيف الشقة 3" />
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" placeholder="مثال: مكيف الشقة 3" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm mb-1">التصنيف</label>
-                  <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                  <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm mb-1">الحالة</label>
-                  <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as any })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                  <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as any })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                     {Object.entries(STATUS_CFG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                   </select>
                 </div>
@@ -351,44 +351,44 @@ export default function AssetsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm mb-1">الماركة</label>
-                  <input value={form.brand} onChange={e => setForm({ ...form, brand: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                  <input value={form.brand} onChange={e => setForm({ ...form, brand: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
                 </div>
                 <div>
                   <label className="block text-sm mb-1">الموديل</label>
-                  <input value={form.model} onChange={e => setForm({ ...form, model: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                  <input value={form.model} onChange={e => setForm({ ...form, model: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm mb-1">الرقم التسلسلي</label>
-                <input value={form.serial_no} onChange={e => setForm({ ...form, serial_no: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" dir="ltr" />
+                <input value={form.serial_no} onChange={e => setForm({ ...form, serial_no: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" dir="ltr" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm mb-1">تاريخ التركيب</label>
-                  <input type="date" value={form.install_date} onChange={e => setForm({ ...form, install_date: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                  <input type="date" value={form.install_date} onChange={e => setForm({ ...form, install_date: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
                 </div>
                 <div>
                   <label className="block text-sm mb-1">نهاية الضمان</label>
-                  <input type="date" value={form.warranty_end} onChange={e => setForm({ ...form, warranty_end: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                  <input type="date" value={form.warranty_end} onChange={e => setForm({ ...form, warranty_end: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm mb-1">العقار</label>
-                <select value={form.property_id} onChange={e => setForm({ ...form, property_id: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                <select value={form.property_id} onChange={e => setForm({ ...form, property_id: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                   <option value="">— بدون —</option>
                   {properties.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm mb-1">الموقع/الغرفة</label>
-                <input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" placeholder="مثال: السطح — جناح 1" />
+                <input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" placeholder="مثال: السطح — جناح 1" />
               </div>
               <div>
                 <label className="block text-sm mb-1">ملاحظات</label>
-                <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
               </div>
               <div className="flex gap-2 pt-2">
-                <button type="button" onClick={() => { setShowAssetForm(false); setEditing(null); }} className="flex-1 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg">إلغاء</button>
+                <button type="button" onClick={() => { setShowAssetForm(false); setEditing(null); }} className="flex-1 bg-[var(--bg-surface-2)] hover:bg-slate-700 px-4 py-2 rounded-lg">إلغاء</button>
                 <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg font-medium">{editing ? "حفظ" : "إضافة"}</button>
               </div>
             </form>
@@ -399,27 +399,27 @@ export default function AssetsPage() {
       {/* Tech Form Modal */}
       {showTechForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setShowTechForm(false)}>
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl p-6 max-w-md w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">فني جديد</h2>
-              <button onClick={() => setShowTechForm(false)} className="p-1 hover:bg-slate-800 rounded"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowTechForm(false)} className="p-1 hover:bg-[var(--bg-surface-2)] rounded"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={saveTechnician} className="space-y-3">
               <div>
                 <label className="block text-sm mb-1">الاسم *</label>
-                <input value={techForm.name} onChange={e => setTechForm({ ...techForm, name: e.target.value })} required className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                <input value={techForm.name} onChange={e => setTechForm({ ...techForm, name: e.target.value })} required className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
               </div>
               <div>
                 <label className="block text-sm mb-1">الجوال</label>
-                <input value={techForm.phone} onChange={e => setTechForm({ ...techForm, phone: e.target.value })} dir="ltr" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" placeholder="05xxxxxxxx" />
+                <input value={techForm.phone} onChange={e => setTechForm({ ...techForm, phone: e.target.value })} dir="ltr" className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" placeholder="05xxxxxxxx" />
               </div>
               <div>
                 <label className="block text-sm mb-1">البريد الإلكتروني</label>
-                <input type="email" value={techForm.email} onChange={e => setTechForm({ ...techForm, email: e.target.value })} dir="ltr" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                <input type="email" value={techForm.email} onChange={e => setTechForm({ ...techForm, email: e.target.value })} dir="ltr" className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
               </div>
               <div>
                 <label className="block text-sm mb-1">الاختصاص</label>
-                <select value={techForm.specialty} onChange={e => setTechForm({ ...techForm, specialty: e.target.value })} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                <select value={techForm.specialty} onChange={e => setTechForm({ ...techForm, specialty: e.target.value })} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                   <option value="general">عام</option>
                   <option value="plumbing">سباكة</option>
                   <option value="electrical">كهرباء</option>
@@ -430,10 +430,10 @@ export default function AssetsPage() {
               </div>
               <div>
                 <label className="block text-sm mb-1">ملاحظات</label>
-                <textarea value={techForm.notes} onChange={e => setTechForm({ ...techForm, notes: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                <textarea value={techForm.notes} onChange={e => setTechForm({ ...techForm, notes: e.target.value })} rows={2} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
               </div>
               <div className="flex gap-2 pt-2">
-                <button type="button" onClick={() => setShowTechForm(false)} className="flex-1 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg">إلغاء</button>
+                <button type="button" onClick={() => setShowTechForm(false)} className="flex-1 bg-[var(--bg-surface-2)] hover:bg-slate-700 px-4 py-2 rounded-lg">إلغاء</button>
                 <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg font-medium">إضافة</button>
               </div>
             </form>

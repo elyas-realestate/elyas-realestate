@@ -18,64 +18,46 @@ import type { LucideIcon } from "lucide-react";
 import type { PropertyRequest, Client, Deal } from "@/types/database";
 
 type NavItemData = { label: string; href: string; icon: LucideIcon };
-type NavGroup = { id: string; title: string; icon: LucideIcon; items: NavItemData[] };
+type NavGroup = { id: string; title: string; icon: LucideIcon; items: NavItemData[]; officeOnly?: boolean };
 
 // ═══════════════════════════════════════════════════════════════
-// PRIMARY — العناصر اليومية الأكثر استخداماً (دائماً ظاهرة)
-// مبسَّطة بناءً على تقرير CIB: من 7 إلى 5 عناصر يومية
+// PRIMARY — هيكل ٧ عناصر بناءً على تقرير CIB (Miller's Law)
+// ٥ يومية + المالية + الإعدادات. كل واحد يقود لـ hub بداخله sub-pages.
 // ═══════════════════════════════════════════════════════════════
 const primaryItems: NavItemData[] = [
-  { label: "الرئيسية",          href: "/dashboard",                  icon: LayoutDashboard },
-  { label: "العملاء",           href: "/dashboard/clients",          icon: Users           },
-  { label: "العقارات",          href: "/dashboard/properties",       icon: Building2       },
-  { label: "الذكاء الصناعي",    href: "/dashboard/ai",               icon: Sparkles        },
-  { label: "محادثات WhatsApp",  href: "/dashboard/whatsapp/inbox",   icon: MessageCircle   },
+  { label: "الرئيسية",         href: "/dashboard",                icon: LayoutDashboard },
+  { label: "يومي",             href: "/dashboard/today",          icon: CheckSquare     },
+  { label: "العملاء",          href: "/dashboard/clients",        icon: Users           },
+  { label: "العقارات",         href: "/dashboard/properties",     icon: Building2       },
+  { label: "الذكاء الصناعي",   href: "/dashboard/ai",             icon: Sparkles        },
+  { label: "المالية",          href: "/dashboard/financial",      icon: Banknote        },
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// SECONDARY — مجموعات قابلة للطي (مغلقة افتراضياً)
+// SECONDARY — مجموعتان فقط: أدوات + إدارة الأملاك (Office Mode)
+// إدارة الأملاك تظهر فقط لو office_mode_enabled = true
 // ═══════════════════════════════════════════════════════════════
-// تم إعادة هيكلة المجموعات: من 5 مجموعات إلى 4 مع نقل عناصر AI لـ /dashboard/ai
 const secondaryGroups: NavGroup[] = [
   {
-    id: "sales", title: "المبيعات", icon: Briefcase,
+    id: "tools", title: "أدوات", icon: BarChart3,
     items: [
-      { label: "المهام",            href: "/dashboard/tasks",             icon: CheckSquare   },
-      { label: "الصفقات",            href: "/dashboard/deals",             icon: TrendingUp    },
-      { label: "طلبات العقار",       href: "/dashboard/property-requests", icon: Inbox         },
-      { label: "الأهداف",           href: "/dashboard/goals",             icon: Trophy        },
+      { label: "بطاقتي التعريفية", href: "/dashboard/profile-card",    icon: Sparkles   },
+      { label: "محادثات WhatsApp", href: "/dashboard/whatsapp/inbox",  icon: MessageCircle },
+      { label: "المحتوى التسويقي", href: "/dashboard/marketing",       icon: Megaphone  },
+      { label: "توزيع العقارات",   href: "/dashboard/distribute",      icon: Share2     },
+      { label: "العقود",          href: "/dashboard/contracts",       icon: FileSignature },
+      { label: "التقارير والتحليل", href: "/dashboard/insights",        icon: FileText   },
+      { label: "استيراد CSV",     href: "/dashboard/import",          icon: Upload     },
     ],
   },
+  // ── يظهر فقط في "وضع المكتب" (office_mode_enabled = true) ──
   {
-    id: "portfolio", title: "محفظة الأملاك", icon: Building,
+    id: "office", title: "إدارة الأملاك (وضع المكتب)", icon: Building, officeOnly: true,
     items: [
-      { label: "المشاريع",          href: "/dashboard/projects",         icon: Building2  },
-      { label: "بوابة المستأجر",    href: "/dashboard/tenant-portal",    icon: KeyRound   },
-      { label: "أوامر العمل",       href: "/dashboard/work-orders",      icon: Wrench     },
-      { label: "الأصول",            href: "/dashboard/assets",           icon: Package    },
-      { label: "توزيع العقارات",    href: "/dashboard/distribute",       icon: Share2     },
-    ],
-  },
-  {
-    id: "finance", title: "المالية", icon: Banknote,
-    items: [
-      { label: "عروض الأسعار",      href: "/dashboard/quotations",  icon: FileText       },
-      { label: "العقود",            href: "/dashboard/contracts",   icon: FileSignature  },
-      { label: "الفواتير",          href: "/dashboard/invoices",    icon: CreditCard     },
-      { label: "العمولات",          href: "/dashboard/commissions", icon: Banknote       },
-      { label: "التحليل المالي",     href: "/dashboard/financial",   icon: BarChart3      },
-    ],
-  },
-  {
-    id: "tools", title: "أدوات إضافية", icon: BarChart3,
-    items: [
-      { label: "بطاقتي التعريفية",  href: "/dashboard/profile-card",    icon: Sparkles   },
-      { label: "المحتوى التسويقي",  href: "/dashboard/marketing",       icon: Megaphone  },
-      { label: "قوالب واتساب",      href: "/dashboard/whatsapp",        icon: FileText   },
-      { label: "التقارير",          href: "/dashboard/reports",         icon: FileText   },
-      { label: "الوثائق",           href: "/dashboard/documents",       icon: Scale      },
-      { label: "استيراد CSV",       href: "/dashboard/import",          icon: Upload     },
-      { label: "تتبّع المشروع",      href: "/dashboard/project-tracker", icon: BarChart3  },
+      { label: "المشاريع",         href: "/dashboard/projects",      icon: Building2 },
+      { label: "بوابة المستأجر",   href: "/dashboard/tenant-portal", icon: KeyRound  },
+      { label: "أوامر العمل",      href: "/dashboard/work-orders",   icon: Wrench    },
+      { label: "الأصول",           href: "/dashboard/assets",        icon: Package   },
     ],
   },
 ];
@@ -158,6 +140,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [newRequests, setNewRequests] = useState(0);
   const [brokerName, setBrokerName] = useState("إلياس الدخيل");
   const [brokerSlug, setBrokerSlug] = useState("");
+  const [officeMode, setOfficeMode] = useState(false);
   const [notifCount, setNotifCount] = useState(0);
   const [renewalDaysLeft, setRenewalDaysLeft] = useState<number | null>(null);
   const [renewalPlan, setRenewalPlan] = useState("");
@@ -241,7 +224,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const [{ count }, { data: identity }, { data: ownedTenant }, { data: siteSettings }, { data: membership }, { data: superAdminCheck }] = await Promise.all([
       supabase.from("property_requests").select("id", { count: "exact", head: true }).eq("status", "جديد"),
       supabase.from("broker_identity").select("broker_name").limit(1).maybeSingle(),
-      supabase.from("tenants").select("slug").eq("owner_id", user.id).maybeSingle(),
+      supabase.from("tenants").select("slug, office_mode_enabled").eq("owner_id", user.id).maybeSingle(),
       supabase.from("site_settings").select("plan, plan_expires_at").limit(1).maybeSingle(),
       supabase.from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle(),
       supabase.rpc("is_super_admin"),
@@ -252,6 +235,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     // resolve slug: owner first, else fetch by membership tenant_id
     if (ownedTenant?.slug) {
       setBrokerSlug(ownedTenant.slug);
+      setOfficeMode(!!ownedTenant.office_mode_enabled);
     } else if (membership?.tenant_id) {
       const { data: memberTenant } = await supabase
         .from("tenants").select("slug").eq("id", membership.tenant_id).maybeSingle();
@@ -580,8 +564,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 })}
               </div>
 
-              {/* SECONDARY — مجموعات قابلة للطي */}
-              {secondaryGroups.map((group) => {
+              {/* SECONDARY — مجموعات قابلة للطي. officeOnly تختفي ما لم يفعّل الوسيط "وضع المكتب" */}
+              {secondaryGroups.filter(g => !g.officeOnly || officeMode).map((group) => {
                 const isExpanded = expandedGroups[group.id];
                 const hasActive = group.items.some(it => pathname === it.href || pathname.startsWith(it.href + "/"));
                 const GroupIcon = group.icon;

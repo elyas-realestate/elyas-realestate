@@ -11,17 +11,15 @@ import type { LucideIcon } from "lucide-react";
 import {
   // Social
   Twitter, Instagram, Music2, Camera, Linkedin, Youtube, Hash, Facebook,
-  MessageCircle, Send, Headphones, MapPin, Mic2, Music,
+  MessageCircle, Send, MapPin,
   // Contact
   Phone, Mail, MessageSquare, ClipboardList,
   // License & business
   Award, Shield, Briefcase, FileText, BadgeCheck, Building2,
-  // Stores & delivery
-  ShoppingBag, Store, Bike, Pizza, Truck, Coffee,
   // Content
-  Globe, Link2, Image as ImageIcon, FileIcon, Video, Music as MusicNote,
+  Globe, Link2,
   // Dividers
-  Type, Minus, Heading,
+  Type, Heading,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
@@ -65,14 +63,15 @@ export interface ProfileElement {
 // ─────────────────────────────────────────────────────────────
 // التصنيفات (تظهر في tabs المكتبة)
 // ─────────────────────────────────────────────────────────────
+// التصنيفات (تظهر في tabs المكتبة)
+// social/contact/license تأتي auto-pull من الإعدادات (لا تظهر في المكتبة).
+// store/delivery تم حذفها — لا علاقة لها بوسيط عقاري سعودي.
 export const CATEGORIES: Array<{ key: ElementCategory; label: string; emoji: string }> = [
   { key: "social",   label: "الشبكات الإجتماعية", emoji: "💫" },
   { key: "contact",  label: "التواصل المباشر",     emoji: "📞" },
   { key: "license",  label: "الرخص والاعتمادات",   emoji: "🏆" },
   { key: "form",     label: "نماذج تفاعلية",       emoji: "📝" },
-  { key: "store",    label: "المتاجر الإلكترونية", emoji: "🛍️" },
-  { key: "delivery", label: "خدمات التوصيل",       emoji: "🛵" },
-  { key: "content",  label: "روابط ومحتوى",        emoji: "🔗" },
+  { key: "content",  label: "روابط عقارية ومحتوى", emoji: "🏘️" },
   { key: "divider",  label: "عناوين وفواصل",       emoji: "—" },
 ];
 
@@ -282,67 +281,47 @@ export const ELEMENTS: ProfileElement[] = [
     defaultLabel: "رخصة هيئة العقار",
   },
 
-  // ════════ STORE ════════
+  // ════════ روابط عقارية ومحتوى مخصص ════════
+  // عناصر منطقية لوسيط عقاري سعودي (ليست متاجر أو توصيل)
   {
-    type: "store_zid", category: "store", label: "متجر زد",
-    icon: Store, brandBg: "#7B61FF", brandFg: "#FFFFFF", emoji: "🛒",
+    type: "content_aqar_listings", category: "content", label: "عقاراتي على عقار.fm",
+    icon: Building2, brandBg: "#10B981", brandFg: "#FFFFFF", emoji: "🏘️",
+    description: "اعرض عقاراتك المنشورة على منصة عقار",
     fields: [
-      { key: "url", label: "رابط متجرك على زد", type: "url", placeholder: "https://yourstore.zid.store", required: true },
-      { key: "label", label: "اسم المتجر", type: "text", placeholder: "متجري" },
+      { key: "user_id", label: "رقم حسابك على عقار", type: "text", placeholder: "1033913", required: true },
+      { key: "label", label: "نص الزر", type: "text", placeholder: "تصفّح عقاراتي" },
+    ],
+    buildUrl: (v) => `https://sa.aqar.fm/user/${u(v.user_id)}`,
+    defaultLabel: "عقاراتي على عقار.fm",
+  },
+  {
+    type: "content_bayut_listings", category: "content", label: "عقاراتي على بيوت",
+    icon: Building2, brandBg: "#A52F50", brandFg: "#FFFFFF", emoji: "🏢",
+    description: "رابط حسابك على بيوت",
+    fields: [
+      { key: "url", label: "رابط حسابك على بيوت", type: "url", required: true },
+      { key: "label", label: "نص الزر", type: "text", placeholder: "عقاراتي على بيوت" },
     ],
     buildUrl: (v) => v.url,
-    defaultLabel: "متجري",
+    defaultLabel: "عقاراتي على بيوت",
   },
   {
-    type: "store_custom", category: "store", label: "متجر إلكتروني",
-    icon: ShoppingBag, brandBg: "#1A1206", brandFg: "#FFFFFF",
+    type: "content_request_property", category: "content", label: "اطلب عقاراً (بحث مخصص)",
+    icon: Building2, brandBg: "#3B82F6", brandFg: "#FFFFFF", emoji: "🔍",
+    description: "زر يأخذ العميل لنموذج تقديم طلب عقار جديد",
     fields: [
-      { key: "url", label: "رابط المتجر", type: "url", placeholder: "https://...", required: true },
-      { key: "label", label: "اسم المتجر", type: "text", placeholder: "متجري", required: true },
+      { key: "label", label: "نص الزر", type: "text", placeholder: "اطلب بحث عقاري مخصص" },
     ],
-    buildUrl: (v) => v.url,
-    defaultLabel: "متجري",
+    buildUrl: (v) => `/${(v.slug || "")}/request`,
+    defaultLabel: "اطلب بحث عقاري مخصص",
   },
-
-  // ════════ DELIVERY ════════
-  {
-    type: "delivery_hungerstation", category: "delivery", label: "هنقرستيشن",
-    icon: Bike, brandBg: "#FFB300", brandFg: "#000000", emoji: "🍔",
-    fields: [
-      { key: "url", label: "رابط مطعمك على هنقرستيشن", type: "url", required: true },
-    ],
-    buildUrl: (v) => v.url,
-    defaultLabel: "اطلب من هنقرستيشن",
-  },
-  {
-    type: "delivery_jahez", category: "delivery", label: "جاهز",
-    icon: Pizza, brandBg: "#E53935", brandFg: "#FFFFFF", emoji: "🍕",
-    fields: [{ key: "url", label: "رابطك على جاهز", type: "url", required: true }],
-    buildUrl: (v) => v.url,
-    defaultLabel: "اطلب من جاهز",
-  },
-  {
-    type: "delivery_keeta", category: "delivery", label: "كيتا",
-    icon: Truck, brandBg: "#FFE600", brandFg: "#000000", emoji: "🛵",
-    fields: [{ key: "url", label: "رابطك على كيتا", type: "url", required: true }],
-    buildUrl: (v) => v.url,
-    defaultLabel: "اطلب من كيتا",
-  },
-  {
-    type: "delivery_mrsool", category: "delivery", label: "مرسول",
-    icon: Truck, brandBg: "#FB923C", brandFg: "#FFFFFF",
-    fields: [{ key: "url", label: "رابطك على مرسول", type: "url", required: true }],
-    buildUrl: (v) => v.url,
-    defaultLabel: "اطلب من مرسول",
-  },
-
-  // ════════ CONTENT ════════
   {
     type: "content_website", category: "content", label: "موقع إلكتروني",
     icon: Globe, brandBg: "#1A1206", brandFg: "#FFFFFF",
+    description: "رابط لموقعك الشخصي أو موقع شركتك",
     fields: [
-      { key: "url", label: "رابط الموقع", type: "url", placeholder: "https://yourwebsite.com", required: true },
-      { key: "label", label: "اسم الموقع", type: "text", placeholder: "موقعي الإلكتروني" },
+      { key: "url", label: "رابط الموقع", type: "url", placeholder: "https://...", required: true },
+      { key: "label", label: "اسم الموقع", type: "text", placeholder: "موقعي" },
     ],
     buildUrl: (v) => v.url,
     defaultLabel: "موقعي الإلكتروني",
@@ -350,23 +329,14 @@ export const ELEMENTS: ProfileElement[] = [
   {
     type: "content_custom_link", category: "content", label: "رابط مخصص",
     icon: Link2, brandBg: "transparent", brandFg: "inherit",
+    description: "أي رابط آخر",
     fields: [
       { key: "url", label: "الرابط", type: "url", required: true },
       { key: "label", label: "اسم الرابط", type: "text", required: true },
-      { key: "subtitle", label: "وصف فرعي", type: "text" },
+      { key: "subtitle", label: "وصف فرعي (اختياري)", type: "text" },
     ],
     buildUrl: (v) => v.url,
     defaultLabel: "رابط",
-  },
-  {
-    type: "content_aqar_listings", category: "content", label: "عقاراتي على عقار",
-    icon: Building2, brandBg: "#10B981", brandFg: "#FFFFFF", emoji: "🏘️",
-    fields: [
-      { key: "user_id", label: "رقم حسابك على عقار (مثل 1033913)", type: "text", required: true },
-      { key: "label", label: "نص الزر", type: "text", placeholder: "تصفّح عقاراتي" },
-    ],
-    buildUrl: (v) => `https://sa.aqar.fm/user/${u(v.user_id)}`,
-    defaultLabel: "عقاراتي على عقار",
   },
 
   // ════════ DIVIDER ════════

@@ -25,7 +25,7 @@ const ROLE_CONFIG: Record<Member["role"], { label: string; icon: any; color: str
   owner:  { label: "المالك",   icon: Crown,  color: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30" },
   admin:  { label: "مدير",     icon: Shield, color: "text-blue-400 bg-blue-500/10 border-blue-500/30"     },
   member: { label: "عضو",      icon: User,   color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
-  viewer: { label: "مشاهد",    icon: Eye,    color: "text-slate-400 bg-slate-500/10 border-slate-500/30"    },
+  viewer: { label: "مشاهد",    icon: Eye,    color: "text-[var(--text-faint)] bg-slate-500/10 border-slate-500/30"    },
 };
 
 function fmtDate(iso: string | null) {
@@ -144,7 +144,7 @@ export default function TeamPage() {
   const atLimit = totalCount >= maxMembers;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-strong)]">
       <div className="max-w-6xl mx-auto px-4 py-6">
         <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "الفريق" }]} />
 
@@ -154,7 +154,7 @@ export default function TeamPage() {
               <Users className="w-7 h-7 text-blue-400" />
               إدارة الفريق
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-[var(--text-faint)] text-sm mt-1">
               ادعُ أعضاء لإدارة الحساب معك بأدوار مختلفة
             </p>
           </div>
@@ -173,45 +173,45 @@ export default function TeamPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
             <div className="text-2xl font-bold text-emerald-400">{activeCount}</div>
-            <div className="text-xs text-slate-400">نشط</div>
+            <div className="text-xs text-[var(--text-faint)]">نشط</div>
           </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-2xl font-bold text-amber-400">{pendingCount}</div>
-            <div className="text-xs text-slate-400">بانتظار التسجيل</div>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
+            <div className="text-2xl font-bold text-[var(--gold-1)]">{pendingCount}</div>
+            <div className="text-xs text-[var(--text-faint)]">بانتظار التسجيل</div>
           </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
             <div className="text-2xl font-bold text-blue-400">{totalCount} / {maxMembers}</div>
-            <div className="text-xs text-slate-400">مستخدَم / متاح</div>
+            <div className="text-xs text-[var(--text-faint)]">مستخدَم / متاح</div>
           </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-2xl font-bold text-slate-200 uppercase">{plan}</div>
-            <div className="text-xs text-slate-400">الخطة الحالية</div>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
+            <div className="text-2xl font-bold text-[var(--text-strong)] uppercase">{plan}</div>
+            <div className="text-xs text-[var(--text-faint)]">الخطة الحالية</div>
           </div>
         </div>
 
         {atLimit && canManage && (
-          <div className="bg-amber-950/30 border border-amber-500/30 rounded-xl p-4 mb-6 text-amber-200 text-sm">
+          <div className="bg-amber-950/30 border border-[var(--gold-bg-hover)] rounded-xl p-4 mb-6 text-amber-200 text-sm">
             وصلت للحد الأقصى لأعضاء خطتك ({maxMembers}). <a href="/dashboard/subscription" className="underline font-medium">رقّ الخطة</a> لإضافة المزيد.
           </div>
         )}
 
         {/* Members list */}
         {loading ? (
-          <div className="text-center py-12 text-slate-400">جاري التحميل...</div>
+          <div className="text-center py-12 text-[var(--text-faint)]">جاري التحميل...</div>
         ) : members.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-12 text-center">
             <Users className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400">لا يوجد أعضاء بعد</p>
+            <p className="text-[var(--text-faint)]">لا يوجد أعضاء بعد</p>
           </div>
         ) : (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden">
             {members.map((m) => {
               const cfg = ROLE_CONFIG[m.role];
               const Icon = cfg.icon;
               return (
-                <div key={m.id} className="flex items-center gap-4 p-4 border-b border-slate-800 last:border-0 hover:bg-slate-800/30 transition">
+                <div key={m.id} className="flex items-center gap-4 p-4 border-b border-[var(--gold-bg)] last:border-0 hover:bg-[var(--bg-surface-2)]/30 transition">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${cfg.color}`}>
                     <Icon className="w-5 h-5" />
                   </div>
@@ -221,7 +221,7 @@ export default function TeamPage() {
                       <span className="font-medium">{m.full_name || m.email.split("@")[0]}</span>
                       <span className={`text-xs px-2 py-0.5 rounded border ${cfg.color}`}>{cfg.label}</span>
                       {m.status === "invited" && (
-                        <span className="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                        <span className="text-xs px-2 py-0.5 rounded bg-[var(--gold-2)]/10 text-[var(--gold-1)] border border-[var(--gold-bg-hover)] flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           بانتظار التسجيل
                         </span>
@@ -233,13 +233,13 @@ export default function TeamPage() {
                         </span>
                       )}
                     </div>
-                    <div className="text-sm text-slate-400 flex items-center gap-1 mt-1">
+                    <div className="text-sm text-[var(--text-faint)] flex items-center gap-1 mt-1">
                       <Mail className="w-3 h-3" />
                       {m.email}
                     </div>
                   </div>
 
-                  <div className="text-xs text-slate-500 text-left hidden md:block">
+                  <div className="text-xs text-[var(--text-faint)] text-left hidden md:block">
                     <div>دعوة: {fmtDate(m.invited_at)}</div>
                     {m.activated_at && <div>نشّط: {fmtDate(m.activated_at)}</div>}
                   </div>
@@ -269,13 +269,13 @@ export default function TeamPage() {
         )}
 
         {/* Role explainer */}
-        <div className="mt-6 bg-slate-900/50 border border-slate-800 rounded-xl p-5">
-          <h3 className="font-semibold mb-3 text-slate-200">الأدوار والصلاحيات</h3>
+        <div className="mt-6 bg-[var(--bg-surface-1)]/50 border border-[var(--gold-bg)] rounded-xl p-5">
+          <h3 className="font-semibold mb-3 text-[var(--text-strong)]">الأدوار والصلاحيات</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-            <div className="flex items-start gap-2"><Crown className="w-4 h-4 text-yellow-400 mt-0.5" /><div><b className="text-yellow-400">المالك:</b> <span className="text-slate-400">كامل الصلاحيات + الفوترة + حذف الحساب</span></div></div>
-            <div className="flex items-start gap-2"><Shield className="w-4 h-4 text-blue-400 mt-0.5" /><div><b className="text-blue-400">مدير:</b> <span className="text-slate-400">كل شي ماعدا الفوترة وحذف الحساب</span></div></div>
-            <div className="flex items-start gap-2"><User className="w-4 h-4 text-emerald-400 mt-0.5" /><div><b className="text-emerald-400">عضو:</b> <span className="text-slate-400">إدارة العقارات/العملاء/الصفقات</span></div></div>
-            <div className="flex items-start gap-2"><Eye className="w-4 h-4 text-slate-400 mt-0.5" /><div><b className="text-slate-400">مشاهد:</b> <span className="text-slate-400">قراءة فقط — لا يعدّل أو يحذف</span></div></div>
+            <div className="flex items-start gap-2"><Crown className="w-4 h-4 text-yellow-400 mt-0.5" /><div><b className="text-yellow-400">المالك:</b> <span className="text-[var(--text-faint)]">كامل الصلاحيات + الفوترة + حذف الحساب</span></div></div>
+            <div className="flex items-start gap-2"><Shield className="w-4 h-4 text-blue-400 mt-0.5" /><div><b className="text-blue-400">مدير:</b> <span className="text-[var(--text-faint)]">كل شي ماعدا الفوترة وحذف الحساب</span></div></div>
+            <div className="flex items-start gap-2"><User className="w-4 h-4 text-emerald-400 mt-0.5" /><div><b className="text-emerald-400">عضو:</b> <span className="text-[var(--text-faint)]">إدارة العقارات/العملاء/الصفقات</span></div></div>
+            <div className="flex items-start gap-2"><Eye className="w-4 h-4 text-[var(--text-faint)] mt-0.5" /><div><b className="text-[var(--text-faint)]">مشاهد:</b> <span className="text-[var(--text-faint)]">قراءة فقط — لا يعدّل أو يحذف</span></div></div>
           </div>
         </div>
       </div>
@@ -283,45 +283,45 @@ export default function TeamPage() {
       {/* Invite modal */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setShowInvite(false)}>
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-blue-400" />
                 دعوة عضو جديد
               </h2>
-              <button onClick={() => setShowInvite(false)} className="p-1 hover:bg-slate-800 rounded"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowInvite(false)} className="p-1 hover:bg-[var(--bg-surface-2)] rounded"><X className="w-5 h-5" /></button>
             </div>
 
             <form onSubmit={handleInvite} className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-300 mb-1">البريد الإلكتروني *</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">البريد الإلكتروني *</label>
                 <input
                   type="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="name@example.com"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-1">الاسم (اختياري)</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">الاسم (اختياري)</label>
                 <input
                   type="text"
                   value={form.full_name}
                   onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                   placeholder="محمد أحمد"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-1">الدور</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">الدور</label>
                 <select
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 focus:border-blue-500 outline-none"
                 >
                   <option value="admin">مدير — كل الصلاحيات ماعدا الفوترة</option>
                   <option value="member">عضو — إدارة العمل اليومي</option>
@@ -337,7 +337,7 @@ export default function TeamPage() {
                 <button
                   type="button"
                   onClick={() => setShowInvite(false)}
-                  className="flex-1 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition"
+                  className="flex-1 bg-[var(--bg-surface-2)] hover:bg-slate-700 px-4 py-2 rounded-lg transition"
                 >
                   إلغاء
                 </button>

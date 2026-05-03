@@ -38,16 +38,16 @@ type Asset      = { id: string; name: string };
 const STATUS_CFG: Record<WorkOrder["status"], { label: string; color: string; icon: any }> = {
   open:         { label: "مفتوح",       color: "text-blue-400 bg-blue-500/10 border-blue-500/30",         icon: AlertCircle  },
   assigned:     { label: "مُسنَد",       color: "text-purple-400 bg-purple-500/10 border-purple-500/30",   icon: User         },
-  in_progress:  { label: "قيد التنفيذ",  color: "text-amber-400 bg-amber-500/10 border-amber-500/30",      icon: Clock        },
-  on_hold:      { label: "مُعلَّق",       color: "text-slate-400 bg-slate-500/10 border-slate-500/30",      icon: PauseCircle  },
+  in_progress:  { label: "قيد التنفيذ",  color: "text-[var(--gold-1)] bg-[var(--gold-2)]/10 border-[var(--gold-bg-hover)]",      icon: Clock        },
+  on_hold:      { label: "مُعلَّق",       color: "text-[var(--text-faint)] bg-slate-500/10 border-slate-500/30",      icon: PauseCircle  },
   completed:    { label: "مكتمل",       color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30", icon: CheckCircle2 },
   cancelled:    { label: "ملغي",        color: "text-red-400 bg-red-500/10 border-red-500/30",           icon: X            },
 };
 
 const PRIORITY_CFG: Record<WorkOrder["priority"], { label: string; color: string }> = {
-  low:    { label: "منخفض",   color: "text-slate-400 bg-slate-500/10 border-slate-500/30" },
+  low:    { label: "منخفض",   color: "text-[var(--text-faint)] bg-slate-500/10 border-slate-500/30" },
   normal: { label: "عادي",    color: "text-blue-400 bg-blue-500/10 border-blue-500/30" },
-  high:   { label: "عالي",    color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
+  high:   { label: "عالي",    color: "text-[var(--gold-1)] bg-[var(--gold-2)]/10 border-[var(--gold-bg-hover)]" },
   urgent: { label: "عاجل",    color: "text-red-400 bg-red-500/10 border-red-500/30" },
 };
 
@@ -200,22 +200,22 @@ export default function WorkOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-strong)]">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "أوامر العمل" }]} />
 
         <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Wrench className="w-7 h-7 text-amber-400" />
+              <Wrench className="w-7 h-7 text-[var(--gold-1)]" />
               أوامر العمل والصيانة
             </h1>
-            <p className="text-slate-400 text-sm mt-1">إدارة طلبات الصيانة — من الفتح حتى الإغلاق</p>
+            <p className="text-[var(--text-faint)] text-sm mt-1">إدارة طلبات الصيانة — من الفتح حتى الإغلاق</p>
           </div>
 
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-lg font-medium transition"
+            className="flex items-center gap-2 bg-amber-600 hover:bg-[var(--gold-2)] px-4 py-2 rounded-lg font-medium transition"
           >
             <Plus className="w-4 h-4" /> أمر عمل جديد
           </button>
@@ -223,30 +223,30 @@ export default function WorkOrdersPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
             <div className="text-2xl font-bold text-blue-400">{stats.open}</div>
-            <div className="text-xs text-slate-400">مفتوح</div>
+            <div className="text-xs text-[var(--text-faint)]">مفتوح</div>
           </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-2xl font-bold text-amber-400">{stats.in_progress}</div>
-            <div className="text-xs text-slate-400">قيد التنفيذ</div>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
+            <div className="text-2xl font-bold text-[var(--gold-1)]">{stats.in_progress}</div>
+            <div className="text-xs text-[var(--text-faint)]">قيد التنفيذ</div>
           </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4">
             <div className="text-2xl font-bold text-emerald-400">{stats.completed}</div>
-            <div className="text-xs text-slate-400">مكتمل</div>
+            <div className="text-xs text-[var(--text-faint)]">مكتمل</div>
           </div>
-          <div className={`border rounded-xl p-4 ${stats.urgent > 0 ? "bg-red-950/30 border-red-500/30" : "bg-slate-900 border-slate-800"}`}>
-            <div className={`text-2xl font-bold flex items-center gap-1 ${stats.urgent > 0 ? "text-red-400" : "text-slate-500"}`}>
+          <div className={`border rounded-xl p-4 ${stats.urgent > 0 ? "bg-red-950/30 border-red-500/30" : "bg-[var(--bg-surface-1)] border-[var(--gold-bg)]"}`}>
+            <div className={`text-2xl font-bold flex items-center gap-1 ${stats.urgent > 0 ? "text-red-400" : "text-[var(--text-faint)]"}`}>
               {stats.urgent > 0 && <Flame className="w-5 h-5" />}
               {stats.urgent}
             </div>
-            <div className="text-xs text-slate-400">عاجل</div>
+            <div className="text-xs text-[var(--text-faint)]">عاجل</div>
           </div>
         </div>
 
         {/* Filter */}
         <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
-          <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+          <Filter className="w-4 h-4 text-[var(--text-faint)] shrink-0" />
           {["all", ...Object.keys(STATUS_CFG)].map(s => (
             <button
               key={s}
@@ -254,7 +254,7 @@ export default function WorkOrdersPage() {
               className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition ${
                 statusFilter === s
                   ? "bg-amber-600 text-white"
-                  : "bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800"
+                  : "bg-[var(--bg-surface-1)] text-[var(--text-faint)] hover:bg-[var(--bg-surface-2)] border border-[var(--gold-bg)]"
               }`}
             >
               {s === "all" ? "الكل" : STATUS_CFG[s as WorkOrder["status"]].label}
@@ -265,11 +265,11 @@ export default function WorkOrdersPage() {
 
         {/* List */}
         {loading ? (
-          <div className="text-center py-12 text-slate-400">جاري التحميل...</div>
+          <div className="text-center py-12 text-[var(--text-faint)]">جاري التحميل...</div>
         ) : filtered.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-12 text-center">
             <Wrench className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400">لا يوجد أوامر عمل {statusFilter !== "all" ? "بهذه الحالة" : "بعد"}</p>
+            <p className="text-[var(--text-faint)]">لا يوجد أوامر عمل {statusFilter !== "all" ? "بهذه الحالة" : "بعد"}</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -281,7 +281,7 @@ export default function WorkOrdersPage() {
                 <div
                   key={o.id}
                   onClick={() => setSelected(o)}
-                  className="bg-slate-900 border border-slate-800 hover:border-amber-500/30 rounded-xl p-4 cursor-pointer transition"
+                  className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] hover:border-[var(--gold-bg-hover)] rounded-xl p-4 cursor-pointer transition"
                 >
                   <div className="flex items-start gap-3 flex-wrap">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${sCfg.color}`}>
@@ -290,19 +290,19 @@ export default function WorkOrdersPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-slate-500">{o.ticket_number}</span>
+                        <span className="font-mono text-xs text-[var(--text-faint)]">{o.ticket_number}</span>
                         <span className={`text-xs px-2 py-0.5 rounded border ${sCfg.color}`}>{sCfg.label}</span>
                         <span className={`text-xs px-2 py-0.5 rounded border ${pCfg.color}`}>
                           {o.priority === "urgent" && "🔥 "}{pCfg.label}
                         </span>
                         {o.kind !== "corrective" && (
-                          <span className="text-xs px-2 py-0.5 rounded border border-slate-700 text-slate-400">
+                          <span className="text-xs px-2 py-0.5 rounded border border-[var(--gold-bg-hover)] text-[var(--text-faint)]">
                             {o.kind === "preventive" ? "وقائية" : "فحص"}
                           </span>
                         )}
                       </div>
                       <div className="font-semibold mt-1">{o.title}</div>
-                      <div className="text-xs text-slate-400 mt-1 flex items-center gap-3 flex-wrap">
+                      <div className="text-xs text-[var(--text-faint)] mt-1 flex items-center gap-3 flex-wrap">
                         {o.property_id && <span className="flex items-center gap-1"><Building2 className="w-3 h-3" /> {propTitle(o.property_id)}</span>}
                         {o.technician_id && <span className="flex items-center gap-1"><User className="w-3 h-3" /> {techName(o.technician_id)}</span>}
                         {o.scheduled_for && <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {fmtDate(o.scheduled_for)}</span>}
@@ -321,39 +321,39 @@ export default function WorkOrdersPage() {
       {/* Create modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto" onClick={() => setShowForm(false)}>
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-2xl w-full my-6" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-xl p-6 max-w-2xl w-full my-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold flex items-center gap-2">
-                <Plus className="w-5 h-5 text-amber-400" /> أمر عمل جديد
+                <Plus className="w-5 h-5 text-[var(--gold-1)]" /> أمر عمل جديد
               </h2>
-              <button onClick={() => setShowForm(false)} className="p-1 hover:bg-slate-800 rounded"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowForm(false)} className="p-1 hover:bg-[var(--bg-surface-2)] rounded"><X className="w-5 h-5" /></button>
             </div>
 
             <form onSubmit={handleCreate} className="space-y-3">
               <div>
-                <label className="block text-sm text-slate-300 mb-1">العنوان *</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">العنوان *</label>
                 <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" required placeholder="مثال: تسريب في حمام الشقة 3" />
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" required placeholder="مثال: تسريب في حمام الشقة 3" />
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-1">الوصف</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">الوصف</label>
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-                  rows={3} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" placeholder="تفاصيل المشكلة..." />
+                  rows={3} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" placeholder="تفاصيل المشكلة..." />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm text-slate-300 mb-1">التصنيف</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-1">التصنيف</label>
                   <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                     {CATEGORY_OPTIONS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-300 mb-1">الأولوية</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-1">الأولوية</label>
                   <select value={form.priority} onChange={e => setForm({ ...form, priority: e.target.value as any })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                     <option value="low">منخفض</option>
                     <option value="normal">عادي</option>
                     <option value="high">عالي</option>
@@ -364,34 +364,34 @@ export default function WorkOrdersPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm text-slate-300 mb-1">النوع</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-1">النوع</label>
                   <select value={form.kind} onChange={e => setForm({ ...form, kind: e.target.value as any })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                     <option value="corrective">إصلاح</option>
                     <option value="preventive">وقائية</option>
                     <option value="inspection">فحص</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-300 mb-1">التكلفة المتوقعة (ر.س)</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-1">التكلفة المتوقعة (ر.س)</label>
                   <input type="number" value={form.estimated_cost} onChange={e => setForm({ ...form, estimated_cost: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" placeholder="0" />
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" placeholder="0" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-1">العقار</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">العقار</label>
                 <select value={form.property_id} onChange={e => setForm({ ...form, property_id: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                   <option value="">— اختر —</option>
                   {properties.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-1">الفني المسؤول</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">الفني المسؤول</label>
                 <select value={form.technician_id} onChange={e => setForm({ ...form, technician_id: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2">
                   <option value="">— بدون —</option>
                   {technicians.map(t => <option key={t.id} value={t.id}>{t.name}{t.specialty ? ` — ${t.specialty}` : ""}</option>)}
                 </select>
@@ -399,28 +399,28 @@ export default function WorkOrdersPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm text-slate-300 mb-1">اسم مقدّم الطلب</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-1">اسم مقدّم الطلب</label>
                   <input value={form.reporter_name} onChange={e => setForm({ ...form, reporter_name: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" placeholder="مستأجر / موظف" />
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" placeholder="مستأجر / موظف" />
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-300 mb-1">جوال</label>
+                  <label className="block text-sm text-[var(--text-soft)] mb-1">جوال</label>
                   <input value={form.reporter_phone} onChange={e => setForm({ ...form, reporter_phone: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" dir="ltr" placeholder="05xxxxxxxx" />
+                    className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" dir="ltr" placeholder="05xxxxxxxx" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-slate-300 mb-1">موعد التنفيذ</label>
+                <label className="block text-sm text-[var(--text-soft)] mb-1">موعد التنفيذ</label>
                 <input type="datetime-local" value={form.scheduled_for} onChange={e => setForm({ ...form, scheduled_for: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2" />
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2" />
               </div>
 
               <div className="flex gap-2 pt-2">
                 <button type="button" onClick={() => setShowForm(false)}
-                  className="flex-1 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition">إلغاء</button>
+                  className="flex-1 bg-[var(--bg-surface-2)] hover:bg-slate-700 px-4 py-2 rounded-lg transition">إلغاء</button>
                 <button type="submit" disabled={submitting}
-                  className="flex-1 bg-amber-600 hover:bg-amber-500 disabled:bg-slate-700 px-4 py-2 rounded-lg font-medium transition">
+                  className="flex-1 bg-amber-600 hover:bg-[var(--gold-2)] disabled:bg-slate-700 px-4 py-2 rounded-lg font-medium transition">
                   {submitting ? "جارٍ الحفظ..." : "إنشاء"}
                 </button>
               </div>
@@ -432,13 +432,13 @@ export default function WorkOrdersPage() {
       {/* Detail drawer */}
       {selected && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4 z-50" onClick={() => setSelected(null)}>
-          <div className="bg-slate-900 border border-slate-700 rounded-t-2xl md:rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-t-2xl md:rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-4 gap-2">
               <div>
-                <div className="font-mono text-xs text-slate-500">{selected.ticket_number}</div>
+                <div className="font-mono text-xs text-[var(--text-faint)]">{selected.ticket_number}</div>
                 <h2 className="text-xl font-bold mt-1">{selected.title}</h2>
               </div>
-              <button onClick={() => setSelected(null)} className="p-1 hover:bg-slate-800 rounded"><X className="w-5 h-5" /></button>
+              <button onClick={() => setSelected(null)} className="p-1 hover:bg-[var(--bg-surface-2)] rounded"><X className="w-5 h-5" /></button>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-4">
@@ -450,30 +450,30 @@ export default function WorkOrdersPage() {
 
             {selected.description && (
               <div className="mb-4">
-                <div className="text-xs text-slate-400 mb-1">الوصف</div>
-                <div className="text-sm bg-slate-800/50 rounded-lg p-3">{selected.description}</div>
+                <div className="text-xs text-[var(--text-faint)] mb-1">الوصف</div>
+                <div className="text-sm bg-[var(--bg-surface-2)]/50 rounded-lg p-3">{selected.description}</div>
               </div>
             )}
 
             <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-              <div><div className="text-xs text-slate-400">العقار</div><div>{propTitle(selected.property_id)}</div></div>
-              <div><div className="text-xs text-slate-400">الفني</div><div>{techName(selected.technician_id)}</div></div>
-              <div><div className="text-xs text-slate-400">التصنيف</div><div>{CATEGORY_OPTIONS.find(c => c.value === selected.category)?.label || "—"}</div></div>
-              <div><div className="text-xs text-slate-400">أُنشئ</div><div>{fmtDateTime(selected.created_at)}</div></div>
-              {selected.started_at   && <div><div className="text-xs text-slate-400">بدأ</div><div>{fmtDateTime(selected.started_at)}</div></div>}
-              {selected.completed_at && <div><div className="text-xs text-slate-400">أُغلق</div><div>{fmtDateTime(selected.completed_at)}</div></div>}
-              {selected.reporter_name && <div><div className="text-xs text-slate-400">مقدّم الطلب</div><div>{selected.reporter_name}{selected.reporter_phone ? ` — ${selected.reporter_phone}` : ""}</div></div>}
-              {selected.estimated_cost != null && <div><div className="text-xs text-slate-400">التكلفة المتوقعة</div><div>{selected.estimated_cost} ر.س</div></div>}
+              <div><div className="text-xs text-[var(--text-faint)]">العقار</div><div>{propTitle(selected.property_id)}</div></div>
+              <div><div className="text-xs text-[var(--text-faint)]">الفني</div><div>{techName(selected.technician_id)}</div></div>
+              <div><div className="text-xs text-[var(--text-faint)]">التصنيف</div><div>{CATEGORY_OPTIONS.find(c => c.value === selected.category)?.label || "—"}</div></div>
+              <div><div className="text-xs text-[var(--text-faint)]">أُنشئ</div><div>{fmtDateTime(selected.created_at)}</div></div>
+              {selected.started_at   && <div><div className="text-xs text-[var(--text-faint)]">بدأ</div><div>{fmtDateTime(selected.started_at)}</div></div>}
+              {selected.completed_at && <div><div className="text-xs text-[var(--text-faint)]">أُغلق</div><div>{fmtDateTime(selected.completed_at)}</div></div>}
+              {selected.reporter_name && <div><div className="text-xs text-[var(--text-faint)]">مقدّم الطلب</div><div>{selected.reporter_name}{selected.reporter_phone ? ` — ${selected.reporter_phone}` : ""}</div></div>}
+              {selected.estimated_cost != null && <div><div className="text-xs text-[var(--text-faint)]">التكلفة المتوقعة</div><div>{selected.estimated_cost} ر.س</div></div>}
             </div>
 
             {/* Quick assign */}
             {selected.status !== "completed" && selected.status !== "cancelled" && (
               <div className="mb-4">
-                <div className="text-xs text-slate-400 mb-1">تعيين فني</div>
+                <div className="text-xs text-[var(--text-faint)] mb-1">تعيين فني</div>
                 <select
                   value={selected.technician_id || ""}
                   onChange={(e) => assignTech(selected.id, e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm"
+                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm"
                 >
                   <option value="">— اختر فني —</option>
                   {technicians.map(t => <option key={t.id} value={t.id}>{t.name}{t.specialty ? ` — ${t.specialty}` : ""}</option>)}
@@ -484,7 +484,7 @@ export default function WorkOrdersPage() {
             {/* Status actions */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
               {selected.status !== "in_progress" && selected.status !== "completed" && selected.status !== "cancelled" && (
-                <button onClick={() => updateStatus(selected.id, "in_progress")} className="bg-amber-600 hover:bg-amber-500 px-3 py-2 rounded-lg text-sm">ابدأ التنفيذ</button>
+                <button onClick={() => updateStatus(selected.id, "in_progress")} className="bg-amber-600 hover:bg-[var(--gold-2)] px-3 py-2 rounded-lg text-sm">ابدأ التنفيذ</button>
               )}
               {selected.status === "in_progress" && (
                 <button onClick={() => updateStatus(selected.id, "on_hold")} className="bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg text-sm">تعليق</button>
