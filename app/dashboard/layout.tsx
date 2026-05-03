@@ -824,11 +824,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         position="top-right"
         dir="ltr"
         offset={{ top: 80, right: 20 }}
+        richColors
         toastOptions={{
           style: {
-            background: "var(--bg-surface-1)",
-            border: "1px solid var(--gold-bg-hover)",
-            color: "var(--text-strong)",
             fontFamily: "var(--font-tajawal), 'Tajawal', sans-serif",
             fontSize: 14,
             borderRadius: 12,
