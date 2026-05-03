@@ -205,6 +205,8 @@ export const PHASES: Phase[] = [
       { code: "MM-V2.2", name: "/c/[slug] يرسم العناصر ديناميكياً من الكتالوج", status: "done" },
       { code: "MM-V2.3", name: "Element Library modal + فورمات ديناميكية + drag-drop يدوي", status: "done" },
       { code: "MM-V2.4", name: "نموذج اتصل بنا تفاعلي + جدول submissions + endpoint", status: "done" },
+      { code: "MM-V3", name: "Auto-pull من site_settings — مصدر واحد للحقيقة، لا تكرار في الإدخال", status: "done" },
+      { code: "MM-V3-FIX", name: "قسم رخص مخصص + 7 حقول سعودية + telegram/gmaps auto-pull + CR validation", status: "done" },
     ],
   },
   {
