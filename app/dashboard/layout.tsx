@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase-browser";
 import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
-  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network, Crown,
+  Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network, Crown, HelpCircle,
   ChevronDown, ChevronUp, Briefcase, Building, Search, Command, Inbox, Sparkles,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
@@ -68,6 +68,7 @@ const secondaryGroups: NavGroup[] = [
 // تم تبسيط: حذف 3 عناصر AI (نقلت لـ /dashboard/ai)
 const settingsMenu: NavItemData[] = [
   { label: "الإعدادات العامة",   href: "/dashboard/settings",                icon: Settings   },
+  { label: "مركز المساعدة",      href: "/dashboard/help",                    icon: HelpCircle },
   { label: "الفريق",             href: "/dashboard/team",                    icon: Users      },
   { label: "الاشتراك",           href: "/dashboard/subscription",            icon: CreditCard },
   { label: "الإشعارات",          href: "/dashboard/settings/notifications",  icon: Bell       },

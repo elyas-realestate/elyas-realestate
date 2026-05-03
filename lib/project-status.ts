@@ -171,14 +171,16 @@ export const PHASES: Phase[] = [
   {
     id: "ux-restructure-ss",
     name: "إعادة هيكلة شاملة بناءً على CIB audit (SS)",
-    description: "تنظيف copy-paste من بليندا + إصلاح ٤ صفحات بثيم داكن + sidebar 7 عناصر + Office Mode + /today موحَّد",
+    description: "تنظيف copy-paste + إصلاح الثيم + sidebar 7 + Office Mode + /today + Hero promotion + Help Center",
     status: "done",
     completedAt: "2026-05-03",
     milestones: [
-      { code: "SS-A1", name: "حذف فئات متاجر/توصيل من مكتبة البطاقة (لا علاقة لوسيط)", status: "done" },
-      { code: "SS-A2", name: "إصلاح ٤ صفحات (work-orders, assets, team, contracts) — 250 استبدال للون", status: "done" },
-      { code: "SS-B1", name: "Sidebar من 32 إلى 7 primary + Office Mode toggle", status: "done" },
-      { code: "SS-C1", name: "/dashboard/today صفحة موحَّدة (tasks + deals + followups + requests)", status: "done" },
+      { code: "SS-A1", name: "حذف فئات متاجر/توصيل من مكتبة البطاقة", status: "done" },
+      { code: "SS-A2", name: "إصلاح ٤ صفحات (work-orders, assets, team, contracts)", status: "done" },
+      { code: "SS-B1", name: "Sidebar 32→7 primary + Office Mode toggle", status: "done" },
+      { code: "SS-C1", name: "/dashboard/today صفحة موحَّدة", status: "done" },
+      { code: "SS-D",  name: "Hero promotion للـ AI + Card في /dashboard (CIB #5)", status: "done" },
+      { code: "SS-E",  name: "/dashboard/help مركز مساعدة بـ ٧ أقسام + بحث + FAQ", status: "done" },
     ],
   },
   {

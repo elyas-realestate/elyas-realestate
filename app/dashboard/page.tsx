@@ -7,7 +7,7 @@ import Link from "next/link";
 import {
   Building2, Users, TrendingUp, ArrowUpRight, ArrowDownRight,
   CheckCircle, Sparkles, Brain, BellRing, Target, CircleDollarSign,
-  CreditCard, Flame, AlertTriangle,
+  CreditCard, Flame, AlertTriangle, IdCard, Bot, ExternalLink, ArrowLeft,
 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const [hotClients, setHotClients] = useState<{ id: string; name: string | null }[]>([]);
   const [staleProps, setStaleProps] = useState(0);
   const [aiInsight, setAiInsight] = useState<string>("");
+  const [heroData, setHeroData] = useState<{ slug: string; aiActive: number; aiTotal: number; cardLinks: number }>({ slug: "", aiActive: 0, aiTotal: 0, cardLinks: 0 });
 
   useEffect(() => {
     fetchData();
@@ -49,7 +50,7 @@ export default function DashboardPage() {
       const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       const sixMonthsAgo = new Date(); sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5); sixMonthsAgo.setDate(1);
 
-      const [propAllRes, propByStatusRes, clientRes, dealRes, dealRevenueRes, dealPipelineRes, subRes, hotRes, staleRes] = await Promise.all([
+      const [propAllRes, propByStatusRes, clientRes, dealRes, dealRevenueRes, dealPipelineRes, subRes, hotRes, staleRes, tenantRes, aiCountRes, cardLinksRes] = await Promise.all([
         supabase.from("properties").select("id", { count: "exact", head: true }),
         supabase.from("properties").select("status, offer_type"),
         supabase.from("clients").select("id", { count: "exact", head: true }),
@@ -60,7 +61,17 @@ export default function DashboardPage() {
         supabase.from("clients").select("id, name").eq("sentiment", "hot").limit(5),
         supabase.from("properties").select("id", { count: "exact", head: true })
           .or(`last_availability_check.is.null,last_availability_check.lt.${weekAgo}`),
+        supabase.from("tenants").select("slug").eq("owner_id", user.id).maybeSingle(),
+        supabase.from("ai_employees").select("id", { count: "exact", head: true }).eq("is_active", true),
+        supabase.from("profile_links").select("id", { count: "exact", head: true }).eq("is_active", true),
       ]);
+
+      setHeroData({
+        slug: tenantRes.data?.slug || "",
+        aiActive: aiCountRes.count || 0,
+        aiTotal: 16, // إجمالي المساعدين في النظام
+        cardLinks: cardLinksRes.count || 0,
+      });
 
       // ── إحصائيات أساسية (بدون أرقام وهمية) ──
       const propsCount   = propAllRes.count   || 0;
@@ -201,6 +212,79 @@ export default function DashboardPage() {
             {aiInsight || "جارٍ تحضير نظرة سريعة على نشاطك..."}
           </p>
         </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          HERO FEATURES — تمايزك التنافسي (CIB #5)
+          AI Employees + Profile Card — لا منصة سعودية أخرى تجمعهما
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* AI Employees Hero */}
+        <Link href="/dashboard/ai" className="rounded-2xl p-5 no-underline relative overflow-hidden transition group" style={{
+          background: "linear-gradient(135deg, var(--gold-bg-hover), var(--bg-surface-1))",
+          border: "1px solid var(--gold-bg-strong)",
+        }}>
+          <div className="absolute -left-8 -top-8 w-32 h-32 rounded-full opacity-20 blur-2xl" style={{ background: "var(--gold-2)" }} />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
+                background: "var(--bg-page)", border: "1px solid var(--gold-bg-strong)",
+              }}>
+                <Bot size={22} style={{ color: "var(--gold-2)" }} />
+              </div>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
+                background: "var(--gold-2)", color: "var(--bg-page)",
+              }}>تمايزنا التنافسي</span>
+            </div>
+            <div className="font-bold text-base mb-1" style={{ color: "var(--text-strong)" }}>
+              فريقك من المساعدين الأذكياء
+            </div>
+            <div className="text-xs mb-3" style={{ color: "var(--text-soft)" }}>
+              {heroData.aiActive > 0
+                ? `${heroData.aiActive} من ${heroData.aiTotal} مساعد يعمل بأمرك الآن — يكتب، يتابع، يحلّل`
+                : `${heroData.aiTotal} مساعد جاهز — شغّل أول واحد بنقرتين`}
+            </div>
+            <div className="flex items-center gap-1 text-xs font-bold" style={{ color: "var(--gold-2)" }}>
+              فتح مركز التحكم <ArrowLeft size={12} />
+            </div>
+          </div>
+        </Link>
+
+        {/* Profile Card Hero */}
+        <Link href="/dashboard/profile-card" className="rounded-2xl p-5 no-underline relative overflow-hidden transition group" style={{
+          background: "linear-gradient(135deg, rgba(167,139,250,0.10), var(--bg-surface-1))",
+          border: "1px solid rgba(167,139,250,0.25)",
+        }}>
+          <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full opacity-20 blur-2xl" style={{ background: "rgb(167,139,250)" }} />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
+                background: "var(--bg-page)", border: "1px solid rgba(167,139,250,0.4)",
+              }}>
+                <IdCard size={22} style={{ color: "rgb(167,139,250)" }} />
+              </div>
+              {heroData.slug && (
+                <Link href={`/c/${heroData.slug}`} target="_blank"
+                  onClick={e => e.stopPropagation()}
+                  className="text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 no-underline"
+                  style={{ background: "rgb(167,139,250)", color: "#FFFFFF" }}>
+                  <ExternalLink size={10} /> /c/{heroData.slug}
+                </Link>
+              )}
+            </div>
+            <div className="font-bold text-base mb-1" style={{ color: "var(--text-strong)" }}>
+              بطاقتك الاحترافية الذكية
+            </div>
+            <div className="text-xs mb-3" style={{ color: "var(--text-soft)" }}>
+              {heroData.cardLinks > 0
+                ? `${heroData.cardLinks} عنصر مفعَّل + رخصك ووسائل تواصلك تلقائياً`
+                : "خصّص بطاقتك واسحب QR للمشاركة الفورية"}
+            </div>
+            <div className="flex items-center gap-1 text-xs font-bold" style={{ color: "rgb(167,139,250)" }}>
+              تحرير البطاقة <ArrowLeft size={12} />
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* SMART ALERTS ROW */}
