@@ -3,7 +3,6 @@
 // يستخدم web-push npm package + VAPID keys من env vars
 // ══════════════════════════════════════════════════════════════
 
-// @ts-expect-error -- web-push installed by Vercel build (in package.json deps)
 import webpush from "web-push";
 import { createClient } from "@supabase/supabase-js";
 

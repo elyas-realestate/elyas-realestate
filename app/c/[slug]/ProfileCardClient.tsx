@@ -1,13 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import QRCode from "qrcode";
 import {
   MessageCircle, Mail, Phone, Share2, QrCode, X, Facebook, Linkedin,
   Twitter, Music2, Camera, Youtube, Hash, ExternalLink, Clock, Shield,
   Award, Copy, Download, Check
 } from "lucide-react";
+
+// أفاتار من الأحرف الأولى — لا يحتاج external service
+function InitialsAvatar({ name, bg, color, size = 96 }: { name: string; bg: string; color: string; size?: number }) {
+  const initial = (name || "؟").trim().charAt(0).toUpperCase();
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: bg, color: color,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: size * 0.42, fontWeight: 800, fontFamily: "var(--font-cairo), sans-serif",
+      flexShrink: 0,
+    }}>
+      {initial}
+    </div>
+  );
+}
 
 const SOCIAL_CONFIGS: Record<string, { icon: any; bg: string; text: string; gradient?: string }> = {
   x:         { icon: Twitter,   bg: "#000000", text: "#FFFFFF" },
@@ -34,7 +50,7 @@ export default function ProfileCardClient({ card, links, identity, slug }: any) 
 
   const displayName = card.display_name || identity?.broker_name || slug;
   const bio = card.bio || identity?.specialization || "وسيط عقاري";
-  const avatar = card.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=C6914C&color=FAF7F2&size=256`;
+  const avatarUrl = card.avatar_url || identity?.photo_url || null;
 
   const profileUrl = typeof window !== "undefined"
     ? `${window.location.origin}/c/${slug}`
@@ -76,14 +92,26 @@ export default function ProfileCardClient({ card, links, identity, slug }: any) 
         {/* Avatar + Name + Bio */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <div style={{
-            width: 96, height: 96, borderRadius: "50%",
-            background: card.accent_color || "#C6914C",
-            margin: "0 auto 16px",
-            overflow: "hidden",
-            border: `3px solid ${card.accent_color || "#C6914C"}`,
-            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+            margin: "0 auto 16px", display: "flex", justifyContent: "center",
+            filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.08))",
           }}>
-            <img src={avatar} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            {avatarUrl ? (
+              <div style={{
+                width: 96, height: 96, borderRadius: "50%",
+                overflow: "hidden",
+                border: `3px solid ${card.accent_color || "#C6914C"}`,
+              }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={avatarUrl} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+            ) : (
+              <InitialsAvatar
+                name={displayName}
+                bg={card.accent_color || "#C6914C"}
+                color={card.bg_color || "#FAF7F2"}
+                size={96}
+              />
+            )}
           </div>
           <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, lineHeight: 1.3 }}>
             {displayName}
@@ -242,10 +270,10 @@ export default function ProfileCardClient({ card, links, identity, slug }: any) 
       </div>
 
       {/* Share Modal */}
-      {shareOpen && <ShareModal url={profileUrl} name={displayName} avatar={avatar} onClose={() => setShareOpen(false)} bgColor={card.bg_color} textColor={card.text_color} />}
+      {shareOpen && <ShareModal url={profileUrl} name={displayName} avatarUrl={avatarUrl} cardAccent={card.accent_color || "#C6914C"} cardBg={card.bg_color || "#FAF7F2"} onClose={() => setShareOpen(false)} bgColor={card.bg_color} textColor={card.text_color} />}
 
       {/* QR Modal */}
-      {qrOpen && <QRModal url={profileUrl} name={displayName} avatar={avatar} onClose={() => setQrOpen(false)} bgColor={card.bg_color} textColor={card.text_color} />}
+      {qrOpen && <QRModal url={profileUrl} name={displayName} avatarUrl={avatarUrl} cardAccent={card.accent_color || "#C6914C"} cardBg={card.bg_color || "#FAF7F2"} onClose={() => setQrOpen(false)} bgColor={card.bg_color} textColor={card.text_color} />}
     </div>
   );
 }
@@ -312,7 +340,7 @@ function iconBtnStyle(textColor: string): React.CSSProperties {
 
 // ════════ Modals ════════
 
-function ShareModal({ url, name, avatar, onClose, bgColor, textColor }: any) {
+function ShareModal({ url, name, avatarUrl, cardAccent, cardBg, onClose, bgColor, textColor }: any) {
   const [copied, setCopied] = useState(false);
 
   const shareTo = (platform: string) => {
@@ -337,7 +365,14 @@ function ShareModal({ url, name, avatar, onClose, bgColor, textColor }: any) {
   return (
     <Modal onClose={onClose} bgColor={bgColor} textColor={textColor} title={`شارك رابط ${name}`}>
       <div style={{ textAlign: "center", padding: "0 8px" }}>
-        <img src={avatar} alt="" style={{ width: 70, height: 70, borderRadius: "50%", margin: "0 auto 12px", display: "block" }} />
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatarUrl} alt="" style={{ width: 70, height: 70, borderRadius: "50%", display: "block" }} />
+          ) : (
+            <InitialsAvatar name={name} bg={cardAccent} color={cardBg} size={70} />
+          )}
+        </div>
         <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 14 }}>{name}</div>
 
         <div style={{
@@ -366,13 +401,37 @@ function ShareModal({ url, name, avatar, onClose, bgColor, textColor }: any) {
   );
 }
 
-function QRModal({ url, name, avatar, onClose, bgColor, textColor }: any) {
-  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
+function QRModal({ url, name, avatarUrl, cardAccent, cardBg, onClose, bgColor, textColor }: any) {
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
+
+  useEffect(() => {
+    // QR محلي بدون أي خدمة خارجية
+    QRCode.toDataURL(url, { width: 400, margin: 1, errorCorrectionLevel: "H" })
+      .then(setQrDataUrl)
+      .catch(() => setQrDataUrl(""));
+  }, [url]);
+
+  function downloadQR() {
+    if (!qrDataUrl) return;
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = `${name}-qr.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 
   return (
     <Modal onClose={onClose} bgColor={bgColor} textColor={textColor} title="شارك رمز QR للبروفايل">
       <div style={{ textAlign: "center", padding: "0 8px" }}>
-        <img src={avatar} alt="" style={{ width: 70, height: 70, borderRadius: "50%", margin: "0 auto 12px", display: "block" }} />
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatarUrl} alt="" style={{ width: 70, height: 70, borderRadius: "50%", display: "block" }} />
+          ) : (
+            <InitialsAvatar name={name} bg={cardAccent} color={cardBg} size={70} />
+          )}
+        </div>
         <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 18 }}>{name}</div>
 
         <div style={{
@@ -380,17 +439,23 @@ function QRModal({ url, name, avatar, onClose, bgColor, textColor }: any) {
           display: "inline-block", marginBottom: 18,
           boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
         }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={qrSrc} alt="QR Code" width={200} height={200} style={{ display: "block" }} />
+          {qrDataUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={qrDataUrl} alt="QR Code" width={200} height={200} style={{ display: "block" }} />
+          ) : (
+            <div style={{ width: 200, height: 200, display: "flex", alignItems: "center", justifyContent: "center", color: "#888" }}>
+              جارٍ التوليد...
+            </div>
+          )}
         </div>
 
         <div style={{ display: "flex", justifyContent: "center", gap: 16 }}>
-          <button onClick={() => navigator.share?.({ url, title: name })} style={iconBtnStyle(textColor)}>
+          <button onClick={() => navigator.share?.({ url, title: name }).catch(() => {})} style={iconBtnStyle(textColor)}>
             <Share2 size={16} />
           </button>
-          <a href={qrSrc} download={`${name}-qr.png`} style={{ ...iconBtnStyle(textColor), textDecoration: "none" }}>
+          <button onClick={downloadQR} style={{ ...iconBtnStyle(textColor), border: "none", cursor: "pointer" }}>
             <Download size={16} />
-          </a>
+          </button>
         </div>
         <div style={{ marginTop: 8, display: "flex", justifyContent: "center", gap: 16, fontSize: 11, opacity: 0.65 }}>
           <span>شارك</span>

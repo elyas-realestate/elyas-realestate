@@ -40,9 +40,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        // الصفحة الرئيسية تعرض الـ landing الجديد من Claude Design
-        // beforeFiles يطغى على filesystem routing (app/page.tsx)
-        { source: "/", destination: "/landing.html" },
+        // (PP-FIX4) أزلنا rewrite إلى /landing.html — كان static dark.
+        // الآن `/` يستخدم app/page.tsx الذي يستهلك CSS variables → كريمي تلقائياً.
       ],
       afterFiles: [],
       fallback: [],
