@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-export const revalidate = 3600;
+// تقليل وقت الـ ISR cache من ٣٦٠٠ إلى ٦٠ ثانية حتى تتبع تغييرات الثيم بسرعة
+// لاحقاً، يمكن رفعه لـ ٣٦٠٠ بعد ثبات الـ landing
+export const revalidate = 60;
 
 const features = [
   {
