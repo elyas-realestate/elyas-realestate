@@ -333,13 +333,18 @@ function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveU
 // مودال مكتبة العناصر
 // ─────────────────────────────────────────────────────────────
 function ElementLibraryModal({ onClose, onSelect }: any) {
-  const [activeCategory, setActiveCategory] = useState<ElementCategory>("social");
+  // اخفِ الفئات الفارغة (التي كل عناصرها autoFrom من الإعدادات)
+  const visibleCategories = CATEGORIES.filter(c => getCategoryElements(c.key).length > 0);
+  const [activeCategory, setActiveCategory] = useState<ElementCategory>(visibleCategories[0]?.key || "content");
   const items = getCategoryElements(activeCategory);
 
   return (
     <ModalShell onClose={onClose} title="مكتبة العناصر">
+      <p className="text-xs mb-3" style={{ color: "var(--text-faint)" }}>
+        💡 وسائل التواصل والرخص تأتي تلقائياً من <Link href="/dashboard/settings" className="underline" style={{ color: "var(--gold-2)" }}>الإعدادات</Link>. هنا فقط العناصر الإضافية.
+      </p>
       <div className="flex gap-2 overflow-x-auto pb-3 -mx-2 px-2" style={{ scrollbarWidth: "thin" }}>
-        {CATEGORIES.map(c => (
+        {visibleCategories.map(c => (
           <button key={c.key} onClick={() => setActiveCategory(c.key)}
             className="px-3 py-1.5 rounded-full text-xs whitespace-nowrap"
             style={{
