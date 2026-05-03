@@ -170,6 +170,22 @@ export default function ProfileCardPage() {
         </div>
       </div>
 
+      {/* Auto-pulled banner */}
+      <div className="rounded-xl p-3 flex items-start gap-2" style={{
+        background: "var(--gold-bg-soft)",
+        border: "1px solid var(--gold-bg)",
+      }}>
+        <Sparkles size={14} style={{ color: "var(--gold-2)", marginTop: 2 }} />
+        <div className="flex-1 text-xs" style={{ color: "var(--text-soft)" }}>
+          <div className="font-bold" style={{ color: "var(--text-strong)" }}>
+            روابطك ورخصك تأتي تلقائياً
+          </div>
+          <div className="mt-0.5">
+            وسائل التواصل، الواتساب، البريد، والرخص (فال، السجل التجاري، معروف، إلخ) تظهر في بطاقتك تلقائياً من <Link href="/dashboard/settings" className="underline" style={{ color: "var(--gold-2)" }}>الإعدادات</Link>. هنا تضيف فقط العناصر الإضافية كـ المتاجر، التوصيل، الروابط المخصصة، النماذج.
+          </div>
+        </div>
+      </div>
+
       {/* Add Element Button */}
       <button onClick={() => setLibraryOpen(true)}
         className="w-full rounded-xl py-4 font-bold flex items-center justify-center gap-2"
@@ -177,15 +193,15 @@ export default function ProfileCardPage() {
           background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
           color: "var(--bg-page)", border: "none", fontSize: 15, cursor: "pointer",
         }}>
-        <Plus size={18} /> أضف للبروفايل
+        <Plus size={18} /> أضف عنصراً مخصصاً
       </button>
 
-      {/* Elements list */}
+      {/* Elements list — manual فقط */}
       <div className="space-y-2">
         {links.length === 0 ? (
-          <div className="text-center py-12 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px dashed var(--gold-bg)", color: "var(--text-faint)" }}>
-            <div className="text-sm">لم تضف أي عنصر بعد.</div>
-            <div className="text-xs mt-2">اضغط الزر أعلاه لتبدأ.</div>
+          <div className="text-center py-10 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px dashed var(--gold-bg)", color: "var(--text-faint)" }}>
+            <div className="text-sm">لم تضف أي عنصر مخصص بعد.</div>
+            <div className="text-xs mt-2">العناصر الأساسية (وسائل تواصل، رخص) تظهر تلقائياً من الإعدادات.</div>
           </div>
         ) : (
           links.map((link, idx) => (

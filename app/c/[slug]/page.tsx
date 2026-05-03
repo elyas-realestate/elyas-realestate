@@ -1,8 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfileCardClient from "./ProfileCardClient";
+import { buildAutoElements } from "@/lib/profile-elements";
 
 export const revalidate = 60;
 
@@ -115,9 +114,38 @@ async function getCardData(slug: string) {
     social_whatsapp:  s.social_whatsapp || s.whatsapp || null,
   };
 
+  // ✨ AUTO-PULL: عناصر تلقائية من الإعدادات (سوشال + رخص + تواصل مباشر)
+  const autoElements = buildAutoElements(s, bi);
+
+  // دمج auto + manual في قائمة موحَّدة (auto أولاً، ثم manual بترتيبها)
+  const manualLinks = (linksRes.data || []).map((l: any) => ({
+    ...l,
+    isAuto: false,
+  }));
+
+  // عناصر auto تأخذ id افتراضية + display_order سالب لتظهر أولاً (إلا لو manual تجاوزها)
+  const autoLinks = autoElements.map((a, i) => ({
+    id: `auto-${a.type}`,
+    element_type: a.type,
+    link_type: "auto",
+    label: "",
+    value: null,
+    subtitle: null,
+    metadata: a.metadata,
+    bg_color: null,
+    text_color: null,
+    display_order: -1000 + i,  // قبل أي manual
+    is_active: true,
+    isAuto: true,
+  }));
+
+  const allLinks = [...autoLinks, ...manualLinks].sort(
+    (a: any, b: any) => (a.display_order || 0) - (b.display_order || 0)
+  );
+
   return {
     card: cardRes.data as ProfileCard | null,
-    links: (linksRes.data || []) as ProfileLink[],
+    links: allLinks,
     identity,
     slug: tenant.slug,
   };

@@ -53,6 +53,13 @@ export interface ProfileElement {
   buildLabel?: (v: Record<string, string>) => string;
   defaultLabel?: string;       // لو buildLabel غير معرَّف
   isPremium?: boolean;
+  // ─────────────────────────────────────────────────────────────
+  // autoFrom: مصدر البيانات التلقائي.
+  //   إذا محدَّد → العنصر يُسحَب تلقائياً من إعدادات الموقع/الهوية،
+  //   ولا يظهر في مكتبة العناصر (لأن المستخدم يديره من /dashboard/settings).
+  //   مثال: social_x autoFrom = "site_settings.social_x"
+  // ─────────────────────────────────────────────────────────────
+  autoFrom?: string;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -78,84 +85,68 @@ const u = (s: string) => (s || "").trim().replace(/^@+/, "").replace(/\s/g, "");
 // كتالوج العناصر
 // ─────────────────────────────────────────────────────────────
 export const ELEMENTS: ProfileElement[] = [
-  // ════════ SOCIAL ════════
+  // ════════ SOCIAL — تُسحَب تلقائياً من /dashboard/settings ════════
   {
     type: "social_x", category: "social", label: "اكس (تويتر)",
     icon: Twitter, brandBg: "#000000", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم المستخدم", type: "text", placeholder: "elyasad1", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "حسابي على اكس" },
-    ],
+    autoFrom: "site_settings.social_x",
+    fields: [{ key: "username", label: "اسم المستخدم", type: "text", required: true }],
     buildUrl: (v) => `https://x.com/${u(v.username)}`,
     defaultLabel: "اكس",
   },
   {
     type: "social_instagram", category: "social", label: "انستجرام",
     icon: Instagram, brandBg: "linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045)", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم المستخدم", type: "text", placeholder: "elyasad1", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "حسابي على انستجرام" },
-    ],
+    autoFrom: "site_settings.social_instagram",
+    fields: [{ key: "username", label: "اسم المستخدم", type: "text", required: true }],
     buildUrl: (v) => `https://instagram.com/${u(v.username)}`,
     defaultLabel: "انستجرام",
   },
   {
     type: "social_tiktok", category: "social", label: "تيك توك",
     icon: Music2, brandBg: "#000000", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم المستخدم", type: "text", placeholder: "elyasad1", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "حسابي على تيك توك" },
-    ],
+    autoFrom: "site_settings.social_tiktok",
+    fields: [{ key: "username", label: "اسم المستخدم", type: "text", required: true }],
     buildUrl: (v) => `https://tiktok.com/@${u(v.username)}`,
     defaultLabel: "تيك توك",
   },
   {
     type: "social_snapchat", category: "social", label: "سناب شات",
     icon: Camera, brandBg: "#FFFC00", brandFg: "#000000",
-    fields: [
-      { key: "username", label: "اسم المستخدم", type: "text", placeholder: "elyasad1", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "حسابي على سناب شات" },
-    ],
+    autoFrom: "site_settings.social_snapchat",
+    fields: [{ key: "username", label: "اسم المستخدم", type: "text", required: true }],
     buildUrl: (v) => `https://snapchat.com/add/${u(v.username)}`,
     defaultLabel: "سناب شات",
   },
   {
     type: "social_linkedin", category: "social", label: "لينكد إن",
     icon: Linkedin, brandBg: "#0A66C2", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم المستخدم", type: "text", placeholder: "elyas-aldakhil", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "حسابي على لينكد إن" },
-    ],
+    autoFrom: "site_settings.social_linkedin",
+    fields: [{ key: "username", label: "اسم المستخدم", type: "text", required: true }],
     buildUrl: (v) => `https://linkedin.com/in/${u(v.username)}`,
     defaultLabel: "لينكد إن",
   },
   {
     type: "social_youtube", category: "social", label: "يوتيوب",
     icon: Youtube, brandBg: "#FF0000", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم القناة (بدون @)", type: "text", placeholder: "elyasad1", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "قناتي على يوتيوب" },
-    ],
+    autoFrom: "site_settings.social_youtube",
+    fields: [{ key: "username", label: "اسم القناة", type: "text", required: true }],
     buildUrl: (v) => `https://youtube.com/@${u(v.username)}`,
     defaultLabel: "يوتيوب",
   },
   {
     type: "social_threads", category: "social", label: "ثريدز",
     icon: Hash, brandBg: "#000000", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم المستخدم", type: "text", placeholder: "elyasad1", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text", placeholder: "حسابي على ثريدز" },
-    ],
+    autoFrom: "site_settings.social_threads",
+    fields: [{ key: "username", label: "اسم المستخدم", type: "text", required: true }],
     buildUrl: (v) => `https://threads.net/@${u(v.username)}`,
     defaultLabel: "ثريدز",
   },
   {
     type: "social_facebook", category: "social", label: "فيسبوك",
     icon: Facebook, brandBg: "#1877F2", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم الصفحة/المستخدم", type: "text", placeholder: "elyas.realestate", required: true },
-      { key: "label",    label: "عنوان الرابط (اختياري)", type: "text" },
-    ],
+    autoFrom: "site_settings.social_facebook",
+    fields: [{ key: "username", label: "اسم الصفحة", type: "text", required: true }],
     buildUrl: (v) => `https://facebook.com/${u(v.username)}`,
     defaultLabel: "فيسبوك",
   },
@@ -179,14 +170,12 @@ export const ELEMENTS: ProfileElement[] = [
     defaultLabel: "موقعي على الخريطة",
   },
 
-  // ════════ CONTACT ════════
+  // ════════ CONTACT — تُسحَب تلقائياً من /dashboard/settings ════════
   {
     type: "contact_whatsapp", category: "contact", label: "واتساب",
     icon: MessageCircle, brandBg: "#25D366", brandFg: "#FFFFFF",
-    fields: [
-      { key: "phone", label: "رقم الجوال", type: "tel", placeholder: "0501234567", prefix: "+966", required: true },
-      { key: "label", label: "نص الزر", type: "text", placeholder: "تواصل على واتساب" },
-    ],
+    autoFrom: "site_settings.social_whatsapp",
+    fields: [{ key: "phone", label: "رقم الجوال", type: "tel", required: true }],
     buildUrl: (v) => {
       const digits = (v.phone || "").replace(/\D/g, "").replace(/^0+/, "");
       const full = digits.startsWith("966") ? digits : digits.startsWith("5") && digits.length === 9 ? `966${digits}` : digits;
@@ -197,20 +186,16 @@ export const ELEMENTS: ProfileElement[] = [
   {
     type: "contact_phone", category: "contact", label: "رقم هاتف",
     icon: Phone, brandBg: "#3B82F6", brandFg: "#FFFFFF",
-    fields: [
-      { key: "phone", label: "رقم الهاتف", type: "tel", placeholder: "0501234567", required: true },
-      { key: "label", label: "نص الزر", type: "text", placeholder: "اتصال هاتفي" },
-    ],
+    autoFrom: "site_settings.phone",
+    fields: [{ key: "phone", label: "رقم الهاتف", type: "tel", required: true }],
     buildUrl: (v) => `tel:${v.phone}`,
     defaultLabel: "اتصال هاتفي",
   },
   {
     type: "contact_email", category: "contact", label: "بريد إلكتروني",
     icon: Mail, brandBg: "#EF4444", brandFg: "#FFFFFF",
-    fields: [
-      { key: "email", label: "البريد الإلكتروني", type: "email", placeholder: "broker@example.com", required: true },
-      { key: "label", label: "نص الزر", type: "text", placeholder: "راسلني عبر البريد" },
-    ],
+    autoFrom: "site_settings.email",
+    fields: [{ key: "email", label: "البريد الإلكتروني", type: "email", required: true }],
     buildUrl: (v) => `mailto:${v.email}`,
     defaultLabel: "بريدي الإلكتروني",
   },
@@ -249,64 +234,55 @@ export const ELEMENTS: ProfileElement[] = [
     isPremium: true,
   },
 
-  // ════════ LICENSE ════════
+  // ════════ LICENSE — كلها تُسحَب تلقائياً من /dashboard/settings ════════
   {
     type: "license_falar", category: "license", label: "رخصة فال",
     icon: BadgeCheck, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "◇",
-    description: "الرخصة الرسمية للوسيط من الهيئة العامة للعقار",
-    fields: [
-      { key: "number", label: "رقم رخصة فال", type: "text", placeholder: "1100167397", required: true },
-      { key: "expires_at", label: "تاريخ الانتهاء (اختياري)", type: "text", placeholder: "2027-01-15" },
-    ],
+    autoFrom: "site_settings.fal_license",
+    fields: [{ key: "number", label: "رقم رخصة فال", type: "text", required: true }],
     defaultLabel: "رخصة فال",
-  },
-  {
-    type: "license_gam", category: "license", label: "رخصة هيئة العقار",
-    icon: Shield, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "🏛️",
-    fields: [
-      { key: "number", label: "رقم الرخصة", type: "text", placeholder: "0000000000", required: true },
-    ],
-    defaultLabel: "رخصة هيئة العقار",
   },
   {
     type: "license_cr", category: "license", label: "السجل التجاري",
     icon: Briefcase, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "📋",
-    fields: [
-      { key: "number", label: "رقم السجل التجاري", type: "text", placeholder: "1010000000", required: true },
-    ],
+    autoFrom: "site_settings.cr_number",
+    fields: [{ key: "number", label: "رقم السجل التجاري", type: "text", required: true }],
     defaultLabel: "السجل التجاري",
   },
   {
-    type: "license_freelance", category: "license", label: "وثيقة العمل الحر",
-    icon: FileText, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "📄",
-    fields: [
-      { key: "number", label: "رقم الوثيقة", type: "text", placeholder: "FL-XXXXXXXXX", required: true },
-    ],
-    defaultLabel: "وثيقة العمل الحر",
+    type: "license_vat", category: "license", label: "الرقم الضريبي",
+    icon: Award, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "💼",
+    autoFrom: "site_settings.vat_number",
+    fields: [{ key: "number", label: "الرقم الضريبي", type: "text", required: true }],
+    defaultLabel: "الشهادة الضريبية",
   },
   {
     type: "license_maaroof", category: "license", label: "رخصة معروف",
     icon: BadgeCheck, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "✅",
-    fields: [
-      { key: "number", label: "رقم رخصة معروف", type: "text", placeholder: "351692", required: true },
-    ],
+    autoFrom: "site_settings.maaroof_license",
+    fields: [{ key: "number", label: "رقم رخصة معروف", type: "text", required: true }],
     defaultLabel: "رخصة معروف",
   },
   {
     type: "license_mowathaq", category: "license", label: "رخصة موثوق",
     icon: BadgeCheck, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "🛡️",
-    fields: [
-      { key: "number", label: "رقم رخصة موثوق", type: "text", placeholder: "0000000", required: true },
-    ],
+    autoFrom: "site_settings.mowathaq_license",
+    fields: [{ key: "number", label: "رقم رخصة موثوق", type: "text", required: true }],
     defaultLabel: "رخصة موثوق",
   },
   {
-    type: "license_vat", category: "license", label: "الشهادة الضريبية",
-    icon: Award, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "💼",
-    fields: [
-      { key: "number", label: "الرقم الضريبي", type: "text", placeholder: "3XXXXXXXXXXXXX3", required: true },
-    ],
-    defaultLabel: "الشهادة الضريبية",
+    type: "license_freelance", category: "license", label: "وثيقة العمل الحر",
+    icon: FileText, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "📄",
+    autoFrom: "site_settings.freelance_license",
+    fields: [{ key: "number", label: "رقم الوثيقة", type: "text", required: true }],
+    defaultLabel: "وثيقة العمل الحر",
+  },
+  {
+    type: "license_gam", category: "license", label: "رخصة هيئة العقار",
+    icon: Shield, brandBg: "#FAFAFA", brandFg: "#1A1206", emoji: "🏛️",
+    autoFrom: "site_settings.gam_license",
+    fields: [{ key: "number", label: "رقم رخصة الهيئة", type: "text", required: true }],
+    defaultLabel: "رخصة هيئة العقار",
   },
 
   // ════════ STORE ════════
@@ -423,8 +399,72 @@ export function getElement(type: string): ProfileElement | undefined {
   return ELEMENTS.find(e => e.type === type);
 }
 
+/**
+ * عناصر المكتبة (للداشبورد): تستثني العناصر autoFrom (لأنها تأتي من الإعدادات)
+ */
 export function getCategoryElements(cat: ElementCategory): ProfileElement[] {
-  return ELEMENTS.filter(e => e.category === cat);
+  return ELEMENTS.filter(e => e.category === cat && !e.autoFrom);
+}
+
+/**
+ * AUTO-PULL: يبني قائمة العناصر التلقائية من site_settings + broker_identity
+ * يُستخدَم في /c/[slug] لتجنّب طلب نفس البيانات من المستخدم مرتين.
+ */
+export interface AutoElement {
+  type: string;
+  metadata: Record<string, string>;
+  isAuto: true;
+}
+
+export function buildAutoElements(
+  siteSettings: Record<string, any> | null,
+  brokerIdentity: Record<string, any> | null
+): AutoElement[] {
+  const result: AutoElement[] = [];
+  const s = siteSettings || {};
+  const bi = brokerIdentity || {};
+
+  for (const el of ELEMENTS) {
+    if (!el.autoFrom) continue;
+
+    // تحليل المصدر مثل "site_settings.social_x"
+    const [source, field] = el.autoFrom.split(".");
+    let value: string | null = null;
+
+    if (source === "site_settings") {
+      value = s[field] || null;
+      // لـ social_whatsapp: أيضاً جرّب whatsapp العام
+      if (!value && field === "social_whatsapp") value = s.whatsapp || null;
+      // لـ email: جرّب contact_email
+      if (!value && field === "email") value = s.contact_email || null;
+    } else if (source === "broker_identity") {
+      value = bi[field] || null;
+    }
+
+    if (!value || !String(value).trim()) continue;
+
+    // استخراج القيمة الصحيحة لكل نوع
+    const meta: Record<string, string> = {};
+    const fieldDef = el.fields[0]; // الحقل الأول هو القيمة الرئيسية
+    if (!fieldDef) continue;
+
+    if (fieldDef.key === "username") {
+      // لو الـ value رابط كامل، استخرج الـ username
+      const m = String(value).match(/(?:\/|@)([\w.\-_]+)\/?$/);
+      meta.username = m ? m[1] : String(value).replace(/^@+/, "");
+    } else if (fieldDef.key === "phone") {
+      const m = String(value).match(/(\d{9,})/);
+      meta.phone = m ? m[1] : String(value);
+    } else if (fieldDef.key === "email") {
+      meta.email = String(value);
+    } else {
+      meta[fieldDef.key] = String(value);
+    }
+
+    result.push({ type: el.type, metadata: meta, isAuto: true });
+  }
+
+  return result;
 }
 
 export function buildElementUrl(type: string, metadata: Record<string, string>): string {

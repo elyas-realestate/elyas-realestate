@@ -607,9 +607,41 @@ export default function Settings() {
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm text-[var(--text-soft)] mb-2">رقم رخصة فال <span className="text-[var(--text-faint)]">(يظهر في الموقع)</span></label>
-                    <input value={s.fal_license || ""} onChange={e => sc("fal_license", e.target.value)} className={inputClass} placeholder="مثال: 1100000000" maxLength={10} dir="ltr" />
+                  <div className="rounded-xl p-4 mt-4" style={{ background: "var(--gold-bg-soft)", border: "1px dashed var(--gold-bg-hover)" }}>
+                    <h4 className="font-bold mb-1 text-sm" style={{ color: "var(--gold-2)" }}>الرخص والاعتمادات</h4>
+                    <p className="text-xs mb-4" style={{ color: "var(--text-faint)" }}>
+                      هذه الأرقام تظهر تلقائياً على بطاقتك التعريفية في <code className="px-1.5 rounded text-xs" style={{ background: "var(--bg-surface-2)" }}>/c/{s.id ? "..." : "اسمك"}</code>
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">◇ رخصة فال</label>
+                        <input value={s.fal_license || ""} onChange={e => sc("fal_license", e.target.value)} className={inputClass} placeholder="1100167397" maxLength={10} dir="ltr" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">📋 السجل التجاري</label>
+                        <input value={s.cr_number || ""} onChange={e => sc("cr_number", e.target.value)} className={inputClass} placeholder="1010000000" dir="ltr" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">💼 الرقم الضريبي</label>
+                        <input value={s.vat_number || ""} onChange={e => sc("vat_number", e.target.value)} className={inputClass} placeholder="3XXXXXXXXXXXXX3" maxLength={15} dir="ltr" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">✅ رخصة معروف</label>
+                        <input value={s.maaroof_license || ""} onChange={e => sc("maaroof_license", e.target.value)} className={inputClass} placeholder="351692" dir="ltr" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">🛡️ رخصة موثوق</label>
+                        <input value={s.mowathaq_license || ""} onChange={e => sc("mowathaq_license", e.target.value)} className={inputClass} dir="ltr" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">📄 وثيقة العمل الحر</label>
+                        <input value={s.freelance_license || ""} onChange={e => sc("freelance_license", e.target.value)} className={inputClass} placeholder="FL-XXXXXXXXX" dir="ltr" />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[var(--text-soft)] mb-1.5">🏛️ رخصة هيئة العقار</label>
+                        <input value={s.gam_license || ""} onChange={e => sc("gam_license", e.target.value)} className={inputClass} dir="ltr" />
+                      </div>
+                    </div>
                   </div>
                   <SaveBtn onClick={handleSaveSettings} />
                 </div>
