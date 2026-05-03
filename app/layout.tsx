@@ -63,7 +63,9 @@ export default function RootLayout({
     <html
       lang="ar"
       dir="rtl"
+      data-theme="cream"
       className={`${notoKufi.variable} ${tajawal.variable} ${cairo.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         {/* تطبيق الثيم + ألوان البراند قبل أول render لتجنّب FOUC */}

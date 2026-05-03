@@ -123,14 +123,14 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
 
   // helper: يحوّل hex → rgba بأمان (يدعم #RGB و #RRGGBB، يرجع fallback لو فشل)
   const hexToRgba = (hex: string, alpha: number) => {
-    if (!hex || !hex.startsWith("#")) return `rgba(10,10,12,${alpha})`;
+    if (!hex || !hex.startsWith("#")) return `rgba(250,247,242,${alpha})`;
     let h = hex.replace("#", "");
     if (h.length === 3) h = h.split("").map(c => c + c).join("");
-    if (h.length !== 6) return `rgba(10,10,12,${alpha})`;
+    if (h.length !== 6) return `rgba(250,247,242,${alpha})`;
     const r = parseInt(h.slice(0, 2), 16);
     const g = parseInt(h.slice(2, 4), 16);
     const b = parseInt(h.slice(4, 6), 16);
-    if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(10,10,12,${alpha})`;
+    if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(250,247,242,${alpha})`;
     return `rgba(${r},${g},${b},${alpha})`;
   };
   const fntHero        = s?.font_size_hero        || "clamp(2.2rem, 5vw, 3.8rem)";
