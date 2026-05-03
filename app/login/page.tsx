@@ -141,6 +141,18 @@ export default function Login() {
               <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>سجّل الآن مجاناً</span>
             </Link>
           </div>
+
+          {/* اتفاقية الاستخدام */}
+          <div style={{ fontSize: 11, color: "var(--text-faint)", lineHeight: 1.6, padding: "8px 12px" }}>
+            بدخولك، أنت توافق على{" "}
+            <Link href="/terms" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>الشروط والأحكام</Link>
+            {" و "}
+            <Link href="/privacy" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>سياسة الخصوصية</Link>
+            {" و "}
+            <Link href="/data-processing" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>اتفاقية معالجة البيانات</Link>
+            {" — متوافقة مع نظام حماية البيانات الشخصية السعودي (PDPL)."}
+          </div>
+
           <Link href="/" style={{ fontSize: 12, color: "var(--border-1)", textDecoration: "none" }}>
             ← العودة للموقع
           </Link>

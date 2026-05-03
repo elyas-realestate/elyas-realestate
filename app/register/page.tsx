@@ -331,12 +331,15 @@ export default function Register() {
                 ) : "إنشاء الحساب"}
               </button>
 
-              {/* شروط */}
-              <p style={{ fontSize: 11, color: "var(--border-1)", textAlign: "center", lineHeight: 1.6 }}>
+              {/* شروط — متوافقة مع PDPL */}
+              <p style={{ fontSize: 11, color: "var(--text-faint)", textAlign: "center", lineHeight: 1.7 }}>
                 بالتسجيل أنت توافق على{" "}
-                <span style={{ color: "var(--text-faint)" }}>شروط الاستخدام</span>
-                {" "}و{" "}
-                <span style={{ color: "var(--text-faint)" }}>سياسة الخصوصية</span>
+                <Link href="/terms" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>الشروط والأحكام</Link>
+                {" و "}
+                <Link href="/privacy" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>سياسة الخصوصية</Link>
+                {" و "}
+                <Link href="/data-processing" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>اتفاقية معالجة البيانات</Link>
+                {" — وفق نظام حماية البيانات الشخصية (PDPL)"}
               </p>
             </form>
           </div>

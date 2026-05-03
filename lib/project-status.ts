@@ -299,11 +299,11 @@ export const PHASES: Phase[] = [
   {
     id: "payments",
     name: "نظام الدفع",
-    description: "D3 — Moyasar روابط دفع + VAT آلي",
-    status: "pending",
+    description: "D3 — Moyasar API + webhook + payment events",
+    status: "in_progress",
     milestones: [
-      { code: "D3-1", name: "تكامل Moyasar API", status: "pending" },
-      { code: "D3-2", name: "إنشاء روابط دفع للعميل", status: "pending" },
+      { code: "D3-1", name: "lib/moyasar.ts + /api/payment route", status: "done" },
+      { code: "D3-2", name: "Moyasar webhook + payment_events audit table", status: "done" },
       { code: "D3-3", name: "احتساب VAT 15% آلي", status: "pending" },
       { code: "D3-4", name: "Webhook استقبال دفع ناجح", status: "pending" },
     ],

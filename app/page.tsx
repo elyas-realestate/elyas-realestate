@@ -73,27 +73,27 @@ const plans = [
   },
   {
     name: "أساسي",
-    price: "199",
+    price: "99",
     period: "ر.س / شهر",
     badge: "الأكثر طلباً",
     desc: "للوسيط النشط الذي يريد النمو",
     features: [
       "٥٠ عقار",
       "عملاء غير محدودين",
-      "موظف تسويق + متابعة + محلل (٣ من ٤)",
+      "وكيل المحتوى الذكي (٥٠ طلب/شهر)",
       "العقود الإلكترونية",
       "ZATCA كامل + الفواتير",
       "تحليل مالي + تقارير PDF",
       "WhatsApp (wa.me)",
     ],
-    excluded: ["موظف الاستقبال (Meta API)", "غرفة المحتوى (٣ نماذج)"],
+    excluded: ["AI غير محدود", "غرفة المحتوى (٣ نماذج)"],
     cta: "ابدأ تجربة مجانية",
     ctaStyle: "gold",
     highlighted: true,
   },
   {
     name: "احترافي",
-    price: "499",
+    price: "249",
     period: "ر.س / شهر",
     badge: "بدون قيود",
     desc: "للوسيط المحترف وفريقه",
@@ -342,7 +342,7 @@ export default function Home() {
       {/* ═══ FOOTER ═══ */}
       <footer style={{ padding: "48px", background: "var(--bg-page)", borderTop: "1px solid var(--gold-bg-soft)" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 40 }}>
+          <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr", gap: 32, marginBottom: 40 }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                 <div className="accent-bg font-kufi" style={{ width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "var(--bg-page)" }}>و</div>
@@ -353,9 +353,9 @@ export default function Home() {
             <div>
               <h4 className="font-kufi" style={{ fontSize: 13, fontWeight: 700, color: "var(--text-soft)", marginBottom: 16, letterSpacing: 1 }}>المنصة</h4>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {["المميزات", "الأسعار", "تسجيل الدخول"].map((link, i) => (
-                  <a key={i} href={i < 2 ? `#${["features","pricing"][i]}` : "/login"} style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13, transition: "color 0.2s" }}>{link}</a>
-                ))}
+                <a href="#features" style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>المميزات</a>
+                <a href="#pricing"  style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>الأسعار</a>
+                <a href="/login"    style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>تسجيل الدخول</a>
               </div>
             </div>
             <div>
@@ -364,6 +364,15 @@ export default function Home() {
                 {["وكيل المحتوى", "إدارة العقارات", "التحليل المالي", "الوثائق"].map((item, i) => (
                   <span key={i} style={{ color: "var(--text-faint)", fontSize: 13 }}>{item}</span>
                 ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="font-kufi" style={{ fontSize: 13, fontWeight: 700, color: "var(--text-soft)", marginBottom: 16, letterSpacing: 1 }}>قانوني</h4>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <a href="/privacy" style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>سياسة الخصوصية</a>
+                <a href="/terms" style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>الشروط والأحكام</a>
+                <a href="/data-processing" style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>اتفاقية معالجة البيانات</a>
+                <a href="/license" style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}>الترخيص</a>
               </div>
             </div>
             <div>
