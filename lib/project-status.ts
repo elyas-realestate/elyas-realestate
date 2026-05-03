@@ -22,6 +22,7 @@ export interface Phase {
   status: PhaseStatus;
   milestones: Milestone[];
   completedAt?: string;
+  blockedBy?: string;
 }
 
 export interface Competitor {
@@ -169,16 +170,89 @@ export const PHASES: Phase[] = [
   },
   {
     id: "ux-consolidation",
-    name: "توحيد تجربة الـ AI (KK)",
-    description: "دمج الصفحات المتفرقة في /dashboard/ai واحد بستة تابات",
+    name: "توحيد تجربة الـ AI (KK + LL)",
+    description: "دمج الصفحات المتفرقة في /dashboard/ai واحد بستة تابات + إصلاح ٥ bugs من CIB",
     status: "done",
-    completedAt: "2026-05-02",
+    completedAt: "2026-05-03",
     milestones: [
       { code: "UX-1", name: "تحليل CIB لنقاط الإرباك (39 رابط → 6)", status: "done" },
       { code: "UX-2", name: "/dashboard/ai layout + hero stats + 6 tabs", status: "done" },
       { code: "UX-3", name: "تابات: التحكم، المساعدون، الاختبار، المخرجات، الموافقات، المزوّدون", status: "done" },
-      { code: "UX-4", name: "Redirects من المسارات القديمة (ai-employees، ai-foundation، ceo/operations، ceo/test-mas)", status: "done" },
+      { code: "UX-4", name: "Redirects من المسارات القديمة", status: "done" },
       { code: "UX-5", name: "اختصار sidebar من 39 إلى 5 عناصر primary", status: "done" },
+      { code: "UX-6", name: "Toaster + richColors (أخضر/أحمر)", status: "done" },
+      { code: "UX-7", name: "Hero refresh فوري بـ custom event", status: "done" },
+      { code: "UX-8", name: "Skeleton أثناء التحميل", status: "done" },
+      { code: "UX-9", name: "outputs_count موحَّد في status API", status: "done" },
+    ],
+  },
+  {
+    id: "profile-card",
+    name: "بطاقة الوسيط (Linktree-style) — MM",
+    description: "إعادة تصميم /[slug] كبطاقة احترافية + لوحة تحكم + QR + روابط بطاقات",
+    status: "pending",
+    milestones: [
+      { code: "MM-1", name: "Migration: profile_card + cards table", status: "pending" },
+      { code: "MM-2", name: "إعادة تصميم /[slug] بأسلوب linktree-mobile-first", status: "pending" },
+      { code: "MM-3", name: "/dashboard/profile-card — لوحة التحكم بالبطاقة", status: "pending" },
+      { code: "MM-4", name: "QR code للمشاركة + زر مشاركة سريع", status: "pending" },
+      { code: "MM-5", name: "ترتيب draggable للروابط", status: "pending" },
+    ],
+  },
+  {
+    id: "social-smart",
+    name: "إدخال وسائل التواصل الذكي — NN",
+    description: "قبول username بدون https://platform.com/ ويحوّل تلقائياً",
+    status: "pending",
+    milestones: [
+      { code: "NN-1", name: "lib/social-normalize.ts", status: "pending" },
+      { code: "NN-2", name: "تطبيقه في /dashboard/settings + onboarding", status: "pending" },
+    ],
+  },
+  {
+    id: "subdomain",
+    name: "Subdomain للوسيط — OO (مؤجَّل)",
+    description: "elyas.wpro.sa بدل /elyas — يحتاج شراء دومين",
+    status: "blocked",
+    blockedBy: "domain-purchase",
+    milestones: [
+      { code: "OO-1", name: "Middleware يقرأ host → يكشف subdomain", status: "pending" },
+      { code: "OO-2", name: "Wildcard DNS + Vercel custom domain", status: "pending", blockedBy: "domain-purchase" },
+      { code: "OO-3", name: "301 redirect من /[slug] للـ subdomain", status: "pending", blockedBy: "domain-purchase" },
+    ],
+  },
+  {
+    id: "cream-default",
+    name: "الكريمي = الثيم الافتراضي — PP",
+    description: "تطبيق الكريمي على landing + اعتباره الافتراضي للمستخدم الجديد",
+    status: "pending",
+    milestones: [
+      { code: "PP-1", name: "تغيير CSS default theme من dark إلى cream", status: "pending" },
+      { code: "PP-2", name: "تطبيق الكريمي على landing page (الصفحة العامة)", status: "pending" },
+      { code: "PP-3", name: "Theme switcher يحفظ التفضيل في DB ويعرض cream افتراضياً", status: "pending" },
+    ],
+  },
+  {
+    id: "tracker-link",
+    name: "رابط تتبّع المشروع في الـ header — QQ",
+    description: "زر بارز بجانب /slug للوصول السريع",
+    status: "done",
+    completedAt: "2026-05-03",
+    milestones: [
+      { code: "QQ-1", name: "إضافة الرابط بتدرج ذهبي بارز", status: "done" },
+    ],
+  },
+  {
+    id: "ux-simplification-2",
+    name: "تبسيط UX المرحلة الثانية + كتيّب — RR",
+    description: "Onboarding tour + tooltips + /help + simplified mode",
+    status: "pending",
+    milestones: [
+      { code: "RR-1", name: "Onboarding tour (Joyride) لأول مرة", status: "pending" },
+      { code: "RR-2", name: "زر '?' بجانب كل قسم رئيسي", status: "pending" },
+      { code: "RR-3", name: "/dashboard/help — مركز المساعدة", status: "pending" },
+      { code: "RR-4", name: "Simplified mode: يخفي ميزات المتقدمين عن المبتدئين", status: "pending" },
+      { code: "RR-5", name: "كتيّب PDF عربي للوسيط الجديد", status: "pending" },
     ],
   },
   {
@@ -412,54 +486,63 @@ export interface Priority_Item {
   impact: string;
 }
 
+// أولويات معاد ترتيبها: المالك أجّل الإطلاق ويركّز على اكتمال الرؤية والتبسيط
 export const TOP_PRIORITIES: Priority_Item[] = [
   {
-    id: "p-payments",
+    id: "p-cream",
     rank: 1,
-    title: "دمج Moyasar (D3)",
-    why: "بدون دفع فعلي ما في إيراد",
+    title: "الكريمي = الافتراضي + landing (PP)",
+    why: "أول انطباع للمستخدم؛ هوية بصرية موحَّدة قبل أي شي",
+    effort: "ساعتان",
+    impact: "تحسين أول انطباع",
+  },
+  {
+    id: "p-social-smart",
+    rank: 2,
+    title: "إدخال وسائل التواصل الذكي (NN)",
+    why: "تخفيف احتكاك للوسطاء؛ تحسين سهلة التنفيذ",
+    effort: "ساعة",
+    impact: "تحسين UX onboarding",
+  },
+  {
+    id: "p-profile-card",
+    rank: 3,
+    title: "بطاقة الوسيط Linktree-style (MM)",
+    why: "ميزة تنافسية كبيرة (نزل/تعاريف عندهم) + هوية مميَّزة لكل وسيط",
+    effort: "يومان",
+    impact: "تمييز عن المنافسين",
+  },
+  {
+    id: "p-subdomain-design",
+    rank: 4,
+    title: "تصميم Subdomain routing (OO-1 فقط)",
+    why: "نبني الكود الآن، نُفعّله لما تُشترى الدومين",
+    effort: "نصف يوم",
+    impact: "جاهزية تقنية مستقبلية",
+  },
+  {
+    id: "p-ux-2",
+    rank: 5,
+    title: "تبسيط UX المرحلة الثانية (RR)",
+    why: "المالك يشعر بالإرباك؛ Onboarding tour + Help center + Simplified mode",
+    effort: "3-4 أيام",
+    impact: "حلّ بلوكر استخدام رئيسي",
+  },
+  {
+    id: "p-payments",
+    rank: 6,
+    title: "دمج Moyasar (D3) — مؤجَّل بناءً على قرار المالك",
+    why: "حاسم للإطلاق، لكن ليس الآن — تركيز على اكتمال الرؤية",
     effort: "يومان",
     impact: "بلوكر إطلاق Beta",
   },
   {
-    id: "p-whatsapp",
-    rank: 2,
-    title: "ترقية WhatsApp لرقم سعودي",
-    why: "بدونه، الـ MAS كله نظري",
-    effort: "1-3 أيام (انتظار Meta)",
-    impact: "بلوكر إطلاق Beta",
-  },
-  {
-    id: "p-legal",
-    rank: 3,
-    title: "صفحات Legal (TOS + Privacy)",
-    why: "إلزام قانوني",
-    effort: "يوم واحد + مراجعة",
-    impact: "بلوكر إطلاق",
-  },
-  {
-    id: "p-pricing",
-    rank: 4,
-    title: "تثبيت التسعير النهائي",
-    why: "ما تقدر تطلق Beta بدون أسعار محسومة",
-    effort: "نصف يوم تفكير",
-    impact: "تحدّد ROI",
-  },
-  {
-    id: "p-ux",
-    rank: 5,
-    title: "توحيد UX (II8)",
-    why: "تجربة واضحة = onboarding أسرع",
-    effort: "3-4 أيام",
-    impact: "تحسين conversion",
-  },
-  {
     id: "p-property-mgmt",
-    rank: 6,
+    rank: 7,
     title: "إدارة الأملاك (D2)",
     why: "ميزة تنافسية ضد نزل",
     effort: "أسبوع",
-    impact: "توسيع السوق المستهدف",
+    impact: "توسيع السوق",
   },
 ];
 

@@ -433,6 +433,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span>/{brokerSlug}</span>
             </Link>
           )}
+          {/* تتبّع المشروع — عرض مؤقّت بارز للمالك */}
+          <Link
+            href="/dashboard/project-tracker"
+            className="hidden sm:flex items-center gap-1.5 no-underline transition"
+            style={{
+              color: "var(--bg-page)",
+              fontSize: 12,
+              padding: "6px 10px",
+              borderRadius: 8,
+              background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              border: "none",
+              fontWeight: 700,
+            }}
+          >
+            <BarChart3 size={13} />
+            <span>تتبّع المشروع</span>
+          </Link>
         </div>
       </header>
 
