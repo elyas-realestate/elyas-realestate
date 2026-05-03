@@ -18,15 +18,17 @@ import { normalizeSocial, getSmartPlaceholder, type SocialPlatform } from "@/lib
 
 // المنصات تحفظ كرابط كامل، لكن المستخدم يكتب username فقط (نطبّع تلقائياً عند الحفظ)
 const SOCIAL_PLATFORMS: Array<{ key: string; platform: SocialPlatform; label: string }> = [
-  { key: "social_x",         platform: "x",         label: "X (تويتر)" },
-  { key: "social_instagram", platform: "instagram", label: "Instagram" },
-  { key: "social_tiktok",    platform: "tiktok",    label: "TikTok" },
-  { key: "social_snapchat",  platform: "snapchat",  label: "سناب شات" },
-  { key: "social_linkedin",  platform: "linkedin",  label: "LinkedIn" },
-  { key: "social_youtube",   platform: "youtube",   label: "يوتيوب" },
-  { key: "social_threads",   platform: "threads",   label: "Threads" },
-  { key: "social_facebook",  platform: "facebook",  label: "فيسبوك" },
-  { key: "social_whatsapp",  platform: "whatsapp",  label: "واتساب" },
+  { key: "social_x",          platform: "x",         label: "X (تويتر)" },
+  { key: "social_instagram",  platform: "instagram", label: "Instagram" },
+  { key: "social_tiktok",     platform: "tiktok",    label: "TikTok" },
+  { key: "social_snapchat",   platform: "snapchat",  label: "سناب شات" },
+  { key: "social_linkedin",   platform: "linkedin",  label: "LinkedIn" },
+  { key: "social_youtube",    platform: "youtube",   label: "يوتيوب" },
+  { key: "social_threads",    platform: "threads",   label: "Threads" },
+  { key: "social_facebook",   platform: "facebook",  label: "فيسبوك" },
+  { key: "social_whatsapp",   platform: "whatsapp",  label: "واتساب" },
+  { key: "social_telegram",   platform: "telegram",   label: "تيليجرام" },
+  { key: "social_googlemaps", platform: "googlemaps", label: "خرائط جوجل (موقع المكتب)" },
 ];
 
 const STATIC_PAGES = [
@@ -628,8 +630,21 @@ export default function Settings() {
                       <input value={s.fal_license || ""} onChange={e => sc("fal_license", e.target.value)} className={inputClass} placeholder="1100167397" maxLength={10} dir="ltr" />
                     </div>
                     <div>
-                      <label className="block text-sm text-[var(--text-soft)] mb-2">📋 السجل التجاري</label>
-                      <input value={s.cr_number || ""} onChange={e => sc("cr_number", e.target.value)} className={inputClass} placeholder="1010000000" dir="ltr" />
+                      <label className="block text-sm text-[var(--text-soft)] mb-2">📋 السجل التجاري / الرقم الموحَّد <span className="text-[var(--text-faint)]">(يبدأ بـ 7، عشرة أرقام)</span></label>
+                      <input
+                        value={s.cr_number || ""}
+                        onChange={e => sc("cr_number", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                        className={inputClass}
+                        placeholder="7XXXXXXXXX"
+                        maxLength={10}
+                        inputMode="numeric"
+                        dir="ltr"
+                      />
+                      {s.cr_number && s.cr_number.length === 10 && !s.cr_number.startsWith("7") && (
+                        <p className="text-xs mt-1" style={{ color: "var(--warning)" }}>
+                          ⚠️ السجل التجاري السعودي عادةً يبدأ بـ 7
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm text-[var(--text-soft)] mb-2">💼 الرقم الضريبي</label>

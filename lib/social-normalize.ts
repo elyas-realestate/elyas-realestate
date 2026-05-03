@@ -17,7 +17,9 @@ export type SocialPlatform =
   | "youtube"
   | "threads"
   | "facebook"
-  | "whatsapp";
+  | "whatsapp"
+  | "telegram"
+  | "googlemaps";
 
 interface PlatformConfig {
   domains: string[];          // الدومينات المعروفة (للتعرّف)
@@ -37,6 +39,8 @@ const PLATFORMS: Record<SocialPlatform, PlatformConfig> = {
   threads:   { domains: ["threads.net"],           prefix: "https://threads.net/@", needsAt: true },
   facebook:  { domains: ["facebook.com", "fb.com"], prefix: "https://facebook.com/" },
   whatsapp:  { domains: ["wa.me", "whatsapp.com"], prefix: "https://wa.me/", whatsappFormat: true },
+  telegram:  { domains: ["t.me", "telegram.me"],   prefix: "https://t.me/" },
+  googlemaps:{ domains: ["maps.google.com", "maps.app.goo.gl", "google.com/maps"], prefix: "https://maps.google.com/?q=" },
 };
 
 /**
@@ -158,16 +162,18 @@ export function extractUsername(platform: SocialPlatform, url: string): string {
  */
 export function getSmartPlaceholder(platform: SocialPlatform): string {
   const examples: Record<SocialPlatform, string> = {
-    x:         "elyasad1 أو @elyasad1",
-    twitter:   "elyasad1 أو @elyasad1",
-    instagram: "elyas_realestate",
-    tiktok:    "elyasad1",
-    snapchat:  "elyasad1",
-    linkedin:  "elyas-aldakhil",
-    youtube:   "elyasad1",
-    threads:   "elyas_realestate",
-    facebook:  "elyas.realestate",
-    whatsapp:  "0501234567 أو 966501234567",
+    x:          "elyasad1 أو @elyasad1",
+    twitter:    "elyasad1 أو @elyasad1",
+    instagram:  "elyas_realestate",
+    tiktok:     "elyasad1",
+    snapchat:   "elyasad1",
+    linkedin:   "elyas-aldakhil",
+    youtube:    "elyasad1",
+    threads:    "elyas_realestate",
+    facebook:   "elyas.realestate",
+    whatsapp:   "0501234567 أو 966501234567",
+    telegram:   "elyasad1 أو @elyasad1",
+    googlemaps: "https://maps.app.goo.gl/...",
   };
   return examples[platform] || "اسم المستخدم فقط";
 }

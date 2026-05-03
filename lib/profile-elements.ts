@@ -153,19 +153,16 @@ export const ELEMENTS: ProfileElement[] = [
   {
     type: "social_telegram", category: "social", label: "تيليجرام",
     icon: Send, brandBg: "#26A5E4", brandFg: "#FFFFFF",
-    fields: [
-      { key: "username", label: "اسم المستخدم/القناة", type: "text", placeholder: "elyasad1", required: true },
-    ],
+    autoFrom: "site_settings.social_telegram",
+    fields: [{ key: "username", label: "اسم المستخدم/القناة", type: "text", required: true }],
     buildUrl: (v) => `https://t.me/${u(v.username)}`,
     defaultLabel: "تيليجرام",
   },
   {
     type: "social_googlemaps", category: "social", label: "خرائط جوجل",
     icon: MapPin, brandBg: "#34A853", brandFg: "#FFFFFF",
-    fields: [
-      { key: "url", label: "رابط Google Maps الكامل", type: "url", placeholder: "https://maps.app.goo.gl/...", required: true },
-      { key: "label", label: "عنوان (مثل: مكتبي)", type: "text", placeholder: "موقع المكتب" },
-    ],
+    autoFrom: "site_settings.social_googlemaps",
+    fields: [{ key: "url", label: "رابط Google Maps الكامل", type: "url", required: true }],
     buildUrl: (v) => v.url,
     defaultLabel: "موقعي على الخريطة",
   },
