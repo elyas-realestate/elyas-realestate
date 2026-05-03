@@ -12,19 +12,21 @@ import Link from "next/link";
 import { toast } from "sonner";
 import ThemeSwitcher from "@/app/components/ThemeSwitcher";
 import ServiceIcon, { SERVICE_ICON_KEYS } from "@/app/components/ServiceIcon";
+import { normalizeSocial, getSmartPlaceholder, type SocialPlatform } from "@/lib/social-normalize";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const SOCIAL_PLATFORMS = [
-  { key: "social_x",         label: "X (تويتر)",    placeholder: "https://x.com/username" },
-  { key: "social_instagram", label: "Instagram",     placeholder: "https://instagram.com/username" },
-  { key: "social_tiktok",    label: "TikTok",        placeholder: "https://tiktok.com/@username" },
-  { key: "social_snapchat",  label: "سناب شات",      placeholder: "https://snapchat.com/add/username" },
-  { key: "social_linkedin",  label: "LinkedIn",      placeholder: "https://linkedin.com/in/username" },
-  { key: "social_youtube",   label: "يوتيوب",        placeholder: "https://youtube.com/@username" },
-  { key: "social_threads",   label: "Threads",       placeholder: "https://threads.net/@username" },
-  { key: "social_facebook",  label: "فيسبوك",        placeholder: "https://facebook.com/username" },
-  { key: "social_whatsapp",  label: "واتساب (رابط)", placeholder: "https://wa.me/966501234567" },
+// المنصات تحفظ كرابط كامل، لكن المستخدم يكتب username فقط (نطبّع تلقائياً عند الحفظ)
+const SOCIAL_PLATFORMS: Array<{ key: string; platform: SocialPlatform; label: string }> = [
+  { key: "social_x",         platform: "x",         label: "X (تويتر)" },
+  { key: "social_instagram", platform: "instagram", label: "Instagram" },
+  { key: "social_tiktok",    platform: "tiktok",    label: "TikTok" },
+  { key: "social_snapchat",  platform: "snapchat",  label: "سناب شات" },
+  { key: "social_linkedin",  platform: "linkedin",  label: "LinkedIn" },
+  { key: "social_youtube",   platform: "youtube",   label: "يوتيوب" },
+  { key: "social_threads",   platform: "threads",   label: "Threads" },
+  { key: "social_facebook",  platform: "facebook",  label: "فيسبوك" },
+  { key: "social_whatsapp",  platform: "whatsapp",  label: "واتساب" },
 ];
 
 const STATIC_PAGES = [
@@ -204,6 +206,15 @@ export default function Settings() {
     if (!settings?.id) return;
     setSaving(true);
     const { id, created_at, ...updateData } = settings;
+
+    // طبّع كل روابط السوشال ميديا قبل الحفظ (defense in depth)
+    for (const p of SOCIAL_PLATFORMS) {
+      const v = updateData[p.key];
+      if (v && typeof v === "string") {
+        updateData[p.key] = normalizeSocial(p.platform, v);
+      }
+    }
+
     const { error } = await supabase.from("site_settings").update(updateData).eq("id", settings.id);
     if (settings.fal_license !== undefined) {
       await supabase.from("broker_identity").update({ fal_license: settings.fal_license }).not("id", "is", null);
@@ -1182,10 +1193,23 @@ export default function Settings() {
           </div>
           <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-4">
             <h3 className="font-bold text-[var(--gold-2)] text-lg">حسابات السوشال ميديا</h3>
+            <p className="text-xs" style={{ color: "var(--text-faint)" }}>
+              ✨ اكتب اسم المستخدم فقط (مثلاً <code style={{ background: "var(--bg-surface-2)", padding: "1px 6px", borderRadius: 4 }}>elyasad1</code>)، النظام يحوّله لرابط كامل تلقائياً عند الحفظ.
+            </p>
             {SOCIAL_PLATFORMS.map(p => (
               <div key={p.key}>
                 <label className="block text-sm text-[var(--text-soft)] mb-2">{p.label}</label>
-                <input value={s[p.key]||""} onChange={e=>sc(p.key,e.target.value)} className={inputClass} placeholder={p.placeholder} dir="ltr"/>
+                <input
+                  value={s[p.key] || ""}
+                  onChange={e => sc(p.key, e.target.value)}
+                  onBlur={e => {
+                    const normalized = normalizeSocial(p.platform, e.target.value);
+                    if (normalized !== e.target.value) sc(p.key, normalized);
+                  }}
+                  className={inputClass}
+                  placeholder={getSmartPlaceholder(p.platform)}
+                  dir="ltr"
+                />
               </div>
             ))}
           </div>

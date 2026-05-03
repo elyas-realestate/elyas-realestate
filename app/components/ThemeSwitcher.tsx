@@ -11,31 +11,33 @@ const THEMES: Array<{
   description: string;
   preview: { bg: string; surface: string; text: string; accent: string };
   Icon: typeof Moon;
+  isDefault?: boolean;
 }> = [
-  {
-    id: "dark",
-    name: "الثيم الداكن",
-    description: "أسود فخم بلمسات ذهبية — هوية المنصّة الأصلية",
-    preview: { bg: "#0A0A0C", surface: "#16161A", text: "#F4F4F5", accent: "#E8B86D" },
-    Icon: Moon,
-  },
   {
     id: "cream",
     name: "الثيم الكريمي العقاري",
-    description: "كريمي ناعم بنبرة عقارية فخمة — مستوحى من العلامات العقارية الراقية",
+    description: "الثيم الافتراضي — كريمي ناعم بنبرة عقارية فخمة، مستوحى من العلامات العقارية الراقية",
     preview: { bg: "#FAF7F2", surface: "#FFFFFF", text: "#1A1206", accent: "#E8B86D" },
     Icon: Sun,
+    isDefault: true,
+  },
+  {
+    id: "dark",
+    name: "الثيم الداكن",
+    description: "ثانوي — أسود فخم بلمسات ذهبية للعرض الليلي أو من يفضّل الواجهات الداكنة",
+    preview: { bg: "#0A0A0C", surface: "#16161A", text: "#F4F4F5", accent: "#E8B86D" },
+    Icon: Moon,
   },
 ];
 
 export default function ThemeSwitcher() {
-  const [active, setActive] = useState<ThemeMode>("dark");
+  const [active, setActive] = useState<ThemeMode>("cream");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // قراءة الثيم الحالي من document أو localStorage
+    // قراءة الثيم الحالي من document أو localStorage (الافتراضي = cream)
     const html = document.documentElement;
-    const current = (html.getAttribute("data-theme") || localStorage.getItem("wasit_theme") || "dark") as ThemeMode;
+    const current = (html.getAttribute("data-theme") || localStorage.getItem("wasit_theme") || "cream") as ThemeMode;
     setActive(current);
     setMounted(true);
   }, []);

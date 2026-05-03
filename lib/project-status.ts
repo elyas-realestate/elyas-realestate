@@ -203,10 +203,12 @@ export const PHASES: Phase[] = [
     id: "social-smart",
     name: "إدخال وسائل التواصل الذكي — NN",
     description: "قبول username بدون https://platform.com/ ويحوّل تلقائياً",
-    status: "pending",
+    status: "done",
+    completedAt: "2026-05-03",
     milestones: [
-      { code: "NN-1", name: "lib/social-normalize.ts", status: "pending" },
-      { code: "NN-2", name: "تطبيقه في /dashboard/settings + onboarding", status: "pending" },
+      { code: "NN-1", name: "lib/social-normalize.ts (9 منصات)", status: "done" },
+      { code: "NN-2", name: "تطبيقه في /dashboard/settings + onBlur + onSave", status: "done" },
+      { code: "NN-3", name: "Smart placeholders + توضيح للمستخدم", status: "done" },
     ],
   },
   {
@@ -225,11 +227,13 @@ export const PHASES: Phase[] = [
     id: "cream-default",
     name: "الكريمي = الثيم الافتراضي — PP",
     description: "تطبيق الكريمي على landing + اعتباره الافتراضي للمستخدم الجديد",
-    status: "pending",
+    status: "done",
+    completedAt: "2026-05-03",
     milestones: [
-      { code: "PP-1", name: "تغيير CSS default theme من dark إلى cream", status: "pending" },
-      { code: "PP-2", name: "تطبيق الكريمي على landing page (الصفحة العامة)", status: "pending" },
-      { code: "PP-3", name: "Theme switcher يحفظ التفضيل في DB ويعرض cream افتراضياً", status: "pending" },
+      { code: "PP-1", name: ":root + cream في CSS — أصبح الافتراضي", status: "done" },
+      { code: "PP-2", name: "init script في layout.tsx يضع cream عند عدم وجود تفضيل", status: "done" },
+      { code: "PP-3", name: "ألوان /[slug] الافتراضية — كريمي بدل أسود", status: "done" },
+      { code: "PP-4", name: "ThemeSwitcher يبدأ بـ cream + تمييز الافتراضي", status: "done" },
     ],
   },
   {

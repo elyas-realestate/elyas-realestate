@@ -69,7 +69,7 @@ export default function RootLayout({
         {/* تطبيق الثيم + ألوان البراند قبل أول render لتجنّب FOUC */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('wasit_theme');if(t==='cream'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}var a=localStorage.getItem('wasit_brand_accent');var ad=localStorage.getItem('wasit_brand_accent_dark');if(a){document.documentElement.style.setProperty('--gold-1',a);}if(ad){document.documentElement.style.setProperty('--gold-2',ad);}else if(a){document.documentElement.style.setProperty('--gold-2',a);}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('wasit_theme');var theme=(t==='dark'||t==='cream')?t:'cream';document.documentElement.setAttribute('data-theme',theme);var a=localStorage.getItem('wasit_brand_accent');var ad=localStorage.getItem('wasit_brand_accent_dark');if(a){document.documentElement.style.setProperty('--gold-1',a);}if(ad){document.documentElement.style.setProperty('--gold-2',ad);}else if(a){document.documentElement.style.setProperty('--gold-2',a);}}catch(e){document.documentElement.setAttribute('data-theme','cream');}})();`,
           }}
         />
         {/* حماية دفاعية: إخفاء عنصر "Stop Claude" يُحقَن من extensions (محدد فقط) */}

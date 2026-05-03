@@ -110,14 +110,16 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
     return v;
   };
 
+  // الألوان الافتراضية = الكريمي العقاري الفخم (الثيم الجديد)
+  // الوسيط يستطيع تخصيصها من DB، لكن الافتراضي كريمي.
   const clrAccent      = clean(s?.color_accent,         "#C6914C");
   const clrAccentDark  = clean(s?.color_accent_dark,    "#A6743A");
-  const clrBgPrimary   = clean(s?.color_bg_primary,     "#0A0A0C");
-  const clrBgSecondary = clean(s?.color_bg_secondary,   "#0F0F12");
-  const clrBgCard      = clean(s?.color_bg_card,        "#16161A");
-  const clrTextPrimary = clean(s?.color_text_primary,   "#F5F5F5");
-  const clrTextSec     = clean(s?.color_text_secondary, "#9A9AA0");
-  const clrTextMuted   = clean(s?.color_text_muted,     "#5A5A62");
+  const clrBgPrimary   = clean(s?.color_bg_primary,     "#FAF7F2"); // كريمي
+  const clrBgSecondary = clean(s?.color_bg_secondary,   "#F0EBE0");
+  const clrBgCard      = clean(s?.color_bg_card,        "#FFFFFF");
+  const clrTextPrimary = clean(s?.color_text_primary,   "#1A1206"); // بنّي داكن
+  const clrTextSec     = clean(s?.color_text_secondary, "#5A5044");
+  const clrTextMuted   = clean(s?.color_text_muted,     "#6A6055");
 
   // helper: يحوّل hex → rgba بأمان (يدعم #RGB و #RRGGBB، يرجع fallback لو فشل)
   const hexToRgba = (hex: string, alpha: number) => {
