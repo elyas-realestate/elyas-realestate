@@ -72,11 +72,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true }, { status: 200 });
   }
 
-  // أعد 200 سريعاً ثم عالج (Meta يرسل retries لو ما رجع 200 خلال 20ث)
-  // معالجة Async بدون انتظار لكن نرجع 200 مباشرة
-  processWebhook(body).catch((e) => {
+  // ⚠️ مهم على Vercel: لا نستخدم fire-and-forget لأن العملية تموت بعد return.
+  // Meta يسمح بـ 20 ثانية، ومعالجتنا أسرع بكثير. نـ await ثم نرد 200.
+  try {
+    await processWebhook(body);
+  } catch (e) {
     console.error("[whatsapp/webhook] processing error:", e);
-  });
+    // نرد 200 رغم الخطأ عشان Meta ما تعيد retries
+  }
 
   return NextResponse.json({ ok: true }, { status: 200 });
 }
