@@ -115,6 +115,10 @@ export default function CEODashboardPage() {
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", border: "none", color: "var(--bg-page)", fontSize: 13, textDecoration: "none", fontWeight: 700, fontFamily: "'Tajawal', sans-serif" }}>
             🛡️ مركز التحكم
           </Link>
+          <Link href="/dashboard/ceo/identity"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
+            <Crown size={13} /> هوية الرئيس التنفيذي
+          </Link>
           <Link href="/dashboard/ceo/test-mas"
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
             <Sparkles size={13} /> اختبار المساعدين

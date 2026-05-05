@@ -186,6 +186,21 @@ async function isCEOPhone(
   tenantId: string,
   phone: string
 ): Promise<boolean> {
+  // 1) المصدر الجديد: ceo_identity.phones (مصفوفة كائنات بصيغة منظَّمة)
+  const { data: identity } = await admin
+    .from("ceo_identity")
+    .select("phones")
+    .eq("tenant_id", tenantId)
+    .maybeSingle();
+
+  if (identity?.phones && Array.isArray(identity.phones)) {
+    const match = identity.phones.some(
+      (p: { number?: string }) => p?.number === phone
+    );
+    if (match) return true;
+  }
+
+  // 2) Fallback للمصدر القديم: tenant_ai_config.ceo_phones (مصفوفة سترينج)
   const { data: cfg } = await admin
     .from("tenant_ai_config")
     .select("ceo_phones")
