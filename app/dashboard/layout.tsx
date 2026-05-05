@@ -67,13 +67,15 @@ const secondaryGroups: NavGroup[] = [
 // ═══════════════════════════════════════════════════════════════
 // تم تبسيط: حذف 3 عناصر AI (نقلت لـ /dashboard/ai)
 const settingsMenu: NavItemData[] = [
-  { label: "الإعدادات العامة",   href: "/dashboard/settings",                icon: Settings   },
-  { label: "مركز المساعدة",      href: "/dashboard/help",                    icon: HelpCircle },
-  { label: "الفريق",             href: "/dashboard/team",                    icon: Users      },
-  { label: "الاشتراك",           href: "/dashboard/subscription",            icon: CreditCard },
-  { label: "الإشعارات",          href: "/dashboard/settings/notifications",  icon: Bell       },
-  { label: "سجل التدقيق",        href: "/dashboard/audit",                   icon: Shield     },
-  { label: "الأمان (2FA)",       href: "/dashboard/security",                icon: ShieldCheck },
+  { label: "الإعدادات العامة",       href: "/dashboard/settings",                icon: Settings   },
+  { label: "لوحة الرئيس التنفيذي",   href: "/dashboard/ceo",                     icon: Crown      },
+  { label: "هوية الرئيس التنفيذي",   href: "/dashboard/ceo/identity",            icon: Crown      },
+  { label: "مركز المساعدة",          href: "/dashboard/help",                    icon: HelpCircle },
+  { label: "الفريق",                 href: "/dashboard/team",                    icon: Users      },
+  { label: "الاشتراك",               href: "/dashboard/subscription",            icon: CreditCard },
+  { label: "الإشعارات",              href: "/dashboard/settings/notifications",  icon: Bell       },
+  { label: "سجل التدقيق",            href: "/dashboard/audit",                   icon: Shield     },
+  { label: "الأمان (2FA)",           href: "/dashboard/security",                icon: ShieldCheck },
 ];
 
 // كل العناصر مدمجة (للبحث السريع Command Palette)
