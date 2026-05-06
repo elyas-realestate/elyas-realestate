@@ -424,11 +424,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link
               href={`/${brokerSlug}`}
               target="_blank"
+              title={`زيارة موقعك العام (/${brokerSlug})`}
               className="hidden sm:flex items-center gap-1.5 no-underline transition"
               style={{ color: "var(--gold-2)", fontSize: 12, padding: "6px 10px", borderRadius: 8, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", fontWeight: 600 }}
             >
               <ExternalLink size={13} />
-              <span>/{brokerSlug}</span>
+              <span>زيارة موقعي</span>
             </Link>
           )}
           {/* تتبّع المشروع — عرض مؤقّت بارز للمالك */}

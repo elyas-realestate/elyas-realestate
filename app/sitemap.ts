@@ -1,55 +1,85 @@
+import type { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
-import { MetadataRoute } from "next";
 
+// ══════════════════════════════════════════════════════════════
+// sitemap.xml — Next.js App Router auto-generation
+// يُولَّد ديناميكياً: صفحات ثابتة + روابط الوسطاء + العقارات المنشورة
+// ══════════════════════════════════════════════════════════════
 
-export const revalidate = 3600;
+const SITE = "https://elyas-realestate.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waseet-pro.com";
-
-  // نستخدم service role لقراءة البيانات العامة بدون RLS
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const now = new Date();
 
   // ── الصفحات الثابتة ──
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl,                   lastModified: new Date(), changeFrequency: "daily",   priority: 1.0 },
-    { url: `${baseUrl}/register`,     lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
-    { url: `${baseUrl}/login`,        lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
-    { url: `${baseUrl}/search`,       lastModified: new Date(), changeFrequency: "daily",   priority: 0.8 },
-    { url: `${baseUrl}/mortgage`,     lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    { url: SITE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
+    { url: `${SITE}/search`,           lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${SITE}/properties`,       lastModified: now, changeFrequency: "daily",   priority: 0.9 },
+    { url: `${SITE}/mortgage`,         lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE}/login`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
+    { url: `${SITE}/register`,         lastModified: now, changeFrequency: "yearly",  priority: 0.5 },
+    { url: `${SITE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
+    { url: `${SITE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
+    { url: `${SITE}/data-processing`,  lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
+    { url: `${SITE}/license`,          lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
   ];
 
-  // ── صفحات الوسطاء — /{slug} ──
-  const { data: tenants } = await supabase
-    .from("tenants")
-    .select("slug, updated_at")
-    .eq("is_active", true)
-    .not("slug", "is", null);
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return staticPages;
+  }
 
-  const brokerPages: MetadataRoute.Sitemap = (tenants || []).map(t => ({
-    url: `${baseUrl}/${t.slug}`,
-    lastModified: new Date(t.updated_at || new Date()),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const admin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
 
-  // ── العقارات المنشورة — /properties/{id} ──
-  const { data: properties } = await supabase
-    .from("properties")
-    .select("id, updated_at, title")
-    .eq("is_published", true)
-    .order("updated_at", { ascending: false })
-    .limit(1000);
+  const dynamicPages: MetadataRoute.Sitemap = [];
 
-  const propertyPages: MetadataRoute.Sitemap = (properties || []).map(p => ({
-    url: `${baseUrl}/properties/${p.id}`,
-    lastModified: new Date(p.updated_at || new Date()),
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+  try {
+    const { data: tenants } = await admin
+      .from("tenants")
+      .select("slug, updated_at")
+      .not("slug", "is", null)
+      .limit(1000);
 
-  return [...staticPages, ...brokerPages, ...propertyPages];
+    if (tenants) {
+      for (const t of tenants) {
+        if (!t.slug) continue;
+        dynamicPages.push({
+          url: `${SITE}/${encodeURIComponent(t.slug)}`,
+          lastModified: t.updated_at ? new Date(t.updated_at) : now,
+          changeFrequency: "weekly",
+          priority: 0.8,
+        });
+        dynamicPages.push({
+          url: `${SITE}/c/${encodeURIComponent(t.slug)}`,
+          lastModified: t.updated_at ? new Date(t.updated_at) : now,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        });
+      }
+    }
+
+    const { data: properties } = await admin
+      .from("properties")
+      .select("id, updated_at")
+      .eq("is_published", true)
+      .limit(5000);
+
+    if (properties) {
+      for (const p of properties) {
+        dynamicPages.push({
+          url: `${SITE}/properties/${p.id}`,
+          lastModified: p.updated_at ? new Date(p.updated_at) : now,
+          changeFrequency: "daily",
+          priority: 0.7,
+        });
+      }
+    }
+  } catch (e) {
+    console.error("[sitemap] فشل جلب البيانات الديناميكية:", e);
+  }
+
+  return [...staticPages, ...dynamicPages];
 }

@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase-browser";
 import {
   ChevronRight, ExternalLink, Eye, EyeOff, Loader2,
   Plus, Trash2, GripVertical, X, ArrowLeft, Edit2,
-  QrCode, Sparkles, Share2, IdCard, Camera
+  QrCode, Sparkles, Share2, IdCard, Camera, Settings as SettingsIcon
 } from "lucide-react";
 import {
-  ELEMENTS, CATEGORIES, getElement, getCategoryElements,
-  type ProfileElement, type ElementCategory, type ElementField
+  ELEMENTS, CATEGORIES, getElement, getCategoryElements, buildAutoElements, buildElementUrl, buildElementLabel,
+  type ProfileElement, type ElementCategory, type ElementField, type AutoElement
 } from "@/lib/profile-elements";
 
 const PRESET_THEMES = [
@@ -38,6 +39,9 @@ export default function ProfileCardPage() {
 
   // Theme picker تم نقله لـ /dashboard/settings?tab=design — مصدر واحد للحقيقة
 
+  // Auto elements (social/license/etc.) من /settings + /broker_identity
+  const [autoElements, setAutoElements] = useState<AutoElement[]>([]);
+
   async function load() {
     setLoading(true);
     try {
@@ -48,6 +52,21 @@ export default function ProfileCardPage() {
         setLinks(j.links || []);
         setSlug(j.slug || "");
       } else toast.error(j.error || "فشل التحميل");
+
+      // ── جلب الـ auto-elements (السوشال + الرخص) من site_settings + broker_identity ──
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData.user) {
+        const { data: t } = await supabase
+          .from("tenants").select("id").eq("owner_id", userData.user.id).maybeSingle();
+        if (t?.id) {
+          const [siteRes, identityRes] = await Promise.all([
+            supabase.from("site_settings").select("*").eq("tenant_id", t.id).maybeSingle(),
+            supabase.from("broker_identity").select("*").eq("tenant_id", t.id).maybeSingle(),
+          ]);
+          const auto = buildAutoElements(siteRes.data, identityRes.data);
+          setAutoElements(auto);
+        }
+      }
     } finally { setLoading(false); }
   }
   useEffect(() => { load(); }, []);
@@ -185,6 +204,60 @@ export default function ProfileCardPage() {
           </div>
         </div>
       </div>
+
+      {/* ─── الروابط التلقائية من الإعدادات (للمعاينة + التعديل بنقرة) ─── */}
+      {autoElements.length > 0 && (
+        <div className="rounded-2xl p-4" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <Sparkles size={14} style={{ color: "var(--gold-2)" }} />
+              <h3 className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+                روابط تلقائية في بطاقتك
+              </h3>
+              <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--gold-bg)", color: "var(--gold-2)", fontWeight: 600 }}>
+                {autoElements.length}
+              </span>
+            </div>
+            <Link href="/dashboard/settings?tab=contact" className="text-xs flex items-center gap-1 no-underline px-3 py-1.5 rounded-lg"
+              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--gold-2)", fontWeight: 600 }}>
+              <SettingsIcon size={11} /> تعديل من الإعدادات
+            </Link>
+          </div>
+          <p className="text-xs mb-3" style={{ color: "var(--text-faint)" }}>
+            هذه الروابط تظهر في بطاقتك تلقائياً. لتغيير قيمة أي منها، اذهب إلى الإعدادات.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {autoElements.map((ae) => {
+              const el = getElement(ae.type);
+              if (!el) return null;
+              const Icon = el.icon;
+              const url = buildElementUrl(ae.type, ae.metadata);
+              const label = buildElementLabel(ae.type, ae.metadata) || el.label;
+              return (
+                <div key={ae.type} className="flex items-center gap-2 p-2.5 rounded-lg"
+                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-soft)" }}>
+                  <div className="flex items-center justify-center rounded-lg flex-shrink-0"
+                    style={{ width: 32, height: 32, background: el.brandBg || "var(--gold-bg)" }}>
+                    <Icon size={14} style={{ color: el.brandFg || "var(--gold-2)" }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-bold truncate" style={{ color: "var(--text-strong)" }}>{el.label}</div>
+                    <div className="text-xs truncate" style={{ color: "var(--text-faint)", direction: "ltr", textAlign: "right" }}>
+                      {label}
+                    </div>
+                  </div>
+                  {url && (
+                    <a href={url} target="_blank" rel="noopener noreferrer" title="اختبار الرابط"
+                      className="p-1.5 rounded flex-shrink-0" style={{ color: "var(--text-faint)" }}>
+                      <ExternalLink size={12} />
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Add Element Button */}
       <button onClick={() => setLibraryOpen(true)}

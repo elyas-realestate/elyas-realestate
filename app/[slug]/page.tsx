@@ -219,6 +219,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
             {whatsapp && (
               <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className="accent-bg" style={{ color:clrBgPrimary, textDecoration:"none", fontSize:13, fontWeight:700, padding:"9px 20px", borderRadius:9 }}>واتساب</a>
             )}
+            <a href="/login" style={{ color:clrTextSec, textDecoration:"none", fontSize:13, fontWeight:600, padding:"7px 14px", borderRadius:8, border:`1px solid ${hexToRgba(clrAccent, 0.25)}` }}>تسجيل دخول</a>
           </div>
         </nav>
 

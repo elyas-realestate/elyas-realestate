@@ -25,9 +25,24 @@ const cairo = Cairo({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://elyas-realestate.vercel.app";
+
 export const metadata: Metadata = {
-  title: "وسيط برو — المنصة العقارية الذكية",
-  description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "وسيط برو — المنصة العقارية الذكية",
+    template: "%s | وسيط برو",
+  },
+  description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين — CRM، عقود، أتمتة، ذكاء صناعي، واتساب، فواتير ZATCA — كل ما تحتاجه لإدارة عملك العقاري في مكان واحد.",
+  keywords: [
+    "وسيط عقاري", "عقارات السعودية", "منصة وسيط عقاري", "CRM عقاري",
+    "إدارة عقارات", "وسيط برو", "العقارات الرياض", "ذكاء صناعي عقاري",
+    "real estate Saudi", "broker platform", "real estate CRM",
+  ],
+  authors: [{ name: "إلياس الدخيل" }],
+  creator: "إلياس الدخيل",
+  publisher: "وسيط برو",
+
   applicationName: "وسيط برو",
   appleWebApp: {
     capable: true,
@@ -44,6 +59,47 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
+
+  // ── Open Graph (Facebook + WhatsApp + LinkedIn) ──
+  openGraph: {
+    type: "website",
+    locale: "ar_SA",
+    url: SITE_URL,
+    siteName: "وسيط برو",
+    title: "وسيط برو — المنصة العقارية الذكية",
+    description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين — CRM، عقود، أتمتة، ذكاء صناعي، واتساب.",
+    images: [
+      {
+        url: "/icons/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "وسيط برو",
+      },
+    ],
+  },
+
+  // ── Twitter / X Cards ──
+  twitter: {
+    card: "summary_large_image",
+    title: "وسيط برو — المنصة العقارية الذكية",
+    description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين",
+    images: ["/icons/icon-512.png"],
+  },
+
+  // ── Robots / Indexing ──
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
+  // ── Verification (ضع رمز Search Console هنا لاحقاً) ──
+  // verification: { google: "...", },
 };
 
 export const viewport: Viewport = {
