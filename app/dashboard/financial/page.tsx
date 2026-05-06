@@ -2,14 +2,25 @@
 import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import {
   TrendingUp, DollarSign, Calculator, Award, BarChart3,
   Plus, Trash2, Check, X, Download, Receipt, PieChart,
   ArrowUpCircle, ArrowDownCircle, Percent, Activity,
+  FileText, FileSignature, Target, ChevronLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
 import type { Deal } from "@/types/database";
+
+// ── الأقسام المالية الفرعية (Sub-pages) ──
+const FINANCIAL_SUB_PAGES = [
+  { href: "/dashboard/invoices",    label: "الفواتير",        icon: Receipt,        color: "var(--gold-2)" },
+  { href: "/dashboard/quotations",  label: "العروض السعرية", icon: FileSignature,  color: "rgb(99,102,241)" },
+  { href: "/dashboard/commissions", label: "العمولات",       icon: Award,          color: "rgb(34,197,94)" },
+  { href: "/dashboard/goals",       label: "الأهداف",        icon: Target,         color: "rgb(239,68,68)" },
+  { href: "/dashboard/reports",     label: "التقارير الشهرية", icon: FileText,       color: "rgb(168,85,247)" },
+];
 
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -108,6 +119,34 @@ function OverviewTab({ deals }: { deals: Deal[] }) {
               {k.sub} {k.sar && <SARIcon color="muted" size={10} />}
             </p>
           </div>
+        ))}
+      </div>
+
+      {/* الأقسام المالية الفرعية */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {FINANCIAL_SUB_PAGES.map((p) => (
+          <Link
+            key={p.href}
+            href={p.href}
+            className="flex items-center gap-2 p-3 rounded-xl no-underline transition"
+            style={{
+              background: "var(--bg-surface-1)",
+              border: "1px solid var(--gold-bg-soft)",
+            }}
+          >
+            <div
+              className="rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ width: 32, height: 32, background: p.color + "18" }}
+            >
+              <p.icon size={14} style={{ color: p.color }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold truncate" style={{ color: "var(--text-strong)" }}>
+                {p.label}
+              </div>
+            </div>
+            <ChevronLeft size={12} style={{ color: "var(--text-faint)", flexShrink: 0 }} />
+          </Link>
         ))}
       </div>
 

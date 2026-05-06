@@ -7,7 +7,7 @@ import {
   Users, FileText, TrendingUp, CheckSquare, Megaphone, Settings,
   LogOut, ExternalLink, Building2, LayoutDashboard,
   Menu, X, BarChart3, Scale, CreditCard, Plus, Bell, Banknote, Target, Shield, ShieldCheck, Brain, MessageCircle, KeyRound, AlertTriangle, Trophy, Wrench, Package, Upload, Share2, Bot, FileSignature, Network, Crown, HelpCircle,
-  ChevronDown, ChevronUp, Briefcase, Building, Search, Command, Inbox, Sparkles,
+  ChevronDown, ChevronUp, Briefcase, Building, Search, Command, Inbox, Sparkles, Palette,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import AIAssistant from "@/components/AIAssistant";
@@ -34,10 +34,18 @@ const primaryItems: NavItemData[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// SECONDARY — مجموعتان فقط: أدوات + إدارة الأملاك (Office Mode)
-// إدارة الأملاك تظهر فقط لو office_mode_enabled = true
+// SECONDARY — مجموعات قابلة للطي: العمل اليومي + أدوات + إدارة الأملاك
+// "إدارة الأملاك" تظهر فقط لو office_mode_enabled = true
 // ═══════════════════════════════════════════════════════════════
 const secondaryGroups: NavGroup[] = [
+  {
+    id: "work", title: "العمل اليومي", icon: Briefcase,
+    items: [
+      { label: "الصفقات",         href: "/dashboard/deals",            icon: TrendingUp },
+      { label: "المهام",          href: "/dashboard/tasks",            icon: CheckSquare },
+      { label: "طلبات العقار",    href: "/dashboard/requests",         icon: Inbox },
+    ],
+  },
   {
     id: "tools", title: "أدوات", icon: BarChart3,
     items: [
@@ -46,6 +54,7 @@ const secondaryGroups: NavGroup[] = [
       { label: "المحتوى التسويقي", href: "/dashboard/marketing",       icon: Megaphone  },
       { label: "توزيع العقارات",   href: "/dashboard/distribute",      icon: Share2     },
       { label: "العقود",          href: "/dashboard/contracts",       icon: FileSignature },
+      { label: "المستندات",       href: "/dashboard/documents",       icon: FileText   },
       { label: "التقارير والتحليل", href: "/dashboard/insights",        icon: FileText   },
       { label: "استيراد CSV",     href: "/dashboard/import",          icon: Upload     },
     ],
@@ -68,6 +77,7 @@ const secondaryGroups: NavGroup[] = [
 // تم تبسيط: حذف 3 عناصر AI (نقلت لـ /dashboard/ai)
 const settingsMenu: NavItemData[] = [
   { label: "الإعدادات العامة",       href: "/dashboard/settings",                icon: Settings   },
+  { label: "المظهر والثيم",          href: "/dashboard/theme",                   icon: Palette    },
   { label: "لوحة الرئيس التنفيذي",   href: "/dashboard/ceo",                     icon: Crown      },
   { label: "هوية الرئيس التنفيذي",   href: "/dashboard/ceo/identity",            icon: Crown      },
   { label: "مركز المساعدة",          href: "/dashboard/help",                    icon: HelpCircle },

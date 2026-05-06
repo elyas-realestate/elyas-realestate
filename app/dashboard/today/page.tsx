@@ -155,7 +155,7 @@ export default function TodayPage() {
           title="طلبات عقار جديدة"
           icon={<Inbox size={16} />}
           count={stats.new_requests}
-          href="/dashboard/property-requests"
+          href="/dashboard/requests"
           empty="لا طلبات جديدة"
         >
           {requests.map(r => (
@@ -163,7 +163,7 @@ export default function TodayPage() {
               title={r.full_name}
               subtitle={`${r.request_type || "—"} — ${r.district || r.city || ""}`}
               accent="var(--warning)"
-              href={`/dashboard/property-requests#${r.id}`}
+              href={`/dashboard/requests#${r.id}`}
               icon={<Inbox size={12} />}
             />
           ))}
@@ -176,7 +176,7 @@ export default function TodayPage() {
         <Link href="/dashboard/tasks" className="text-xs px-3 py-1.5 rounded-full no-underline" style={btnStyle()}>
           <Plus size={11} className="inline ms-1" /> مهمة
         </Link>
-        <Link href="/dashboard/clients/add" className="text-xs px-3 py-1.5 rounded-full no-underline" style={btnStyle()}>
+        <Link href="/dashboard/clients" className="text-xs px-3 py-1.5 rounded-full no-underline" style={btnStyle()}>
           <Plus size={11} className="inline ms-1" /> عميل
         </Link>
         <Link href="/dashboard/properties/add" className="text-xs px-3 py-1.5 rounded-full no-underline" style={btnStyle()}>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, Crown, Bot, ChevronLeft, FileText, Network } from "lucide-react";
+import { Loader2, Crown, Bot, ChevronLeft, FileText, Network, Sparkles } from "lucide-react";
 
 type Manager = { id: string; code: string; name: string; department: string; default_ai_provider: string; default_ai_model: string; tenant_enabled: boolean };
 type Employee = { id: string; code: string; name: string; manager_id: string | null; manager_name: string | null; default_ai_provider: string; default_ai_model: string; tenant_enabled: boolean };
@@ -86,7 +86,7 @@ export default function AssistantsTab() {
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Link href="/dashboard/organization" className="flex items-center gap-2 p-3 rounded-lg no-underline"
           style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
           <Network size={16} style={{ color: "var(--gold-2)" }} />
@@ -101,6 +101,14 @@ export default function AssistantsTab() {
           <div>
             <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>مراجعات المدراء اليومية</div>
             <div className="text-xs" style={{ color: "var(--text-faint)" }}>ماذا قال كل مدير عن فريقه أمس</div>
+          </div>
+        </Link>
+        <Link href="/dashboard/content" className="flex items-center gap-2 p-3 rounded-lg no-underline"
+          style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+          <Sparkles size={16} style={{ color: "var(--gold-2)" }} />
+          <div>
+            <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>محتوى الذكاء الصناعي</div>
+            <div className="text-xs" style={{ color: "var(--text-faint)" }}>هوية + مصنع + غرفة محتوى + جدولة</div>
           </div>
         </Link>
       </div>

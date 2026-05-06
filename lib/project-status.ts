@@ -380,12 +380,41 @@ export const PHASES: Phase[] = [
     ],
   },
   {
+    id: "navigation-audit",
+    name: "تنظيف معمارية الـ Routing (Pipe Audit)",
+    description: "فحص شامل لـ 96 صفحة + إصلاح يتامى وروابط مكسورة وتكرارات",
+    status: "done",
+    completedAt: "2026-05-06",
+    milestones: [
+      { code: "NAV-1", name: "إصلاح رابط مكسور /clients/add في /today", status: "done" },
+      { code: "NAV-2", name: "حلّ تكرار property-requests ↔ requests (٣ صفحات → redirects)", status: "done" },
+      { code: "NAV-3", name: "إضافة /deals + /tasks + /requests إلى مجموعة 'العمل اليومي' الجديدة", status: "done" },
+      { code: "NAV-4", name: "إضافة /documents لـ Tools group", status: "done" },
+      { code: "NAV-5", name: "إضافة /theme لـ Settings menu", status: "done" },
+      { code: "NAV-6", name: "تحويل /site-settings إلى redirect لـ /settings (إزالة تكرار)", status: "done" },
+      { code: "NAV-7", name: "ربط /invoices + /quotations + /commissions + /goals + /reports من /financial", status: "done" },
+      { code: "NAV-8", name: "ربط /content من /dashboard/ai (محتوى AI)", status: "done" },
+      { code: "NAV-9", name: "تأكيد ai-foundation + ai-employees redirects (موجودة سلفاً)", status: "done" },
+    ],
+  },
+  {
     id: "ui-bugs",
     name: "UI Bugs (تشكيل/Hover)",
     description: "أخطاء بصرية متفرقة على الواجهة — تجمع وتُصلح كـ batch",
     status: "pending",
     milestones: [
       { code: "BUG-1", name: "بطاقات المدراء تتحوّل لخلفية سوداء عند hover (ربما /dashboard/ai/control أو organization)", status: "pending" },
+    ],
+  },
+  {
+    id: "settings-photo-fix",
+    name: "إصلاح رفع الصورة الشخصية + Storage Buckets",
+    description: "Migration 045 + cleanup كود رفع الصورة",
+    status: "done",
+    completedAt: "2026-05-06",
+    milestones: [
+      { code: "SET-1", name: "Migration 045 — buckets (avatars + assets) مع RLS صحيح", status: "done" },
+      { code: "SET-2", name: "إصلاح handlePhotoChange: tenant-scoped update + رسائل خطأ واضحة + path آمن", status: "done" },
     ],
   },
   {
