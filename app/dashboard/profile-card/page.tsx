@@ -36,8 +36,7 @@ export default function ProfileCardPage() {
   // Identity edit
   const [editingIdentity, setEditingIdentity] = useState(false);
 
-  // Theme picker
-  const [themeOpen, setThemeOpen] = useState(false);
+  // Theme picker تم نقله لـ /dashboard/settings?tab=design — مصدر واحد للحقيقة
 
   async function load() {
     setLoading(true);
@@ -254,10 +253,7 @@ export default function ProfileCardPage() {
           onSave={async (updates: any) => { await saveCard(updates); setEditingIdentity(false); }}
         />
       )}
-      {themeOpen && (
-        <ThemeModal card={card} onClose={() => setThemeOpen(false)}
-          onApply={async (t: any) => { await saveCard(t); setThemeOpen(false); }} />
-      )}
+      {/* ThemeModal تم حذفه — التحكم بالثيم الآن في /dashboard/settings?tab=design فقط */}
     </div>
   );
 }
@@ -564,36 +560,8 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// مودال الثيم
+// ThemeModal — حُذف بالكامل (انتقل التحكم إلى /dashboard/settings?tab=design)
 // ─────────────────────────────────────────────────────────────
-function ThemeModal({ card, onClose, onApply }: any) {
-  return (
-    <ModalShell onClose={onClose} title="اختر ثيم البروفايل">
-      <div className="grid grid-cols-2 gap-2">
-        {PRESET_THEMES.map(t => {
-          const isActive = card.bg_color === t.bg && card.text_color === t.text;
-          return (
-            <button key={t.name}
-              onClick={() => onApply({ bg_color: t.bg, text_color: t.text, accent_color: t.accent })}
-              className="rounded-xl p-3 text-start"
-              style={{
-                background: t.bg, color: t.text,
-                border: `2px solid ${isActive ? t.accent : "transparent"}`,
-                cursor: "pointer",
-              }}>
-              <div className="text-sm font-bold mb-2">{t.name}</div>
-              <div className="flex gap-1.5">
-                <span style={{ width: 14, height: 14, borderRadius: "50%", background: t.bg, border: `1px solid ${t.text}30` }} />
-                <span style={{ width: 14, height: 14, borderRadius: "50%", background: t.text }} />
-                <span style={{ width: 14, height: 14, borderRadius: "50%", background: t.accent }} />
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </ModalShell>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────
 // إطار المودال المشترك
