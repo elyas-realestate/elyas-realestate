@@ -10,6 +10,7 @@ import {
 import { ELEMENTS, getElement, buildElementUrl, buildElementLabel, type ProfileElement } from "@/lib/profile-elements";
 import SaveContactButton from "@/app/components/SaveContactButton";
 import TestimonialsSection from "@/app/components/TestimonialsSection";
+import { getBrandIcon, getBrandBg, getBrandFg } from "@/app/components/BrandIcons";
 
 interface ProfileLink {
   id: string;
@@ -116,25 +117,32 @@ export default function ProfileCardClient({ card, links, identity, slug, testimo
           {bio && <p style={{ fontSize: 13, opacity: 0.75, lineHeight: 1.6 }}>{bio}</p>}
         </div>
 
-        {/* شريط الأيقونات الاجتماعية في الأعلى */}
+        {/* شريط الأيقونات الاجتماعية في الأعلى — أيقونات رسمية (Simple Icons) */}
         {topSocials.length > 0 && (
           <div style={{ display: "flex", justifyContent: "center", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
             {topSocials.map(link => {
               const el = getElement(link.element_type);
               if (!el) return null;
-              const Icon = el.icon;
               const url = buildElementUrl(link.element_type, link.metadata || {});
+              // Brand icon أولاً (Simple Icons رسمية)، fallback لـ lucide
+              const BrandIcon = getBrandIcon(link.element_type);
+              const Icon = BrandIcon || el.icon;
+              const brandBg = getBrandBg(link.element_type) || el.brandBg || "transparent";
+              const brandFg = getBrandFg(link.element_type) || el.brandFg || "inherit";
               return (
                 <a key={link.id} href={url} target="_blank" rel="noopener noreferrer"
                    title={el.label}
                    style={{
-                     width: 38, height: 38, borderRadius: "50%",
-                     background: el.brandBg || "transparent",
-                     color: el.brandFg || "inherit",
+                     width: 40, height: 40, borderRadius: "50%",
+                     background: brandBg,
+                     color: brandFg,
                      display: "flex", alignItems: "center", justifyContent: "center",
                      textDecoration: "none",
-                   }}>
-                  <Icon size={17} />
+                     transition: "transform 0.15s ease",
+                   }}
+                   onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.08)"; }}
+                   onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}>
+                  <Icon size={18} />
                 </a>
               );
             })}
@@ -272,10 +280,10 @@ function ElementCard({ link, cardTextColor, cardBgColor, accent, onContactFormOp
     return (
       <button onClick={() => onContactFormOpen(link)}
         style={{
-          ...elementCardStyle(el, cardTextColor),
-          width: "100%", cursor: "pointer", textAlign: "right", border: "none",
+          ...elementCardStyle(el, cardTextColor, meta),
+          width: "100%", cursor: "pointer", textAlign: "right", border: meta.bg_color ? "none" : undefined,
         }}>
-        <ElementCardInner el={el} link={link} meta={meta} cardTextColor={cardTextColor} />
+        <ElementCardInner el={el} link={link} meta={meta} cardTextColor={meta.text_color || cardTextColor} />
       </button>
     );
   }
@@ -286,14 +294,18 @@ function ElementCard({ link, cardTextColor, cardBgColor, accent, onContactFormOp
 
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-       style={{ ...elementCardStyle(el, cardTextColor), textDecoration: "none" }}>
-      <ElementCardInner el={el} link={link} meta={meta} cardTextColor={cardTextColor} />
+       style={{ ...elementCardStyle(el, cardTextColor, meta), textDecoration: "none" }}>
+      <ElementCardInner el={el} link={link} meta={meta} cardTextColor={meta.text_color || cardTextColor} />
     </a>
   );
 }
 
 function ElementCardInner({ el, link, meta, cardTextColor }: any) {
-  const Icon = el.icon;
+  // Brand icon رسمي أولاً، fallback لـ lucide
+  const BrandIcon = getBrandIcon(link.element_type);
+  const Icon = BrandIcon || el.icon;
+  const brandBg = getBrandBg(link.element_type) || el.brandBg || "transparent";
+  const brandFg = getBrandFg(link.element_type) || el.brandFg || cardTextColor;
   const label = buildElementLabel(link.element_type, meta) || link.label;
   const subtitle = meta.subtitle || link.subtitle;
 
@@ -301,13 +313,13 @@ function ElementCardInner({ el, link, meta, cardTextColor }: any) {
     <>
       <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
         <div style={{
-          width: 32, height: 32, borderRadius: 8,
-          background: el.brandBg || "transparent",
-          color: el.brandFg || cardTextColor,
+          width: 36, height: 36, borderRadius: 9,
+          background: brandBg,
+          color: brandFg,
           display: "flex", alignItems: "center", justifyContent: "center",
           flexShrink: 0,
         }}>
-          <Icon size={16} />
+          <Icon size={18} />
         </div>
         <div style={{ minWidth: 0, flex: 1 }}>
           <div style={{ fontSize: 14, fontWeight: 600 }}>{label}</div>
@@ -319,14 +331,20 @@ function ElementCardInner({ el, link, meta, cardTextColor }: any) {
   );
 }
 
-function elementCardStyle(el: ProfileElement, fallbackText: string): React.CSSProperties {
+function elementCardStyle(el: ProfileElement, fallbackText: string, meta?: Record<string, any>): React.CSSProperties {
+  // أولوية: meta المخصّص للعنصر (من الـ editor) > brand colors > افتراضي
+  const customBg = meta?.bg_color;
+  const customText = meta?.text_color;
   const useBrand = el.brandBg && el.brandBg !== "transparent";
+  const finalBg = customBg || (useBrand ? el.brandBg : "transparent");
+  const finalText = customText || (useBrand ? el.brandFg : fallbackText);
+  const hasBg = !!customBg || useBrand;
   return {
     display: "flex", alignItems: "center", justifyContent: "space-between",
     padding: "12px 14px", borderRadius: 14,
-    background: useBrand ? el.brandBg : "transparent",
-    color: useBrand ? el.brandFg : fallbackText,
-    border: useBrand ? "none" : `1px solid ${fallbackText}20`,
+    background: finalBg,
+    color: finalText,
+    border: hasBg ? "none" : `1px solid ${fallbackText}20`,
     fontSize: 14,
   };
 }

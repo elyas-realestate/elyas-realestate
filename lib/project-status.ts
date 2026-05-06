@@ -425,6 +425,23 @@ export const PHASES: Phase[] = [
     ],
   },
   {
+    id: "card-rebuild-phase5",
+    name: "إعادة بناء البطاقة — Phase 5 (Brand Icons + Drag/Design Freedom)",
+    description: "أيقونات رسمية في كل المواضع، ترتيب بالسحب، تخصيص تصميم كل عنصر",
+    status: "done",
+    completedAt: "2026-05-07",
+    milestones: [
+      { code: "P5-1", name: "BrandIcons.tsx — توسعة BRAND_ICON_MAP بـ contact_* + aliases (17+ key)", status: "done" },
+      { code: "P5-2", name: "BRAND_BG_MAP + BRAND_FG_MAP + getBrandBg/getBrandFg helpers", status: "done" },
+      { code: "P5-3", name: "ProfileCardClient.tsx — استخدام Brand Icons في topSocials + ElementCardInner", status: "done" },
+      { code: "P5-4", name: "/dashboard/profile-card editor — Brand Icons في autoElements + ElementRow + Library + EditModal", status: "done" },
+      { code: "P5-5", name: "Drag & Drop reorder — HTML5 native (handleDragStart/Over/Drop/End) + visual feedback", status: "done" },
+      { code: "P5-6", name: "ElementDesignSection — تسمية مخصّصة + 8 ألوان جاهزة + color picker مخصّص لكل عنصر", status: "done" },
+      { code: "P5-7", name: "elementCardStyle يقرأ meta.bg_color/text_color (أولوية على brand colors)", status: "done" },
+      { code: "P5-8", name: "GripVertical handle + ↑↓ buttons معاً (مرونة)", status: "done" },
+    ],
+  },
+  {
     id: "card-rebuild-phase3",
     name: "إعادة بناء البطاقة — Phase 3 (UI Integration)",
     description: "ربط البنية التحتية بـ UI: Save Contact، LeadCapture، Themes Picker، Testimonials، Neighborhood، QR",

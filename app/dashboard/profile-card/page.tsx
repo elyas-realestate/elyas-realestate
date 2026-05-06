@@ -15,6 +15,7 @@ import {
 } from "@/lib/profile-elements";
 import CardThemePicker from "@/app/components/CardThemePicker";
 import BrokerQRModal from "@/app/components/BrokerQRModal";
+import { getBrandIcon, getBrandBg, getBrandFg } from "@/app/components/BrandIcons";
 
 const PRESET_THEMES = [
   { name: "كريمي ذهبي",  bg: "#FAF7F2", text: "#1A1206", accent: "#C6914C" },
@@ -110,6 +111,15 @@ export default function ProfileCardPage() {
     } else toast.error(j.error);
   }
 
+  async function persistOrder(reordered: any[]) {
+    await Promise.all(reordered.map((l, i) =>
+      fetch("/api/profile-card/links", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: l.id, display_order: i }),
+      })
+    ));
+  }
+
   async function moveLink(id: string, direction: "up" | "down") {
     const idx = links.findIndex(l => l.id === id);
     if (idx === -1) return;
@@ -119,14 +129,51 @@ export default function ProfileCardPage() {
     const reordered = [...links];
     [reordered[idx], reordered[newIdx]] = [reordered[newIdx], reordered[idx]];
     setLinks(reordered);
+    await persistOrder(reordered);
+  }
 
-    // Save new order
-    await Promise.all(reordered.map((l, i) =>
-      fetch("/api/profile-card/links", {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: l.id, display_order: i }),
-      })
-    ));
+  // ⭐ Drag & drop: حالة الـ drag + reorder بالسحب
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  function handleDragStart(id: string, e: React.DragEvent) {
+    setDraggingId(id);
+    e.dataTransfer.effectAllowed = "move";
+    // استخدام text/plain لتفعيل السحب في كل المتصفحات
+    try { e.dataTransfer.setData("text/plain", id); } catch {}
+  }
+
+  function handleDragOver(id: string, e: React.DragEvent) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (id !== dragOverId) setDragOverId(id);
+  }
+
+  function handleDragLeave() {
+    setDragOverId(null);
+  }
+
+  async function handleDrop(targetId: string, e: React.DragEvent) {
+    e.preventDefault();
+    const sourceId = draggingId;
+    setDraggingId(null);
+    setDragOverId(null);
+    if (!sourceId || sourceId === targetId) return;
+
+    const sIdx = links.findIndex(l => l.id === sourceId);
+    const tIdx = links.findIndex(l => l.id === targetId);
+    if (sIdx === -1 || tIdx === -1) return;
+
+    const reordered = [...links];
+    const [moved] = reordered.splice(sIdx, 1);
+    reordered.splice(tIdx, 0, moved);
+    setLinks(reordered);
+    await persistOrder(reordered);
+  }
+
+  function handleDragEnd() {
+    setDraggingId(null);
+    setDragOverId(null);
   }
 
   if (loading) {
@@ -250,15 +297,18 @@ export default function ProfileCardPage() {
             {autoElements.map((ae) => {
               const el = getElement(ae.type);
               if (!el) return null;
-              const Icon = el.icon;
+              const BrandIcon = getBrandIcon(ae.type);
+              const Icon = BrandIcon || el.icon;
+              const brandBg = getBrandBg(ae.type) || el.brandBg || "var(--gold-bg)";
+              const brandFg = getBrandFg(ae.type) || el.brandFg || "var(--gold-2)";
               const url = buildElementUrl(ae.type, ae.metadata);
               const label = buildElementLabel(ae.type, ae.metadata) || el.label;
               return (
                 <div key={ae.type} className="flex items-center gap-2 p-2.5 rounded-lg"
                   style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-soft)" }}>
                   <div className="flex items-center justify-center rounded-lg flex-shrink-0"
-                    style={{ width: 32, height: 32, background: el.brandBg || "var(--gold-bg)" }}>
-                    <Icon size={14} style={{ color: el.brandFg || "var(--gold-2)" }} />
+                    style={{ width: 32, height: 32, background: brandBg }}>
+                    <Icon size={15} style={{ color: brandFg }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold truncate" style={{ color: "var(--text-strong)" }}>{el.label}</div>
@@ -298,17 +348,36 @@ export default function ProfileCardPage() {
           </div>
         ) : (
           links.map((link, idx) => (
-            <ElementRow
+            <div
               key={link.id}
-              link={link}
-              isFirst={idx === 0}
-              isLast={idx === links.length - 1}
-              onToggle={() => toggleLink(link.id, link.is_active)}
-              onEdit={() => setEditingLink(link)}
-              onDelete={() => deleteLink(link.id)}
-              onMoveUp={() => moveLink(link.id, "up")}
-              onMoveDown={() => moveLink(link.id, "down")}
-            />
+              draggable
+              onDragStart={(e) => handleDragStart(link.id, e)}
+              onDragOver={(e) => handleDragOver(link.id, e)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(link.id, e)}
+              onDragEnd={handleDragEnd}
+              style={{
+                position: "relative",
+                outline: dragOverId === link.id && draggingId !== link.id
+                  ? "2px dashed var(--gold-2)"
+                  : "none",
+                outlineOffset: 2,
+                borderRadius: 12,
+                transition: "outline 0.12s ease",
+              }}
+            >
+              <ElementRow
+                link={link}
+                isFirst={idx === 0}
+                isLast={idx === links.length - 1}
+                onToggle={() => toggleLink(link.id, link.is_active)}
+                onEdit={() => setEditingLink(link)}
+                onDelete={() => deleteLink(link.id)}
+                onMoveUp={() => moveLink(link.id, "up")}
+                onMoveDown={() => moveLink(link.id, "down")}
+                isDragging={draggingId === link.id}
+              />
+            </div>
           ))
         )}
       </div>
@@ -384,10 +453,13 @@ export default function ProfileCardPage() {
 // ─────────────────────────────────────────────────────────────
 // صف العنصر في القائمة
 // ─────────────────────────────────────────────────────────────
-function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveUp, onMoveDown }: any) {
+function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveUp, onMoveDown, dragHandleProps, isDragging }: any) {
   const el = getElement(link.element_type);
   if (!el) return null;
-  const Icon = el.icon;
+  const BrandIcon = getBrandIcon(link.element_type);
+  const Icon = BrandIcon || el.icon;
+  const brandBg = getBrandBg(link.element_type) || el.brandBg || "var(--bg-surface-2)";
+  const brandFg = getBrandFg(link.element_type) || el.brandFg || "var(--text-soft)";
   const meta = link.metadata || {};
   const displayLabel = meta.label || el.defaultLabel || el.label;
   const subtitle = meta.username || meta.number || meta.url || meta.email || meta.phone || "";
@@ -396,23 +468,46 @@ function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveU
     <div className="flex items-center gap-2 rounded-xl p-3" style={{
       background: "var(--bg-surface-1)",
       border: "1px solid var(--gold-bg)",
+      opacity: isDragging ? 0.5 : 1,
+      transition: "opacity 0.15s ease",
     }}>
+      {/* Drag handle */}
+      <button
+        {...(dragHandleProps || {})}
+        title="اسحب لإعادة الترتيب"
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "grab",
+          padding: "4px 2px",
+          color: "var(--text-faint)",
+          opacity: 0.6,
+          touchAction: "none",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.6"; }}
+      >
+        <GripVertical size={16} />
+      </button>
+
       <div className="flex flex-col gap-0.5">
         <button onClick={onMoveUp} disabled={isFirst}
-          style={{ opacity: isFirst ? 0.3 : 0.7, background: "transparent", border: "none", cursor: isFirst ? "default" : "pointer", padding: 2 }}>
+          style={{ opacity: isFirst ? 0.25 : 0.6, background: "transparent", border: "none", cursor: isFirst ? "default" : "pointer", padding: 1, fontSize: 9 }}
+          title="نقل لأعلى">
           ▲
         </button>
         <button onClick={onMoveDown} disabled={isLast}
-          style={{ opacity: isLast ? 0.3 : 0.7, background: "transparent", border: "none", cursor: isLast ? "default" : "pointer", padding: 2 }}>
+          style={{ opacity: isLast ? 0.25 : 0.6, background: "transparent", border: "none", cursor: isLast ? "default" : "pointer", padding: 1, fontSize: 9 }}
+          title="نقل لأسفل">
           ▼
         </button>
       </div>
 
       <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{
-        background: el.brandBg || "var(--bg-surface-2)",
-        color: el.brandFg || "var(--text-soft)",
+        background: brandBg,
+        color: brandFg,
       }}>
-        <Icon size={16} />
+        <Icon size={17} />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -479,7 +574,10 @@ function ElementLibraryModal({ onClose, onSelect }: any) {
 
       <div className="grid grid-cols-3 gap-2 mt-3">
         {items.map(el => {
-          const Icon = el.icon;
+          const BrandIcon = getBrandIcon(el.type);
+          const Icon = BrandIcon || el.icon;
+          const brandBg = getBrandBg(el.type) || el.brandBg || "var(--bg-surface-3)";
+          const brandFg = getBrandFg(el.type) || el.brandFg || "var(--text-soft)";
           return (
             <button key={el.type} onClick={() => onSelect(el.type)}
               className="rounded-xl p-3 flex flex-col items-center gap-2 relative"
@@ -495,10 +593,10 @@ function ElementLibraryModal({ onClose, onSelect }: any) {
                 }}>⭐</span>
               )}
               <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{
-                background: el.brandBg || "var(--bg-surface-3)",
-                color: el.brandFg || "var(--text-soft)",
+                background: brandBg,
+                color: brandFg,
               }}>
-                <Icon size={18} />
+                <Icon size={20} />
               </div>
               <span className="text-xs font-bold text-center" style={{ color: "var(--text-strong)" }}>
                 {el.label}
@@ -555,17 +653,25 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
 
   return (
     <ModalShell onClose={onClose} title={link ? "تعديل العنصر" : el.label}>
-      <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={{ background: "var(--bg-surface-2)" }}>
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{
-          background: el.brandBg || "var(--bg-surface-3)", color: el.brandFg || "var(--text-soft)",
-        }}>
-          <el.icon size={18} />
-        </div>
-        <div>
-          <div className="text-sm font-bold">{el.label}</div>
-          {el.description && <div className="text-xs opacity-70">{el.description}</div>}
-        </div>
-      </div>
+      {(() => {
+        const BrandIcon = getBrandIcon(el.type);
+        const HeaderIcon = BrandIcon || el.icon;
+        const headerBg = getBrandBg(el.type) || el.brandBg || "var(--bg-surface-3)";
+        const headerFg = getBrandFg(el.type) || el.brandFg || "var(--text-soft)";
+        return (
+          <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={{ background: "var(--bg-surface-2)" }}>
+            <div className="w-11 h-11 rounded-lg flex items-center justify-center" style={{
+              background: headerBg, color: headerFg,
+            }}>
+              <HeaderIcon size={20} />
+            </div>
+            <div>
+              <div className="text-sm font-bold">{el.label}</div>
+              {el.description && <div className="text-xs opacity-70">{el.description}</div>}
+            </div>
+          </div>
+        );
+      })()}
 
       <div className="space-y-3">
         {el.fields.map(field => (
@@ -574,6 +680,9 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
             onChange={(v) => setMeta({ ...meta, [field.key]: v })} />
         ))}
       </div>
+
+      {/* ⭐ تخصيص التصميم لهذا العنصر فقط */}
+      <ElementDesignSection meta={meta} setMeta={setMeta} />
 
       <button onClick={save} disabled={saving}
         className="w-full mt-5 py-3 rounded-xl font-bold"
@@ -585,6 +694,139 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
         {saving ? "جاري الحفظ..." : link ? "حفظ التعديلات" : "إضافة للبروفايل"}
       </button>
     </ModalShell>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// قسم تصميم العنصر (لكل عنصر منفرد) — يُحفَظ في metadata
+// ─────────────────────────────────────────────────────────────
+function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; setMeta: (m: Record<string, any>) => void }) {
+  const [open, setOpen] = useState(false);
+
+  const colorPresets = [
+    { name: "افتراضي", bg: "", text: "" },
+    { name: "ذهبي", bg: "#C6914C", text: "#FFFFFF" },
+    { name: "أسود", bg: "#0A0A0C", text: "#F5F5F5" },
+    { name: "أبيض", bg: "#FFFFFF", text: "#0F172A" },
+    { name: "أخضر", bg: "#10B981", text: "#FFFFFF" },
+    { name: "أزرق", bg: "#3B82F6", text: "#FFFFFF" },
+    { name: "أحمر", bg: "#EF4444", text: "#FFFFFF" },
+    { name: "بنفسجي", bg: "#8B5CF6", text: "#FFFFFF" },
+  ];
+
+  return (
+    <div className="mt-4 rounded-xl" style={{ border: "1px solid var(--gold-bg-soft)", background: "var(--bg-surface-2)", overflow: "hidden" }}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full p-3 flex items-center justify-between"
+        style={{ background: "transparent", border: "none", cursor: "pointer", color: "var(--text-soft)", fontSize: 13, fontWeight: 600 }}
+      >
+        <span className="flex items-center gap-2">
+          <Sparkles size={13} style={{ color: "var(--gold-2)" }} />
+          تخصيص التصميم (اختياري)
+        </span>
+        <span style={{ opacity: 0.6, fontSize: 11 }}>{open ? "▲" : "▼"}</span>
+      </button>
+
+      {open && (
+        <div className="p-3 pt-0 space-y-3" style={{ borderTop: "1px solid var(--gold-bg-soft)" }}>
+          {/* Custom label */}
+          <div>
+            <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>تسمية مخصّصة (اختياري)</label>
+            <input
+              type="text"
+              value={meta.label || ""}
+              onChange={(e) => setMeta({ ...meta, label: e.target.value })}
+              placeholder="مثال: حسابي الرسمي"
+              className="w-full rounded-lg px-3 py-2 text-sm"
+              style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)" }}
+            />
+          </div>
+
+          {/* Color presets */}
+          <div>
+            <label className="text-xs block mb-2" style={{ color: "var(--text-faint)" }}>نمط جاهز</label>
+            <div className="grid grid-cols-4 gap-2">
+              {colorPresets.map((p) => {
+                const isActive = (meta.bg_color || "") === p.bg;
+                return (
+                  <button
+                    key={p.name}
+                    type="button"
+                    onClick={() => setMeta({ ...meta, bg_color: p.bg, text_color: p.text })}
+                    className="rounded-lg p-2 text-xs font-bold flex items-center justify-center"
+                    style={{
+                      background: p.bg || "var(--bg-surface-1)",
+                      color: p.text || "var(--text-soft)",
+                      border: `2px solid ${isActive ? "var(--gold-2)" : "var(--gold-bg-soft)"}`,
+                      cursor: "pointer",
+                      minHeight: 36,
+                    }}
+                  >
+                    {p.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Custom hex */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>لون الخلفية</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={meta.bg_color || "#FAF7F2"}
+                  onChange={(e) => setMeta({ ...meta, bg_color: e.target.value })}
+                  style={{ width: 38, height: 38, padding: 0, border: "1px solid var(--gold-bg)", borderRadius: 8, cursor: "pointer", background: "transparent" }}
+                />
+                <input
+                  type="text"
+                  value={meta.bg_color || ""}
+                  onChange={(e) => setMeta({ ...meta, bg_color: e.target.value })}
+                  placeholder="#FAF7F2"
+                  className="flex-1 rounded-lg px-3 py-2 text-sm"
+                  style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)", direction: "ltr", fontFamily: "monospace" }}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>لون النص</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={meta.text_color || "#1A1206"}
+                  onChange={(e) => setMeta({ ...meta, text_color: e.target.value })}
+                  style={{ width: 38, height: 38, padding: 0, border: "1px solid var(--gold-bg)", borderRadius: 8, cursor: "pointer", background: "transparent" }}
+                />
+                <input
+                  type="text"
+                  value={meta.text_color || ""}
+                  onChange={(e) => setMeta({ ...meta, text_color: e.target.value })}
+                  placeholder="#1A1206"
+                  className="flex-1 rounded-lg px-3 py-2 text-sm"
+                  style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)", direction: "ltr", fontFamily: "monospace" }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Reset */}
+          {(meta.bg_color || meta.text_color || meta.label) && (
+            <button
+              type="button"
+              onClick={() => setMeta({ ...meta, bg_color: "", text_color: "", label: "" })}
+              className="text-xs underline"
+              style={{ color: "var(--text-faint)", background: "transparent", border: "none", cursor: "pointer", padding: 0 }}
+            >
+              استعادة الافتراضي
+            </button>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -116,7 +116,9 @@ export const BRAND_COLORS: Record<string, string> = {
 };
 
 // ─── Map من type → icon component ────────────────────────────
+// يغطّي element_type المستخدمة في profile-elements.ts
 export const BRAND_ICON_MAP: Record<string, React.ComponentType<IconProps>> = {
+  // social_* (من ELEMENTS)
   social_x: XIcon,
   social_instagram: InstagramIcon,
   social_tiktok: TikTokIcon,
@@ -125,12 +127,62 @@ export const BRAND_ICON_MAP: Record<string, React.ComponentType<IconProps>> = {
   social_youtube: YouTubeIcon,
   social_threads: ThreadsIcon,
   social_facebook: FacebookIcon,
-  social_whatsapp: WhatsAppIcon,
   social_telegram: TelegramIcon,
   social_googlemaps: GoogleMapsIcon,
+  // contact_* (من ELEMENTS)
+  contact_whatsapp: WhatsAppIcon,
+  contact_phone: PhoneIcon,
+  contact_email: EmailIcon,
+  // aliases قصيرة (للاستخدام المباشر)
+  x: XIcon,
+  twitter: XIcon,
+  instagram: InstagramIcon,
+  tiktok: TikTokIcon,
+  snapchat: SnapchatIcon,
+  linkedin: LinkedInIcon,
+  youtube: YouTubeIcon,
+  threads: ThreadsIcon,
+  facebook: FacebookIcon,
+  whatsapp: WhatsAppIcon,
+  telegram: TelegramIcon,
+  googlemaps: GoogleMapsIcon,
   email: EmailIcon,
   phone: PhoneIcon,
   whatsapp_chat: WhatsAppIcon,
+};
+
+// ─── Map من type → brand color (للخلفية) ─────────────────────
+export const BRAND_BG_MAP: Record<string, string> = {
+  social_x: "#000000",
+  social_instagram: "#E4405F",
+  social_tiktok: "#000000",
+  social_snapchat: "#FFFC00",
+  social_linkedin: "#0A66C2",
+  social_youtube: "#FF0000",
+  social_threads: "#000000",
+  social_facebook: "#1877F2",
+  social_telegram: "#26A5E4",
+  social_googlemaps: "#4285F4",
+  contact_whatsapp: "#25D366",
+  contact_phone: "#22C55E",
+  contact_email: "#6B7280",
+};
+
+// ─── Map من type → text color على الخلفية ────────────────────
+export const BRAND_FG_MAP: Record<string, string> = {
+  social_x: "#FFFFFF",
+  social_instagram: "#FFFFFF",
+  social_tiktok: "#FFFFFF",
+  social_snapchat: "#000000",
+  social_linkedin: "#FFFFFF",
+  social_youtube: "#FFFFFF",
+  social_threads: "#FFFFFF",
+  social_facebook: "#FFFFFF",
+  social_telegram: "#FFFFFF",
+  social_googlemaps: "#FFFFFF",
+  contact_whatsapp: "#FFFFFF",
+  contact_phone: "#FFFFFF",
+  contact_email: "#FFFFFF",
 };
 
 export function getBrandIcon(type: string): React.ComponentType<IconProps> | null {
@@ -139,4 +191,12 @@ export function getBrandIcon(type: string): React.ComponentType<IconProps> | nul
 
 export function getBrandColor(platform: string): string {
   return BRAND_COLORS[platform] || "#6B7280";
+}
+
+export function getBrandBg(type: string): string | null {
+  return BRAND_BG_MAP[type] || null;
+}
+
+export function getBrandFg(type: string): string | null {
+  return BRAND_FG_MAP[type] || null;
 }
