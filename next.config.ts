@@ -1,15 +1,17 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const isDev = process.env.NODE_ENV === "development";
 
 // CSP عام للمنصّة كلها (يطبّق على /dashboard, /admin, إلخ)
+// + Sentry: نسمح بإرسال أحداث الأخطاء إلى ingest endpoint
 const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' https://fonts.gstatic.com;
   img-src 'self' blob: data: https://*.supabase.co;
-  connect-src 'self' https://*.supabase.co https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com;
+  connect-src 'self' https://*.supabase.co https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://*.sentry.io https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -93,4 +95,19 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// ══════════════════════════════════════════════════════════════
+// Sentry — تتبّع الأخطاء في الإنتاج
+// يُفعَّل تلقائياً لو NEXT_PUBLIC_SENTRY_DSN موجود
+// ══════════════════════════════════════════════════════════════
+export default withSentryConfig(nextConfig, {
+  // ── معلومات المشروع (لرفع source maps) ──
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // ── خيارات بناء ──
+  silent: !process.env.CI,         // اسكت رسائل البناء محلياً
+  hideSourceMaps: true,            // لا تكشف source maps للعموم
+  disableLogger: true,             // أزل console.log الخاص بـ Sentry من البناء
+  widenClientFileUpload: true,     // ارفع ملفات أكثر للحصول على stack traces أوضح
+});
