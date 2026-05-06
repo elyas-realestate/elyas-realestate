@@ -276,19 +276,87 @@ export default function Settings() {
   async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 3 * 1024 * 1024) { toast.error("حجم الصورة يجب أن يكون أقل من 3 ميغابايت"); return; }
+
+    // ── 1) فحص النوع والحجم ──
+    if (!file.type.startsWith("image/")) {
+      toast.error("الملف يجب أن يكون صورة (JPG/PNG/WebP)");
+      return;
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error("حجم الصورة يجب أن يكون أقل من ٣ ميغابايت");
+      return;
+    }
+
     setUploadingPhoto(true);
     try {
-      const ext  = file.name.split(".").pop();
-      const path = `broker-photos/${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
-      if (upErr) throw upErr;
-      const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-      await supabase.from("broker_identity").update({ photo_url: publicUrl }).not("id", "is", null);
+      // ── 2) جلب user + tenant_id ──
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        toast.error("جلستك انتهت — أعد تسجيل الدخول");
+        return;
+      }
+
+      const { data: t } = await supabase
+        .from("tenants").select("id").eq("owner_id", userData.user.id).maybeSingle();
+      const tenantId = t?.id;
+      if (!tenantId) {
+        toast.error("لا يمكن العثور على ملف منشأتك. تواصل مع الدعم.");
+        return;
+      }
+
+      // ── 3) رفع الصورة بـ مسار user-scoped ──
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${userData.user.id}/photo_${Date.now()}.${ext}`;
+
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (upErr) {
+        // ── رسائل خطأ واضحة ──
+        const msg = upErr.message || "";
+        if (msg.includes("not found") || msg.toLowerCase().includes("bucket")) {
+          toast.error("الـ Storage Bucket 'avatars' غير موجود. شغّل migration 045 في Supabase.");
+        } else if (msg.includes("policy") || msg.includes("403") || msg.toLowerCase().includes("permission")) {
+          toast.error("صلاحيات الرفع غير مفعّلة. شغّل migration 045 لإعداد RLS.");
+        } else if (msg.includes("size") || msg.includes("too large")) {
+          toast.error("الصورة كبيرة جداً");
+        } else {
+          toast.error("فشل الرفع: " + msg);
+        }
+        console.error("[photo upload] error:", upErr);
+        return;
+      }
+
+      // ── 4) جلب الـ public URL ──
+      const { data: pubData } = supabase.storage.from("avatars").getPublicUrl(path);
+      const publicUrl = pubData?.publicUrl;
+      if (!publicUrl) {
+        toast.error("الرفع نجح لكن تعذّر إنشاء رابط عام");
+        return;
+      }
+
+      // ── 5) تحديث broker_identity للـ tenant الصحيح فقط ──
+      const { error: updErr } = await supabase
+        .from("broker_identity")
+        .update({ photo_url: publicUrl })
+        .eq("tenant_id", tenantId);
+
+      if (updErr) {
+        toast.error("الصورة رُفعت لكن لم تُحفظ في الملف: " + updErr.message);
+        console.error("[photo update] error:", updErr);
+        return;
+      }
+
       setProfile(p => ({ ...p, photo_url: publicUrl }));
-      toast.success("تم رفع الصورة بنجاح");
-    } catch { toast.error("حدث خطأ أثناء رفع الصورة"); }
-    finally  { setUploadingPhoto(false); }
+      toast.success("تم رفع الصورة وحفظها ✓");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "خطأ غير متوقع";
+      toast.error("فشل الرفع: " + msg);
+      console.error("[photo upload] exception:", e);
+    } finally {
+      setUploadingPhoto(false);
+    }
   }
 
   // ─── Logo upload ──────────────────────────────────────────────────────────
