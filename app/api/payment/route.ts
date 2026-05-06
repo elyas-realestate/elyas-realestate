@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
-import { createPayment, getPayment, PLAN_PRICES } from "@/lib/moyasar";
+import { createPayment, getPayment, PLAN_PRICES, getPlanBreakdown } from "@/lib/moyasar";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,15 +24,18 @@ export async function POST(req: NextRequest) {
     }
 
     const priceInfo = PLAN_PRICES[plan];
-    const amountSAR = billing === "monthly" ? priceInfo.monthly : priceInfo.yearly;
-    const amountHalalas = amountSAR * 100;
+    const breakdown = getPlanBreakdown(plan, billing);
+    if (!breakdown) return NextResponse.json({ error: "خطة غير معروفة" }, { status: 400 });
+
+    // ── نخصم السعر الإجمالي (شامل VAT 15%) — ZATCA compliant ──
+    const amountHalalas = breakdown.grossHalalas;
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waseet-pro.com";
 
     const payment = await createPayment({
       amount: amountHalalas,
       currency: "SAR",
-      description: `اشتراك ${priceInfo.label} — ${billing === "monthly" ? "شهري" : "سنوي"}`,
+      description: `اشتراك ${priceInfo.label} — ${billing === "monthly" ? "شهري" : "سنوي"} (شامل VAT 15%)`,
       callback_url: `${baseUrl}/dashboard/subscription?payment_status=success&plan=${plan}`,
       source: {
         type: "creditcard",
@@ -42,7 +45,14 @@ export async function POST(req: NextRequest) {
         month: String(card_month).slice(0, 2),
         year: String(card_year).slice(0, 4),
       },
-      metadata: { plan, billing },
+      metadata: {
+        plan,
+        billing,
+        net_sar: String(breakdown.net),
+        vat_sar: String(breakdown.vat),
+        gross_sar: String(breakdown.gross),
+        vat_rate: "0.15",
+      },
     });
 
     // ── تحقق مستقل من المبلغ والحالة قبل الترقية ──

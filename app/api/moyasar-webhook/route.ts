@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import { reverseVAT, calculateVAT } from "@/lib/vat";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -103,6 +104,16 @@ export async function POST(req: NextRequest) {
           }).eq("tenant_id", tp.tenant_id);
 
           console.log(`[moyasar-webhook] ✅ تفعيل ${tp.plan} للـ tenant ${tp.tenant_id}`);
+
+          // ── إنشاء فاتورة ZATCA-compliant ──
+          await createSubscriptionInvoice(admin, {
+            tenantId: tp.tenant_id,
+            paymentId: payment.id,
+            plan: tp.plan,
+            billing: tp.billing,
+            amountHalalas: payment.amount,
+            metadata: payment.metadata || {},
+          });
         }
         break;
       }
@@ -128,5 +139,75 @@ export async function POST(req: NextRequest) {
   } catch (e: any) {
     console.error("[moyasar-webhook] خطأ:", e);
     return NextResponse.json({ error: e?.message || "internal error" }, { status: 500 });
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// إنشاء فاتورة اشتراك ZATCA-compliant بعد نجاح الدفع
+// ══════════════════════════════════════════════════════════════
+interface InvoiceArgs {
+  tenantId: string;
+  paymentId: string;
+  plan: string;
+  billing: string;
+  amountHalalas: number;
+  metadata: Record<string, string>;
+}
+
+async function createSubscriptionInvoice(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any,
+  args: InvoiceArgs
+) {
+  try {
+    // ── استخراج breakdown ──
+    // المبلغ من Moyasar gross (شامل VAT). reverse للحصول على net و VAT.
+    const grossSAR = args.amountHalalas / 100;
+    const breakdown = args.metadata?.net_sar
+      ? calculateVAT(parseFloat(args.metadata.net_sar))
+      : reverseVAT(grossSAR);
+
+    // ── العداد التسلسلي عبر RPC (atomic) ──
+    const { data: nextCounterData } = await admin.rpc(
+      "next_subscription_invoice_counter",
+      { p_tenant_id: args.tenantId }
+    );
+    const nextCounter = (nextCounterData as number) || 1;
+    const invoiceNumber = `WP-${args.tenantId.slice(0, 8).toUpperCase()}-${String(nextCounter).padStart(6, "0")}`;
+
+    // ── الوصف ──
+    const planLabels: Record<string, string> = {
+      basic: "اشتراك الأساسي",
+      pro: "اشتراك الاحترافي",
+    };
+    const billingLabel = args.billing === "yearly" ? "سنوي" : "شهري";
+
+    // ── إنشاء الفاتورة في الجدول الصحيح ──
+    const { error: invErr } = await admin.from("subscription_invoices").insert({
+      tenant_id: args.tenantId,
+      invoice_number: invoiceNumber,
+      invoice_counter: nextCounter,
+      invoice_type: "simplified",
+      payment_id: args.paymentId,
+      payment_method: "card",
+      subtotal: breakdown.net,
+      vat_amount: breakdown.vat,
+      vat_rate: 0.15,
+      total: breakdown.gross,
+      currency: "SAR",
+      plan: args.plan,
+      billing: args.billing,
+      description: `${planLabels[args.plan] || args.plan} (${billingLabel})`,
+      status: "paid",
+      paid_at: new Date().toISOString(),
+    });
+
+    if (invErr) {
+      console.warn("[moyasar-webhook] إنشاء الفاتورة فشل:", invErr.message);
+    } else {
+      console.log(`[moyasar-webhook] ✅ فاتورة ${invoiceNumber} تم إنشاؤها`);
+    }
+  } catch (e) {
+    console.error("[moyasar-webhook] خطأ في إنشاء الفاتورة:", e);
   }
 }

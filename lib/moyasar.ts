@@ -62,8 +62,28 @@ export async function getPayment(id: string): Promise<MoyasarPayment> {
   return res.json();
 }
 
-// Plan pricing in SAR
+// ══════════════════════════════════════════════════════════════
+// Plan pricing in SAR — كل الأسعار "صافي قبل الضريبة" (net).
+// ZATCA السعودية: VAT 15% يُضاف على الفاتورة الفعلية.
+// استخدم calculateVAT() من lib/vat.ts للحصول على breakdown.
+// ══════════════════════════════════════════════════════════════
 export const PLAN_PRICES: Record<string, { monthly: number; yearly: number; label: string }> = {
   basic: { monthly: 99,  yearly: 899,  label: "الأساسي"   },
   pro:   { monthly: 249, yearly: 2249, label: "الاحترافي" },
 };
+
+import { calculateVAT, type PriceBreakdown } from "./vat";
+
+/**
+ * يعطي breakdown كامل (net + VAT + gross) لخطة معيّنة بدورة فوترة معيّنة.
+ * هذا هو المصدر الموحَّد لأي حساب فوترة في النظام.
+ */
+export function getPlanBreakdown(
+  plan: string,
+  billing: "monthly" | "yearly"
+): PriceBreakdown | null {
+  const info = PLAN_PRICES[plan];
+  if (!info) return null;
+  const netSAR = billing === "monthly" ? info.monthly : info.yearly;
+  return calculateVAT(netSAR);
+}

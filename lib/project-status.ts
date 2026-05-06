@@ -299,13 +299,15 @@ export const PHASES: Phase[] = [
   {
     id: "payments",
     name: "نظام الدفع",
-    description: "D3 — Moyasar API + webhook + payment events",
-    status: "in_progress",
+    description: "D3 — Moyasar API + webhook + payment events + ZATCA invoices",
+    status: "done",
+    completedAt: "2026-05-06",
     milestones: [
       { code: "D3-1", name: "lib/moyasar.ts + /api/payment route", status: "done" },
       { code: "D3-2", name: "Moyasar webhook + payment_events audit table", status: "done" },
-      { code: "D3-3", name: "احتساب VAT 15% آلي", status: "pending" },
-      { code: "D3-4", name: "Webhook استقبال دفع ناجح", status: "pending" },
+      { code: "D3-3", name: "lib/vat.ts + getPlanBreakdown — احتساب VAT 15% آلي", status: "done" },
+      { code: "D3-4", name: "Webhook ينشئ فاتورة subscription_invoices تلقائياً عند نجاح الدفع", status: "done" },
+      { code: "D3-5", name: "Migration 043 — جدول subscription_invoices متوافق مع ZATCA", status: "done" },
     ],
   },
   {
@@ -328,7 +330,7 @@ export const PHASES: Phase[] = [
       { code: "WA-FIX", name: "إصلاح Vercel async kill في webhook handler (await processWebhook)", status: "done" },
       { code: "WA-TEST", name: "اختبار End-to-End ناجح: Inbound + Outbound + AI auto-reply", status: "done" },
       { code: "WA-ROTATE", name: "Rotation كامل للتوكن + App Secret (إغلاق التسرب الأمني)", status: "done" },
-      { code: "WA-7", name: "Display Name 'إلياس الدخيل | Elyas Aldakhil' — Pending Review", status: "in_progress" },
+      { code: "WA-7", name: "Display Name 'Elyas Real Estate' — Pending Review (قُدّم 6 مايو بعد رفض 3 محاولات سابقة)", status: "in_progress" },
     ],
   },
   {
@@ -442,22 +444,43 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "ux-consolidation", category: "تجربة", label: "تجربة AI موحَّدة في /dashboard/ai", done: true, blocking: false },
 
   // تشغيل
-  { id: "whatsapp-test", category: "تشغيل", label: "اختبار رسالة على رقم Meta التجريبي", done: false, blocking: false, note: "مرسَلة الآن، تحتاج تأكيد CIB" },
-  { id: "whatsapp-real", category: "تشغيل", label: "رقم سعودي حقيقي معتمد من Meta", done: false, blocking: true, note: "يحتاج 1-3 أيام مراجعة" },
+  { id: "whatsapp-test", category: "تشغيل", label: "اختبار رسالة على رقم Meta التجريبي", done: true, blocking: false, note: "تم استبداله بالرقم الحقيقي" },
+  { id: "whatsapp-real", category: "تشغيل", label: "رقم سعودي حقيقي معتمد من Meta", done: true, blocking: true, note: "+966575828854 — End-to-End يعمل" },
   { id: "deploy", category: "تشغيل", label: "Deploy على Vercel + crons شغّالة", done: true, blocking: true },
   { id: "monitoring", category: "تشغيل", label: "تتبّع الأخطاء (Sentry/equivalent)", done: false, blocking: false },
+  { id: "rate-limit", category: "تشغيل", label: "Rate limiting على APIs", done: false, blocking: false },
+  { id: "backups", category: "تشغيل", label: "تأكيد Supabase auto-backups", done: false, blocking: false },
+  { id: "error-boundaries", category: "تشغيل", label: "Error boundaries في React + صفحات 500/404", done: false, blocking: false },
 
   // مالي
   { id: "subscription-plans", category: "مالي", label: "خطط اشتراك في DB", done: true, blocking: true },
   { id: "pricing-decision", category: "مالي", label: "تثبيت الأسعار النهائية (99/149/249)", done: false, blocking: true },
   { id: "moyasar", category: "مالي", label: "تكامل Moyasar للدفع الفعلي", done: false, blocking: true },
-  { id: "vat", category: "مالي", label: "احتساب VAT 15%", done: false, blocking: true },
+  { id: "vat", category: "مالي", label: "احتساب VAT 15%", done: true, blocking: true, note: "lib/vat.ts + integration كاملة" },
   { id: "zatca", category: "مالي", label: "فاتورة ZATCA متوافقة", done: true, blocking: false },
 
   // قانون
-  { id: "tos", category: "قانون", label: "شروط الاستخدام", done: false, blocking: true },
-  { id: "privacy", category: "قانون", label: "سياسة الخصوصية + PDPL", done: false, blocking: true },
+  { id: "tos", category: "قانون", label: "شروط الاستخدام", done: true, blocking: true, note: "/terms موجودة" },
+  { id: "privacy", category: "قانون", label: "سياسة الخصوصية + PDPL", done: true, blocking: true, note: "/privacy موجودة" },
   { id: "broker-license", category: "قانون", label: "حقل ترخيص فال للوسيط", done: true, blocking: false },
+  { id: "pdpl-rights", category: "قانون", label: "حقوق المستخدم (تصدير/حذف بيانات)", done: false, blocking: false },
+  { id: "subscription-contract", category: "قانون", label: "عقد اشتراك واضح + قبول صريح", done: false, blocking: false },
+
+  // تجربة (إضافات)
+  { id: "onboarding-flow", category: "تجربة", label: "Onboarding flow للوسيط الجديد (أول 5 دقائق)", done: false, blocking: false },
+  { id: "transactional-emails", category: "تجربة", label: "إيميلات معاملاتية (welcome, reset, receipt)", done: false, blocking: false },
+  { id: "mobile-audit", category: "تجربة", label: "فحص responsiveness على الجوّال لكل الصفحات", done: false, blocking: false },
+  { id: "loading-states", category: "تجربة", label: "Loading + Error states موحَّدة", done: false, blocking: false },
+
+  // تسويق & SEO
+  { id: "sitemap", category: "تشغيل", label: "Sitemap.xml + robots.txt", done: false, blocking: false },
+  { id: "meta-tags", category: "تشغيل", label: "Open Graph + Twitter cards على landing", done: false, blocking: false },
+  { id: "analytics", category: "تشغيل", label: "Analytics (PostHog/Plausible/GA4)", done: false, blocking: false },
+
+  // تشغيل Beta
+  { id: "beta-invite", category: "تشغيل", label: "آلية دعوة Beta (invite codes / waitlist)", done: false, blocking: false },
+  { id: "feedback-loop", category: "تشغيل", label: "نظام جمع feedback للوسطاء التجريبيين", done: false, blocking: false },
+  { id: "support-channel", category: "تشغيل", label: "قناة دعم العملاء (واتساب / form)", done: false, blocking: false },
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -475,12 +498,12 @@ export const STRENGTHS: SWOTItem[] = [
 
 export const WEAKNESSES: SWOTItem[] = [
   { text: "لا يوجد مستخدمون فعليون بعد — كل الاختبارات معك", weight: 3 },
-  { text: "Moyasar غير مدمج — لا يوجد دفع فعلي", weight: 3 },
-  { text: "WhatsApp على رقم Meta التجريبي فقط", weight: 3 },
-  { text: "تجربة UX متفرقة — صفحات AI كثيرة", weight: 2 },
-  { text: "لا يوجد monitoring/error tracking في إنتاج", weight: 2 },
+  { text: "Moyasar webhook لم يُكمل (D3-3 + D3-4: VAT + معالجة دفع ناجح)", weight: 3 },
+  { text: "لا يوجد monitoring/error tracking في إنتاج (Sentry)", weight: 2 },
+  { text: "Onboarding flow للوسيط الجديد غير مصمم", weight: 2 },
+  { text: "إيميلات معاملاتية غير مضبوطة (welcome, reset, receipt)", weight: 2 },
   { text: "إدارة الأملاك (D2) لم تُبنَ بعد", weight: 2 },
-  { text: "صفحات شروط/خصوصية مفقودة", weight: 2 },
+  { text: "لا analytics — لا نعرف كيف يستخدمها الوسطاء", weight: 1 },
 ];
 
 export const OPPORTUNITIES: SWOTItem[] = [
