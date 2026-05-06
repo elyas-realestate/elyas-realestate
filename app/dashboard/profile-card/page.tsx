@@ -126,11 +126,12 @@ export default function ProfileCardPage() {
             style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
             <Eye size={12} /> شاهد البروفايل
           </Link>
-          <button onClick={() => setThemeOpen(true)}
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs"
-            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)", cursor: "pointer" }}>
-            <Sparkles size={12} /> الثيم
-          </button>
+          {/* الثيم انتقل لـ /dashboard/settings → التصميم — مصدر واحد للحقيقة */}
+          <Link href="/dashboard/settings?tab=design"
+            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs no-underline"
+            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+            <Sparkles size={12} /> الثيم العام
+          </Link>
         </div>
       </div>
 

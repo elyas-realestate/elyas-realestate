@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { tabs } from "./constants";
+import GrowthNav from "@/app/components/GrowthNav";
 
 // ── Lazy-loaded tabs (code splitting) ──
 import IdentityTab from "./components/IdentityTab";
@@ -29,6 +30,8 @@ export default function ContentAI() {
 
   return (
     <div dir="rtl">
+      <GrowthNav />
+
       {/* Page Title */}
       <div className="mb-4 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold mb-1">

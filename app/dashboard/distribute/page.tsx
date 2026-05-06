@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import Breadcrumb from "../../components/Breadcrumb";
+import GrowthNav from "@/app/components/GrowthNav";
 import {
   Share2, Copy, Check, Search, ExternalLink,
   CheckCircle2, Clock, XCircle, RefreshCw,
@@ -167,6 +168,8 @@ export default function DistributePage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "توزيع العقارات" }]} />
+
+      <GrowthNav />
 
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">

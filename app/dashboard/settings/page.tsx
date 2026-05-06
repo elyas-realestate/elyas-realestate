@@ -580,11 +580,16 @@ export default function Settings() {
               <label className="block text-sm text-[var(--text-soft)] mb-2">البريد الإلكتروني <span className="text-[var(--text-faint)]">(بريد الحساب)</span></label>
               <input value={profile.email} disabled className={inputClass + " opacity-50 cursor-not-allowed"} />
             </div>
-            <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">بريد الإشعارات</label>
-              <input value={profile.contact_email} onChange={e => setProfile(p => ({...p, contact_email: e.target.value}))}
-                className={inputClass} placeholder="notifications@example.com" type="email" dir="ltr" />
-              <p className="text-xs text-[var(--text-faint)] mt-1">يُستخدم لاستقبال إشعارات الطلبات الجديدة — اتركه فارغاً لإيقاف الإشعارات</p>
+            {/* بريد الإشعارات انتقل لصفحة الإشعارات الخاصة (إزالة تكرار) */}
+            <div className="rounded-lg p-3 text-xs flex items-start gap-2"
+              style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+              <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>💡</span>
+              <div>
+                إعدادات بريد الإشعارات والـ Push انتقلت إلى صفحة مخصَّصة:{" "}
+                <Link href="/dashboard/settings/notifications" className="font-bold no-underline" style={{ color: "var(--gold-2)" }}>
+                  صفحة الإشعارات →
+                </Link>
+              </div>
             </div>
             <div>
               <label className="block text-sm text-[var(--text-soft)] mb-2">الجنس</label>
@@ -1301,6 +1306,18 @@ export default function Settings() {
       {/* ════════════════════ TAB: التواصل ════════════════════ */}
       {tab === "contact" && settings && (
         <div className="max-w-2xl space-y-5">
+          {/* تنبيه: تكامل WhatsApp Cloud API له صفحة منفصلة (Tokens, Phone IDs, Templates) */}
+          <div className="rounded-xl p-3 text-xs flex items-start gap-2"
+            style={{ background: "rgba(37,211,102,0.08)", border: "1px solid rgba(37,211,102,0.30)", color: "var(--text-soft)" }}>
+            <span style={{ color: "rgb(37,211,102)", fontWeight: 700, fontSize: 14 }}>💬</span>
+            <div>
+              للتكامل المتقدّم مع WhatsApp Business (إرسال OTP، Templates، تكامل API):{" "}
+              <Link href="/dashboard/whatsapp/settings" className="font-bold no-underline" style={{ color: "rgb(37,211,102)" }}>
+                إعدادات واتساب الكاملة →
+              </Link>
+            </div>
+          </div>
+
           <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-6 space-y-5">
             <h3 className="font-bold text-[var(--gold-2)] text-lg">معلومات التواصل العامة</h3>
             <div>

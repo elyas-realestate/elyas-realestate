@@ -2,6 +2,7 @@
 import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
+import GrowthNav from "@/app/components/GrowthNav";
 import {
   Megaphone, GitCompare, Plus, X, Edit3, Check, Trash2,
   Instagram, Twitter, Play, Pause, CheckCircle2, Clock,
@@ -168,6 +169,8 @@ function CampaignsTab() {
 
   return (
     <div className="space-y-5">
+
+      <GrowthNav />
 
       {/* KPI Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
