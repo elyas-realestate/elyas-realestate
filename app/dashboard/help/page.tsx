@@ -7,6 +7,7 @@ import {
   Bot, IdCard, Building2, Users, FileSignature, Banknote,
   CheckSquare, ShieldCheck, Sparkles, BookOpen, Play, Mail
 } from "lucide-react";
+import SupportContact from "@/app/components/SupportContact";
 
 interface FAQItem {
   q: string;
@@ -207,6 +208,9 @@ export default function HelpPage() {
           ابحث في كل ميزات المنصة، أو تصفّح الأقسام أدناه.
         </p>
       </div>
+
+      {/* Support Contact — تواصل سريع */}
+      <SupportContact />
 
       {/* Search */}
       <div className="relative">

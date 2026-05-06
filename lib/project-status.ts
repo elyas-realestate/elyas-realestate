@@ -348,6 +348,21 @@ export const PHASES: Phase[] = [
     ],
   },
   {
+    id: "onboarding-support",
+    name: "Onboarding + Support Flow",
+    description: "تجربة الوسيط الجديد + قناة دعم متكاملة",
+    status: "done",
+    completedAt: "2026-05-06",
+    milestones: [
+      { code: "ONB-1", name: "Migration 044 — جدولين: support_requests + tenant_onboarding", status: "done" },
+      { code: "ONB-2", name: "API /api/support-request (POST/GET) + validation", status: "done" },
+      { code: "ONB-3", name: "API /api/onboarding (auto-detect 4 خطوات)", status: "done" },
+      { code: "ONB-4", name: "OnboardingChecklist component في /dashboard (يختفي عند الإنجاز)", status: "done" },
+      { code: "ONB-5", name: "SupportContact في /dashboard/help (واتساب + إيميل + form)", status: "done" },
+      { code: "ONB-6", name: "RLS + auto-detect للخطوات (profile/property/whatsapp/assistant)", status: "done" },
+    ],
+  },
+  {
     id: "monitoring-sentry",
     name: "Monitoring (Sentry)",
     description: "تتبّع أخطاء الإنتاج في الـ frontend والـ backend",
@@ -359,7 +374,9 @@ export const PHASES: Phase[] = [
       { code: "SEN-3", name: "Global error boundary (app/global-error.tsx) — UI لطيف للمستخدم", status: "done" },
       { code: "SEN-4", name: "Endpoint اختبار /api/sentry-test (محمي بـ CRON_SECRET)", status: "done" },
       { code: "SEN-5", name: "CSP محدَّث للسماح بـ Sentry ingest endpoints", status: "done" },
-      { code: "SEN-6", name: "ربط بحساب Sentry فعلي + إضافة DSN في Vercel", status: "pending", blockedBy: "owner-action" },
+      { code: "SEN-6", name: "ربط بحساب Sentry فعلي + إضافة DSN في Vercel", status: "done" },
+      { code: "SEN-7", name: "اختبار End-to-End ناجح: خطأ ملتقَط في Sentry dashboard", status: "done" },
+      { code: "SEN-8", name: "تحسين endpoint الاختبار: مصادقة المالك بديل للـ secret", status: "done" },
     ],
   },
   {
@@ -482,7 +499,7 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "subscription-contract", category: "قانون", label: "عقد اشتراك واضح + قبول صريح", done: false, blocking: false },
 
   // تجربة (إضافات)
-  { id: "onboarding-flow", category: "تجربة", label: "Onboarding flow للوسيط الجديد (أول 5 دقائق)", done: false, blocking: false },
+  { id: "onboarding-flow", category: "تجربة", label: "Onboarding flow للوسيط الجديد (أول 5 دقائق)", done: true, blocking: false, note: "OnboardingChecklist في /dashboard مع 4 خطوات auto-detect" },
   { id: "transactional-emails", category: "تجربة", label: "إيميلات معاملاتية (welcome, reset, receipt)", done: false, blocking: false },
   { id: "mobile-audit", category: "تجربة", label: "فحص responsiveness على الجوّال لكل الصفحات", done: false, blocking: false },
   { id: "loading-states", category: "تجربة", label: "Loading + Error states موحَّدة", done: false, blocking: false },
@@ -495,7 +512,7 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   // تشغيل Beta
   { id: "beta-invite", category: "تشغيل", label: "آلية دعوة Beta (invite codes / waitlist)", done: false, blocking: false },
   { id: "feedback-loop", category: "تشغيل", label: "نظام جمع feedback للوسطاء التجريبيين", done: false, blocking: false },
-  { id: "support-channel", category: "تشغيل", label: "قناة دعم العملاء (واتساب / form)", done: false, blocking: false },
+  { id: "support-channel", category: "تشغيل", label: "قناة دعم العملاء (واتساب / form)", done: true, blocking: false, note: "SupportContact widget + form في /dashboard/help + جدول support_requests" },
 ];
 
 // ─────────────────────────────────────────────────────────────

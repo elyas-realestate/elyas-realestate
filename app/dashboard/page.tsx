@@ -9,6 +9,7 @@ import {
   CheckCircle, Sparkles, Brain, BellRing, Target, CircleDollarSign,
   CreditCard, Flame, AlertTriangle, IdCard, Bot, ExternalLink, ArrowLeft,
 } from "lucide-react";
+import OnboardingChecklist from "@/app/components/OnboardingChecklist";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell
@@ -168,7 +169,10 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 pb-12" dir="rtl">
-      
+
+      {/* Onboarding Checklist — يظهر للوسطاء الجدد فقط، يختفي تلقائياً عند الإنجاز */}
+      <OnboardingChecklist />
+
       {/* HEADER & TOGGLES */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
