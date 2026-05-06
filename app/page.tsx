@@ -1,5 +1,6 @@
 import Link from "next/link";
 import WaitlistForm from "@/app/components/WaitlistForm";
+import SARIcon from "@/app/components/SARIcon";
 
 // تقليل وقت الـ ISR cache من ٣٦٠٠ إلى ٦٠ ثانية حتى تتبع تغييرات الثيم بسرعة
 // لاحقاً، يمكن رفعه لـ ٣٦٠٠ بعد ثبات الـ landing
@@ -75,7 +76,7 @@ const plans = [
   {
     name: "أساسي",
     price: "99",
-    period: "ر.س / شهر",
+    period: "/ شهر",
     badge: "الأكثر طلباً",
     desc: "للوسيط النشط الذي يريد النمو",
     features: [
@@ -95,7 +96,7 @@ const plans = [
   {
     name: "احترافي",
     price: "249",
-    period: "ر.س / شهر",
+    period: "/ شهر",
     badge: "بدون قيود",
     desc: "للوسيط المحترف وفريقه",
     features: [
@@ -253,10 +254,20 @@ export default function Home() {
                   <p style={{ fontSize: 12, color: "var(--text-faint)" }}>{plan.desc}</p>
                 </div>
                 <div style={{ marginBottom: 24, paddingBottom: 24, borderBottom: "1px solid var(--gold-bg)" }}>
-                  <span className="font-kufi" style={{ fontSize: plan.price === "0" ? 28 : "clamp(1.8rem, 2.5vw, 2.2rem)", fontWeight: 900, color: plan.highlighted ? "var(--gold-2)" : "var(--text-strong)" }}>
-                    {plan.price === "0" ? "مجاناً" : plan.price}
-                  </span>
-                  {plan.period && <span style={{ fontSize: 12, color: "var(--text-faint)", marginRight: 4 }}>{plan.period}</span>}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <span className="font-kufi" style={{ fontSize: plan.price === "0" ? 28 : "clamp(1.8rem, 2.5vw, 2.2rem)", fontWeight: 900, color: plan.highlighted ? "var(--gold-2)" : "var(--text-strong)" }}>
+                      {plan.price === "0" ? "مجاناً" : plan.price}
+                    </span>
+                    {plan.price !== "0" && (
+                      <SARIcon size={18} color={plan.highlighted ? "accent" : "current"} />
+                    )}
+                    {plan.period && <span style={{ fontSize: 12, color: "var(--text-faint)" }}>{plan.period}</span>}
+                  </div>
+                  {plan.price !== "0" && (
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 6, opacity: 0.85 }}>
+                      + ضريبة القيمة المضافة 15%
+                    </div>
+                  )}
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px" }}>
                   {plan.features.map((f, j) => (

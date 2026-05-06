@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import RequestForm from "./RequestForm";
 import SocialIcon from "@/app/components/SocialIcon";
 import ServiceIcon from "@/app/components/ServiceIcon";
+import SARIcon from "@/app/components/SARIcon";
 
 // 10 ثوان — كافٍ لتفادي ضغط القاعدة دون تأخير ملحوظ بعد تعديل الإعدادات
 export const revalidate = 10;
@@ -379,8 +380,9 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                               {p.land_area && <span style={{ fontSize:12, color:clrTextMuted }}>📐 {p.land_area} م²</span>}
                             </div>
                             {p.price && (
-                              <div className="font-kufi accent" style={{ fontSize:20, fontWeight:800 }}>
-                                {Number(p.price).toLocaleString("ar-SA")} <span style={{ fontSize:12, color:clrTextMuted }}>ر.س</span>
+                              <div className="font-kufi accent" style={{ fontSize:20, fontWeight:800, display:"inline-flex", alignItems:"center", gap:6 }}>
+                                <span>{Number(p.price).toLocaleString("ar-SA")}</span>
+                                <SARIcon size={14} color="accent" />
                               </div>
                             )}
                           </div>
@@ -438,10 +440,46 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
             <div className="accent" style={{ fontSize:12, fontWeight:700, letterSpacing:2, marginBottom:14 }}>— تواصل معي —</div>
             <h2 className="font-kufi" style={{ fontSize:fntSection, fontWeight:900, color:clrTextPrimary, lineHeight:1.3, marginBottom:16 }}>{s?.cta_title || "عندك عقار أو تبحث عن واحد؟"}</h2>
             <p style={{ fontSize:fntBody, color:clrTextSec, lineHeight:1.85, marginBottom:36 }}>{s?.cta_subtitle || "تواصل معي مباشرة وخلنا نختصر عليك الطريق."}</p>
-            <div className="hero-actions" style={{ display:"flex", justifyContent:"center", gap:12, marginBottom:hasSocials ? 40 : 0 }}>
+            <div className="hero-actions" style={{ display:"flex", justifyContent:"center", gap:12, marginBottom:24, flexWrap:"wrap" }}>
               {whatsapp && <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className="accent-bg" style={{ color:clrBgPrimary, textDecoration:"none", fontSize:15, fontWeight:800, padding:"14px 32px", borderRadius:11 }}>واتساب</a>}
               {phone    && <a href={`tel:${phone}`} style={{ color:clrTextPrimary, textDecoration:"none", fontSize:14, fontWeight:600, padding:"14px 28px", borderRadius:11, border:`1px solid color-mix(in srgb, ${clrAccent} 15%, transparent)` }}>اتصال</a>}
               {email    && <a href={`mailto:${email}`} style={{ color:clrTextPrimary, textDecoration:"none", fontSize:14, fontWeight:600, padding:"14px 28px", borderRadius:11, border:`1px solid color-mix(in srgb, ${clrAccent} 15%, transparent)` }}>بريد إلكتروني</a>}
+            </div>
+
+            {/* ⭐ زر "احفظ في جهات اتصالك" — بارز ومميّز */}
+            <div style={{ maxWidth: 460, margin: `0 auto ${hasSocials ? 40 : 0}px` }}>
+              <a
+                href={`/api/vcard/${slug}`}
+                download={`${name}.vcf`}
+                title="احفظ بياناتي في جهات الاتصال — iPhone · Android · Huawei"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 12,
+                  padding: "16px 22px",
+                  borderRadius: 16,
+                  background: `linear-gradient(135deg, ${clrAccent} 0%, color-mix(in srgb, ${clrAccent} 80%, #000) 100%)`,
+                  color: clrBgPrimary,
+                  fontSize: 16,
+                  fontWeight: 800,
+                  textDecoration: "none",
+                  border: `1.5px solid color-mix(in srgb, ${clrAccent} 70%, #000)`,
+                  boxShadow: `0 8px 24px color-mix(in srgb, ${clrAccent} 35%, transparent), 0 2px 6px rgba(0,0,0,0.08)`,
+                  letterSpacing: "0.2px",
+                }}
+              >
+                <span style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11ZM8 11C9.66 11 10.99 9.66 10.99 8C10.99 6.34 9.66 5 8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11ZM8 13C5.67 13 1 14.17 1 16.5V19H15V16.5C15 14.17 10.33 13 8 13ZM16 13C15.71 13 15.38 13.02 15.03 13.05C16.19 13.89 17 15.02 17 16.5V19H23V16.5C23 14.17 18.33 13 16 13Z" fill="currentColor"/>
+                  </svg>
+                </span>
+                <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "right", flex: 1 }}>
+                  <span style={{ fontSize: 16, fontWeight: 800, lineHeight: 1.25 }}>اضغط لحفظ في جهات اتصالك</span>
+                  <span style={{ fontSize: 11.5, fontWeight: 500, opacity: 0.88, marginTop: 2 }}>iPhone · Android · Huawei — بضغطة واحدة</span>
+                </span>
+                <span style={{ fontSize: 18, fontWeight: 900, opacity: 0.9 }}>←</span>
+              </a>
             </div>
             {hasSocials && (
               <div style={{ display:"flex", justifyContent:"center", gap:10, flexWrap:"wrap" }}>

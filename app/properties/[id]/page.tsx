@@ -5,12 +5,15 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { MapPin, Phone, Share2, ArrowRight, Maximize2, Bed, Bath, Layers, ChevronLeft, ChevronRight, X, Printer } from "lucide-react";
 import SARIcon from "../../components/SARIcon";
+import LeadCaptureGate from "../../components/LeadCaptureGate";
+import NeighborhoodIntel from "../../components/NeighborhoodIntel";
 
 
 export default function PropertyDetail() {
   const params = useParams();
   const [property, setProperty] = useState<any>(null);
   const [settings, setSettings] = useState<any>(null);
+  const [tenantSlug, setTenantSlug] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
@@ -20,9 +23,18 @@ export default function PropertyDetail() {
     Promise.all([
       supabase.from("properties").select("*").eq("id", params.id as string).eq("is_published", true).single(),
       supabase.from("site_settings").select("*").single(),
-    ]).then(([{ data: prop }, { data: s }]) => {
+    ]).then(async ([{ data: prop }, { data: s }]) => {
       setProperty(prop);
       setSettings(s);
+      // ── جلب slug للوسيط (لـ LeadCaptureGate) ──
+      if (s?.tenant_id) {
+        const { data: tenant } = await supabase
+          .from("tenants")
+          .select("slug")
+          .eq("id", s.tenant_id)
+          .maybeSingle();
+        if (tenant?.slug) setTenantSlug(tenant.slug);
+      }
       setLoading(false);
       // تحديث label الزيارة باسم العقار
       if (prop?.title) {
@@ -286,6 +298,13 @@ export default function PropertyDetail() {
                 الموقع على الخريطة
               </a>
             )}
+
+            {/* ⭐ Neighborhood Intel — معلومات الحي بالـ AI */}
+            <NeighborhoodIntel
+              city={property.city}
+              district={property.district}
+              accentColor="#C6914C"
+            />
           </div>
 
           {/* RIGHT — Sticky Card */}
@@ -310,18 +329,40 @@ export default function PropertyDetail() {
               {/* Buttons */}
               <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
                 {hasContact && (
-                  <>
-                    <button onClick={handleWhatsApp} className="action-btn"
-                      style={{ width: "100%", padding: "15px", borderRadius: 14, background: "linear-gradient(135deg, var(--whatsapp), #128C7E)", border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                      تواصل عبر واتساب
-                    </button>
-                    <button onClick={handleCall} className="action-btn"
-                      style={{ width: "100%", padding: "13px", borderRadius: 14, background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
-                      <Phone size={17} style={{ color: "var(--gold-2)" }} />
-                      اتصال مباشر
-                    </button>
-                  </>
+                  property.require_lead_capture && tenantSlug ? (
+                    <LeadCaptureGate
+                      tenantSlug={tenantSlug}
+                      contextType="property"
+                      contextId={property.id}
+                      contextLabel="بيانات التواصل المباشر"
+                      message={property.lead_capture_message || "لتواصل مباشر مع الوسيط، يرجى تعبئة بياناتك أولاً"}
+                      accentColor="#C6914C"
+                    >
+                      <button onClick={handleWhatsApp} className="action-btn"
+                        style={{ width: "100%", padding: "15px", borderRadius: 14, background: "linear-gradient(135deg, var(--whatsapp), #128C7E)", border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif", marginBottom: 10 }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        تواصل عبر واتساب
+                      </button>
+                      <button onClick={handleCall} className="action-btn"
+                        style={{ width: "100%", padding: "13px", borderRadius: 14, background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
+                        <Phone size={17} style={{ color: "var(--gold-2)" }} />
+                        اتصال مباشر
+                      </button>
+                    </LeadCaptureGate>
+                  ) : (
+                    <>
+                      <button onClick={handleWhatsApp} className="action-btn"
+                        style={{ width: "100%", padding: "15px", borderRadius: 14, background: "linear-gradient(135deg, var(--whatsapp), #128C7E)", border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        تواصل عبر واتساب
+                      </button>
+                      <button onClick={handleCall} className="action-btn"
+                        style={{ width: "100%", padding: "13px", borderRadius: 14, background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "'Tajawal', sans-serif" }}>
+                        <Phone size={17} style={{ color: "var(--gold-2)" }} />
+                        اتصال مباشر
+                      </button>
+                    </>
+                  )
                 )}
                 <div style={{ display: "flex", gap: 10 }}>
                   <button onClick={handleShare} className="action-btn"

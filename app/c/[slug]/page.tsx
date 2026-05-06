@@ -81,11 +81,20 @@ async function getCardData(slug: string) {
 
   if (!tenant) return null;
 
-  const [cardRes, linksRes, identityRes, settingsRes] = await Promise.all([
+  const [cardRes, linksRes, identityRes, settingsRes, testimonialsRes] = await Promise.all([
     admin.from("profile_cards").select("*").eq("tenant_id", tenant.id).maybeSingle(),
     admin.from("profile_links").select("*").eq("tenant_id", tenant.id).eq("is_active", true).order("display_order"),
     admin.from("broker_identity").select("broker_name, specialization, photo_url, bio_short, commercial_register, vat_number").eq("tenant_id", tenant.id).maybeSingle(),
     admin.from("site_settings").select("*").eq("tenant_id", tenant.id).maybeSingle(),
+    admin
+      .from("testimonials")
+      .select("id, client_name, client_role, rating, content, is_featured, created_at")
+      .eq("tenant_id", tenant.id)
+      .eq("is_published", true)
+      .order("is_featured", { ascending: false })
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .limit(8),
   ]);
 
   // دمج الحقول من المصدرين — site_settings له الأولوية للحقول التواصلية
@@ -148,6 +157,7 @@ async function getCardData(slug: string) {
     links: allLinks,
     identity,
     slug: tenant.slug,
+    testimonials: testimonialsRes.data || [],
   };
 }
 

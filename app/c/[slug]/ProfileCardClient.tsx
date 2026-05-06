@@ -8,6 +8,8 @@ import {
   Camera, Copy, Download, Check, Bell, ExternalLink, Heading
 } from "lucide-react";
 import { ELEMENTS, getElement, buildElementUrl, buildElementLabel, type ProfileElement } from "@/lib/profile-elements";
+import SaveContactButton from "@/app/components/SaveContactButton";
+import TestimonialsSection from "@/app/components/TestimonialsSection";
 
 interface ProfileLink {
   id: string;
@@ -41,7 +43,7 @@ function InitialsAvatar({ name, bg, color, size = 96 }: { name: string; bg: stri
 // ─────────────────────────────────────────────────────────────
 // المكوّن الرئيسي
 // ─────────────────────────────────────────────────────────────
-export default function ProfileCardClient({ card, links, identity, slug }: any) {
+export default function ProfileCardClient({ card, links, identity, slug, testimonials }: any) {
   const [shareOpen, setShareOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [contactFormOpen, setContactFormOpen] = useState<ProfileLink | null>(null);
@@ -139,6 +141,18 @@ export default function ProfileCardClient({ card, links, identity, slug }: any) 
           </div>
         )}
 
+        {/* ⭐ زر "احفظ في جهات اتصالك" — الميزة المميزة */}
+        <div style={{ marginBottom: 16 }}>
+          <SaveContactButton
+            slug={slug}
+            brokerName={displayName}
+            accent={accent}
+            bgColor={card.bg_color || "#FAF7F2"}
+            textColor={card.text_color || "#1A1206"}
+            variant="hero"
+          />
+        </div>
+
         {/* قائمة العناصر — بطاقات كاملة */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {cardLinks.map(link => (
@@ -152,6 +166,16 @@ export default function ProfileCardClient({ card, links, identity, slug }: any) 
             />
           ))}
         </div>
+
+        {/* ⭐ آراء العملاء */}
+        {testimonials && testimonials.length > 0 && (
+          <TestimonialsSection
+            testimonials={testimonials}
+            accent={accent}
+            bgColor={card.bg_color || "#FAF7F2"}
+            textColor={card.text_color || "#1A1206"}
+          />
+        )}
 
         {/* Footer */}
         <div style={{ textAlign: "center", marginTop: 32, paddingTop: 20, opacity: 0.55, fontSize: 11 }}>

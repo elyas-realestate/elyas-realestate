@@ -13,6 +13,8 @@ import {
   ELEMENTS, CATEGORIES, getElement, getCategoryElements, buildAutoElements, buildElementUrl, buildElementLabel,
   type ProfileElement, type ElementCategory, type ElementField, type AutoElement
 } from "@/lib/profile-elements";
+import CardThemePicker from "@/app/components/CardThemePicker";
+import BrokerQRModal from "@/app/components/BrokerQRModal";
 
 const PRESET_THEMES = [
   { name: "كريمي ذهبي",  bg: "#FAF7F2", text: "#1A1206", accent: "#C6914C" },
@@ -37,7 +39,11 @@ export default function ProfileCardPage() {
   // Identity edit
   const [editingIdentity, setEditingIdentity] = useState(false);
 
-  // Theme picker تم نقله لـ /dashboard/settings?tab=design — مصدر واحد للحقيقة
+  // ⭐ Card Theme picker (٢٠ ثيم مخصص للبطاقة)
+  const [cardThemeOpen, setCardThemeOpen] = useState(false);
+
+  // ⭐ QR Modal
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   // Auto elements (social/license/etc.) من /settings + /broker_identity
   const [autoElements, setAutoElements] = useState<AutoElement[]>([]);
@@ -144,11 +150,25 @@ export default function ProfileCardPage() {
             style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
             <Eye size={12} /> شاهد البروفايل
           </Link>
-          {/* الثيم انتقل لـ /dashboard/settings → التصميم — مصدر واحد للحقيقة */}
+          {/* ⭐ ثيم البطاقة — ٢٠ ثيم احترافي خاص بالبطاقة */}
+          <button
+            onClick={() => setCardThemeOpen(true)}
+            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs"
+            style={{ background: "var(--gold-bg)", border: "1px solid var(--gold-bg-strong, var(--gold-bg-hover))", color: "var(--gold-2)", cursor: "pointer", fontFamily: "inherit" }}>
+            <Sparkles size={12} /> ثيم البطاقة
+          </button>
+          {/* QR للبطاقة */}
+          <button
+            onClick={() => setQrModalOpen(true)}
+            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs"
+            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)", cursor: "pointer", fontFamily: "inherit" }}>
+            <QrCode size={12} /> رمز QR
+          </button>
+          {/* الثيم العام لِلوحة التحكم — مصدر واحد للحقيقة */}
           <Link href="/dashboard/settings?tab=design"
             className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs no-underline"
             style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
-            <Sparkles size={12} /> الثيم العام
+            <SettingsIcon size={12} /> الثيم العام
           </Link>
         </div>
       </div>
@@ -326,7 +346,37 @@ export default function ProfileCardPage() {
           onSave={async (updates: any) => { await saveCard(updates); setEditingIdentity(false); }}
         />
       )}
-      {/* ThemeModal تم حذفه — التحكم بالثيم الآن في /dashboard/settings?tab=design فقط */}
+      {/* ThemeModal تم حذفه — التحكم بالثيم العام في /dashboard/settings?tab=design */}
+
+      {/* ⭐ Card Theme Picker — ٢٠ ثيم خاص بالبطاقة */}
+      {cardThemeOpen && (
+        <CardThemePicker
+          currentBg={card.bg_color}
+          currentText={card.text_color}
+          currentAccent={card.accent_color}
+          onApply={async (theme) => {
+            await saveCard({
+              bg_color: theme.bg_color,
+              text_color: theme.text_color,
+              accent_color: theme.accent_color,
+            });
+            setCardThemeOpen(false);
+          }}
+          onClose={() => setCardThemeOpen(false)}
+        />
+      )}
+
+      {/* ⭐ QR Modal */}
+      {qrModalOpen && slug && (
+        <BrokerQRModal
+          slug={slug}
+          brokerName={card?.display_name || slug}
+          accentColor={card?.accent_color || "#C6914C"}
+          bgColor={card?.bg_color || "#FAF7F2"}
+          textColor={card?.text_color || "#1A1206"}
+          onClose={() => setQrModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
