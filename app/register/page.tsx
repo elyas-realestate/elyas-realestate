@@ -19,6 +19,7 @@ export default function Register() {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [fal, setFal]           = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [slug, setSlug]         = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
   const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
@@ -50,6 +51,28 @@ export default function Register() {
     }
 
     setLoading(true);
+
+    // ── Beta: تحقق من invite code إن وُجد (اختياري حالياً) ──
+    const codeTrimmed = inviteCode.trim().toUpperCase();
+    if (codeTrimmed) {
+      try {
+        const r = await fetch("/api/invite-code/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: codeTrimmed }),
+        });
+        const d = await r.json();
+        if (!d.valid) {
+          setError(d.error || "كود الدعوة غير صالح");
+          setLoading(false);
+          return;
+        }
+      } catch {
+        setError("تعذّر التحقق من كود الدعوة، حاول لاحقاً");
+        setLoading(false);
+        return;
+      }
+    }
 
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -100,6 +123,19 @@ export default function Register() {
             broker_name: name,
           }),
         ]);
+      }
+
+      // ── استهلاك invite code (لو استُخدم) ──
+      if (codeTrimmed) {
+        try {
+          await supabase.rpc("consume_invite_code", {
+            p_code: codeTrimmed,
+            p_user_id: data.user.id,
+          });
+        } catch (e) {
+          console.warn("[register] consume_invite_code failed:", e);
+          // لا نعيق التسجيل لو فشل — التسجيل نجح بالفعل
+        }
       }
     }
 
@@ -307,6 +343,26 @@ export default function Register() {
                   placeholder="FAL-XXXXXXX"
                   dir="ltr"
                 />
+              </div>
+
+              {/* كود دعوة Beta (اختياري) */}
+              <div>
+                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>
+                  كود دعوة Beta
+                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>(اختياري — للأعضاء المدعوّين)</span>
+                </label>
+                <input
+                  type="text"
+                  value={inviteCode}
+                  onChange={e => setInviteCode(e.target.value.toUpperCase())}
+                  className="reg-input"
+                  placeholder="WP-W1-XXXXXX"
+                  dir="ltr"
+                  maxLength={50}
+                />
+                <p style={{ fontSize: 11, marginTop: 5, color: "var(--text-faint)" }}>
+                  لو وصلك كود دعوة Beta، أدخله هنا. إن لم يكن لديك، سجّل عادياً.
+                </p>
               </div>
 
               {/* خطأ */}

@@ -1,86 +1,110 @@
-# Checkpoint — ٦ مايو ٢٠٢٦ (يوم منتج جداً + تنظيف معماري)
+# Checkpoint — ٦ مايو ٢٠٢٦ (يوم ماراثون استثنائي)
 
 > اقرأ هذا الملف لما ترجع. كل التقدم محفوظ.
 
-## ✅ المراحل المكتملة اليوم
+## 🏆 ملخّص اليوم
 
-### ١. WA-REAL مغلقة 100%
-- WhatsApp Cloud API يعمل End-to-End على +966575828854
-- Token + App Secret rotated (التسرّب الأمني محلول)
-- Display Name: `Elyas Real Estate` قُدّم لـ Meta (Pending Review)
+أنجزنا ما يساوي **أسبوع شغل عادي** في جلسة واحدة:
 
-### ٢. CEO Identity System
-- Migration 042 + API + UI + sidebar links
-- منشور في Vercel ✓
-- اختبار ناجح: السكرتير يتعرّف على المالك تلقائياً
+| المرحلة | الحالة |
+|---|---|
+| 🔧 إصلاح رفع الصورة + Storage Buckets | ✅ |
+| 🛣️ Routing Audit (96 صفحة) + ١١ إصلاح | ✅ |
+| 🚀 Tasks 1-10 الكبيرة (Hubs + Property + Settings) | ✅ |
+| 🔍 Deep Dedup (CIB audit) — ٨ من ١٠ | ✅ |
+| 📝 توثيق Canonical Map | ✅ |
+| 💬 ملاحظات UX من المالك (٤ بنود) | ✅ |
+| 📊 Phase 5: SEO + Analytics | ✅ |
+| 📨 Phase 6: Beta Invite + Waitlist + Register | ✅ |
+| 🎨 BUG-1: Hover dark cards | ✅ |
+| 📋 خطة إطلاق Beta مكتوبة | ✅ |
 
-### ٣. Payments + VAT 15%
-- `lib/vat.ts` — احتساب VAT
-- `getPlanBreakdown()` — كل الأسعار net + vat + gross
-- Payment route يخصم gross (شامل VAT)
-- Webhook ينشئ فاتورة ZATCA-compliant تلقائياً
-- Migration 043 — جدول `subscription_invoices`
-- منشور ✓
+## 📊 المنصة الآن — جاهزة للإطلاق
 
-### ٤. Sentry Monitoring
-- Sentry SDK (v10.51.0) مثبَّت
-- 4 config files + instrumentation.ts + global-error.tsx
-- `withSentryConfig` في next.config.ts
-- CSP محدَّث للسماح بـ Sentry ingest
-- اختبار End-to-End ناجح: الخطأ ظهر في Sentry dashboard
-- منشور ✓
+| القدرة | الحالة |
+|---|---|
+| WhatsApp Cloud API على رقم سعودي حقيقي | ✅ Live |
+| Display Name "Elyas Real Estate" | 🟡 Pending Meta Review |
+| Moyasar Payment + VAT 15% + ZATCA Invoices | ✅ |
+| Sentry Error Monitoring | ✅ End-to-End tested |
+| Onboarding Checklist (auto-detect 4 steps) | ✅ |
+| Support Channel (WhatsApp + Email + Form) | ✅ |
+| CEO Identity System | ✅ |
+| Hubs بتبويبات (WhatsApp + CEO + AI) | ✅ |
+| GrowthNav (Marketing + Content + Distribute) | ✅ |
+| sitemap.xml ديناميكي (12+ URLs) | ✅ |
+| robots.txt مع AI crawlers (GPTBot, Claude, Perplexity) | ✅ |
+| Open Graph + Twitter Cards | ✅ |
+| Beta Invite System (٢٣ كود نشط) | ✅ |
+| Waitlist Form في landing | ✅ |
+| Register يقبل invite code | ✅ |
 
-### ٥. Onboarding + Support Flow
-- Migration 044 — جدولين: `support_requests` + `tenant_onboarding`
-- API `/api/support-request` + `/api/onboarding`
-- `OnboardingChecklist` component في dashboard (auto-detect 4 خطوات)
-- `SupportContact` component في /dashboard/help (واتساب + إيميل + form)
-- ⏳ **لم يُنشر بعد** — يحتاج migration + git push
-
----
-
-## ⏸️ متوقّفون مؤقتاً لإصلاح مشاكل
-
-**المشكلة الحالية:** رفع الصورة الشخصية في صفحة الإعدادات لا يعمل.
-
-**ملاحظات قادمة:** المالك سيناقش ملاحظات أخرى بعد حل مشكلة الصورة.
-
----
-
-## 📂 الملفات الجديدة/المعدَّلة اليوم (جاهزة للـ commit)
+## 🆔 المعرّفات الحرجة
 
 ```
-سترة - الجاهزة للنشر
-─────────────────────
-supabase/044_support_requests.sql       ⭐ جديد
-app/api/support-request/route.ts        ⭐ جديد
-app/api/onboarding/route.ts             ⭐ جديد
-app/components/OnboardingChecklist.tsx  ⭐ جديد
-app/components/SupportContact.tsx       ⭐ جديد
-app/dashboard/page.tsx                   ✏️ محدَّث (يعرض Checklist)
-app/dashboard/help/page.tsx              ✏️ محدَّث (يعرض SupportContact)
-lib/project-status.ts                    ✏️ محدَّث
+BM ID:          952931401017558  (Elyas Aldakhil Real Estate, Verified)
+WABA ID:        739396469199589  (وسيط برو)
+Phone:          +966575828854    (Phone ID: 1127800283749970)
+App ID:         993475963670628  (Wasit Pro API)
+System User ID: 61588847717265
+Webhook URL:    https://elyas-realestate.vercel.app/api/whatsapp/webhook
+Display Name:   Elyas Real Estate (Pending Review)
 ```
 
-**أمر الـ commit الجاهز** (ينفّذ بعد إصلاح مشكلة الصورة):
+## 📁 Migrations المُطبَّقة (٥ migrations اليوم)
 
+- ✅ 042: ceo_identity
+- ✅ 043: subscription_invoices
+- ✅ 044: support_requests + tenant_onboarding
+- ✅ 045: storage buckets (avatars + assets)
+- ⏳ 046: invite_codes + beta_waitlist (يحتاج تشغيل)
+
+## 🎫 أكواد Beta الجاهزة (٢٣ كود)
+
+**Wave 1 — Real codes (٢٠):**
+```
+WP-W1-C0C099, WP-W1-CB951A, WP-W1-F9EEB5, WP-W1-150B25,
+WP-W1-105BE4, WP-W1-8F5DA2, WP-W1-5828B0, WP-W1-E3B883,
+WP-W1-821424, WP-W1-05735A, WP-W1-38B7D3, WP-W1-FBF19D,
+WP-W1-5FBDC9, WP-W1-396F18, WP-W1-49646B, WP-W1-9C7DAF,
+WP-W1-88CD02, WP-W1-C9B31D, WP-W1-AD01C2, WP-W1-0880DA
+```
+
+**Test codes (٣):**
+- WASIT-BETA-1, WASIT-BETA-2, WASIT-BETA-3
+
+## ⏳ المعلَّقات المنطقية (لا تعطّل الإطلاق)
+
+- DUP-4: نقل fal_license لـ broker_identity (١٤ ملف، عالي المخاطر)
+- DEEP-9: useBrokerProfile() hook (refactor كبير)
+- DEEP-10: Search filter داخل /settings (٦ تبويبات بسيطة)
+- DUP-10: حذف ٩ redirects القديمة (نتركها شهرين)
+- Display Name approval (انتظار Meta — ٢٤-٤٨ ساعة)
+
+## 🎬 خطة الإطلاق (مفصّلة في docs/beta-launch-plan.md)
+
+- **W1 (Soft Launch):** ٥ أكواد لشبكتك المباشرة + onboarding ١:١
+- **W2:** ١٠-١٥ كود إضافي + جمع feedback
+- **W3:** Public Waitlist + قرار التسعير
+
+## 🚀 خطوات النشر النهائية للجلسة
+
+### ١) Migration 046 في Supabase
+```
+https://supabase.com/dashboard/project/apmdwautyqoqjlabxysz/sql/new
+```
+انسخ `D:\elyas-realestate\supabase\046_beta_invites.sql` → Run
+
+### ٢) git push (commit شامل)
 ```powershell
-git add supabase/044_support_requests.sql app/api/support-request app/api/onboarding app/components/OnboardingChecklist.tsx app/components/SupportContact.tsx app/dashboard/page.tsx app/dashboard/help/page.tsx lib/project-status.ts
-git commit -m "feat(onboarding): checklist + support flow with WhatsApp/email/form"
+cd D:\elyas-realestate
+git add app/[slug]/page.tsx app/dashboard/layout.tsx app/dashboard/profile-card/page.tsx app/sitemap.ts app/robots.ts app/layout.tsx supabase/046_beta_invites.sql app/api/invite-code app/api/waitlist app/components/WaitlistForm.tsx app/page.tsx app/register/page.tsx app/dashboard/organization/page.tsx docs/beta-launch-plan.md lib/project-status.ts WA-REAL-CHECKPOINT.md
+git commit -m "feat: complete UX fixes + SEO + Beta invite system + bug fixes + launch plan"
 git push
 ```
 
-**Migration 044 الجاهز** (ينفّذ في Supabase بعد الإصلاحات).
+### ٣) فحص نهائي عبر CIB (optional)
 
 ---
 
-## 🎯 ما تبقّى من الخطة الأصلية بعد الإصلاحات
-
-5. **SEO + Analytics** — Sitemap + robots.txt + Open Graph + PostHog
-6. **Beta invite mechanism** — invite codes / waitlist
-7. **Display Name approval** — انتظار Meta (24-48 ساعة)
-8. **WhatsApp Templates** — للإشعارات + OTP
-
----
-
-**آخر كلام من المالك:** "احفظ هذا التقدم، نريد إصلاحات قبل الاستئناف. مشكلة الصورة الشخصية أولاً."
+**آخر كلام من المالك اليوم:** يطلب توليد البرومت لـ CIB لفحص باقي التحديثات.

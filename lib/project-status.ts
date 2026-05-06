@@ -418,7 +418,11 @@ export const PHASES: Phase[] = [
       { code: "BETA-3", name: "API /api/invite-code/validate + /api/waitlist", status: "done" },
       { code: "BETA-4", name: "WaitlistForm component (للـ landing أو /beta)", status: "done" },
       { code: "BETA-5", name: "بذور: 3 أكواد Beta أولية (WASIT-BETA-1/2/3)", status: "done" },
-      { code: "BETA-6", name: "ربط في register page + UI لإدارة الأكواد — مؤجَّل (لمرحلة الإطلاق)", status: "pending" },
+      { code: "BETA-6", name: "ربط في register page (validate قبل + consume بعد signup) + حقل invite code", status: "done" },
+      { code: "BETA-7", name: "WaitlistForm مرتبط في landing page (قسم Beta قبل footer)", status: "done" },
+      { code: "BETA-8", name: "20 كود Wave-1 جاهزة في DB (WP-W1-XXXXXX)", status: "done" },
+      { code: "BETA-9", name: "خطة إطلاق مكتوبة في docs/beta-launch-plan.md (timeline + KPIs + رسائل قوالب)", status: "done" },
+      { code: "BUG-1", name: "إصلاح hover dark cards — كان hardcoded #141418 في organization page", status: "done" },
     ],
   },
   {

@@ -127,7 +127,7 @@ export default function OrganizationPage() {
                   display: "flex", flexDirection: "column", gap: 12,
                   transition: "all 0.2s",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = `${dept.color}66`; e.currentTarget.style.background = "#141418"; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = `${dept.color}66`; e.currentTarget.style.background = "var(--bg-surface-1)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = `${dept.color}33`; e.currentTarget.style.background = "var(--bg-deep)"; }}>
                 {/* Header */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

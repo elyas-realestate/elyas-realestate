@@ -1,4 +1,5 @@
 import Link from "next/link";
+import WaitlistForm from "@/app/components/WaitlistForm";
 
 // تقليل وقت الـ ISR cache من ٣٦٠٠ إلى ٦٠ ثانية حتى تتبع تغييرات الثيم بسرعة
 // لاحقاً، يمكن رفعه لـ ٣٦٠٠ بعد ثبات الـ landing
@@ -331,10 +332,15 @@ export default function Home() {
             {" "}اليوم
           </h2>
           <p style={{ fontSize: 15, color: "var(--text-soft)", lineHeight: 1.8, marginBottom: 36 }}>انضم لوسطاء يستخدمون الذكاء الاصطناعي لتوليد المحتوى، وإدارة بياناتهم، وتنمية أعمالهم</p>
-          <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 40 }}>
             <Link href="/register" className="accent-bg" style={{ color: "var(--bg-page)", textDecoration: "none", fontSize: 15, fontWeight: 700, padding: "15px 36px", borderRadius: 11 }}>
               ابدأ مجاناً — بدون بطاقة ائتمان
             </Link>
+          </div>
+
+          {/* Beta Waitlist */}
+          <div style={{ maxWidth: 480, margin: "0 auto" }}>
+            <WaitlistForm source="landing" />
           </div>
         </div>
       </section>
