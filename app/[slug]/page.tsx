@@ -212,10 +212,15 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
               }
             </div>
           </div>
-          <div className="nav-links" style={{ display:"flex", alignItems:"center", gap:28 }}>
+          <div className="nav-links" style={{ display:"flex", alignItems:"center", gap:20 }}>
             {properties.length > 0 && <a href="#properties" style={{ color:clrTextSec, textDecoration:"none", fontSize:14, fontWeight:500 }}>العقارات</a>}
             {services.length > 0   && <a href="#services"   style={{ color:clrTextSec, textDecoration:"none", fontSize:14, fontWeight:500 }}>الخدمات</a>}
             <a href="#contact" style={{ color:clrTextSec, textDecoration:"none", fontSize:14, fontWeight:500 }}>تواصل</a>
+            <a href={`/api/vcard/${slug}`} download
+              style={{ color:clrTextSec, textDecoration:"none", fontSize:13, fontWeight:600, padding:"7px 14px", borderRadius:8, border:`1px solid ${hexToRgba(clrAccent, 0.25)}` }}
+              title="حفظ بياناتي في contacts جوّالك">
+              📇 احفظ بياناتي
+            </a>
             {whatsapp && (
               <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className="accent-bg" style={{ color:clrBgPrimary, textDecoration:"none", fontSize:13, fontWeight:700, padding:"9px 20px", borderRadius:9 }}>واتساب</a>
             )}
