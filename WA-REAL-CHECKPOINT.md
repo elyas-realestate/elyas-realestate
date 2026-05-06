@@ -152,4 +152,36 @@ Display Name:   Elyas Real Estate (Pending Review)
 
 ---
 
-**آخر كلام من المالك:** "ذاهب لمشوار قريب، أكمل بدون توقف، أريد تقريراً عن جميع المراحل."
+## 🆕 إضافات ٧ مايو (آخر تحديث)
+
+### Phase 5 — Brand Icons + Drag/Design Freedom (مكتمل)
+- ✅ **BrandIcons.tsx** موسَّع — BRAND_ICON_MAP بـ 17+ مفتاح يغطّي social_* + contact_* + aliases
+- ✅ **BRAND_BG_MAP + BRAND_FG_MAP + helpers** — getBrandBg/getBrandFg/getBrandIcon
+- ✅ **ProfileCardClient.tsx** — Brand Icons في topSocials (40px) + ElementCardInner (36px)
+- ✅ **Dashboard editor** — Brand Icons في autoElements + ElementRow + library + edit modal
+- ✅ **Drag & Drop reorder** — HTML5 native (handleDragStart/Over/Drop/End/Leave)
+- ✅ **GripVertical handle** + visual feedback (opacity 0.5 + dashed gold outline)
+- ✅ **ElementDesignSection** — قسم "تخصيص التصميم" قابل للطي:
+  - تسمية مخصّصة (label override)
+  - ٨ ألوان جاهزة (ذهبي/أسود/أبيض/أخضر/أزرق/أحمر/بنفسجي/افتراضي)
+  - color picker (hex) للخلفية والنص
+  - زر "استعادة الافتراضي"
+- ✅ **elementCardStyle** يقرأ meta.bg_color/text_color بأولوية على brand colors
+
+### إصلاحات بعد فحص CIB ٧ مايو
+- ✅ SAR icon في /[slug] (بطاقات العقارات — استبدال "ر.س" نص)
+- ✅ SAR icon في /#pricing + سطر "+ ضريبة القيمة المضافة 15%" تحت كل خطة
+- ✅ /api/event endpoint (pixel beacon 1×1 + POST + log في site_analytics)
+
+### تقرير CIB ٧ مايو — ٥/٥ ✅
+- SAR icon موحَّد في كل الصفحات
+- VAT 15% ظاهر
+- زر "احفظ في جهات اتصالك" بارز في /elyas + /c/elyas
+- vCard download يعمل (487 byte، VCARD صحيح)
+- Phase 3 UI Integration ٧/١١ منجز
+
+---
+
+**ما تبقّى:** Phase 3 (٤ بنود) — Compare page + Voice UI + Smart Matching UI + Themes preview.
+
+**📌 للجلسة القادمة:** اقرأ `docs/next-session-handoff.md` أولاً.
