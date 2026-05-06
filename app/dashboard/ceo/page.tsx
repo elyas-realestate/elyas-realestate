@@ -101,31 +101,15 @@ export default function CEODashboardPage() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
             <Crown size={20} style={{ color: "var(--gold-1)" }} /> فريقك من المساعدين الأذكياء
           </h1>
-          <p style={{ fontSize: 13, color: "var(--text-ghost)" }}>كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.</p>
+          <p style={{ fontSize: 13, color: "var(--text-faint)" }}>كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <Link href="/dashboard/project-tracker"
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
             📊 تتبّع المشروع
-          </Link>
-          <Link href="/dashboard/ceo/operations"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", border: "none", color: "var(--bg-page)", fontSize: 13, textDecoration: "none", fontWeight: 700, fontFamily: "'Tajawal', sans-serif" }}>
-            🛡️ مركز التحكم
-          </Link>
-          <Link href="/dashboard/ceo/identity"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
-            <Crown size={13} /> هوية الرئيس التنفيذي
-          </Link>
-          <Link href="/dashboard/ceo/test-mas"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
-            <Sparkles size={13} /> اختبار المساعدين
-          </Link>
-          <Link href="/dashboard/ceo/approvals"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: pendingEscalations.length > 0 ? "rgba(248,113,113,0.10)" : "rgba(167,139,250,0.08)", border: `1px solid ${pendingEscalations.length > 0 ? "rgba(248,113,113,0.30)" : "rgba(167,139,250,0.20)"}`, color: pendingEscalations.length > 0 ? "var(--danger)" : "var(--purple-ai)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
-            <AlertTriangle size={13} /> بوابات الموافقة {pendingEscalations.length > 0 ? `(${pendingEscalations.length})` : ""}
           </Link>
           <button onClick={load} disabled={loading}
             style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(232,184,109,0.08)", border: "1px solid rgba(232,184,109,0.2)", color: "var(--gold-1)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>

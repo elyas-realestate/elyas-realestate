@@ -536,10 +536,19 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
 
   return (
     <ModalShell onClose={onClose} title="تعديل الهوية">
+      {/* تنبيه — الاسم/الصورة يُستوردان تلقائياً من إعدادات المنشأة لو تركتهما فارغين */}
+      <div className="rounded-lg p-3 mb-3 text-xs flex items-start gap-2"
+        style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+        <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>💡</span>
+        <div>
+          الاسم والصورة هنا يطغيان على القيم من <strong>الإعدادات → الملف الشخصي</strong>.
+          اتركهما فارغين لتستخدم بطاقتك نفس اسمك وصورتك في باقي المنصة.
+        </div>
+      </div>
       <div className="space-y-3">
-        <DynamicField field={{ key: "display_name", label: "الاسم المعروض", type: "text", placeholder: "إلياس الدخيل", required: true }} value={name} onChange={setName} />
+        <DynamicField field={{ key: "display_name", label: "الاسم المعروض (اختياري — للبطاقة فقط)", type: "text", placeholder: "اتركه فارغاً لاستخدام اسمك من الإعدادات" }} value={name} onChange={setName} />
         <DynamicField field={{ key: "bio", label: "الوصف القصير", type: "textarea", placeholder: "وسيط عقاري معتمد — الرياض", helpText: "حد أقصى 140 حرف، يظهر تحت اسمك" }} value={bio} onChange={setBio} />
-        <DynamicField field={{ key: "avatar", label: "رابط الصورة (اختياري)", type: "url", placeholder: "https://...", helpText: "إذا تركته فارغاً، نستخدم الحرف الأول من اسمك" }} value={avatar} onChange={setAvatar} />
+        <DynamicField field={{ key: "avatar", label: "رابط الصورة (اختياري — للبطاقة فقط)", type: "url", placeholder: "اتركه فارغاً لاستخدام صورتك من الإعدادات", helpText: "إذا تركته فارغاً، نستخدم صورتك في الإعدادات أو الحرف الأول من اسمك" }} value={avatar} onChange={setAvatar} />
       </div>
       <button onClick={() => onSave({ display_name: name, bio, avatar_url: avatar || null })}
         className="w-full mt-5 py-3 rounded-xl font-bold"

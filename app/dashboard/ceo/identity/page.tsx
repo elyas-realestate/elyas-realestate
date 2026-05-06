@@ -143,30 +143,22 @@ export default function CEOIdentityPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-5" dir="rtl">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <Link href="/dashboard/ceo"
-          className="text-xs flex items-center gap-1 no-underline"
-          style={{ color: "var(--text-faint)" }}>
-          <ArrowRight size={14} /> رجوع
-        </Link>
-      </div>
-
+    <div className="max-w-3xl mx-auto space-y-5" dir="rtl">
+      {/* عنوان الصفحة */}
       <div className="flex items-center gap-3">
         <div style={{
-          width: 44, height: 44, borderRadius: 12,
+          width: 40, height: 40, borderRadius: 10,
           background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-          <Crown size={22} color="#0A0A0C" />
+          <Crown size={20} color="#0A0A0C" />
         </div>
         <div>
           <h1 className="text-xl font-bold" style={{ color: "var(--text-strong)" }}>
             هوية الرئيس التنفيذي
           </h1>
           <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-            مصدر موحَّد للتعرّف على المالك عبر كل قنوات المنصة (واتساب، إيميل، داشبورد)
+            مصدر موحَّد للتعرّف على المالك عبر كل قنوات المنصة (واتساب، إيميل، داشبورد).
           </p>
         </div>
       </div>
@@ -179,6 +171,16 @@ export default function CEOIdentityPage() {
           أي رقم تضيفه هنا، السكرتير الذكي يتعرّف عليه تلقائياً ويعاملك كرئيس تنفيذي عبر واتساب —
           مع أدواته السبعة (صفقات، عملاء، عقارات، مهام، طلبات، فواتير، تقارير).
           ولن يرد على عملاء عاديين بهذا الأسلوب.
+        </div>
+      </div>
+
+      {/* تنبيه التوريث — الاسم/الصورة من الإعدادات إذا تركتهما فارغين */}
+      <div className="rounded-xl p-3 text-xs flex items-start gap-2"
+        style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-faint)" }}>
+        <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>💡</span>
+        <div>
+          <strong>المصدر الموحَّد:</strong> اسمك وصورتك الأساسيان في <em>الإعدادات → الملف الشخصي</em>.
+          الحقول هنا تُستخدم لشخصية CEO فقط — اتركها فارغة إذا تريدها نفس بيانات الإعدادات.
         </div>
       </div>
 

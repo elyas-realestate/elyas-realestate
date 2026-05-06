@@ -184,6 +184,16 @@ export default function SmartAddProperty() {
         </div>
       </div>
 
+      {/* تبديل بين الإدخال اليدوي والذكي */}
+      <div className="flex gap-2 mb-6 p-1 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", maxWidth: "fit-content" }}>
+        <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm no-underline" style={{ color: "var(--text-soft)" }}>
+          إدخال يدوي
+        </Link>
+        <span className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-2)" }}>
+          ✨ إدخال ذكي بالـ AI
+        </span>
+      </div>
+
       {/* ══ Step indicators ══ */}
       <div className="flex items-center gap-2 mb-8">
         {[

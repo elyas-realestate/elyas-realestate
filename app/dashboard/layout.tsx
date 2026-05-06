@@ -50,8 +50,9 @@ const secondaryGroups: NavGroup[] = [
     id: "tools", title: "أدوات", icon: BarChart3,
     items: [
       { label: "بطاقتي التعريفية", href: "/dashboard/profile-card",    icon: Sparkles   },
-      { label: "محادثات WhatsApp", href: "/dashboard/whatsapp/inbox",  icon: MessageCircle },
+      { label: "محادثات WhatsApp", href: "/dashboard/whatsapp",        icon: MessageCircle },
       { label: "المحتوى التسويقي", href: "/dashboard/marketing",       icon: Megaphone  },
+      { label: "محتوى الذكاء الصناعي", href: "/dashboard/content",     icon: Brain      },
       { label: "توزيع العقارات",   href: "/dashboard/distribute",      icon: Share2     },
       { label: "العقود",          href: "/dashboard/contracts",       icon: FileSignature },
       { label: "المستندات",       href: "/dashboard/documents",       icon: FileText   },
@@ -75,15 +76,14 @@ const secondaryGroups: NavGroup[] = [
 // SETTINGS MENU — يفتح كـ Popover من زر Settings في الـ footer
 // ═══════════════════════════════════════════════════════════════
 // تم تبسيط: حذف 3 عناصر AI (نقلت لـ /dashboard/ai)
+// ─── Settings menu ───
+// ٧ عناصر فقط (بدلاً من ١٠): حذفنا التكرارات (المظهر داخل /settings، CEO Identity داخل /ceo، الإشعارات لها صفحة منفصلة بسيطة)
 const settingsMenu: NavItemData[] = [
   { label: "الإعدادات العامة",       href: "/dashboard/settings",                icon: Settings   },
-  { label: "المظهر والثيم",          href: "/dashboard/theme",                   icon: Palette    },
   { label: "لوحة الرئيس التنفيذي",   href: "/dashboard/ceo",                     icon: Crown      },
-  { label: "هوية الرئيس التنفيذي",   href: "/dashboard/ceo/identity",            icon: Crown      },
   { label: "مركز المساعدة",          href: "/dashboard/help",                    icon: HelpCircle },
   { label: "الفريق",                 href: "/dashboard/team",                    icon: Users      },
   { label: "الاشتراك",               href: "/dashboard/subscription",            icon: CreditCard },
-  { label: "الإشعارات",              href: "/dashboard/settings/notifications",  icon: Bell       },
   { label: "سجل التدقيق",            href: "/dashboard/audit",                   icon: Shield     },
   { label: "الأمان (2FA)",           href: "/dashboard/security",                icon: ShieldCheck },
 ];
