@@ -10,9 +10,9 @@ import { Inbox, FileText, Settings as SettingsIcon } from "lucide-react";
 // ══════════════════════════════════════════════════════════════
 
 const TABS = [
-  { href: "/dashboard/whatsapp/inbox",    label: "المحادثات",  icon: Inbox },
-  { href: "/dashboard/whatsapp",          label: "القوالب",    icon: FileText, exact: true },
-  { href: "/dashboard/whatsapp/settings", label: "الإعدادات",  icon: SettingsIcon },
+  { href: "/dashboard/whatsapp/inbox",    label: "المحادثات",        icon: Inbox },
+  { href: "/dashboard/whatsapp",          label: "قوالب + استيراد",  icon: FileText, exact: true },
+  { href: "/dashboard/whatsapp/settings", label: "الإعدادات",        icon: SettingsIcon },
 ];
 
 export default function WhatsAppLayout({ children }: { children: React.ReactNode }) {

@@ -145,18 +145,21 @@ export default function WhatsAppPage() {
 
   return (
     <div dir="rtl">
-      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "إدارة الواتساب" }]} />
-
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
         <div>
           <h2 className="font-cairo font-bold flex items-center gap-2" style={{ fontSize: 22 }}>
-            <MessageCircle className="text-[var(--whatsapp)]" size={26} /> 
-            تكامل الواتساب
+            <MessageCircle className="text-[var(--whatsapp)]" size={26} />
+            قوالب رسائل + استيراد دردشات
           </h2>
           <p style={{ color: "var(--text-faint)", fontSize: 13, marginTop: 2 }}>
-            استورد الدردشات ليقوم الذكاء الاصطناعي باستخراج العملاء والعقارات تلقائياً
+            قسمان في صفحة واحدة: <strong>أعلى الصفحة</strong> أداة استيراد محادثات WhatsApp وتحليلها بالذكاء الاصطناعي،
+            و<strong>أسفل الصفحة</strong> مكتبة قوالب رسائل جاهزة للنسخ.
           </p>
         </div>
+        <a href="#قوالب-الرسائل" className="text-xs px-3 py-2 rounded-lg no-underline"
+          style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-2)" }}>
+          ↓ القفز إلى القوالب
+        </a>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -274,7 +277,7 @@ export default function WhatsAppPage() {
       </div>
 
       {/* ══════════ قوالب الرسائل ══════════ */}
-      <div style={{ marginTop: 32 }}>
+      <div id="قوالب-الرسائل" style={{ marginTop: 32, scrollMarginTop: 80 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
           <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <MessageCircle size={16} style={{ color: "var(--whatsapp)" }} />
