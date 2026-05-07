@@ -428,3 +428,9 @@ function EmptyState({ message, properties }: { message: string; properties?: Pro
           fontSize: 14,
           fontWeight: 600,
         }}
+      >
+        تصفّح كل العقارات
+      </Link>
+    </div>
+  );
+}
