@@ -152,10 +152,12 @@ export const BRAND_ICON_MAP: Record<string, React.ComponentType<IconProps>> = {
 };
 
 // ─── Map من type → brand color (للخلفية) ─────────────────────
+// Instagram + TikTok يستخدمان gradients رسمية (linear-gradient)
+// باقي المنصات تستخدم solid colors
 export const BRAND_BG_MAP: Record<string, string> = {
   social_x: "#000000",
-  social_instagram: "#E4405F",
-  social_tiktok: "#000000",
+  social_instagram: "linear-gradient(45deg, #F58529 0%, #DD2A7B 35%, #8134AF 65%, #515BD4 100%)",
+  social_tiktok: "linear-gradient(135deg, #25F4EE 0%, #000000 50%, #FE2C55 100%)",
   social_snapchat: "#FFFC00",
   social_linkedin: "#0A66C2",
   social_youtube: "#FF0000",
