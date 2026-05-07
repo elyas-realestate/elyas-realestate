@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase-browser";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import RequestForm from "./RequestForm";
 import SocialIcon from "@/app/components/SocialIcon";
@@ -9,6 +9,23 @@ import SARIcon from "@/app/components/SARIcon";
 
 // 10 ثوان — كافٍ لتفادي ضغط القاعدة دون تأخير ملحوظ بعد تعديل الإعدادات
 export const revalidate = 10;
+
+// ⛔ كلمات محجوزة — يمنع /[slug] من اختطاف المسارات النظامية
+// إذا طُلب /pricing مثلاً، نحوّله للقسم الصحيح في الـ landing
+const RESERVED_SLUGS = new Set<string>([
+  "pricing", "about", "privacy", "terms", "contact", "help", "support",
+  "register", "login", "logout", "dashboard", "admin", "settings",
+  "api", "docs", "blog", "news", "faq", "features", "team", "careers",
+  "compare", "properties", "search", "favorites",
+  "c", // مساحة /c/[slug] للبطاقات
+]);
+
+const RESERVED_REDIRECTS: Record<string, string> = {
+  pricing: "/#pricing",
+  about: "/#about",
+  features: "/#features",
+  contact: "/#contact",
+};
 
 // ══ جلب البيانات ══════════════════════════════════════════
 async function getBrokerData(slug: string) {
@@ -53,6 +70,8 @@ async function getBrokerData(slug: string) {
 // ══ SEO Metadata ══════════════════════════════════════════
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  // Reserved slugs لا تحتاج metadata (سيُحوَّلون أو يعطون 404)
+  if (RESERVED_SLUGS.has(slug.toLowerCase())) return {};
   const { s, identity } = await getBrokerData(slug);
   const name = identity?.broker_name || s?.site_name || "وسيط عقاري";
   const bio  = identity?.bio_short || s?.hero_subtitle || "وسيط عقاري مرخّص في الرياض";
@@ -75,6 +94,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 // ══ الصفحة الرئيسية ══════════════════════════════════════
 export default async function BrokerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+
+  // ⛔ Reserved slug guard — يمنع /pricing وأمثاله من اختطاف صفحة الوسيط
+  const lowerSlug = slug.toLowerCase();
+  if (RESERVED_SLUGS.has(lowerSlug)) {
+    const redirectTarget = RESERVED_REDIRECTS[lowerSlug];
+    if (redirectTarget) {
+      redirect(redirectTarget);
+    }
+    notFound(); // باقي الـ reserved يرجع 404 إذا ما له redirect
+  }
+
   const { s, identity, properties, totalProperties, tenantId } = await getBrokerData(slug);
   if (!s && !identity) notFound();
 

@@ -32,5 +32,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ valid: false, error: "خطأ في التحقق" }, { status: 500 });
   }
 
+  // ── توحيد صياغة الرسائل (يغطّي كل حالات الفشل برسالة موحَّدة) ──
+  // SQL function ترجع: "الكود غير موجود" / "الكود منتهي الصلاحية" / "تم استخدام الكود سابقاً" / "الكود غير نشط"
+  if (data && typeof data === "object" && "valid" in data && data.valid === false) {
+    return NextResponse.json({
+      ...data,
+      error: "كود الدعوة غير صالح أو منتهي الصلاحية",
+      // نحتفظ بالسبب التقني للـ logs (بدون عرضه للمستخدم)
+      _technical: data.error,
+    });
+  }
+
   return NextResponse.json(data);
 }

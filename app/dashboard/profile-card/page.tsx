@@ -16,6 +16,7 @@ import {
 import CardThemePicker from "@/app/components/CardThemePicker";
 import BrokerQRModal from "@/app/components/BrokerQRModal";
 import { getBrandIcon, getBrandBg, getBrandFg } from "@/app/components/BrandIcons";
+import HelpHint from "@/app/components/HelpHint";
 
 const PRESET_THEMES = [
   { name: "كريمي ذهبي",  bg: "#FAF7F2", text: "#1A1206", accent: "#C6914C" },
@@ -190,6 +191,11 @@ export default function ProfileCardPage() {
       <div className="flex items-start justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
           <IdCard size={22} style={{ color: "var(--gold-2)" }} /> البروفايل
+          <HelpHint
+            title="بطاقتك التعريفية"
+            body="هذه صفحتك العامة التي تشاركها مع العملاء. تظهر روابطك ورخصك تلقائياً، وتقدر تضيف عناصر مخصّصة، وتسحبها لإعادة الترتيب، وتخصّص لون كل عنصر."
+            helpUrl="/dashboard/help#profile-card"
+          />
         </h1>
         <div className="flex gap-2">
           <Link href={`/c/${slug}`} target="_blank"

@@ -6,6 +6,7 @@ import { Plus, Search, MapPin, Eye, EyeOff, Sparkles, AlertTriangle, Download } 
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";
+import HelpHint from "../../components/HelpHint";
 import { exportToCSV, PROPERTIES_EXPORT_HEADERS } from "@/lib/export";
 
 
@@ -70,7 +71,15 @@ export default function Properties() {
     <div dir="rtl">
       <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "العقارات" }]} />
       <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
-        <h2 className="text-2xl font-bold">العقارات</h2>
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          العقارات
+          <HelpHint
+            title="إدارة العقارات"
+            body="هنا تدير كل عقاراتك المنشورة وغير المنشورة. تقدر تضيف عقاراً يدوياً أو عبر الذكاء الاصطناعي (Smart Add)، أو تستورد دفعة من ملف CSV. كل عقار له صفحة تفاصيل عامة قابلة للمشاركة."
+            helpUrl="/dashboard/help#properties"
+            size="sm"
+          />
+        </h2>
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => exportToCSV(filtered, PROPERTIES_EXPORT_HEADERS, "عقارات")}

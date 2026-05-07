@@ -278,8 +278,8 @@ export const PHASES: Phase[] = [
     status: "pending",
     milestones: [
       { code: "RR-1", name: "Onboarding tour (Joyride) لأول مرة", status: "pending" },
-      { code: "RR-2", name: "زر '?' بجانب كل قسم رئيسي", status: "pending" },
-      { code: "RR-3", name: "/dashboard/help — مركز المساعدة", status: "pending" },
+      { code: "RR-2", name: "زر '?' بجانب كل قسم رئيسي — HelpHint component مُطبَّق على /profile-card + /today + /properties", status: "in_progress" },
+      { code: "RR-3", name: "/dashboard/help — مركز المساعدة (منجَز عبر SS-E في 3 مايو)", status: "done" },
       { code: "RR-4", name: "Simplified mode: يخفي ميزات المتقدمين عن المبتدئين", status: "pending" },
       { code: "RR-5", name: "كتيّب PDF عربي للوسيط الجديد", status: "pending" },
     ],
@@ -425,6 +425,23 @@ export const PHASES: Phase[] = [
     ],
   },
   {
+    id: "stability-and-polish-phase6",
+    name: "Stability + Polish — Phase 6 (٧ مايو)",
+    description: "تصحيح تناقضات الحالة + Reserved slugs + Error pages + /compare + HelpHint + توحيد رسالة الكود",
+    status: "done",
+    completedAt: "2026-05-07",
+    milestones: [
+      { code: "P6-1", name: "تصحيح ٧ تناقضات في LAUNCH_READINESS (moyasar/sitemap/meta-tags/beta-invite/BUG-1/RR-3/B-2)", status: "done" },
+      { code: "P6-2", name: "توحيد رسالة 'كود الدعوة غير صالح أو منتهي الصلاحية' في /api/invite-code/validate", status: "done" },
+      { code: "P6-3", name: "Reserved slugs guard في /[slug] — يمنع /pricing /about /privacy إلخ من اختطاف صفحة الوسيط", status: "done" },
+      { code: "P6-4", name: "RESERVED_REDIRECTS — /pricing → /#pricing تلقائياً", status: "done" },
+      { code: "P6-5", name: "app/error.tsx — root-level error boundary بصفحة 500 مهنية مع زر إعادة المحاولة", status: "done" },
+      { code: "P6-6", name: "صفحة /compare?ids=... — مقارنة 2-4 عقارات + جدول مواصفات + best value highlights + sharing link", status: "done" },
+      { code: "P6-7", name: "HelpHint component — tooltip خفيف بدون مكتبات + إغلاق عند Esc/click outside", status: "done" },
+      { code: "P6-8", name: "تطبيق HelpHint على /profile-card + /today + /properties (٣ نماذج)", status: "done" },
+    ],
+  },
+  {
     id: "card-rebuild-phase5",
     name: "إعادة بناء البطاقة — Phase 5 (Brand Icons + Drag/Design Freedom)",
     description: "أيقونات رسمية في كل المواضع، ترتيب بالسحب، تخصيص تصميم كل عنصر",
@@ -455,7 +472,7 @@ export const PHASES: Phase[] = [
       { code: "P3-5", name: "TestimonialsSection في /c/[slug] — عرض آراء العملاء بنجوم + featured badge", status: "done" },
       { code: "P3-6", name: "CardThemePicker — مودال 20 ثيم بفلاتر فئات (luxury/modern/...)، مربوط بـ profile_cards", status: "done" },
       { code: "P3-7", name: "BrokerQRModal trigger — زر 'رمز QR' في profile-card editor", status: "done" },
-      { code: "P3-8", name: "Compare page /compare?ids=... — صفحة مقارنة العقارات", status: "pending" },
+      { code: "P3-8", name: "Compare page /compare?ids=... — صفحة مقارنة العقارات (2-4 side-by-side + جدول مواصفات + best value highlights)", status: "done" },
       { code: "P3-9", name: "Voice-to-Property UI — زر تسجيل صوتي في /properties/add", status: "pending" },
       { code: "P3-10", name: "Smart Matching UI — /dashboard/clients/[id]/alerts", status: "pending" },
       { code: "P3-11", name: "Themes Picker — preview على السمات والخطوط داخل الـ picker", status: "pending" },
@@ -567,9 +584,10 @@ export const PHASES: Phase[] = [
     id: "ui-bugs",
     name: "UI Bugs (تشكيل/Hover)",
     description: "أخطاء بصرية متفرقة على الواجهة — تجمع وتُصلح كـ batch",
-    status: "pending",
+    status: "done",
+    completedAt: "2026-05-06",
     milestones: [
-      { code: "BUG-1", name: "بطاقات المدراء تتحوّل لخلفية سوداء عند hover (ربما /dashboard/ai/control أو organization)", status: "pending" },
+      { code: "BUG-1", name: "بطاقات المدراء تتحوّل لخلفية سوداء عند hover — أُصلح في /dashboard/organization (CIB ٧ مايو أكّد الحل)", status: "done" },
     ],
   },
   {
@@ -589,11 +607,11 @@ export const PHASES: Phase[] = [
     description: "اختبار المنصة مع 10-30 وسيط فعليين",
     status: "pending",
     milestones: [
-      { code: "B-1", name: "تثبيت التسعير (99/149/249)", status: "pending" },
-      { code: "B-2", name: "صفحة هبوط للتسجيل في Beta", status: "pending" },
-      { code: "B-3", name: "دعوة 10-30 وسيط من شبكتك", status: "pending" },
+      { code: "B-1", name: "تثبيت التسعير (99/149/249) — قرار تجاري", status: "pending" },
+      { code: "B-2", name: "صفحة هبوط Beta — منجَز (waitlist + invite UI + 23 code نشط)", status: "done" },
+      { code: "B-3", name: "دعوة 10-30 وسيط من شبكتك — قرار + تنفيذ يدوي", status: "pending" },
       { code: "B-4", name: "نظام تتبّع feedback", status: "pending" },
-      { code: "B-5", name: "Onboarding يدوي للأوائل", status: "pending" },
+      { code: "B-5", name: "Onboarding يدوي للأوائل — قرار إجرائي (Zoom/مكالمة)", status: "pending" },
     ],
   },
 ];
@@ -677,12 +695,12 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "monitoring", category: "تشغيل", label: "تتبّع الأخطاء (Sentry)", done: true, blocking: false, note: "Sentry SDK + 4 config files + global-error boundary + test endpoint" },
   { id: "rate-limit", category: "تشغيل", label: "Rate limiting على APIs", done: false, blocking: false },
   { id: "backups", category: "تشغيل", label: "تأكيد Supabase auto-backups", done: false, blocking: false },
-  { id: "error-boundaries", category: "تشغيل", label: "Error boundaries في React + صفحات 500/404", done: false, blocking: false },
+  { id: "error-boundaries", category: "تشغيل", label: "Error boundaries في React + صفحات 500/404", done: true, blocking: false, note: "app/not-found.tsx + app/error.tsx + global-error.tsx" },
 
   // مالي
   { id: "subscription-plans", category: "مالي", label: "خطط اشتراك في DB", done: true, blocking: true },
   { id: "pricing-decision", category: "مالي", label: "تثبيت الأسعار النهائية (99/149/249)", done: false, blocking: true },
-  { id: "moyasar", category: "مالي", label: "تكامل Moyasar للدفع الفعلي", done: false, blocking: true },
+  { id: "moyasar", category: "مالي", label: "تكامل Moyasar للدفع الفعلي", done: true, blocking: true, note: "Phase D3 مكتمل — lib/moyasar + webhook + payment_events + subscription_invoices" },
   { id: "vat", category: "مالي", label: "احتساب VAT 15%", done: true, blocking: true, note: "lib/vat.ts + integration كاملة" },
   { id: "zatca", category: "مالي", label: "فاتورة ZATCA متوافقة", done: true, blocking: false },
 
@@ -700,12 +718,12 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "loading-states", category: "تجربة", label: "Loading + Error states موحَّدة", done: false, blocking: false },
 
   // تسويق & SEO
-  { id: "sitemap", category: "تشغيل", label: "Sitemap.xml + robots.txt", done: false, blocking: false },
-  { id: "meta-tags", category: "تشغيل", label: "Open Graph + Twitter cards على landing", done: false, blocking: false },
-  { id: "analytics", category: "تشغيل", label: "Analytics (PostHog/Plausible/GA4)", done: false, blocking: false },
+  { id: "sitemap", category: "تشغيل", label: "Sitemap.xml + robots.txt", done: true, blocking: false, note: "12 URLs ديناميكي + AI crawlers rules" },
+  { id: "meta-tags", category: "تشغيل", label: "Open Graph + Twitter cards على landing", done: true, blocking: false, note: "OG + Twitter cards + canonical + JSON-LD" },
+  { id: "analytics", category: "تشغيل", label: "Analytics (PostHog/Plausible/GA4)", done: false, blocking: false, note: "site_analytics جدول داخلي يعمل، لكن لا dashboard خارجي" },
 
   // تشغيل Beta
-  { id: "beta-invite", category: "تشغيل", label: "آلية دعوة Beta (invite codes / waitlist)", done: false, blocking: false },
+  { id: "beta-invite", category: "تشغيل", label: "آلية دعوة Beta (invite codes / waitlist)", done: true, blocking: false, note: "Migration 046 + 23 كود نشط + WaitlistForm + /api/invite-code/validate" },
   { id: "feedback-loop", category: "تشغيل", label: "نظام جمع feedback للوسطاء التجريبيين", done: false, blocking: false },
   { id: "support-channel", category: "تشغيل", label: "قناة دعم العملاء (واتساب / form)", done: true, blocking: false, note: "SupportContact widget + form في /dashboard/help + جدول support_requests" },
 ];

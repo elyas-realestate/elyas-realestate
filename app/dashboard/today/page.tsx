@@ -7,6 +7,7 @@ import {
   CheckSquare, Inbox, MessageCircle, TrendingUp, ArrowLeft,
   Loader2, Clock, AlertTriangle, ChevronRight, Plus
 } from "lucide-react";
+import HelpHint from "@/app/components/HelpHint";
 
 // "صفحة يومي" — موحَّدة من ٤ مصادر:
 // ١. المهام (tasks)
@@ -74,6 +75,12 @@ export default function TodayPage() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
             <CheckSquare size={22} style={{ color: "var(--gold-2)" }} /> يومي
+            <HelpHint
+              title="صفحة يومي"
+              body="هنا تجد كل ما يحتاج إجراء منك اليوم: مهامك، صفقات قيد التفاوض، عملاء يحتاجون متابعة، ورسائل WhatsApp غير مقروءة. أربعة مصادر في صفحة واحدة."
+              helpUrl="/dashboard/help#today"
+              size="sm"
+            />
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
             {totalActions === 0
