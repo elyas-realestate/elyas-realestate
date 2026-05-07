@@ -26,15 +26,15 @@ interface Client {
 interface Alert {
   id: string;
   client_id: string;
-  cities: string[] | null;
-  districts: string[] | null;
-  main_categories: string[] | null;
-  sub_categories: string[] | null;
+  city: string | null;
+  district: string | null;
+  main_category: string | null;
+  sub_category: string | null;
   offer_type: string | null;
-  price_min: number | null;
-  price_max: number | null;
-  rooms_min: number | null;
-  area_min: number | null;
+  min_price: number | null;
+  max_price: number | null;
+  min_rooms: number | null;
+  min_area: number | null;
   is_active: boolean;
   created_at: string;
 }
@@ -344,27 +344,27 @@ function AlertRow({
         <div className="flex-1 min-w-0">
           <div className="text-sm font-bold mb-0.5" style={{ color: "var(--text-strong)" }}>
             {[
-              alert.cities?.length && `${alert.cities.length} مدن`,
-              alert.districts?.length && `${alert.districts.length} أحياء`,
+              alert.city,
+              alert.district,
               alert.offer_type,
-              alert.sub_categories?.[0],
+              alert.sub_category,
             ]
               .filter(Boolean)
               .join(" · ") || "تنبيه عام"}
           </div>
           <div className="text-xs" style={{ color: "var(--text-faint)" }}>
-            {alert.price_min || alert.price_max ? (
+            {alert.min_price || alert.max_price ? (
               <span>
-                {alert.price_min ? Number(alert.price_min).toLocaleString("ar-SA") : "0"}
+                {alert.min_price ? Number(alert.min_price).toLocaleString("ar-SA") : "0"}
                 {" — "}
-                {alert.price_max ? Number(alert.price_max).toLocaleString("ar-SA") : "∞"}{" "}
+                {alert.max_price ? Number(alert.max_price).toLocaleString("ar-SA") : "∞"}{" "}
                 ر.س
               </span>
             ) : (
               "بدون نطاق سعر"
             )}
-            {alert.rooms_min ? ` · ${alert.rooms_min}+ غرف` : ""}
-            {alert.area_min ? ` · ${alert.area_min}+ م²` : ""}
+            {alert.min_rooms ? ` · ${alert.min_rooms}+ غرف` : ""}
+            {alert.min_area ? ` · ${alert.min_area}+ م²` : ""}
           </div>
         </div>
       </div>
@@ -497,14 +497,14 @@ function AddAlertForm({
   onCancel: () => void;
 }) {
   const [form, setForm] = useState({
-    cities: "",
-    districts: "",
+    city: "",
+    district: "",
     offer_type: "",
-    sub_categories: "",
-    price_min: "",
-    price_max: "",
-    rooms_min: "",
-    area_min: "",
+    sub_category: "",
+    min_price: "",
+    max_price: "",
+    min_rooms: "",
+    min_area: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -529,18 +529,14 @@ function AddAlertForm({
       const payload = {
         tenant_id: tenant.id,
         client_id: clientId,
-        cities: form.cities ? form.cities.split(",").map((s) => s.trim()).filter(Boolean) : null,
-        districts: form.districts
-          ? form.districts.split(",").map((s) => s.trim()).filter(Boolean)
-          : null,
+        city: form.city || null,
+        district: form.district || null,
         offer_type: form.offer_type || null,
-        sub_categories: form.sub_categories
-          ? form.sub_categories.split(",").map((s) => s.trim()).filter(Boolean)
-          : null,
-        price_min: form.price_min ? Number(form.price_min) : null,
-        price_max: form.price_max ? Number(form.price_max) : null,
-        rooms_min: form.rooms_min ? Number(form.rooms_min) : null,
-        area_min: form.area_min ? Number(form.area_min) : null,
+        sub_category: form.sub_category || null,
+        min_price: form.min_price ? Number(form.min_price) : null,
+        max_price: form.max_price ? Number(form.max_price) : null,
+        min_rooms: form.min_rooms ? Number(form.min_rooms) : null,
+        min_area: form.min_area ? Number(form.min_area) : null,
         is_active: true,
       };
 
@@ -581,25 +577,25 @@ function AddAlertForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
-            المدن (مفصولة بفاصلة)
+            المدينة
           </label>
           <input
             type="text"
-            placeholder="الرياض، جدة"
-            value={form.cities}
-            onChange={(e) => setForm({ ...form, cities: e.target.value })}
+            placeholder="الرياض"
+            value={form.city}
+            onChange={(e) => setForm({ ...form, city: e.target.value })}
             style={inputStyle}
           />
         </div>
         <div>
           <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
-            الأحياء
+            الحي
           </label>
           <input
             type="text"
-            placeholder="العليا، الملقا"
-            value={form.districts}
-            onChange={(e) => setForm({ ...form, districts: e.target.value })}
+            placeholder="العليا"
+            value={form.district}
+            onChange={(e) => setForm({ ...form, district: e.target.value })}
             style={inputStyle}
           />
         </div>
@@ -623,9 +619,9 @@ function AddAlertForm({
           </label>
           <input
             type="text"
-            placeholder="فيلا، شقة، أرض"
-            value={form.sub_categories}
-            onChange={(e) => setForm({ ...form, sub_categories: e.target.value })}
+            placeholder="فيلا / شقة / أرض"
+            value={form.sub_category}
+            onChange={(e) => setForm({ ...form, sub_category: e.target.value })}
             style={inputStyle}
           />
         </div>
@@ -636,8 +632,8 @@ function AddAlertForm({
           <input
             type="number"
             placeholder="500000"
-            value={form.price_min}
-            onChange={(e) => setForm({ ...form, price_min: e.target.value })}
+            value={form.min_price}
+            onChange={(e) => setForm({ ...form, min_price: e.target.value })}
             style={inputStyle}
           />
         </div>
@@ -648,8 +644,8 @@ function AddAlertForm({
           <input
             type="number"
             placeholder="2000000"
-            value={form.price_max}
-            onChange={(e) => setForm({ ...form, price_max: e.target.value })}
+            value={form.max_price}
+            onChange={(e) => setForm({ ...form, max_price: e.target.value })}
             style={inputStyle}
           />
         </div>
@@ -660,8 +656,8 @@ function AddAlertForm({
           <input
             type="number"
             placeholder="3"
-            value={form.rooms_min}
-            onChange={(e) => setForm({ ...form, rooms_min: e.target.value })}
+            value={form.min_rooms}
+            onChange={(e) => setForm({ ...form, min_rooms: e.target.value })}
             style={inputStyle}
           />
         </div>
@@ -672,8 +668,8 @@ function AddAlertForm({
           <input
             type="number"
             placeholder="200"
-            value={form.area_min}
-            onChange={(e) => setForm({ ...form, area_min: e.target.value })}
+            value={form.min_area}
+            onChange={(e) => setForm({ ...form, min_area: e.target.value })}
             style={inputStyle}
           />
         </div>
