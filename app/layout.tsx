@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Kufi_Arabic, Tajawal, Cairo } from "next/font/google";
 import "./globals.css";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import FeedbackWidget from "./components/FeedbackWidget";
 import { I18nProvider } from "@/lib/i18n";
 
 const notoKufi = Noto_Kufi_Arabic({
@@ -139,6 +140,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <AnalyticsTracker />
+        <FeedbackWidget />
         <I18nProvider>{children}</I18nProvider>
         {/* PWA: register service worker on load */}
         <script

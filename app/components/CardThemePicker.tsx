@@ -246,9 +246,12 @@ function ThemeCard({
   isCurrent: boolean;
   onSelect: () => void;
 }) {
+  const [hover, setHover] = useState(false);
   return (
     <button
       onClick={onSelect}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       style={{
         background: "transparent",
         border: "none",
@@ -256,6 +259,8 @@ function ThemeCard({
         cursor: "pointer",
         textAlign: "right",
         position: "relative",
+        transform: hover ? "translateY(-2px)" : "translateY(0)",
+        transition: "transform 0.18s ease",
       }}
     >
       <div
@@ -266,39 +271,80 @@ function ThemeCard({
           transition: "all 0.2s",
           boxShadow: isCurrent
             ? `0 0 0 3px ${theme.accent_color}30`
-            : "0 1px 4px rgba(0,0,0,0.04)",
+            : hover
+              ? `0 8px 24px ${theme.accent_color}25`
+              : "0 1px 4px rgba(0,0,0,0.04)",
         }}
       >
-        {/* Preview */}
+        {/* Preview — مصغّر للبطاقة الفعلية */}
         <div
           style={{
             background: theme.preview_gradient || theme.bg_color,
-            height: 110,
+            height: 140,
             position: "relative",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 12,
+            padding: "12px 10px",
           }}
         >
           {/* Mini avatar */}
           <div
             style={{
-              width: 38,
-              height: 38,
+              width: 34,
+              height: 34,
               borderRadius: "50%",
               background: theme.accent_color,
               border: `2px solid ${theme.bg_color}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: 800,
               color: theme.bg_color,
               flexShrink: 0,
+              margin: "0 auto 6px",
             }}
           >
             {theme.emoji}
+          </div>
+
+          {/* Mini name */}
+          <div
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: theme.text_color,
+              textAlign: "center",
+              marginBottom: 4,
+              opacity: 0.9,
+            }}
+          >
+            وسيط عقاري
+          </div>
+
+          {/* Mini bio bar */}
+          <div
+            style={{
+              width: "60%",
+              height: 4,
+              background: theme.text_color,
+              opacity: 0.2,
+              borderRadius: 2,
+              margin: "0 auto 8px",
+            }}
+          />
+
+          {/* Mini links (3 boxes) */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 3, padding: "0 6px" }}>
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                style={{
+                  height: 9,
+                  background: theme.accent_color,
+                  opacity: 0.85 - i * 0.18,
+                  borderRadius: 3,
+                }}
+              />
+            ))}
           </div>
 
           {isCurrent && (
@@ -322,7 +368,7 @@ function ThemeCard({
           )}
         </div>
 
-        {/* Name */}
+        {/* Name + accent dot */}
         <div
           style={{
             background: theme.bg_color,

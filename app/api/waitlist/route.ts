@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
 
 // ══════════════════════════════════════════════════════════════
 // /api/waitlist — تسجيل في قائمة انتظار Beta
@@ -16,6 +17,18 @@ interface WaitlistPayload {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 3 طلبات بالساعة لكل IP (تجنّب spam)
+  const rl = checkRateLimit(getClientKey(req), {
+    maxRequests: 3,
+    windowSeconds: 60 * 60,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "تم استلام طلبك سابقاً. حاول بعد ساعة." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds || 60) } }
+    );
+  }
+
   let body: WaitlistPayload;
   try {
     body = (await req.json()) as WaitlistPayload;

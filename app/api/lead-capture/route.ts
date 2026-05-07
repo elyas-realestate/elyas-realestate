@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
 
 // ══════════════════════════════════════════════════════════════
 // /api/lead-capture — استقبال بيانات الزائر قبل عرض العقار/البطاقة
@@ -26,6 +27,18 @@ function normalizePhone(raw: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 طلبات بالساعة لكل IP (عقار معيّن قد يحتاج retry)
+  const rl = checkRateLimit(getClientKey(req), {
+    maxRequests: 10,
+    windowSeconds: 60 * 60,
+  });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "كثير من المحاولات. حاول لاحقاً." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds || 60) } }
+    );
+  }
+
   let body: Payload;
   try {
     body = (await req.json()) as Payload;

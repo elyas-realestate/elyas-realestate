@@ -11,6 +11,7 @@ import SARIcon from "../../../components/SARIcon";
 import { checkLimit } from "@/lib/plan-limits";
 import { toast } from "sonner";
 import MapsLinkInput from "@/app/components/MapsLinkInput";
+import VoiceRecorder from "@/app/components/VoiceRecorder";
 
 
 const categoriesMap: Record<string, string[]> = {
@@ -343,6 +344,32 @@ export default function AddProperty() {
         <Link href="/dashboard/properties/smart-add" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm no-underline" style={{ color: "var(--text-soft)" }}>
           ✨ إدخال ذكي بالـ AI
         </Link>
+      </div>
+
+      {/* ⭐ Voice-to-Property — تسجيل صوتي + استخراج تلقائي */}
+      <div className="max-w-3xl mb-5">
+        <VoiceRecorder
+          accentColor="#C6914C"
+          onExtracted={(fields) => {
+            // ربط الحقول المستخرجة بالـ form
+            setForm((f) => ({
+              ...f,
+              title: fields.title || f.title,
+              main_category: fields.main_category || f.main_category,
+              sub_category: fields.sub_category || f.sub_category,
+              offer_type: fields.offer_type || f.offer_type,
+              city: fields.city || f.city,
+              district: fields.district || f.district,
+              land_area: fields.land_area ? String(fields.land_area) : f.land_area,
+              built_area: fields.built_area ? String(fields.built_area) : f.built_area,
+              rooms: fields.rooms ? String(fields.rooms) : f.rooms,
+              bathrooms: fields.bathrooms ? String(fields.bathrooms) : f.bathrooms,
+              price: fields.price ? String(fields.price) : f.price,
+              description: fields.description || f.description,
+            }));
+            toast.success("✨ تم استخراج البيانات. راجعها وأكمل الحقول الناقصة.");
+          }}
+        />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5 max-w-3xl">

@@ -288,12 +288,13 @@ export const PHASES: Phase[] = [
     id: "property-mgmt",
     name: "إدارة الأملاك",
     description: "D2 — مدفوعات + متأخرات + تذكير واتساب للمستأجرين",
-    status: "pending",
+    status: "done",
+    completedAt: "2026-05-07",
     milestones: [
-      { code: "D2-1", name: "جدول مدفوعات الإيجار", status: "pending" },
-      { code: "D2-2", name: "تذكير تلقائي قبل الاستحقاق", status: "pending" },
-      { code: "D2-3", name: "تتبع المتأخرات", status: "pending" },
-      { code: "D2-4", name: "/dashboard/property-management", status: "pending" },
+      { code: "D2-1", name: "Migration 050 — rent_contracts + rent_payments + RLS + status trigger", status: "done" },
+      { code: "D2-2", name: "تذكير تلقائي قبل الاستحقاق — زر WhatsApp مباشر من PaymentRow", status: "done" },
+      { code: "D2-3", name: "تتبع المتأخرات — auto-detect overdue + dashboard stats view", status: "done" },
+      { code: "D2-4", name: "/dashboard/property-management — 3 tabs (overview/contracts/payments) + new contract modal + auto-generate payments", status: "done" },
     ],
   },
   {
@@ -425,6 +426,23 @@ export const PHASES: Phase[] = [
     ],
   },
   {
+    id: "feature-completion-phase7",
+    name: "Feature Completion — Phase 7 (٧ مايو، الموجة الكبرى)",
+    description: "إكمال Phase 3 المتبقّي + D2 إدارة الأملاك + B-4 feedback + PDPL + Loading states + Rate limiting",
+    status: "done",
+    completedAt: "2026-05-07",
+    milestones: [
+      { code: "P7-1", name: "P3-11 Themes Picker preview محسّن (avatar + bio + links + hover)", status: "done" },
+      { code: "P7-2", name: "P3-10 Smart Matching UI — صفحة كاملة لإدارة تنبيهات العميل + المطابقات", status: "done" },
+      { code: "P7-3", name: "P3-9 Voice-to-Property UI — VoiceRecorder + Web Speech API + ربط /properties/add", status: "done" },
+      { code: "P7-4", name: "D2 — Migration 050 + /dashboard/property-management كامل (3 tabs + auto-payments)", status: "done" },
+      { code: "P7-5", name: "B-4 — Migration 051 + /api/beta-feedback + FeedbackWidget عائم", status: "done" },
+      { code: "P7-6", name: "PDPL rights — /api/pdpl/export + /api/pdpl/delete + /dashboard/settings/privacy", status: "done" },
+      { code: "P7-7", name: "Loading states موحَّدة — Spinner + SkeletonRow + SkeletonCard + EmptyState + ErrorState", status: "done" },
+      { code: "P7-8", name: "Rate limiting على /api/lead-capture (10/h) + /api/waitlist (3/h) + /api/beta-feedback (5/h)", status: "done" },
+    ],
+  },
+  {
     id: "stability-and-polish-phase6",
     name: "Stability + Polish — Phase 6 (٧ مايو)",
     description: "تصحيح تناقضات الحالة + Reserved slugs + Error pages + /compare + HelpHint + توحيد رسالة الكود",
@@ -439,6 +457,10 @@ export const PHASES: Phase[] = [
       { code: "P6-6", name: "صفحة /compare?ids=... — مقارنة 2-4 عقارات + جدول مواصفات + best value highlights + sharing link", status: "done" },
       { code: "P6-7", name: "HelpHint component — tooltip خفيف بدون مكتبات + إغلاق عند Esc/click outside", status: "done" },
       { code: "P6-8", name: "تطبيق HelpHint على /profile-card + /today + /properties (٣ نماذج)", status: "done" },
+      { code: "P6-9", name: "Suspense wrapper لـ /compare (server + client split) + إصلاح build error في Vercel", status: "done" },
+      { code: "P6-10", name: "Instagram + TikTok official gradients (linear-gradient في BRAND_BG_MAP)", status: "done" },
+      { code: "P6-11", name: "إصلاح closing tags ناقصة في ComparePageClient.tsx (drift من Linux mount)", status: "done" },
+      { code: "P6-VERIFY", name: "CIB أكّد ٥/٥ بنود ناجحة (slugs / compare / 500 / invite-msg / brand-icons)", status: "done" },
     ],
   },
   {
@@ -473,9 +495,9 @@ export const PHASES: Phase[] = [
       { code: "P3-6", name: "CardThemePicker — مودال 20 ثيم بفلاتر فئات (luxury/modern/...)، مربوط بـ profile_cards", status: "done" },
       { code: "P3-7", name: "BrokerQRModal trigger — زر 'رمز QR' في profile-card editor", status: "done" },
       { code: "P3-8", name: "Compare page /compare?ids=... — صفحة مقارنة العقارات (2-4 side-by-side + جدول مواصفات + best value highlights)", status: "done" },
-      { code: "P3-9", name: "Voice-to-Property UI — زر تسجيل صوتي في /properties/add", status: "pending" },
-      { code: "P3-10", name: "Smart Matching UI — /dashboard/clients/[id]/alerts", status: "pending" },
-      { code: "P3-11", name: "Themes Picker — preview على السمات والخطوط داخل الـ picker", status: "pending" },
+      { code: "P3-9", name: "Voice-to-Property UI — VoiceRecorder component + Web Speech API + ربطه بـ /properties/add", status: "done" },
+      { code: "P3-10", name: "Smart Matching UI — /dashboard/clients/[id]/alerts (إضافة + تشغيل + عرض المطابقات بـ score)", status: "done" },
+      { code: "P3-11", name: "Themes Picker preview محسّن — preview حقيقي بـ avatar + bio + 3 links + hover", status: "done" },
     ],
   },
   {
@@ -610,7 +632,7 @@ export const PHASES: Phase[] = [
       { code: "B-1", name: "تثبيت التسعير (99/149/249) — قرار تجاري", status: "pending" },
       { code: "B-2", name: "صفحة هبوط Beta — منجَز (waitlist + invite UI + 23 code نشط)", status: "done" },
       { code: "B-3", name: "دعوة 10-30 وسيط من شبكتك — قرار + تنفيذ يدوي", status: "pending" },
-      { code: "B-4", name: "نظام تتبّع feedback", status: "pending" },
+      { code: "B-4", name: "نظام تتبّع feedback — Migration 051 + /api/beta-feedback + FeedbackWidget عائم في كل dashboard pages", status: "done" },
       { code: "B-5", name: "Onboarding يدوي للأوائل — قرار إجرائي (Zoom/مكالمة)", status: "pending" },
     ],
   },
@@ -693,7 +715,7 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "whatsapp-real", category: "تشغيل", label: "رقم سعودي حقيقي معتمد من Meta", done: true, blocking: true, note: "+966575828854 — End-to-End يعمل" },
   { id: "deploy", category: "تشغيل", label: "Deploy على Vercel + crons شغّالة", done: true, blocking: true },
   { id: "monitoring", category: "تشغيل", label: "تتبّع الأخطاء (Sentry)", done: true, blocking: false, note: "Sentry SDK + 4 config files + global-error boundary + test endpoint" },
-  { id: "rate-limit", category: "تشغيل", label: "Rate limiting على APIs", done: false, blocking: false },
+  { id: "rate-limit", category: "تشغيل", label: "Rate limiting على APIs", done: true, blocking: false, note: "lib/rate-limit + applied على lead-capture/waitlist/beta-feedback/AI" },
   { id: "backups", category: "تشغيل", label: "تأكيد Supabase auto-backups", done: false, blocking: false },
   { id: "error-boundaries", category: "تشغيل", label: "Error boundaries في React + صفحات 500/404", done: true, blocking: false, note: "app/not-found.tsx + app/error.tsx + global-error.tsx" },
 
@@ -708,14 +730,14 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   { id: "tos", category: "قانون", label: "شروط الاستخدام", done: true, blocking: true, note: "/terms موجودة" },
   { id: "privacy", category: "قانون", label: "سياسة الخصوصية + PDPL", done: true, blocking: true, note: "/privacy موجودة" },
   { id: "broker-license", category: "قانون", label: "حقل ترخيص فال للوسيط", done: true, blocking: false },
-  { id: "pdpl-rights", category: "قانون", label: "حقوق المستخدم (تصدير/حذف بيانات)", done: false, blocking: false },
+  { id: "pdpl-rights", category: "قانون", label: "حقوق المستخدم (تصدير/حذف بيانات)", done: true, blocking: false, note: "/dashboard/settings/privacy + /api/pdpl/export + /api/pdpl/delete" },
   { id: "subscription-contract", category: "قانون", label: "عقد اشتراك واضح + قبول صريح", done: false, blocking: false },
 
   // تجربة (إضافات)
   { id: "onboarding-flow", category: "تجربة", label: "Onboarding flow للوسيط الجديد (أول 5 دقائق)", done: true, blocking: false, note: "OnboardingChecklist في /dashboard مع 4 خطوات auto-detect" },
   { id: "transactional-emails", category: "تجربة", label: "إيميلات معاملاتية (welcome, reset, receipt)", done: false, blocking: false },
   { id: "mobile-audit", category: "تجربة", label: "فحص responsiveness على الجوّال لكل الصفحات", done: false, blocking: false },
-  { id: "loading-states", category: "تجربة", label: "Loading + Error states موحَّدة", done: false, blocking: false },
+  { id: "loading-states", category: "تجربة", label: "Loading + Error states موحَّدة", done: true, blocking: false, note: "app/components/LoadingStates.tsx — Spinner/Skeleton/Empty/Error" },
 
   // تسويق & SEO
   { id: "sitemap", category: "تشغيل", label: "Sitemap.xml + robots.txt", done: true, blocking: false, note: "12 URLs ديناميكي + AI crawlers rules" },
@@ -724,7 +746,7 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
 
   // تشغيل Beta
   { id: "beta-invite", category: "تشغيل", label: "آلية دعوة Beta (invite codes / waitlist)", done: true, blocking: false, note: "Migration 046 + 23 كود نشط + WaitlistForm + /api/invite-code/validate" },
-  { id: "feedback-loop", category: "تشغيل", label: "نظام جمع feedback للوسطاء التجريبيين", done: false, blocking: false },
+  { id: "feedback-loop", category: "تشغيل", label: "نظام جمع feedback للوسطاء التجريبيين", done: true, blocking: false, note: "FeedbackWidget عائم + /api/beta-feedback + Migration 051" },
   { id: "support-channel", category: "تشغيل", label: "قناة دعم العملاء (واتساب / form)", done: true, blocking: false, note: "SupportContact widget + form في /dashboard/help + جدول support_requests" },
 ];
 
