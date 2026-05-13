@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write . --ignore-path .gitignore",
+    "format:check": "prettier --check . --ignore-path .gitignore",
+    "test": "echo 'لم يُعدّ Vitest بعد — انظر docs/cleanup-plan-may-11.md (المهمة 3.1)' && exit 0",
+    "ci": "npm run typecheck && npm run lint && npm run format:check",
+    "db:types": "echo 'استخدم: npx supabase gen types typescript --project-id apmdwautyqoqjlabxysz > types/database.ts'"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -37,6 +44,8 @@
     "@types/web-push": "^3.6.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

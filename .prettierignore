@@ -1,0 +1,35 @@
+# مجلدات البناء
+.next/
+out/
+build/
+dist/
+node_modules/
+
+# ملفات قاعدة البيانات / migrations (نتركها بصياغتها اليدوية)
+supabase/*.sql
+
+# ملفات النوع المولّدة
+next-env.d.ts
+types/database.ts
+
+# تقارير الاختبارات
+coverage/
+playwright-report/
+test-results/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Static
+public/
+
+# ملفات HTML الكبيرة المنفصلة
+wasit-pro-landing.html
+
+# Misc
+*.log
+.DS_Store
+.vercel/
+.turbo/
