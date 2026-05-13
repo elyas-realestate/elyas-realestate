@@ -35,11 +35,14 @@ async function extractWithFallback(text: string, keys: Record<string, string>): 
   if (keys.openai) {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + keys.openai },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + keys.openai },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         response_format: { type: "json_object" },
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: userMessage }],
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: userMessage },
+        ],
         temperature: 0.1,
       }),
     });
@@ -51,11 +54,14 @@ async function extractWithFallback(text: string, keys: Record<string, string>): 
   if (keys.groq) {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + keys.groq },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + keys.groq },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
         response_format: { type: "json_object" },
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: userMessage }],
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: userMessage },
+        ],
         temperature: 0.1,
       }),
     });
@@ -67,11 +73,14 @@ async function extractWithFallback(text: string, keys: Record<string, string>): 
   if (keys.deepseek) {
     const res = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + keys.deepseek },
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + keys.deepseek },
       body: JSON.stringify({
         model: "deepseek-chat",
         response_format: { type: "json_object" },
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: userMessage }],
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: userMessage },
+        ],
         temperature: 0.1,
       }),
     });
@@ -83,7 +92,11 @@ async function extractWithFallback(text: string, keys: Record<string, string>): 
   if (keys.anthropic) {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": keys.anthropic, "anthropic-version": "2023-06-01" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": keys.anthropic,
+        "anthropic-version": "2023-06-01",
+      },
       body: JSON.stringify({
         model: "claude-haiku-4-20250514",
         max_tokens: 2000,
@@ -121,21 +134,34 @@ export async function POST(req: NextRequest) {
     const clientKey = getClientKey(req);
     const rateLimitRes = checkRateLimit(clientKey, AI_RATE_LIMIT);
     if (!rateLimitRes.allowed) {
-      return NextResponse.json({ error: "تم تجاوز الحد المسموح للطلبات. يرجى المحاولة لاحقاً." }, { status: 429 });
+      return NextResponse.json(
+        { error: "تم تجاوز الحد المسموح للطلبات. يرجى المحاولة لاحقاً." },
+        { status: 429 }
+      );
     }
 
     // ── Auth ──
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { cookies: { getAll() { return req.cookies.getAll(); }, setAll(_cookiesToSet) {} } }
+      {
+        cookies: {
+          getAll() {
+            return req.cookies.getAll();
+          },
+          setAll(_cookiesToSet) {},
+        },
+      }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
     // ── Plan Limits ──
     const limitCheck = await checkLimit(supabase, "ai_requests");
-    if (!limitCheck.allowed) return NextResponse.json({ error: limitCheck.reason }, { status: 403 });
+    if (!limitCheck.allowed)
+      return NextResponse.json({ error: limitCheck.reason }, { status: 403 });
 
     // ── Input Validation ──
     const body = await req.json();
@@ -147,7 +173,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "النص المرفوع قصير جداً لفحصه" }, { status: 400 });
     }
     if (chatText.length > 200_000) {
-      return NextResponse.json({ error: "النص كبير جداً — الحد الأقصى 200,000 حرف" }, { status: 413 });
+      return NextResponse.json(
+        { error: "النص كبير جداً — الحد الأقصى 200,000 حرف" },
+        { status: 413 }
+      );
     }
 
     // ── جلب مفاتيح AI من DB (مع فك التشفير) ثم env fallback ──
@@ -157,23 +186,23 @@ export async function POST(req: NextRequest) {
       .eq("is_active", true);
 
     const resolveKey = async (prov: string): Promise<string> => {
-      const dbKey = (dbKeys || []).find(k => k.provider === prov)?.api_key_encrypted;
+      const dbKey = (dbKeys || []).find((k) => k.provider === prov)?.api_key_encrypted;
       if (dbKey) return await safeDecrypt(dbKey);
-      if (prov === "openai")    return process.env.OPENAI_API_KEY    || "";
+      if (prov === "openai") return process.env.OPENAI_API_KEY || "";
       if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
-      if (prov === "google")    return process.env.GOOGLE_API_KEY    || "";
-      if (prov === "groq")      return process.env.GROQ_API_KEY      || "";
-      if (prov === "deepseek")  return process.env.DEEPSEEK_API_KEY  || "";
-      if (prov === "xai")       return process.env.XAI_API_KEY       || "";
+      if (prov === "google") return process.env.GOOGLE_API_KEY || "";
+      if (prov === "groq") return process.env.GROQ_API_KEY || "";
+      if (prov === "deepseek") return process.env.DEEPSEEK_API_KEY || "";
+      if (prov === "xai") return process.env.XAI_API_KEY || "";
       return "";
     };
 
     const keys = {
-      openai:    await resolveKey("openai"),
-      groq:      await resolveKey("groq"),
-      deepseek:  await resolveKey("deepseek"),
+      openai: await resolveKey("openai"),
+      groq: await resolveKey("groq"),
+      deepseek: await resolveKey("deepseek"),
       anthropic: await resolveKey("anthropic"),
-      google:    await resolveKey("google"),
+      google: await resolveKey("google"),
     };
 
     // ── تقليص النص إذا كان كبيراً جداً ──
@@ -184,7 +213,6 @@ export async function POST(req: NextRequest) {
     const extractedData = JSON.parse(jsonText);
 
     return NextResponse.json({ extracted: extractedData });
-
   } catch (error: any) {
     console.error("[WhatsApp Parse Error]", error.message);
     return NextResponse.json({ error: "حدث خطأ أثناء معالجة المحادثة بـ AI" }, { status: 500 });

@@ -4,8 +4,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  ArrowRight, Save, Loader2, Crown, Phone, Mail, User,
-  Plus, Trash2, Star, MessageCircle, ChevronLeft, BookOpen,
+  ArrowRight,
+  Save,
+  Loader2,
+  Crown,
+  Phone,
+  Mail,
+  User,
+  Plus,
+  Trash2,
+  Star,
+  MessageCircle,
+  ChevronLeft,
+  BookOpen,
 } from "lucide-react";
 
 type Tone = "professional" | "friendly" | "mixed";
@@ -128,7 +139,7 @@ export default function CEOIdentityPage() {
   function removePhone(idx: number) {
     const next = identity.phones.filter((_, i) => i !== idx);
     // لو حذفنا الأساسي، اجعل الأول أساسياً
-    if (next.length > 0 && !next.some(p => p.is_primary)) {
+    if (next.length > 0 && !next.some((p) => p.is_primary)) {
       next[0].is_primary = true;
     }
     setIdentity({ ...identity, phones: next });
@@ -143,14 +154,20 @@ export default function CEOIdentityPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-5" dir="rtl">
+    <div className="mx-auto max-w-3xl space-y-5" dir="rtl">
       {/* عنوان الصفحة */}
       <div className="flex items-center gap-3">
-        <div style={{
-          width: 40, height: 40, borderRadius: 10,
-          background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 10,
+            background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Crown size={20} color="#0A0A0C" />
         </div>
         <div>
@@ -164,34 +181,52 @@ export default function CEOIdentityPage() {
       </div>
 
       {/* Info banner */}
-      <div className="rounded-xl p-3 text-xs flex items-start gap-2"
-        style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+      <div
+        className="flex items-start gap-2 rounded-xl p-3 text-xs"
+        style={{
+          background: "var(--gold-bg-soft)",
+          border: "1px solid var(--gold-bg)",
+          color: "var(--text-soft)",
+        }}
+      >
         <BookOpen size={14} style={{ color: "var(--gold-2)", flexShrink: 0, marginTop: 2 }} />
         <div>
-          أي رقم تضيفه هنا، السكرتير الذكي يتعرّف عليه تلقائياً ويعاملك كرئيس تنفيذي عبر واتساب —
-          مع أدواته السبعة (صفقات، عملاء، عقارات، مهام، طلبات، فواتير، تقارير).
-          ولن يرد على عملاء عاديين بهذا الأسلوب.
+          أي رقم تضيفه هنا، السكرتير الذكي يتعرّف عليه تلقائياً ويعاملك كرئيس تنفيذي عبر واتساب — مع
+          أدواته السبعة (صفقات، عملاء، عقارات، مهام، طلبات، فواتير، تقارير). ولن يرد على عملاء
+          عاديين بهذا الأسلوب.
         </div>
       </div>
 
       {/* تنبيه التوريث — الاسم/الصورة من الإعدادات إذا تركتهما فارغين */}
-      <div className="rounded-xl p-3 text-xs flex items-start gap-2"
-        style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-faint)" }}>
+      <div
+        className="flex items-start gap-2 rounded-xl p-3 text-xs"
+        style={{
+          background: "var(--bg-surface-2)",
+          border: "1px solid var(--gold-bg)",
+          color: "var(--text-faint)",
+        }}
+      >
         <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>💡</span>
         <div>
-          <strong>المصدر الموحَّد:</strong> اسمك وصورتك الأساسيان في <em>الإعدادات → الملف الشخصي</em>.
-          الحقول هنا تُستخدم لشخصية CEO فقط — اتركها فارغة إذا تريدها نفس بيانات الإعدادات.
+          <strong>المصدر الموحَّد:</strong> اسمك وصورتك الأساسيان في{" "}
+          <em>الإعدادات → الملف الشخصي</em>. الحقول هنا تُستخدم لشخصية CEO فقط — اتركها فارغة إذا
+          تريدها نفس بيانات الإعدادات.
         </div>
       </div>
 
       {/* Section: Identity */}
-      <section className="rounded-xl p-4 space-y-3"
-        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-        <h2 className="text-sm font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
+      <section
+        className="space-y-3 rounded-xl p-4"
+        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+      >
+        <h2
+          className="flex items-center gap-2 text-sm font-bold"
+          style={{ color: "var(--text-strong)" }}
+        >
           <User size={14} style={{ color: "var(--gold-2)" }} /> الهوية الأساسية
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Field label="الاسم الكامل *" required>
             <input
               type="text"
@@ -235,31 +270,45 @@ export default function CEOIdentityPage() {
       </section>
 
       {/* Section: Phones */}
-      <section className="rounded-xl p-4 space-y-3"
-        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+      <section
+        className="space-y-3 rounded-xl p-4"
+        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+      >
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
+          <h2
+            className="flex items-center gap-2 text-sm font-bold"
+            style={{ color: "var(--text-strong)" }}
+          >
             <Phone size={14} style={{ color: "var(--gold-2)" }} /> أرقام الجوّال
             <span className="text-xs font-normal" style={{ color: "var(--text-faint)" }}>
               ({identity.phones.length})
             </span>
           </h2>
-          <button onClick={addPhone}
-            className="text-xs flex items-center gap-1 px-2 py-1 rounded"
-            style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-2)" }}>
+          <button
+            onClick={addPhone}
+            className="flex items-center gap-1 rounded px-2 py-1 text-xs"
+            style={{
+              background: "var(--gold-bg)",
+              color: "var(--gold-2)",
+              border: "1px solid var(--gold-2)",
+            }}
+          >
             <Plus size={12} /> إضافة رقم
           </button>
         </div>
 
         {identity.phones.length === 0 ? (
-          <div className="text-xs text-center py-4" style={{ color: "var(--text-faint)" }}>
+          <div className="py-4 text-center text-xs" style={{ color: "var(--text-faint)" }}>
             لا توجد أرقام مسجَّلة. أضف رقمك ليتعرّف عليك السكرتير عبر واتساب.
           </div>
         ) : (
           <div className="space-y-2">
             {identity.phones.map((p, idx) => (
-              <div key={idx} className="rounded-lg p-2 flex items-center gap-2 flex-wrap"
-                style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)" }}>
+              <div
+                key={idx}
+                className="flex flex-wrap items-center gap-2 rounded-lg p-2"
+                style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)" }}
+              >
                 <input
                   type="text"
                   value={p.label}
@@ -277,18 +326,24 @@ export default function CEOIdentityPage() {
                 <button
                   onClick={() => updatePhone(idx, "is_primary", !p.is_primary)}
                   title={p.is_primary ? "أساسي" : "ضغط للتعيين كأساسي"}
-                  className="p-1.5 rounded"
+                  className="rounded p-1.5"
                   style={{
                     background: p.is_primary ? "var(--gold-bg)" : "transparent",
                     color: p.is_primary ? "var(--gold-2)" : "var(--text-faint)",
                     border: `1px solid ${p.is_primary ? "var(--gold-2)" : "var(--gold-bg)"}`,
-                  }}>
+                  }}
+                >
                   <Star size={14} fill={p.is_primary ? "currentColor" : "none"} />
                 </button>
                 <button
                   onClick={() => removePhone(idx)}
-                  className="p-1.5 rounded"
-                  style={{ background: "transparent", color: "var(--danger)", border: "1px solid var(--gold-bg)" }}>
+                  className="rounded p-1.5"
+                  style={{
+                    background: "transparent",
+                    color: "var(--danger)",
+                    border: "1px solid var(--gold-bg)",
+                  }}
+                >
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -297,18 +352,24 @@ export default function CEOIdentityPage() {
         )}
 
         <div className="text-xs" style={{ color: "var(--text-faint)" }}>
-          الأرقام تُحفظ تلقائياً بصيغة دولية (966...). تقبل: 0539920003، 966539920003، +966 53 992 0003.
+          الأرقام تُحفظ تلقائياً بصيغة دولية (966...). تقبل: 0539920003، 966539920003، +966 53 992
+          0003.
         </div>
       </section>
 
       {/* Section: Communication */}
-      <section className="rounded-xl p-4 space-y-3"
-        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-        <h2 className="text-sm font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
+      <section
+        className="space-y-3 rounded-xl p-4"
+        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+      >
+        <h2
+          className="flex items-center gap-2 text-sm font-bold"
+          style={{ color: "var(--text-strong)" }}
+        >
           <MessageCircle size={14} style={{ color: "var(--gold-2)" }} /> أسلوب التخاطب
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Field label="اللقب المفضل في المخاطبة">
             <input
               type="text"
@@ -322,8 +383,11 @@ export default function CEOIdentityPage() {
           <Field label="نبرة الردود">
             <select
               value={identity.tone_preference}
-              onChange={(e) => setIdentity({ ...identity, tone_preference: e.target.value as Tone })}
-              style={inputStyle}>
+              onChange={(e) =>
+                setIdentity({ ...identity, tone_preference: e.target.value as Tone })
+              }
+              style={inputStyle}
+            >
               <option value="professional">رسمية</option>
               <option value="friendly">ودية</option>
               <option value="mixed">مختلطة (مهنية ودافئة)</option>
@@ -333,9 +397,13 @@ export default function CEOIdentityPage() {
       </section>
 
       {/* Section: Notes */}
-      <section className="rounded-xl p-4 space-y-3"
-        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-        <h2 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>ملاحظات إضافية</h2>
+      <section
+        className="space-y-3 rounded-xl p-4"
+        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+      >
+        <h2 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+          ملاحظات إضافية
+        </h2>
         <textarea
           value={identity.notes || ""}
           onChange={(e) => setIdentity({ ...identity, notes: e.target.value || null })}
@@ -346,41 +414,62 @@ export default function CEOIdentityPage() {
       </section>
 
       {/* Save bar */}
-      <div className="sticky bottom-3 flex items-center justify-between gap-3 rounded-xl p-3"
-        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-2)", backdropFilter: "blur(6px)" }}>
+      <div
+        className="sticky bottom-3 flex items-center justify-between gap-3 rounded-xl p-3"
+        style={{
+          background: "var(--bg-surface-1)",
+          border: "1px solid var(--gold-2)",
+          backdropFilter: "blur(6px)",
+        }}
+      >
         <div className="text-xs" style={{ color: "var(--text-faint)" }}>
           سيُحفظ في DB ويستخدم فوراً عبر السكرتير الذكي.
         </div>
         <button
           onClick={save}
           disabled={saving}
-          className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-bold"
+          className="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-bold"
           style={{
             background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
             color: "#0A0A0C",
             opacity: saving ? 0.6 : 1,
             cursor: saving ? "not-allowed" : "pointer",
-          }}>
+          }}
+        >
           {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
           {saving ? "جارٍ الحفظ..." : "حفظ الهوية"}
         </button>
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-        <Link href="/dashboard/organization" className="flex items-center justify-between p-3 rounded-lg no-underline"
-          style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+      <div className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2">
+        <Link
+          href="/dashboard/organization"
+          className="flex items-center justify-between rounded-lg p-3 no-underline"
+          style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+        >
           <div>
-            <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>السكرتير الذكي</div>
-            <div className="text-xs" style={{ color: "var(--text-faint)" }}>توجيهات + Knowledge Base</div>
+            <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+              السكرتير الذكي
+            </div>
+            <div className="text-xs" style={{ color: "var(--text-faint)" }}>
+              توجيهات + Knowledge Base
+            </div>
           </div>
           <ChevronLeft size={14} style={{ color: "var(--gold-2)" }} />
         </Link>
-        <Link href="/dashboard/ceo/operations" className="flex items-center justify-between p-3 rounded-lg no-underline"
-          style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+        <Link
+          href="/dashboard/ceo/operations"
+          className="flex items-center justify-between rounded-lg p-3 no-underline"
+          style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+        >
           <div>
-            <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>مركز التحكم التشغيلي</div>
-            <div className="text-xs" style={{ color: "var(--text-faint)" }}>master switch + حدود</div>
+            <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+              مركز التحكم التشغيلي
+            </div>
+            <div className="text-xs" style={{ color: "var(--text-faint)" }}>
+              master switch + حدود
+            </div>
           </div>
           <ChevronLeft size={14} style={{ color: "var(--gold-2)" }} />
         </Link>
@@ -403,14 +492,21 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "inherit",
 };
 
-function Field({ label, children, required }: {
+function Field({
+  label,
+  children,
+  required,
+}: {
   label: string;
   children: React.ReactNode;
   required?: boolean;
 }) {
   return (
     <label className="block">
-      <span className="text-xs block mb-1" style={{ color: required ? "var(--gold-2)" : "var(--text-faint)" }}>
+      <span
+        className="mb-1 block text-xs"
+        style={{ color: required ? "var(--gold-2)" : "var(--text-faint)" }}
+      >
         {label}
       </span>
       {children}

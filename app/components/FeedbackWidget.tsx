@@ -176,7 +176,14 @@ export default function FeedbackWidget() {
             {submitted ? (
               <div style={{ textAlign: "center", padding: "24px 0" }}>
                 <div style={{ fontSize: 36, marginBottom: 8 }}>✅</div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text-strong)", marginBottom: 4 }}>
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: "var(--text-strong)",
+                    marginBottom: 4,
+                  }}
+                >
                   شكراً لك!
                 </div>
                 <div style={{ fontSize: 12, color: "var(--text-faint)" }}>
@@ -185,7 +192,14 @@ export default function FeedbackWidget() {
               </div>
             ) : !category ? (
               <>
-                <p style={{ fontSize: 12.5, color: "var(--text-soft)", marginBottom: 12, lineHeight: 1.7 }}>
+                <p
+                  style={{
+                    fontSize: 12.5,
+                    color: "var(--text-soft)",
+                    marginBottom: 12,
+                    lineHeight: 1.7,
+                  }}
+                >
                   ساعدنا بتحسين المنصة. اختر نوع الملاحظة:
                 </p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -279,8 +293,7 @@ export default function FeedbackWidget() {
                     border: "none",
                     fontWeight: 700,
                     fontSize: 13,
-                    cursor:
-                      submitting || message.trim().length < 5 ? "not-allowed" : "pointer",
+                    cursor: submitting || message.trim().length < 5 ? "not-allowed" : "pointer",
                     fontFamily: "inherit",
                     display: "flex",
                     alignItems: "center",

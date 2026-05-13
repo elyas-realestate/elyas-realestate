@@ -46,10 +46,16 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
 
   if (submitted) {
     return (
-      <div dir="rtl" className="rounded-2xl p-6 text-center space-y-3"
-        style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.10), rgba(232,184,109,0.05))", border: "1px solid rgba(34,197,94,0.30)" }}>
+      <div
+        dir="rtl"
+        className="space-y-3 rounded-2xl p-6 text-center"
+        style={{
+          background: "linear-gradient(135deg, rgba(34,197,94,0.10), rgba(232,184,109,0.05))",
+          border: "1px solid rgba(34,197,94,0.30)",
+        }}
+      >
         <CheckCircle2 size={40} style={{ color: "rgb(34,197,94)", margin: "0 auto" }} />
-        <h3 className="font-bold text-lg" style={{ color: "var(--text-strong)" }}>
+        <h3 className="text-lg font-bold" style={{ color: "var(--text-strong)" }}>
           أنت في القائمة الآن ✓
         </h3>
         <p className="text-sm" style={{ color: "var(--text-soft)", lineHeight: 1.7 }}>
@@ -73,10 +79,14 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
   };
 
   return (
-    <form onSubmit={submit} dir="rtl" className="rounded-2xl p-5 space-y-3"
-      style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-      <div className="text-center mb-2">
-        <h3 className="font-bold text-lg" style={{ color: "var(--text-strong)" }}>
+    <form
+      onSubmit={submit}
+      dir="rtl"
+      className="space-y-3 rounded-2xl p-5"
+      style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+    >
+      <div className="mb-2 text-center">
+        <h3 className="text-lg font-bold" style={{ color: "var(--text-strong)" }}>
           🚀 سجّل في Beta
         </h3>
         <p className="text-xs" style={{ color: "var(--text-faint)" }}>
@@ -85,7 +95,16 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
       </div>
 
       <div className="relative">
-        <Mail size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)" }} />
+        <Mail
+          size={14}
+          style={{
+            position: "absolute",
+            right: 12,
+            top: "50%",
+            transform: "translateY(-50%)",
+            color: "var(--text-faint)",
+          }}
+        />
         <input
           type="email"
           required
@@ -98,7 +117,16 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
       </div>
 
       <div className="relative">
-        <User size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)" }} />
+        <User
+          size={14}
+          style={{
+            position: "absolute",
+            right: 12,
+            top: "50%",
+            transform: "translateY(-50%)",
+            color: "var(--text-faint)",
+          }}
+        />
         <input
           type="text"
           value={form.full_name}
@@ -110,7 +138,16 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
 
       <div className="grid grid-cols-2 gap-2">
         <div className="relative">
-          <Phone size={14} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "var(--text-faint)" }} />
+          <Phone
+            size={14}
+            style={{
+              position: "absolute",
+              right: 12,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--text-faint)",
+            }}
+          />
           <input
             type="tel"
             value={form.phone}
@@ -140,7 +177,7 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
       <button
         type="submit"
         disabled={submitting}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold"
+        className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-bold"
         style={{
           background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
           color: "#0A0A0C",
@@ -154,7 +191,7 @@ export default function WaitlistForm({ source = "landing" }: { source?: string }
         {submitting ? "جارٍ التسجيل..." : "سجّل اسمي في Beta"}
       </button>
 
-      <p className="text-xs text-center" style={{ color: "var(--text-faint)" }}>
+      <p className="text-center text-xs" style={{ color: "var(--text-faint)" }}>
         لن نشارك بياناتك. سننذر فقط عند فتح المقاعد التالية.
       </p>
     </form>

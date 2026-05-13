@@ -71,7 +71,13 @@ export async function GET(req: NextRequest) {
   if (tErr) return NextResponse.json({ error: tErr.message }, { status: 500 });
 
   const activeTenants = (tenants || []) as TenantRow[];
-  const results: Array<{ tenant_id: string; managers_processed: number; reviews_created: number; suggestions_created: number; errors: string[] }> = [];
+  const results: Array<{
+    tenant_id: string;
+    managers_processed: number;
+    reviews_created: number;
+    suggestions_created: number;
+    errors: string[];
+  }> = [];
 
   // 2) كل المدراء النشطين
   const { data: mgrList } = await admin
@@ -91,8 +97,10 @@ export async function GET(req: NextRequest) {
     const gate = await assertSystemActive(t.id);
     if (!gate.ok) {
       await admin.from("org_activity_log").insert({
-        tenant_id: t.id, actor_kind: "system", action: "manager_loop_skipped",
-        details: { reason: gate.reason, gated: true }
+        tenant_id: t.id,
+        actor_kind: "system",
+        action: "manager_loop_skipped",
+        details: { reason: gate.reason, gated: true },
       });
       continue;
     }
@@ -108,7 +116,9 @@ export async function GET(req: NextRequest) {
         const { data: mgrCfg } = await admin
           .from("tenant_ai_config")
           .select("ai_provider_override, ai_model_override, is_enabled")
-          .eq("tenant_id", t.id).eq("target_kind", "manager").eq("target_id", mgr.id)
+          .eq("tenant_id", t.id)
+          .eq("target_kind", "manager")
+          .eq("target_id", mgr.id)
           .maybeSingle();
 
         if (mgrCfg && mgrCfg.is_enabled === false) continue;
@@ -125,9 +135,9 @@ export async function GET(req: NextRequest) {
         const employees = (empList || []) as EmployeeRow[];
         if (employees.length === 0) continue;
 
-        const empIds = employees.map(e => e.id);
-        const empById = new Map(employees.map(e => [e.id, e]));
-        const empByCode = new Map(employees.map(e => [e.code, e]));
+        const empIds = employees.map((e) => e.id);
+        const empById = new Map(employees.map((e) => [e.id, e]));
+        const empByCode = new Map(employees.map((e) => [e.code, e]));
 
         // نشاط الفريق آخر ٢٤ ساعة
         const { data: actsRaw } = await admin
@@ -183,12 +193,19 @@ export async function GET(req: NextRequest) {
           actionCounts[a.action] = (actionCounts[a.action] || 0) + 1;
           if (perEmployee[a.actor_id]) {
             perEmployee[a.actor_id].activity++;
-            if (a.action === "approval_required_whatsapp" || a.action.includes("approval_required")) {
+            if (
+              a.action === "approval_required_whatsapp" ||
+              a.action.includes("approval_required")
+            ) {
               perEmployee[a.actor_id].risky++;
             }
           }
         }
-        const escSeverity: { info: number; warning: number; critical: number } = { info: 0, warning: 0, critical: 0 };
+        const escSeverity: { info: number; warning: number; critical: number } = {
+          info: 0,
+          warning: 0,
+          critical: 0,
+        };
         for (const e of escalations) {
           const sev = e.severity as "info" | "warning" | "critical" | string;
           if (sev === "info" || sev === "warning" || sev === "critical") {
@@ -201,7 +218,9 @@ export async function GET(req: NextRequest) {
           escalations_count: escalations.length,
           escalations_by_severity: escSeverity,
           actions_breakdown: actionCounts,
-          employees_summary: Object.fromEntries(Object.entries(perEmployee).map(([, v]) => [v.name, v])),
+          employees_summary: Object.fromEntries(
+            Object.entries(perEmployee).map(([, v]) => [v.name, v])
+          ),
         };
 
         // إذا ما في نشاط، نولّد مراجعة مخصّصة للمدير (لا نص عام مكرر)
@@ -219,8 +238,9 @@ export async function GET(req: NextRequest) {
             dev_bizdev_manager: `لا نشاط تطويري أو فرص أعمال جديدة اليوم. ${teamSize} متخصّصون يحتاجون مهمة. توصية: أعطِ اتجاهاً واضحاً لهذا الأسبوع (تطوير ميزة جديدة أو استكشاف سوق).`,
           };
 
-          const summary = customSummaries[mgr.code]
-            || `${mgr.name}: يومٌ هادئ. ${teamSize} موظفون نشطون، ${dirCount} توجيه استراتيجي، ${empDirCount} توجيه تشغيلي. ينتظر الفريق نشاطاً ليتفاعل معه.`;
+          const summary =
+            customSummaries[mgr.code] ||
+            `${mgr.name}: يومٌ هادئ. ${teamSize} موظفون نشطون، ${dirCount} توجيه استراتيجي، ${empDirCount} توجيه تشغيلي. ينتظر الفريق نشاطاً ليتفاعل معه.`;
 
           await admin.from("manager_reviews").insert({
             tenant_id: t.id,
@@ -229,9 +249,17 @@ export async function GET(req: NextRequest) {
             period_end: periodEnd,
             summary,
             highlights: [],
-            concerns: teamSize > 0 && dirCount === 0 ? [
-              { title: "لا توجيهات استراتيجية", severity: "info" as const, detail: "الفريق بدون توجيهات استراتيجية حالية. اضبطها من /dashboard/organization." }
-            ] : [],
+            concerns:
+              teamSize > 0 && dirCount === 0
+                ? [
+                    {
+                      title: "لا توجيهات استراتيجية",
+                      severity: "info" as const,
+                      detail:
+                        "الفريق بدون توجيهات استراتيجية حالية. اضبطها من /dashboard/organization.",
+                    },
+                  ]
+                : [],
             metrics,
             suggestions_count: 0,
             generated_by_model: `${provider}:${model}`,
@@ -242,21 +270,31 @@ export async function GET(req: NextRequest) {
         }
 
         // بناء userPrompt للمدير
-        const empListText = employees.map(e => `- ${e.name} (${e.code})`).join("\n");
+        const empListText = employees.map((e) => `- ${e.name} (${e.code})`).join("\n");
 
-        const activitiesSnippet = activities.slice(0, 30).map(a => {
-          const empName = empById.get(a.actor_id)?.name || a.actor_id;
-          return `- [${empName}] ${a.action}${a.details ? ` :: ${JSON.stringify(a.details).slice(0, 200)}` : ""}`;
-        }).join("\n");
+        const activitiesSnippet = activities
+          .slice(0, 30)
+          .map((a) => {
+            const empName = empById.get(a.actor_id)?.name || a.actor_id;
+            return `- [${empName}] ${a.action}${a.details ? ` :: ${JSON.stringify(a.details).slice(0, 200)}` : ""}`;
+          })
+          .join("\n");
 
-        const escSnippet = escalations.slice(0, 15).map(e => {
-          const empName = empById.get(e.raised_by_id)?.name || "?";
-          return `- [${e.severity}] ${empName}: ${e.title} (${e.status})`;
-        }).join("\n") || "(لا توجد تصعيدات)";
+        const escSnippet =
+          escalations
+            .slice(0, 15)
+            .map((e) => {
+              const empName = empById.get(e.raised_by_id)?.name || "?";
+              return `- [${e.severity}] ${empName}: ${e.title} (${e.status})`;
+            })
+            .join("\n") || "(لا توجد تصعيدات)";
 
-        const mgrDirText = mgrDirectives.length > 0
-          ? mgrDirectives.map((d, i) => `${i + 1}. ${d.title}: ${d.content.slice(0, 200)}`).join("\n")
-          : "(لا توجد توجيهات حالية)";
+        const mgrDirText =
+          mgrDirectives.length > 0
+            ? mgrDirectives
+                .map((d, i) => `${i + 1}. ${d.title}: ${d.content.slice(0, 200)}`)
+                .join("\n")
+            : "(لا توجد توجيهات حالية)";
 
         const empDirCount = empDirectives.length;
 
@@ -330,8 +368,8 @@ ${escSnippet}
         await incrementCallCount(t.id);
 
         // حفظ المراجعة
-        const validSuggestions = (review.suggestions || []).filter(s =>
-          s.employee_code && empByCode.has(s.employee_code) && s.title && s.content
+        const validSuggestions = (review.suggestions || []).filter(
+          (s) => s.employee_code && empByCode.has(s.employee_code) && s.title && s.content
         );
 
         const { data: revRow, error: revErr } = await admin
@@ -376,7 +414,7 @@ ${escSnippet}
         }
 
         // تصعيد للـ CEO عند concerns حرجة
-        const criticalConcerns = (review.concerns || []).filter(c => c.severity === "critical");
+        const criticalConcerns = (review.concerns || []).filter((c) => c.severity === "critical");
         if (criticalConcerns.length > 0) {
           for (const c of criticalConcerns) {
             await admin.from("org_escalations").insert({

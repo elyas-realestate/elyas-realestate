@@ -10,7 +10,7 @@ export default function OutputsTab() {
         كل ما أنتجه المساعدون ينتظر مراجعتك في مكان واحد.
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         <OutputCard
           href="/dashboard/marketing/queue"
           icon={<Megaphone size={20} />}
@@ -34,29 +34,52 @@ export default function OutputsTab() {
         />
       </div>
 
-      <div className="rounded-xl p-4 text-xs" style={{
-        background: "var(--bg-surface-2)",
-        border: "1px dashed var(--gold-bg)",
-        color: "var(--text-faint)",
-      }}>
+      <div
+        className="rounded-xl p-4 text-xs"
+        style={{
+          background: "var(--bg-surface-2)",
+          border: "1px dashed var(--gold-bg)",
+          color: "var(--text-faint)",
+        }}
+      >
         💡 المحتوى لا يُنشر تلقائياً — كل شي يمر عليك أولاً.
       </div>
     </div>
   );
 }
 
-function OutputCard({ href, icon, title, desc, color }: { href: string; icon: React.ReactNode; title: string; desc: string; color: string }) {
+function OutputCard({
+  href,
+  icon,
+  title,
+  desc,
+  color,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  color: string;
+}) {
   return (
-    <Link href={href} className="rounded-xl p-4 no-underline block transition" style={{
-      background: "var(--bg-surface-1)",
-      border: "1px solid var(--gold-bg)",
-    }}>
-      <div className="flex items-center justify-between mb-2">
+    <Link
+      href={href}
+      className="block rounded-xl p-4 no-underline transition"
+      style={{
+        background: "var(--bg-surface-1)",
+        border: "1px solid var(--gold-bg)",
+      }}
+    >
+      <div className="mb-2 flex items-center justify-between">
         <div style={{ color }}>{icon}</div>
         <ChevronLeft size={14} style={{ color: "var(--text-faint)" }} />
       </div>
-      <div className="font-bold text-sm mb-1" style={{ color: "var(--text-strong)" }}>{title}</div>
-      <div className="text-xs" style={{ color: "var(--text-faint)" }}>{desc}</div>
+      <div className="mb-1 text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+        {title}
+      </div>
+      <div className="text-xs" style={{ color: "var(--text-faint)" }}>
+        {desc}
+      </div>
     </Link>
   );
 }

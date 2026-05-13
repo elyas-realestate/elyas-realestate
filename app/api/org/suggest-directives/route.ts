@@ -54,9 +54,12 @@ async function handleSuggest(req: NextRequest) {
   // ── فحص env vars مبكراً ──
   const envCheck = checkServerEnv();
   if (!envCheck.ok) {
-    return NextResponse.json({
-      error: `متغيرات بيئة الخادم ناقصة: ${envCheck.missing.join(", ")}. أضفها في إعدادات Vercel ثم أعد المحاولة.`,
-    }, { status: 503 });
+    return NextResponse.json(
+      {
+        error: `متغيرات بيئة الخادم ناقصة: ${envCheck.missing.join(", ")}. أضفها في إعدادات Vercel ثم أعد المحاولة.`,
+      },
+      { status: 503 }
+    );
   }
 
   // ── Auth ──
@@ -65,20 +68,32 @@ async function handleSuggest(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return req.cookies.getAll(); },
+        getAll() {
+          return req.cookies.getAll();
+        },
         setAll() {},
       },
     }
   );
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   // ── tenant_id ──
-  const { data: t } = await supabase.from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+  const { data: t } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   let tenantId = t?.id;
   if (!tenantId) {
     const { data: m } = await supabase
-      .from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle();
+      .from("tenant_members")
+      .select("tenant_id")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
     tenantId = m?.tenant_id;
   }
   if (!tenantId) return NextResponse.json({ error: "لم يُعثر على المستأجر" }, { status: 400 });
@@ -98,8 +113,12 @@ async function handleSuggest(req: NextRequest) {
 
   // ── معلومات المدير ──
   const { data: managerData, error: mErr } = await admin
-    .from("ai_managers").select("*").eq("id", managerId).single();
-  if (mErr || !managerData) return NextResponse.json({ error: "المدير غير موجود" }, { status: 404 });
+    .from("ai_managers")
+    .select("*")
+    .eq("id", managerId)
+    .single();
+  if (mErr || !managerData)
+    return NextResponse.json({ error: "المدير غير موجود" }, { status: 404 });
   const manager = managerData as ManagerRow;
 
   // ── توجيهات المدير النشطة ──
@@ -113,9 +132,12 @@ async function handleSuggest(req: NextRequest) {
     .order("display_order");
 
   if (!mgrDirectives || mgrDirectives.length === 0) {
-    return NextResponse.json({
-      error: "لا توجد توجيهات للمدير. أضف توجيهات أولاً قبل توليد الاقتراحات."
-    }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: "لا توجد توجيهات للمدير. أضف توجيهات أولاً قبل توليد الاقتراحات.",
+      },
+      { status: 400 }
+    );
   }
 
   // ── KB المدير ──
@@ -157,7 +179,8 @@ async function handleSuggest(req: NextRequest) {
     .eq("target_id", managerId)
     .maybeSingle();
 
-  const provider = (tenantConfig?.ai_provider_override || manager.default_ai_provider) as AIProvider;
+  const provider = (tenantConfig?.ai_provider_override ||
+    manager.default_ai_provider) as AIProvider;
   const model = tenantConfig?.ai_model_override || manager.default_ai_model;
 
   // ─────────────────────────────────────────────────────────────
@@ -174,24 +197,31 @@ async function handleSuggest(req: NextRequest) {
     .map((d, i: number) => `${i + 1}. ${d.title}\n   ${d.content}`)
     .join("\n\n");
 
-  const kbText = mgrKB && mgrKB.length > 0
-    ? (mgrKB as Array<{ title: string; content: string; category: string }>)
-        .map((k) => `[${k.category}] ${k.title}: ${k.content}`).join("\n")
-    : "(لا توجد قاعدة معرفة بعد)";
+  const kbText =
+    mgrKB && mgrKB.length > 0
+      ? (mgrKB as Array<{ title: string; content: string; category: string }>)
+          .map((k) => `[${k.category}] ${k.title}: ${k.content}`)
+          .join("\n")
+      : "(لا توجد قاعدة معرفة بعد)";
 
-  const brandContext = [
-    identity?.broker_name && `اسم الوسيط: ${identity.broker_name}`,
-    identity?.specialization && `التخصص: ${identity.specialization}`,
-    identity?.writing_tone && `نبرة الكتابة: ${identity.writing_tone}`,
-    identity?.coverage_areas && `نطاق التغطية: ${Array.isArray(identity.coverage_areas) ? identity.coverage_areas.join(", ") : identity.coverage_areas}`,
-  ].filter(Boolean).join("\n") || "(لا توجد معلومات هوية)";
+  const brandContext =
+    [
+      identity?.broker_name && `اسم الوسيط: ${identity.broker_name}`,
+      identity?.specialization && `التخصص: ${identity.specialization}`,
+      identity?.writing_tone && `نبرة الكتابة: ${identity.writing_tone}`,
+      identity?.coverage_areas &&
+        `نطاق التغطية: ${Array.isArray(identity.coverage_areas) ? identity.coverage_areas.join(", ") : identity.coverage_areas}`,
+    ]
+      .filter(Boolean)
+      .join("\n") || "(لا توجد معلومات هوية)";
 
   // ── Process employees serially to respect provider rate limits (Gemini free tier = 5 RPM) ──
   // Vercel maxDuration=300 يكفي. كل استدعاء ~10-15s، فـ 5 موظفين = 50-75s.
-  for (const emp of (employees as EmployeeRow[])) {
+  for (const emp of employees as EmployeeRow[]) {
     try {
       // إذا replace_existing — احذف الـ pending السابقة
-      if (body.replace_existing !== false) {  // default = true (replace by default)
+      if (body.replace_existing !== false) {
+        // default = true (replace by default)
         await admin
           .from("directives")
           .delete()
@@ -253,12 +283,19 @@ ${kbText}
       } catch (aiErr) {
         const msg = aiErr instanceof Error ? aiErr.message : "AI invocation failed";
         console.warn(`[suggest-directives] AI failed for ${emp.code} (even after fallback):`, msg);
-        results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: `AI: ${msg}` });
+        results.push({
+          employee_id: emp.id,
+          employee_name: emp.name,
+          inserted: 0,
+          error: `AI: ${msg}`,
+        });
         continue;
       }
 
-      console.log(`[suggest-directives] ${emp.code}: provider=${usedProvider}${fallbackReason ? ` (fallback: ${fallbackReason})` : ""}, suggestions =`,
-        Array.isArray(result?.suggestions) ? result!.suggestions.length : "not-array");
+      console.log(
+        `[suggest-directives] ${emp.code}: provider=${usedProvider}${fallbackReason ? ` (fallback: ${fallbackReason})` : ""}, suggestions =`,
+        Array.isArray(result?.suggestions) ? result!.suggestions.length : "not-array"
+      );
 
       if (!result?.suggestions || !Array.isArray(result.suggestions)) {
         results.push({
@@ -271,7 +308,7 @@ ${kbText}
       }
 
       const rows = result.suggestions
-        .filter(s => s && typeof s.title === "string" && typeof s.content === "string")
+        .filter((s) => s && typeof s.title === "string" && typeof s.content === "string")
         .slice(0, 5)
         .map((s, idx) => ({
           tenant_id: tenantId,
@@ -286,13 +323,23 @@ ${kbText}
         }));
 
       if (rows.length === 0) {
-        results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: "اقتراحات فارغة" });
+        results.push({
+          employee_id: emp.id,
+          employee_name: emp.name,
+          inserted: 0,
+          error: "اقتراحات فارغة",
+        });
         continue;
       }
 
       const { error: insErr } = await admin.from("directives").insert(rows);
       if (insErr) {
-        results.push({ employee_id: emp.id, employee_name: emp.name, inserted: 0, error: insErr.message });
+        results.push({
+          employee_id: emp.id,
+          employee_name: emp.name,
+          inserted: 0,
+          error: insErr.message,
+        });
       } else {
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: rows.length });
       }
@@ -306,7 +353,7 @@ ${kbText}
       });
     }
     // Delay قصير بين الاستدعاءات لتفادي rate limit (Gemini free 5 RPM)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
   }
 
   // ── سجّل النشاط ──

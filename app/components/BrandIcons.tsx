@@ -12,25 +12,22 @@ interface IconProps {
   style?: React.CSSProperties;
 }
 
-const wrap = (path: string, viewBox = "0 0 24 24") => ({
-  size = 18,
-  color = "currentColor",
-  className = "",
-  style = {},
-}: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    fill={color}
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    style={{ flexShrink: 0, ...style }}
-    aria-hidden="true"
-  >
-    <path d={path} />
-  </svg>
-);
+const wrap =
+  (path: string, viewBox = "0 0 24 24") =>
+  ({ size = 18, color = "currentColor", className = "", style = {} }: IconProps) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      fill={color}
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      style={{ flexShrink: 0, ...style }}
+      aria-hidden="true"
+    >
+      <path d={path} />
+    </svg>
+  );
 
 // ─── X (formerly Twitter) ────────────────────────────────────
 export const XIcon = wrap(

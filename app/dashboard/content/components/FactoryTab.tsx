@@ -5,15 +5,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { providers, modes } from "../constants";
 import ModelSelector from "./ModelSelector";
 import type { BrokerIdentity, Property } from "@/types/database";
-import {
-  Plus,
-  Trash2,
-  Play,
-  Loader2,
-  Check,
-  Factory,
-  Copy,
-} from "lucide-react";
+import { Plus, Trash2, Play, Loader2, Check, Factory, Copy } from "lucide-react";
 import { SkeletonList } from "@/components/ui/Skeleton";
 
 type QueueItem = {
@@ -40,11 +32,7 @@ type ResultGroup = {
   draft?: string;
 };
 
-export default function FactoryTab({
-  onDraftsCreated,
-}: {
-  onDraftsCreated: () => void;
-}) {
+export default function FactoryTab({ onDraftsCreated }: { onDraftsCreated: () => void }) {
   const [properties, setProperties] = useState<Property[]>([]);
   const [identity, setIdentity] = useState<BrokerIdentity | null>(null);
   const [loading, setLoading] = useState(true);
@@ -90,13 +78,7 @@ export default function FactoryTab({
   }
 
   function addToQueue() {
-    if (
-      !contentGoal ||
-      !platform ||
-      !contentFormat ||
-      !writingTone ||
-      !contentLanguage
-    ) {
+    if (!contentGoal || !platform || !contentFormat || !writingTone || !contentLanguage) {
       setShowErrors(true);
       setError("اختر جميع الخيارات المطلوبة");
       return;
@@ -109,9 +91,7 @@ export default function FactoryTab({
       {
         id: Date.now().toString(),
         propertyId: selectedProperty,
-        propertyLabel: prop
-          ? prop.title + " — " + prop.district
-          : "محتوى عام",
+        propertyLabel: prop ? prop.title + " — " + prop.district : "محتوى عام",
         contentGoal,
         platform,
         contentFormat,
@@ -241,13 +221,9 @@ export default function FactoryTab({
 
   if (loading) return <SkeletonList count={4} />;
 
-  const totalPosts = queue.reduce(
-    (sum, q) => sum + parseInt(q.postCount),
-    0
-  );
+  const totalPosts = queue.reduce((sum, q) => sum + parseInt(q.postCount), 0);
   const modelName = (pid: string, mid: string) =>
-    providers.find((p) => p.id === pid)?.models.find((m) => m.id === mid)
-      ?.name || mid;
+    providers.find((p) => p.id === pid)?.models.find((m) => m.id === mid)?.name || mid;
 
   const selectClass =
     "w-full bg-[var(--bg-surface-2)] rounded-lg px-4 py-3 focus:outline-none text-sm border";
@@ -261,24 +237,21 @@ export default function FactoryTab({
   return (
     <div>
       <div className="mb-6">
-        <h3 className="text-xl font-bold mb-2">مصنع المحتوى</h3>
-        <p className="text-[var(--text-soft)] text-sm">
-          أضف طلبات المحتوى للقائمة ثم انتجها دفعة واحدة — تُحفظ تلقائياً
-          كمسودات
+        <h3 className="mb-2 text-xl font-bold">مصنع المحتوى</h3>
+        <p className="text-sm text-[var(--text-soft)]">
+          أضف طلبات المحتوى للقائمة ثم انتجها دفعة واحدة — تُحفظ تلقائياً كمسودات
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* ─── Sidebar: Content Request Form ─── */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 space-y-4">
-            <h4 className="font-bold text-[var(--gold-2)] text-sm">
-              إضافة طلب محتوى
-            </h4>
+        <div className="space-y-4 lg:col-span-1">
+          <div className="space-y-4 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5">
+            <h4 className="text-sm font-bold text-[var(--gold-2)]">إضافة طلب محتوى</h4>
 
             {/* Property */}
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">
                 العقار <span className="text-[var(--text-faint)]">(اختياري)</span>
               </label>
               <select
@@ -332,9 +305,7 @@ export default function FactoryTab({
 
             {/* Format */}
             <div>
-              <label className={labelClass(!!contentFormat)}>
-                صيغة المحتوى *
-              </label>
+              <label className={labelClass(!!contentFormat)}>صيغة المحتوى *</label>
               <select
                 value={contentFormat}
                 onChange={(e) => setContentFormat(e.target.value)}
@@ -343,30 +314,22 @@ export default function FactoryTab({
                 <option value="">اختر الصيغة...</option>
                 <option value="تغريدة / نص قصير">تغريدة / نص قصير</option>
                 <option value="نص طويل (كابشن)">نص طويل (كابشن)</option>
-                <option value="سكريبت ريلز / فيديو قصير">
-                  سكريبت ريلز / فيديو قصير
-                </option>
+                <option value="سكريبت ريلز / فيديو قصير">سكريبت ريلز / فيديو قصير</option>
                 <option value="كاروسيل (شرائح)">كاروسيل (شرائح)</option>
-                <option value="ثريد (سلسلة تغريدات)">
-                  ثريد (سلسلة تغريدات)
-                </option>
+                <option value="ثريد (سلسلة تغريدات)">ثريد (سلسلة تغريدات)</option>
               </select>
             </div>
 
             {/* Tone */}
             <div>
-              <label className={labelClass(!!writingTone)}>
-                نبرة الكتابة *
-              </label>
+              <label className={labelClass(!!writingTone)}>نبرة الكتابة *</label>
               <select
                 value={writingTone}
                 onChange={(e) => setWritingTone(e.target.value)}
                 className={`${selectClass} ${borderClass(!!writingTone)}`}
               >
                 <option value="">اختر النبرة...</option>
-                <option value="احترافي وبشري — واثق بدون تعالي">
-                  احترافي وبشري
-                </option>
+                <option value="احترافي وبشري — واثق بدون تعالي">احترافي وبشري</option>
                 <option value="رسمي ومهني">رسمي ومهني</option>
                 <option value="ودي وقريب من الناس">ودي وقريب</option>
                 <option value="تحفيزي وملهم">تحفيزي وملهم</option>
@@ -377,9 +340,7 @@ export default function FactoryTab({
 
             {/* Language */}
             <div>
-              <label className={labelClass(!!contentLanguage)}>
-                لغة المحتوى *
-              </label>
+              <label className={labelClass(!!contentLanguage)}>لغة المحتوى *</label>
               <select
                 value={contentLanguage}
                 onChange={(e) => setContentLanguage(e.target.value)}
@@ -395,9 +356,7 @@ export default function FactoryTab({
 
             {/* Post count */}
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">
-                عدد المنشورات
-              </label>
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">عدد المنشورات</label>
               <select
                 value={postCount}
                 onChange={(e) => setPostCount(e.target.value)}
@@ -427,52 +386,50 @@ export default function FactoryTab({
             setModel2={setAiModel2}
           />
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
           <button
             onClick={addToQueue}
-            className="w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 bg-[var(--bg-surface-3)] hover:bg-[var(--bg-surface-3)] text-white"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--bg-surface-3)] py-3 font-bold text-white transition hover:bg-[var(--bg-surface-3)]"
           >
             <Plus size={18} /> إضافة للقائمة
           </button>
 
           {/* Queue */}
           {queue.length > 0 && (
-            <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 space-y-3">
-              <h4 className="font-bold text-sm">
+            <div className="space-y-3 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5">
+              <h4 className="text-sm font-bold">
                 قائمة المحتوى ({queue.length} طلب — {totalPosts} منشور)
               </h4>
               {queue.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-[var(--bg-surface-2)] rounded-lg p-3 flex items-start justify-between gap-3"
+                  className="flex items-start justify-between gap-3 rounded-lg bg-[var(--bg-surface-2)] p-3"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs bg-[var(--gold-bg)] text-[var(--gold-2)] px-2 py-0.5 rounded">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded bg-[var(--gold-bg)] px-2 py-0.5 text-xs text-[var(--gold-2)]">
                         {item.platform}
                       </span>
-                      <span className="text-xs bg-[var(--bg-surface-3)] text-gray-300 px-2 py-0.5 rounded">
+                      <span className="rounded bg-[var(--bg-surface-3)] px-2 py-0.5 text-xs text-gray-300">
                         {item.contentFormat}
                       </span>
                       <span className="text-xs text-[var(--text-faint)]">
                         {item.postCount} منشور
                       </span>
                     </div>
-                    <p className="text-xs text-[var(--text-soft)] mt-1 truncate">
+                    <p className="mt-1 truncate text-xs text-[var(--text-soft)]">
                       {item.propertyLabel} — {item.contentGoal}
                     </p>
-                    <p className="text-xs text-[var(--text-faint)] mt-0.5">
+                    <p className="mt-0.5 text-xs text-[var(--text-faint)]">
                       {modes.find((m) => m.id === item.mode)?.name} •{" "}
                       {modelName(item.provider, item.model)}
-                      {item.mode !== "single"
-                        ? " + " + modelName(item.provider2, item.model2)
-                        : ""}
+                      {item.mode !== "single" ? " + " + modelName(item.provider2, item.model2) : ""}
                     </p>
                   </div>
                   <button
                     onClick={() => removeFromQueue(item.id)}
-                    className="text-[var(--text-faint)] hover:text-red-400 flex-shrink-0"
+                    className="flex-shrink-0 text-[var(--text-faint)] hover:text-red-400"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -482,16 +439,15 @@ export default function FactoryTab({
                 onClick={generateAll}
                 disabled={generating}
                 className={
-                  "w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 " +
+                  "flex w-full items-center justify-center gap-2 rounded-lg py-3 font-bold transition " +
                   (generating
                     ? "bg-[var(--bg-surface-3)] text-[var(--text-soft)]"
-                    : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white")
+                    : "bg-[var(--gold-2)] text-white hover:bg-[var(--gold-3)]")
                 }
               >
                 {generating ? (
                   <>
-                    <Loader2 size={18} className="animate-spin" /> جاري
-                    الإنتاج...
+                    <Loader2 size={18} className="animate-spin" /> جاري الإنتاج...
                   </>
                 ) : (
                   <>
@@ -507,40 +463,32 @@ export default function FactoryTab({
         <div className="lg:col-span-2">
           {resultGroups.length === 0 && !generating && queue.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Factory size={48} className="text-[var(--border-1)] mb-4" />
+              <Factory size={48} className="mb-4 text-[var(--border-1)]" />
               <p className="text-[var(--text-faint)]">
                 أضف طلبات المحتوى للقائمة ثم اضغط &quot;إنتاج الكل&quot;
               </p>
             </div>
           )}
-          {resultGroups.length === 0 &&
-            queue.length > 0 &&
-            !generating && (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="text-6xl mb-4">📋</div>
-                <p className="text-[var(--text-soft)] font-bold text-lg">
-                  {queue.length} طلب — {totalPosts} منشور
-                </p>
-              </div>
-            )}
+          {resultGroups.length === 0 && queue.length > 0 && !generating && (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="mb-4 text-6xl">📋</div>
+              <p className="text-lg font-bold text-[var(--text-soft)]">
+                {queue.length} طلب — {totalPosts} منشور
+              </p>
+            </div>
+          )}
           {generating && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Loader2
-                size={56}
-                className="text-[var(--gold-2)] animate-spin mb-6"
-              />
-              <p className="text-white font-bold text-lg mb-2">
-                جاري إنتاج المحتوى...
-              </p>
+              <Loader2 size={56} className="mb-6 animate-spin text-[var(--gold-2)]" />
+              <p className="mb-2 text-lg font-bold text-white">جاري إنتاج المحتوى...</p>
               <p className="text-[var(--text-soft)]">
                 الطلب {progress.current} من {progress.total}
               </p>
-              <div className="w-64 bg-[var(--bg-surface-2)] rounded-full h-2 mt-4">
+              <div className="mt-4 h-2 w-64 rounded-full bg-[var(--bg-surface-2)]">
                 <div
-                  className="bg-[var(--gold-2)] h-2 rounded-full transition-all duration-500"
+                  className="h-2 rounded-full bg-[var(--gold-2)] transition-all duration-500"
                   style={{
-                    width:
-                      (progress.current / progress.total) * 100 + "%",
+                    width: (progress.current / progress.total) * 100 + "%",
                   }}
                 />
               </div>
@@ -549,74 +497,54 @@ export default function FactoryTab({
           {resultGroups.length > 0 && !generating && (
             <div className="space-y-6">
               {draftsSaved && (
-                <div className="bg-green-900/20 border border-green-800 rounded-xl p-4 flex items-center gap-3">
+                <div className="flex items-center gap-3 rounded-xl border border-green-800 bg-green-900/20 p-4">
                   <Check size={20} className="text-green-400" />
-                  <p className="text-green-400 text-sm">
-                    تم حفظ جميع المنشورات كمسودات تلقائياً
-                  </p>
+                  <p className="text-sm text-green-400">تم حفظ جميع المنشورات كمسودات تلقائياً</p>
                 </div>
               )}
               {resultGroups.map((group, gIdx) => (
                 <div
                   key={gIdx}
-                  className="border border-[var(--gold-bg)] rounded-xl overflow-hidden"
+                  className="overflow-hidden rounded-xl border border-[var(--gold-bg)]"
                 >
-                  <div className="px-5 py-3 bg-[var(--bg-surface-1)] border-b border-[var(--gold-bg)] flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-5 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs bg-[var(--gold-bg)] text-[var(--gold-2)] px-2 py-1 rounded">
+                      <span className="rounded bg-[var(--gold-bg)] px-2 py-1 text-xs text-[var(--gold-2)]">
                         {group.queueItem.platform}
                       </span>
                       <span className="text-xs text-[var(--text-soft)]">
                         {group.queueItem.contentFormat}
                       </span>
                       <span className="text-xs text-[var(--text-faint)]">
-                        {modelName(
-                          group.queueItem.provider,
-                          group.queueItem.model
-                        )}
+                        {modelName(group.queueItem.provider, group.queueItem.model)}
                         {group.queueItem.mode !== "single"
-                          ? " + " +
-                            modelName(
-                              group.queueItem.provider2,
-                              group.queueItem.model2
-                            )
+                          ? " + " + modelName(group.queueItem.provider2, group.queueItem.model2)
                           : ""}
                       </span>
                     </div>
                     <span className="text-xs text-green-400">
                       ✓ {group.posts.length}
-                      {group.posts2
-                        ? " + " + group.posts2.length
-                        : ""}{" "}
-                      منشور
+                      {group.posts2 ? " + " + group.posts2.length : ""} منشور
                     </span>
                   </div>
                   {group.queueItem.mode === "compare" && group.posts2 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-gray-800">
+                    <div className="grid grid-cols-1 divide-y divide-gray-800 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
                       <div>
-                        <div className="px-4 py-2 bg-gray-800/50 text-xs text-center font-bold text-[var(--text-soft)]">
-                          {modelName(
-                            group.queueItem.provider,
-                            group.queueItem.model
-                          )}
+                        <div className="bg-gray-800/50 px-4 py-2 text-center text-xs font-bold text-[var(--text-soft)]">
+                          {modelName(group.queueItem.provider, group.queueItem.model)}
                         </div>
                         <div className="divide-y divide-gray-800">
                           {group.posts.map((post, pIdx) => {
                             const key = "a" + gIdx + "-" + pIdx;
                             return (
                               <div key={pIdx} className="p-4">
-                                <div className="flex justify-between mb-2">
+                                <div className="mb-2 flex justify-between">
                                   <span className="text-xs text-[var(--text-faint)]">
                                     منشور {pIdx + 1}
                                   </span>
-                                  <button
-                                    onClick={() => copyPost(key, post)}
-                                    className="text-xs"
-                                  >
+                                  <button onClick={() => copyPost(key, post)} className="text-xs">
                                     {copiedKey === key ? (
-                                      <span className="text-green-400">
-                                        نُسخ ✓
-                                      </span>
+                                      <span className="text-green-400">نُسخ ✓</span>
                                     ) : (
                                       <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                                         نسخ
@@ -624,7 +552,7 @@ export default function FactoryTab({
                                     )}
                                   </button>
                                 </div>
-                                <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
+                                <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-200">
                                   {post}
                                 </p>
                               </div>
@@ -633,29 +561,21 @@ export default function FactoryTab({
                         </div>
                       </div>
                       <div>
-                        <div className="px-4 py-2 bg-gray-800/50 text-xs text-center font-bold text-[var(--text-soft)]">
-                          {modelName(
-                            group.queueItem.provider2,
-                            group.queueItem.model2
-                          )}
+                        <div className="bg-gray-800/50 px-4 py-2 text-center text-xs font-bold text-[var(--text-soft)]">
+                          {modelName(group.queueItem.provider2, group.queueItem.model2)}
                         </div>
                         <div className="divide-y divide-gray-800">
                           {group.posts2.map((post, pIdx) => {
                             const key = "b" + gIdx + "-" + pIdx;
                             return (
                               <div key={pIdx} className="p-4">
-                                <div className="flex justify-between mb-2">
+                                <div className="mb-2 flex justify-between">
                                   <span className="text-xs text-[var(--text-faint)]">
                                     منشور {pIdx + 1}
                                   </span>
-                                  <button
-                                    onClick={() => copyPost(key, post)}
-                                    className="text-xs"
-                                  >
+                                  <button onClick={() => copyPost(key, post)} className="text-xs">
                                     {copiedKey === key ? (
-                                      <span className="text-green-400">
-                                        نُسخ ✓
-                                      </span>
+                                      <span className="text-green-400">نُسخ ✓</span>
                                     ) : (
                                       <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                                         نسخ
@@ -663,7 +583,7 @@ export default function FactoryTab({
                                     )}
                                   </button>
                                 </div>
-                                <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
+                                <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-200">
                                   {post}
                                 </p>
                               </div>
@@ -675,11 +595,11 @@ export default function FactoryTab({
                   ) : (
                     <div className="divide-y divide-gray-800">
                       {group.draft && (
-                        <div className="p-4 bg-yellow-900/10 border-b border-[var(--gold-bg)]">
-                          <p className="text-xs text-yellow-400 mb-2">
+                        <div className="border-b border-[var(--gold-bg)] bg-yellow-900/10 p-4">
+                          <p className="mb-2 text-xs text-yellow-400">
                             المسودة الأولى (قبل المراجعة):
                           </p>
-                          <p className="text-[var(--text-soft)] text-xs leading-relaxed whitespace-pre-wrap line-clamp-3">
+                          <p className="line-clamp-3 text-xs leading-relaxed whitespace-pre-wrap text-[var(--text-soft)]">
                             {group.draft}
                           </p>
                         </div>
@@ -687,22 +607,14 @@ export default function FactoryTab({
                       {group.posts.map((post, pIdx) => {
                         const key = gIdx + "-" + pIdx;
                         return (
-                          <div
-                            key={pIdx}
-                            className="p-4 hover:bg-[var(--bg-surface-1)]/50"
-                          >
-                            <div className="flex justify-between mb-2">
+                          <div key={pIdx} className="p-4 hover:bg-[var(--bg-surface-1)]/50">
+                            <div className="mb-2 flex justify-between">
                               <span className="text-xs text-[var(--text-faint)]">
                                 منشور {pIdx + 1}
                               </span>
-                              <button
-                                onClick={() => copyPost(key, post)}
-                                className="text-xs"
-                              >
+                              <button onClick={() => copyPost(key, post)} className="text-xs">
                                 {copiedKey === key ? (
-                                  <span className="text-green-400">
-                                    نُسخ ✓
-                                  </span>
+                                  <span className="text-green-400">نُسخ ✓</span>
                                 ) : (
                                   <span className="text-[var(--text-faint)] hover:text-[var(--text-strong)]">
                                     نسخ
@@ -710,7 +622,7 @@ export default function FactoryTab({
                                 )}
                               </button>
                             </div>
-                            <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
+                            <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-200">
                               {post}
                             </p>
                           </div>

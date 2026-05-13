@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
   // ── بناء محتوى الإيميل ──
   const brokerName = settings?.broker_name || "الوسيط";
-  const isRequest  = type === "request";
+  const isRequest = type === "request";
 
   const subject = isRequest
     ? `🏠 طلب عقار جديد — ${data.name || "زائر"}`
@@ -80,11 +80,17 @@ export async function POST(req: NextRequest) {
   </div>
   <div class="body">
     <p style="color:#444;font-size:14px;margin-top:0">مرحباً ${brokerName}، وصلك ${isRequest ? "طلب عقار" : "عميل محتمل"} جديد:</p>
-    ${Object.entries(data).map(([k, v]) => v ? `
+    ${Object.entries(data)
+      .map(([k, v]) =>
+        v
+          ? `
     <div class="row">
       <span class="label">${k}</span>
       <span class="value">${v}</span>
-    </div>` : "").join("")}
+    </div>`
+          : ""
+      )
+      .join("")}
     <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://waseet-pro.com"}/dashboard/${isRequest ? "requests" : "clients"}" class="btn">
       عرض في لوحة التحكم
     </a>
@@ -99,7 +105,7 @@ export async function POST(req: NextRequest) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${RESEND_KEY}`,
+      Authorization: `Bearer ${RESEND_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

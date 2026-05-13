@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ valid: false, error: "JSON غير صالح" }, { status: 400 });
   }
 
-  const code = String(body.code || "").trim().toUpperCase().slice(0, 50);
+  const code = String(body.code || "")
+    .trim()
+    .toUpperCase()
+    .slice(0, 50);
   if (!code) {
     return NextResponse.json({ valid: false, error: "الكود مطلوب" }, { status: 400 });
   }

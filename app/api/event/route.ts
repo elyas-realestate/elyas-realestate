@@ -94,7 +94,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "JSON غير صالح" }, { status: 400 });
   }
 
-  const event_type = String(body.type || "").trim().slice(0, 60);
+  const event_type = String(body.type || "")
+    .trim()
+    .slice(0, 60);
   if (!event_type) {
     return NextResponse.json({ ok: false, error: "type مطلوب" }, { status: 400 });
   }

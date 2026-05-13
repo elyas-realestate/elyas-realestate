@@ -6,13 +6,13 @@
 export interface MatchScore {
   property_id: string;
   request_id: string;
-  score: number;         // 0-100
+  score: number; // 0-100
   breakdown: {
-    city: number;        // 0-30
-    district: number;    // 0-20
-    price: number;       // 0-25
-    category: number;    // 0-15
-    rooms: number;       // 0-10
+    city: number; // 0-30
+    district: number; // 0-20
+    price: number; // 0-25
+    category: number; // 0-15
+    rooms: number; // 0-10
   };
 }
 
@@ -42,7 +42,8 @@ export function calculateMatch(
   // المدينة — 30 نقطة
   if (request.city && property.city) {
     if (property.city === request.city) breakdown.city = 30;
-    else if (property.city.includes(request.city) || request.city.includes(property.city)) breakdown.city = 15;
+    else if (property.city.includes(request.city) || request.city.includes(property.city))
+      breakdown.city = 15;
   } else if (!request.city) {
     breakdown.city = 15; // لا تفضيل = نصف النقاط
   }
@@ -50,7 +51,11 @@ export function calculateMatch(
   // الحي — 20 نقطة
   if (request.district && property.district) {
     if (property.district === request.district) breakdown.district = 20;
-    else if (property.district.includes(request.district) || request.district.includes(property.district)) breakdown.district = 10;
+    else if (
+      property.district.includes(request.district) ||
+      request.district.includes(property.district)
+    )
+      breakdown.district = 10;
   } else if (!request.district) {
     breakdown.district = 10;
   }
@@ -96,7 +101,8 @@ export function calculateMatch(
     breakdown.rooms = 5;
   }
 
-  const score = breakdown.city + breakdown.district + breakdown.price + breakdown.category + breakdown.rooms;
+  const score =
+    breakdown.city + breakdown.district + breakdown.price + breakdown.category + breakdown.rooms;
 
   return {
     property_id: property.id,
@@ -116,8 +122,8 @@ export function findBestMatches(
   limit = 5
 ): MatchScore[] {
   return properties
-    .map(p => calculateMatch(request, p, requestId))
-    .filter(m => m.score >= 30) // حد أدنى 30%
+    .map((p) => calculateMatch(request, p, requestId))
+    .filter((m) => m.score >= 30) // حد أدنى 30%
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);
 }

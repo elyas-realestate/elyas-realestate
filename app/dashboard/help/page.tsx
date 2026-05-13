@@ -3,9 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  HelpCircle, ChevronDown, ChevronLeft, Search, MessageCircle,
-  Bot, IdCard, Building2, Users, FileSignature, Banknote,
-  CheckSquare, ShieldCheck, Sparkles, BookOpen, Play, Mail
+  HelpCircle,
+  ChevronDown,
+  ChevronLeft,
+  Search,
+  MessageCircle,
+  Bot,
+  IdCard,
+  Building2,
+  Users,
+  FileSignature,
+  Banknote,
+  CheckSquare,
+  ShieldCheck,
+  Sparkles,
+  BookOpen,
+  Play,
+  Mail,
 } from "lucide-react";
 import SupportContact from "@/app/components/SupportContact";
 
@@ -189,22 +203,26 @@ export default function HelpPage() {
   const [search, setSearch] = useState("");
 
   const filtered = search
-    ? SECTIONS.map(s => ({
+    ? SECTIONS.map((s) => ({
         ...s,
-        items: s.items.filter(i =>
-          i.q.toLowerCase().includes(search.toLowerCase()) ||
-          i.a.toLowerCase().includes(search.toLowerCase())
+        items: s.items.filter(
+          (i) =>
+            i.q.toLowerCase().includes(search.toLowerCase()) ||
+            i.a.toLowerCase().includes(search.toLowerCase())
         ),
-      })).filter(s => s.items.length > 0)
+      })).filter((s) => s.items.length > 0)
     : SECTIONS;
 
   return (
-    <div dir="rtl" className="space-y-6 max-w-4xl mx-auto">
+    <div dir="rtl" className="mx-auto max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
+        <h1
+          className="flex items-center gap-2 text-2xl font-bold"
+          style={{ color: "var(--text-strong)" }}
+        >
           <HelpCircle size={22} style={{ color: "var(--gold-2)" }} /> مركز المساعدة
         </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
+        <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
           ابحث في كل ميزات المنصة، أو تصفّح الأقسام أدناه.
         </p>
       </div>
@@ -214,10 +232,14 @@ export default function HelpPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "var(--text-faint)" }} />
+        <Search
+          size={16}
+          className="absolute top-1/2 right-3 -translate-y-1/2"
+          style={{ color: "var(--text-faint)" }}
+        />
         <input
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="ابحث في المساعدة..."
           className="w-full rounded-xl px-10 py-3 text-sm"
           style={{
@@ -229,43 +251,79 @@ export default function HelpPage() {
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-        <QuickLink href="/dashboard/ai" icon={<Bot size={16} />} label="مساعدوك" color="var(--gold-2)" />
-        <QuickLink href="/dashboard/profile-card" icon={<IdCard size={16} />} label="بطاقتك" color="rgb(167,139,250)" />
-        <QuickLink href="/dashboard/today" icon={<CheckSquare size={16} />} label="يومي" color="var(--success)" />
-        <QuickLink href="/dashboard/settings" icon={<ShieldCheck size={16} />} label="الإعدادات" color="var(--info, #3B82F6)" />
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+        <QuickLink
+          href="/dashboard/ai"
+          icon={<Bot size={16} />}
+          label="مساعدوك"
+          color="var(--gold-2)"
+        />
+        <QuickLink
+          href="/dashboard/profile-card"
+          icon={<IdCard size={16} />}
+          label="بطاقتك"
+          color="rgb(167,139,250)"
+        />
+        <QuickLink
+          href="/dashboard/today"
+          icon={<CheckSquare size={16} />}
+          label="يومي"
+          color="var(--success)"
+        />
+        <QuickLink
+          href="/dashboard/settings"
+          icon={<ShieldCheck size={16} />}
+          label="الإعدادات"
+          color="var(--info, #3B82F6)"
+        />
       </div>
 
       {/* Sections */}
       <div className="space-y-3">
-        {filtered.map(section => {
+        {filtered.map((section) => {
           const Icon = section.icon;
           const isOpen = search ? true : expandedSection === section.id;
           return (
-            <div key={section.id} className="rounded-xl overflow-hidden" style={{
-              background: "var(--bg-surface-1)",
-              border: "1px solid var(--gold-bg)",
-            }}>
-              <button onClick={() => setExpandedSection(isOpen ? null : section.id)}
-                className="w-full p-4 flex items-center justify-between text-start"
-                style={{ cursor: "pointer", background: "transparent", border: "none" }}>
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{
-                    background: "var(--gold-bg-soft)", color: "var(--gold-2)",
-                  }}>
+            <div
+              key={section.id}
+              className="overflow-hidden rounded-xl"
+              style={{
+                background: "var(--bg-surface-1)",
+                border: "1px solid var(--gold-bg)",
+              }}
+            >
+              <button
+                onClick={() => setExpandedSection(isOpen ? null : section.id)}
+                className="flex w-full items-center justify-between p-4 text-start"
+                style={{ cursor: "pointer", background: "transparent", border: "none" }}
+              >
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-lg"
+                    style={{
+                      background: "var(--gold-bg-soft)",
+                      color: "var(--gold-2)",
+                    }}
+                  >
                     <Icon size={18} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>{section.title}</div>
-                    <div className="text-xs mt-0.5 truncate" style={{ color: "var(--text-faint)" }}>{section.description}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+                      {section.title}
+                    </div>
+                    <div className="mt-0.5 truncate text-xs" style={{ color: "var(--text-faint)" }}>
+                      {section.description}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {section.link && (
-                    <Link href={section.link}
-                      onClick={e => e.stopPropagation()}
-                      className="text-xs px-2 py-1 rounded no-underline"
-                      style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)" }}>
+                    <Link
+                      href={section.link}
+                      onClick={(e) => e.stopPropagation()}
+                      className="rounded px-2 py-1 text-xs no-underline"
+                      style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)" }}
+                    >
                       افتح
                     </Link>
                   )}
@@ -274,13 +332,23 @@ export default function HelpPage() {
               </button>
 
               {isOpen && (
-                <div className="px-4 pb-4 space-y-2">
+                <div className="space-y-2 px-4 pb-4">
                   {section.items.map((item, i) => (
-                    <details key={i} className="rounded-lg" style={{ background: "var(--bg-surface-2)" }}>
-                      <summary className="cursor-pointer p-3 text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+                    <details
+                      key={i}
+                      className="rounded-lg"
+                      style={{ background: "var(--bg-surface-2)" }}
+                    >
+                      <summary
+                        className="cursor-pointer p-3 text-sm font-bold"
+                        style={{ color: "var(--text-strong)" }}
+                      >
                         {item.q}
                       </summary>
-                      <div className="px-3 pb-3 text-sm leading-relaxed" style={{ color: "var(--text-soft)" }}>
+                      <div
+                        className="px-3 pb-3 text-sm leading-relaxed"
+                        style={{ color: "var(--text-soft)" }}
+                      >
                         {item.a}
                       </div>
                     </details>
@@ -293,16 +361,27 @@ export default function HelpPage() {
       </div>
 
       {/* Contact support */}
-      <div className="rounded-xl p-5 text-center" style={{
-        background: "linear-gradient(135deg, var(--gold-bg-soft), var(--bg-surface-1))",
-        border: "1px solid var(--gold-bg)",
-      }}>
+      <div
+        className="rounded-xl p-5 text-center"
+        style={{
+          background: "linear-gradient(135deg, var(--gold-bg-soft), var(--bg-surface-1))",
+          border: "1px solid var(--gold-bg)",
+        }}
+      >
         <MessageCircle size={28} className="mx-auto mb-2" style={{ color: "var(--gold-2)" }} />
-        <div className="text-sm font-bold mb-1" style={{ color: "var(--text-strong)" }}>لم تجد إجابة؟</div>
-        <div className="text-xs mb-3" style={{ color: "var(--text-faint)" }}>تواصل مع الدعم مباشرة</div>
-        <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm no-underline"
-          style={{ background: "#25D366", color: "#FFFFFF" }}>
+        <div className="mb-1 text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+          لم تجد إجابة؟
+        </div>
+        <div className="mb-3 text-xs" style={{ color: "var(--text-faint)" }}>
+          تواصل مع الدعم مباشرة
+        </div>
+        <a
+          href="https://wa.me/966500000000"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold no-underline"
+          style={{ background: "#25D366", color: "#FFFFFF" }}
+        >
           <MessageCircle size={14} /> راسلنا على واتساب
         </a>
       </div>
@@ -312,13 +391,26 @@ export default function HelpPage() {
 
 function QuickLink({ href, icon, label, color }: any) {
   return (
-    <Link href={href} className="rounded-lg p-3 text-center no-underline transition" style={{
-      background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)",
-    }}>
-      <div className="w-8 h-8 rounded-lg mx-auto flex items-center justify-center mb-1.5" style={{
-        background: `${color}15`, color,
-      }}>{icon}</div>
-      <div className="text-xs font-bold" style={{ color: "var(--text-strong)" }}>{label}</div>
+    <Link
+      href={href}
+      className="rounded-lg p-3 text-center no-underline transition"
+      style={{
+        background: "var(--bg-surface-1)",
+        border: "1px solid var(--gold-bg)",
+      }}
+    >
+      <div
+        className="mx-auto mb-1.5 flex h-8 w-8 items-center justify-center rounded-lg"
+        style={{
+          background: `${color}15`,
+          color,
+        }}
+      >
+        {icon}
+      </div>
+      <div className="text-xs font-bold" style={{ color: "var(--text-strong)" }}>
+        {label}
+      </div>
     </Link>
   );
 }

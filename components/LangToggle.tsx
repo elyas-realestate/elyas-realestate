@@ -23,8 +23,12 @@ export default function LangToggle() {
         transition: "all 0.2s",
         letterSpacing: 0.3,
       }}
-      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = "#C6914C"; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = "#9A9AA0"; }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.color = "#C6914C";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.color = "#9A9AA0";
+      }}
     >
       {lang === "ar" ? "EN" : "عر"}
     </button>

@@ -17,7 +17,10 @@ const cspHeader = `
   form-action 'self';
   frame-ancestors 'none';
   ${!isDev ? "upgrade-insecure-requests;" : ""}
-`.replace(/\n/g, "").replace(/\s{2,}/g, " ").trim();
+`
+  .replace(/\n/g, "")
+  .replace(/\s{2,}/g, " ")
+  .trim();
 
 // CSP أوسع لصفحة Claude Design landing فقط (تحتاج blob: scripts + Google Fonts)
 const landingCspHeader = `
@@ -33,7 +36,10 @@ const landingCspHeader = `
   form-action 'self';
   frame-ancestors 'none';
   ${!isDev ? "upgrade-insecure-requests;" : ""}
-`.replace(/\n/g, "").replace(/\s{2,}/g, " ").trim();
+`
+  .replace(/\n/g, "")
+  .replace(/\s{2,}/g, " ")
+  .trim();
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -77,20 +83,62 @@ const nextConfig: NextConfig = {
       },
       // CSP صارم لكل المسارات الأخرى — قواعد محددة بدلاً من catch-all
       // (catch-all كانت تطابق /landing.html و / فيتسبب في CSP مزدوج وانسحاب الموسّع)
-      { source: "/dashboard/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/admin/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/api/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/auth/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/sign/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/broker/:path*", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/login", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/signup", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/privacy", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/terms", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/data-processing", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/license", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/search", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
-      { source: "/mortgage", headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders] },
+      {
+        source: "/dashboard/:path*",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/admin/:path*",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/api/:path*",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/auth/:path*",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/sign/:path*",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/broker/:path*",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/login",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/signup",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/privacy",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/terms",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/data-processing",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/license",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/search",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
+      {
+        source: "/mortgage",
+        headers: [{ key: "Content-Security-Policy", value: cspHeader }, ...sharedSecurityHeaders],
+      },
     ];
   },
 };
@@ -106,8 +154,8 @@ export default withSentryConfig(nextConfig, {
   authToken: process.env.SENTRY_AUTH_TOKEN,
 
   // ── خيارات بناء ──
-  silent: !process.env.CI,         // اسكت رسائل البناء محلياً
-  hideSourceMaps: true,            // لا تكشف source maps للعموم
-  disableLogger: true,             // أزل console.log الخاص بـ Sentry من البناء
-  widenClientFileUpload: true,     // ارفع ملفات أكثر للحصول على stack traces أوضح
+  silent: !process.env.CI, // اسكت رسائل البناء محلياً
+  hideSourceMaps: true, // لا تكشف source maps للعموم
+  disableLogger: true, // أزل console.log الخاص بـ Sentry من البناء
+  widenClientFileUpload: true, // ارفع ملفات أكثر للحصول على stack traces أوضح
 });

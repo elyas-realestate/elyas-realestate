@@ -54,7 +54,7 @@ export interface OrgContext {
     ai_provider: AIProvider;
     ai_model: string;
   };
-  systemPrompt: string;       // الـ prompt الجاهز للحقن
+  systemPrompt: string; // الـ prompt الجاهز للحقن
   directiveCount: number;
   kbCount: number;
   approvalRules: ApprovalRules; // القواعد المدمجة (افتراضي + override)
@@ -79,7 +79,9 @@ export async function buildEmployeeContext(
   // ١) جلب الموظف ومديره
   const { data: emp } = await admin
     .from("ai_employees")
-    .select("id, code, name, description, manager_id, default_ai_provider, default_ai_model, approval_rules")
+    .select(
+      "id, code, name, description, manager_id, default_ai_provider, default_ai_model, approval_rules"
+    )
     .eq("code", employeeCode)
     .eq("is_active", true)
     .single();
@@ -94,20 +96,30 @@ export async function buildEmployeeContext(
 
   // ٢) tenant overrides (provider/model + approval)
   const [{ data: empOverride }, { data: mgrOverride }] = await Promise.all([
-    admin.from("tenant_ai_config")
+    admin
+      .from("tenant_ai_config")
       .select("ai_provider_override, ai_model_override, is_enabled, approval_overrides")
-      .eq("tenant_id", tenantId).eq("target_kind", "employee").eq("target_id", emp.id)
+      .eq("tenant_id", tenantId)
+      .eq("target_kind", "employee")
+      .eq("target_id", emp.id)
       .maybeSingle(),
-    admin.from("tenant_ai_config")
+    admin
+      .from("tenant_ai_config")
       .select("ai_provider_override, ai_model_override, is_enabled")
-      .eq("tenant_id", tenantId).eq("target_kind", "manager").eq("target_id", mgr.id)
+      .eq("tenant_id", tenantId)
+      .eq("target_kind", "manager")
+      .eq("target_id", mgr.id)
       .maybeSingle(),
   ]);
 
   // قواعد الموافقة المدمجة
-  const tenantOverridesObj = (empOverride?.approval_overrides as Record<string, ApprovalRules> | undefined) || {};
+  const tenantOverridesObj =
+    (empOverride?.approval_overrides as Record<string, ApprovalRules> | undefined) || {};
   const tenantOverrideForCode = tenantOverridesObj[emp.code];
-  const mergedRules: ApprovalRules = mergeRules(emp.approval_rules as ApprovalRules, tenantOverrideForCode);
+  const mergedRules: ApprovalRules = mergeRules(
+    emp.approval_rules as ApprovalRules,
+    tenantOverrideForCode
+  );
 
   // إذا الموظف أو مديره معطّل → null
   if (empOverride && empOverride.is_enabled === false) return null;
@@ -121,7 +133,9 @@ export async function buildEmployeeContext(
   // ٣) هوية الوسيط
   const { data: identityData } = await admin
     .from("broker_identity")
-    .select("broker_name, specialization, writing_tone, coverage_areas, brand_keywords, avoid_phrases")
+    .select(
+      "broker_name, specialization, writing_tone, coverage_areas, brand_keywords, avoid_phrases"
+    )
     .eq("tenant_id", tenantId)
     .maybeSingle();
   const identity = (identityData || {}) as BrokerIdentity;
@@ -182,16 +196,22 @@ export async function buildEmployeeContext(
   if (identity.broker_name) identityParts.push(`اسم الوسيط: ${identity.broker_name}`);
   if (identity.specialization) identityParts.push(`التخصص: ${identity.specialization}`);
   if (identity.coverage_areas) {
-    const areas = Array.isArray(identity.coverage_areas) ? identity.coverage_areas.join(", ") : identity.coverage_areas;
+    const areas = Array.isArray(identity.coverage_areas)
+      ? identity.coverage_areas.join(", ")
+      : identity.coverage_areas;
     identityParts.push(`نطاق التغطية: ${areas}`);
   }
   if (identity.writing_tone) identityParts.push(`نبرة الكتابة: ${identity.writing_tone}`);
   if (identity.brand_keywords) {
-    const kw = Array.isArray(identity.brand_keywords) ? identity.brand_keywords.join(", ") : identity.brand_keywords;
+    const kw = Array.isArray(identity.brand_keywords)
+      ? identity.brand_keywords.join(", ")
+      : identity.brand_keywords;
     identityParts.push(`كلمات مفتاحية للعلامة: ${kw}`);
   }
   if (identity.avoid_phrases) {
-    const av = Array.isArray(identity.avoid_phrases) ? identity.avoid_phrases.join(", ") : identity.avoid_phrases;
+    const av = Array.isArray(identity.avoid_phrases)
+      ? identity.avoid_phrases.join(", ")
+      : identity.avoid_phrases;
     identityParts.push(`عبارات يُمنع استخدامها: ${av}`);
   }
   if (identityParts.length > 0) {
@@ -201,33 +221,41 @@ export async function buildEmployeeContext(
   // ── توجيهات المدير (الموروثة) ──
   const mgrDirArr = (mgrDirectives || []) as DirectiveRow[];
   if (mgrDirArr.length > 0) {
-    sections.push(`\n=== التوجيهات الاستراتيجية من ${mgr.name} ===\n${
-      mgrDirArr.map((d, i) => `${i + 1}. ${d.title}\n   ${d.content}`).join("\n\n")
-    }`);
+    sections.push(
+      `\n=== التوجيهات الاستراتيجية من ${mgr.name} ===\n${mgrDirArr
+        .map((d, i) => `${i + 1}. ${d.title}\n   ${d.content}`)
+        .join("\n\n")}`
+    );
   }
 
   // ── توجيهات الموظف ──
   const empDirArr = (empDirectives || []) as DirectiveRow[];
   if (empDirArr.length > 0) {
-    sections.push(`\n=== توجيهاتك التشغيلية المخصّصة ===\n${
-      empDirArr.map((d, i) => `${i + 1}. ${d.title}\n   ${d.content}`).join("\n\n")
-    }`);
+    sections.push(
+      `\n=== توجيهاتك التشغيلية المخصّصة ===\n${empDirArr
+        .map((d, i) => `${i + 1}. ${d.title}\n   ${d.content}`)
+        .join("\n\n")}`
+    );
   }
 
   // ── قاعدة معرفة المدير ──
   const mgrKBArr = (mgrKB || []) as KBRow[];
   if (mgrKBArr.length > 0) {
-    sections.push(`\n=== قاعدة معرفة القسم ===\n${
-      mgrKBArr.map(k => `[${k.category}] ${k.title}: ${k.content}`).join("\n\n")
-    }`);
+    sections.push(
+      `\n=== قاعدة معرفة القسم ===\n${mgrKBArr
+        .map((k) => `[${k.category}] ${k.title}: ${k.content}`)
+        .join("\n\n")}`
+    );
   }
 
   // ── قاعدة معرفة الموظف ──
   const empKBArr = (empKB || []) as KBRow[];
   if (empKBArr.length > 0) {
-    sections.push(`\n=== قاعدة معرفتك الخاصة ===\n${
-      empKBArr.map(k => `[${k.category}] ${k.title}: ${k.content}`).join("\n\n")
-    }`);
+    sections.push(
+      `\n=== قاعدة معرفتك الخاصة ===\n${empKBArr
+        .map((k) => `[${k.category}] ${k.title}: ${k.content}`)
+        .join("\n\n")}`
+    );
   }
 
   // ── حدود الصلاحية والموافقات ──
@@ -246,12 +274,20 @@ export async function buildEmployeeContext(
 
   return {
     manager: {
-      id: mgr.id, code: mgr.code, name: mgr.name, description: mgr.description,
-      ai_provider: mgrProvider, ai_model: mgrModel,
+      id: mgr.id,
+      code: mgr.code,
+      name: mgr.name,
+      description: mgr.description,
+      ai_provider: mgrProvider,
+      ai_model: mgrModel,
     },
     employee: {
-      id: emp.id, code: emp.code, name: emp.name, description: emp.description,
-      ai_provider: empProvider, ai_model: empModel,
+      id: emp.id,
+      code: emp.code,
+      name: emp.name,
+      description: emp.description,
+      ai_provider: empProvider,
+      ai_model: empModel,
     },
     systemPrompt: sections.join("\n"),
     directiveCount: mgrDirArr.length + empDirArr.length,

@@ -8,10 +8,10 @@ export interface CardTheme {
   name: string;
   emoji: string;
   category: "luxury" | "modern" | "classic" | "minimal" | "bold" | "specialty";
-  bg_color: string;        // الخلفية
-  text_color: string;      // النص الرئيسي
-  accent_color: string;    // اللون المميّز
-  sub_color?: string;      // لون ثانوي للنصوص الخافتة
+  bg_color: string; // الخلفية
+  text_color: string; // النص الرئيسي
+  accent_color: string; // اللون المميّز
+  sub_color?: string; // لون ثانوي للنصوص الخافتة
   preview_gradient?: string; // gradient للـ preview cards
 }
 
@@ -239,9 +239,9 @@ export const CATEGORY_LABELS: Record<CardTheme["category"], string> = {
 };
 
 export function getThemeById(id: string): CardTheme | undefined {
-  return CARD_THEMES.find(t => t.id === id);
+  return CARD_THEMES.find((t) => t.id === id);
 }
 
 export function getThemesByCategory(cat: CardTheme["category"]): CardTheme[] {
-  return CARD_THEMES.filter(t => t.category === cat);
+  return CARD_THEMES.filter((t) => t.category === cat);
 }

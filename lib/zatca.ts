@@ -57,11 +57,11 @@ function concatBytes(...arrs: Uint8Array[]): Uint8Array {
 // ══════════════════════════════════════════════════════════════
 
 export interface ZatcaQrInput {
-  sellerName: string;          // اسم البائع
-  vatNumber: string;           // الرقم الضريبي (15 digit)
-  timestamp: string | Date;    // تاريخ الفاتورة (ISO 8601)
-  totalWithVat: number;        // الإجمالي شامل الضريبة
-  vatAmount: number;           // ضريبة القيمة المضافة
+  sellerName: string; // اسم البائع
+  vatNumber: string; // الرقم الضريبي (15 digit)
+  timestamp: string | Date; // تاريخ الفاتورة (ISO 8601)
+  totalWithVat: number; // الإجمالي شامل الضريبة
+  vatAmount: number; // ضريبة القيمة المضافة
 }
 
 /**
@@ -79,14 +79,14 @@ export function buildZatcaQr(input: ZatcaQrInput): string {
 
   // format numbers with 2 decimals (SAR)
   const total = Number(input.totalWithVat || 0).toFixed(2);
-  const vat   = Number(input.vatAmount    || 0).toFixed(2);
+  const vat = Number(input.vatAmount || 0).toFixed(2);
 
   const payload = concatBytes(
     tlv(1, input.sellerName || ""),
     tlv(2, input.vatNumber || ""),
     tlv(3, iso),
     tlv(4, total),
-    tlv(5, vat),
+    tlv(5, vat)
   );
 
   return toBase64(payload);
@@ -140,8 +140,8 @@ export interface ZatcaInvoiceData {
   invoiceUuid: string;
   invoiceNumber: string;
   invoiceCounter: number;
-  issueDate: string;            // YYYY-MM-DD
-  issueTime: string;            // HH:MM:SS
+  issueDate: string; // YYYY-MM-DD
+  issueTime: string; // HH:MM:SS
   invoiceType: "standard" | "simplified";
   previousHash?: string | null; // hash الفاتورة السابقة (أول فاتورة = hash of "0")
 
@@ -167,10 +167,10 @@ export interface ZatcaInvoiceData {
     description: string;
     quantity: number;
     unitPrice: number;
-    vatRate: number;  // 15 for 15%
+    vatRate: number; // 15 for 15%
   }>;
 
-  currency?: string;            // default SAR
+  currency?: string; // default SAR
 }
 
 /**
@@ -195,9 +195,9 @@ export function buildUblXml(inv: ZatcaInvoiceData): string {
   const typeName = inv.invoiceType === "simplified" ? "0200000" : "0100000";
 
   const lineTotal = inv.lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
-  const vatTotal  = inv.lines.reduce(
+  const vatTotal = inv.lines.reduce(
     (sum, l) => sum + (l.quantity * l.unitPrice * l.vatRate) / 100,
-    0,
+    0
   );
   const grandTotal = lineTotal + vatTotal;
 

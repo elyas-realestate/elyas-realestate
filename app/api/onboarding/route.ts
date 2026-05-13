@@ -19,7 +19,14 @@ function makeClient(req: NextRequest) {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
 }
 
@@ -28,13 +35,18 @@ async function getOwnerTenantId(
   userId: string
 ): Promise<string | null> {
   const { data: t } = await supabase
-    .from("tenants").select("id").eq("owner_id", userId).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", userId)
+    .maybeSingle();
   return (t?.id as string) || null;
 }
 
 export async function GET(req: NextRequest) {
   const supabase = makeClient(req);
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const tenantId = await getOwnerTenantId(supabase, user.id);
@@ -110,10 +122,7 @@ export async function GET(req: NextRequest) {
 
   // طبّق التحديثات لو فيه شي تغيّر
   if (Object.keys(updates).length > 0) {
-    await supabase
-      .from("tenant_onboarding")
-      .update(updates)
-      .eq("tenant_id", tenantId);
+    await supabase.from("tenant_onboarding").update(updates).eq("tenant_id", tenantId);
     state = { ...state, ...updates };
   }
 
@@ -122,7 +131,9 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const supabase = makeClient(req);
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const tenantId = await getOwnerTenantId(supabase, user.id);

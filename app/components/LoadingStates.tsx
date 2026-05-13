@@ -13,12 +13,7 @@ interface SpinnerProps {
   fullPage?: boolean;
 }
 
-export function Spinner({
-  size = 20,
-  color = "var(--gold-2)",
-  label,
-  fullPage,
-}: SpinnerProps) {
+export function Spinner({ size = 20, color = "var(--gold-2)", label, fullPage }: SpinnerProps) {
   const content = (
     <div
       style={{

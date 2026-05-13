@@ -7,14 +7,14 @@
 export type CsvRow = Record<string, string>;
 
 export interface CsvParseOptions {
-  delimiter?: string;  // "," أو ";" — لو غير محدد يُكتشف تلقائياً
-  trim?: boolean;      // إزالة المسافات من أطراف كل حقل (افتراضياً true)
+  delimiter?: string; // "," أو ";" — لو غير محدد يُكتشف تلقائياً
+  trim?: boolean; // إزالة المسافات من أطراف كل حقل (افتراضياً true)
 }
 
 export interface CsvStringifyOptions {
-  delimiter?: string;  // افتراضياً ","
-  bom?: boolean;       // إضافة BOM للتوافق مع Excel (افتراضياً true)
-  columns?: string[];  // ترتيب الأعمدة (افتراضياً يُستنبط من أول صف)
+  delimiter?: string; // افتراضياً ","
+  bom?: boolean; // إضافة BOM للتوافق مع Excel (افتراضياً true)
+  columns?: string[]; // ترتيب الأعمدة (افتراضياً يُستنبط من أول صف)
 }
 
 // ── اكتشاف الفاصل ──
@@ -24,7 +24,10 @@ function detectDelimiter(firstLine: string): string {
   let bestCount = 0;
   for (const c of candidates) {
     const count = (firstLine.match(new RegExp(c === "\t" ? "\\t" : c, "g")) || []).length;
-    if (count > bestCount) { bestCount = count; best = c; }
+    if (count > bestCount) {
+      bestCount = count;
+      best = c;
+    }
   }
   return best;
 }
@@ -51,21 +54,45 @@ export function parseCsv(input: string, opts: CsvParseOptions = {}): CsvRow[] {
     const ch = text[i];
     if (inQuotes) {
       if (ch === '"') {
-        if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
-        inQuotes = false; i++; continue;
+        if (text[i + 1] === '"') {
+          field += '"';
+          i += 2;
+          continue;
+        }
+        inQuotes = false;
+        i++;
+        continue;
       }
-      field += ch; i++; continue;
+      field += ch;
+      i++;
+      continue;
     }
     // خارج اقتباس
-    if (ch === '"' && field === "") { inQuotes = true; i++; continue; }
-    if (ch === delimiter) { row.push(trim ? field.trim() : field); field = ""; i++; continue; }
-    if (ch === "\r") { i++; continue; }
-    if (ch === "\n") {
-      row.push(trim ? field.trim() : field); field = "";
-      if (row.length > 1 || row[0] !== "") rows.push(row);
-      row = []; i++; continue;
+    if (ch === '"' && field === "") {
+      inQuotes = true;
+      i++;
+      continue;
     }
-    field += ch; i++;
+    if (ch === delimiter) {
+      row.push(trim ? field.trim() : field);
+      field = "";
+      i++;
+      continue;
+    }
+    if (ch === "\r") {
+      i++;
+      continue;
+    }
+    if (ch === "\n") {
+      row.push(trim ? field.trim() : field);
+      field = "";
+      if (row.length > 1 || row[0] !== "") rows.push(row);
+      row = [];
+      i++;
+      continue;
+    }
+    field += ch;
+    i++;
   }
   // الحقل/السطر الأخير
   if (field !== "" || row.length > 0) {
@@ -77,7 +104,9 @@ export function parseCsv(input: string, opts: CsvParseOptions = {}): CsvRow[] {
   const headers = rows[0].map((h) => h.trim());
   return rows.slice(1).map((r) => {
     const obj: CsvRow = {};
-    headers.forEach((h, idx) => { obj[h] = r[idx] ?? ""; });
+    headers.forEach((h, idx) => {
+      obj[h] = r[idx] ?? "";
+    });
     return obj;
   });
 }
@@ -86,12 +115,14 @@ export function parseCsv(input: string, opts: CsvParseOptions = {}): CsvRow[] {
 export function stringifyCsv(rows: CsvRow[], opts: CsvStringifyOptions = {}): string {
   if (rows.length === 0) return "";
   const delimiter = opts.delimiter || ",";
-  const columns = opts.columns || Array.from(
-    rows.reduce((set, r) => {
-      Object.keys(r).forEach((k) => set.add(k));
-      return set;
-    }, new Set<string>())
-  );
+  const columns =
+    opts.columns ||
+    Array.from(
+      rows.reduce((set, r) => {
+        Object.keys(r).forEach((k) => set.add(k));
+        return set;
+      }, new Set<string>())
+    );
   const needsQuote = (v: string) =>
     v.includes(delimiter) || v.includes('"') || v.includes("\n") || v.includes("\r");
   const escape = (v: unknown): string => {
@@ -107,7 +138,11 @@ export function stringifyCsv(rows: CsvRow[], opts: CsvStringifyOptions = {}): st
 }
 
 // ── تنزيل CSV في المتصفح ──
-export function downloadCsv(filename: string, rows: CsvRow[], opts: CsvStringifyOptions = {}): void {
+export function downloadCsv(
+  filename: string,
+  rows: CsvRow[],
+  opts: CsvStringifyOptions = {}
+): void {
   if (typeof window === "undefined") return;
   const csv = stringifyCsv(rows, opts);
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -127,42 +162,51 @@ export function downloadCsv(filename: string, rows: CsvRow[], opts: CsvStringify
 // ══════════════════════════════════════════════════════════════
 
 export type FieldAlias = {
-  target: string;           // اسم الحقل في قاعدة البيانات
-  aliases: string[];        // مرادفات عربية/إنجليزية شائعة
+  target: string; // اسم الحقل في قاعدة البيانات
+  aliases: string[]; // مرادفات عربية/إنجليزية شائعة
 };
 
 // mapping للعقارات
 export const PROPERTY_ALIASES: FieldAlias[] = [
-  { target: "title",     aliases: ["العنوان", "اسم العقار", "title", "name", "property"] },
-  { target: "type",      aliases: ["النوع", "نوع العقار", "type", "property type"] },
-  { target: "category",  aliases: ["التصنيف", "الفئة", "category", "listing type"] },
-  { target: "price",     aliases: ["السعر", "price", "amount"] },
-  { target: "area",      aliases: ["المساحة", "area", "size", "sqm"] },
-  { target: "city",      aliases: ["المدينة", "city"] },
-  { target: "district",  aliases: ["الحي", "district", "neighborhood"] },
-  { target: "bedrooms",  aliases: ["غرف النوم", "عدد الغرف", "bedrooms", "rooms"] },
+  { target: "title", aliases: ["العنوان", "اسم العقار", "title", "name", "property"] },
+  { target: "type", aliases: ["النوع", "نوع العقار", "type", "property type"] },
+  { target: "category", aliases: ["التصنيف", "الفئة", "category", "listing type"] },
+  { target: "price", aliases: ["السعر", "price", "amount"] },
+  { target: "area", aliases: ["المساحة", "area", "size", "sqm"] },
+  { target: "city", aliases: ["المدينة", "city"] },
+  { target: "district", aliases: ["الحي", "district", "neighborhood"] },
+  { target: "bedrooms", aliases: ["غرف النوم", "عدد الغرف", "bedrooms", "rooms"] },
   { target: "bathrooms", aliases: ["دورات المياه", "الحمامات", "bathrooms"] },
   { target: "description", aliases: ["الوصف", "description", "details"] },
-  { target: "address",   aliases: ["العنوان التفصيلي", "address", "location"] },
+  { target: "address", aliases: ["العنوان التفصيلي", "address", "location"] },
 ];
 
 // mapping للعملاء
 export const CLIENT_ALIASES: FieldAlias[] = [
-  { target: "name",       aliases: ["الاسم", "اسم العميل", "name", "client name"] },
-  { target: "phone",      aliases: ["الجوال", "الهاتف", "phone", "mobile"] },
-  { target: "email",      aliases: ["البريد", "الإيميل", "email"] },
-  { target: "city",       aliases: ["المدينة", "city"] },
-  { target: "notes",      aliases: ["ملاحظات", "notes"] },
-  { target: "budget",     aliases: ["الميزانية", "budget"] },
+  { target: "name", aliases: ["الاسم", "اسم العميل", "name", "client name"] },
+  { target: "phone", aliases: ["الجوال", "الهاتف", "phone", "mobile"] },
+  { target: "email", aliases: ["البريد", "الإيميل", "email"] },
+  { target: "city", aliases: ["المدينة", "city"] },
+  { target: "notes", aliases: ["ملاحظات", "notes"] },
+  { target: "budget", aliases: ["الميزانية", "budget"] },
   { target: "lead_source", aliases: ["المصدر", "source", "lead source"] },
 ];
 
 // يُطابق رأس العمود مع حقل قياسي
 export function matchFieldAlias(header: string, aliases: FieldAlias[]): string | null {
-  const norm = header.trim().toLowerCase().replace(/[\s_-]+/g, "");
+  const norm = header
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "");
   for (const a of aliases) {
     for (const alias of a.aliases) {
-      if (alias.trim().toLowerCase().replace(/[\s_-]+/g, "") === norm) return a.target;
+      if (
+        alias
+          .trim()
+          .toLowerCase()
+          .replace(/[\s_-]+/g, "") === norm
+      )
+        return a.target;
     }
   }
   return null;

@@ -4,7 +4,17 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import { providers, roomRoles } from "../constants";
 import type { BrokerIdentity } from "@/types/database";
-import { Play, Loader2, RefreshCw, Sparkles, Copy, Check, Save, MessageCircle, Users } from "lucide-react";
+import {
+  Play,
+  Loader2,
+  RefreshCw,
+  Sparkles,
+  Copy,
+  Check,
+  Save,
+  MessageCircle,
+  Users,
+} from "lucide-react";
 
 type RoomModel = { provider: string; model: string };
 
@@ -33,23 +43,23 @@ const TURN_PLAN: { roleIdx: number; action: string }[] = [
 ];
 
 const SPEAKER_COLORS = ["var(--gold-2)", "#7BB3E6", "#89D185"];
-const SPEAKER_BG     = ["var(--gold-bg-soft)", "rgba(123,179,230,0.08)", "rgba(137,209,133,0.08)"];
+const SPEAKER_BG = ["var(--gold-bg-soft)", "rgba(123,179,230,0.08)", "rgba(137,209,133,0.08)"];
 
 export default function ContentRoomTab({ onDraftSaved }: { onDraftSaved: () => void }) {
-  const [topic, setTopic]       = useState("");
-  const [models, setModels]     = useState<RoomModel[]>([
-    { provider: "openai",    model: "gpt-4o" },
+  const [topic, setTopic] = useState("");
+  const [models, setModels] = useState<RoomModel[]>([
+    { provider: "openai", model: "gpt-4o" },
     { provider: "anthropic", model: "claude-sonnet-4-20250514" },
-    { provider: "google",    model: "gemini-2.5-flash" },
+    { provider: "google", model: "gemini-2.5-flash" },
   ]);
-  const [turns, setTurns]       = useState<Turn[]>([]);
-  const [finalContent, setFinal]= useState("");
+  const [turns, setTurns] = useState<Turn[]>([]);
+  const [finalContent, setFinal] = useState("");
   const [activeTurn, setActiveTurn] = useState<number>(-1); // -1=idle, 0..5=turns, 6=synthesis
-  const [running, setRunning]   = useState(false);
-  const [done, setDone]         = useState(false);
-  const [error, setError]       = useState("");
-  const [copied, setCopied]     = useState(false);
-  const [savedDraft, setSaved]  = useState(false);
+  const [running, setRunning] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [savedDraft, setSaved] = useState(false);
   const [identity, setIdentity] = useState<BrokerIdentity | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +105,10 @@ export default function ContentRoomTab({ onDraftSaved }: { onDraftSaved: () => v
 
   function buildSystemPrompt(roleIdx: number) {
     const role = roomRoles[roleIdx];
-    const others = roomRoles.filter((_, i) => i !== roleIdx).map((r) => r.fullName).join(" و");
+    const others = roomRoles
+      .filter((_, i) => i !== roleIdx)
+      .map((r) => r.fullName)
+      .join(" و");
     return `${role.systemPrompt}
 
 أنت الآن في نقاش مفتوح مع ${others} حول موضوع عقاري. تكلّم بأسلوب محادثة طبيعية كأنك في اجتماع حقيقي — اذكر اسم الزميل الذي تردّ عليه، اتفق أو اختلف، وأضِف من زاويتك.
@@ -131,9 +144,16 @@ ${transcript}
   }
 
   async function runDiscussion() {
-    if (!topic.trim()) { setError("اكتب الموضوع أولاً"); return; }
-    setError(""); setRunning(true); setDone(false);
-    setTurns([]); setFinal(""); setSaved(false);
+    if (!topic.trim()) {
+      setError("اكتب الموضوع أولاً");
+      return;
+    }
+    setError("");
+    setRunning(true);
+    setDone(false);
+    setTurns([]);
+    setFinal("");
+    setSaved(false);
 
     const accumulated: Turn[] = [];
     try {
@@ -141,8 +161,8 @@ ${transcript}
       for (let i = 0; i < TURN_PLAN.length; i++) {
         setActiveTurn(i);
         const plan = TURN_PLAN[i];
-        const sys  = buildSystemPrompt(plan.roleIdx);
-        const usr  = buildUserPrompt(plan.roleIdx, plan.action, accumulated);
+        const sys = buildSystemPrompt(plan.roleIdx);
+        const usr = buildUserPrompt(plan.roleIdx, plan.action, accumulated);
         const text = await callAI(plan.roleIdx, sys, usr);
         const turn: Turn = { roleIdx: plan.roleIdx, action: plan.action, text };
         accumulated.push(turn);
@@ -189,22 +209,30 @@ ${fullDiscussion}
   }
 
   function resetRoom() {
-    setTurns([]); setFinal(""); setSaved(false); setError(""); setActiveTurn(-1); setDone(false);
+    setTurns([]);
+    setFinal("");
+    setSaved(false);
+    setError("");
+    setActiveTurn(-1);
+    setDone(false);
   }
 
   function copyFinal() {
     navigator.clipboard.writeText(finalContent);
-    setCopied(true); setTimeout(() => setCopied(false), 2000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   async function saveDraft() {
     if (!finalContent) return;
-    await supabase.from("content").insert([{
-      title: topic.substring(0, 60) + (topic.length > 60 ? "..." : ""),
-      main_text: finalContent,
-      content_goal: "خلاصة نقاش غرفة المحتوى",
-      status: "مسودة",
-    }]);
+    await supabase.from("content").insert([
+      {
+        title: topic.substring(0, 60) + (topic.length > 60 ? "..." : ""),
+        main_text: finalContent,
+        content_goal: "خلاصة نقاش غرفة المحتوى",
+        status: "مسودة",
+      },
+    ]);
     setSaved(true);
     onDraftSaved();
   }
@@ -214,56 +242,103 @@ ${fullDiscussion}
   return (
     <div>
       <div className="mb-5">
-        <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+        <h3 className="mb-2 flex items-center gap-2 text-xl font-bold">
           <Users size={20} className="text-[var(--gold-2)]" /> غرفة المحتوى — الطاولة المستديرة
         </h3>
-        <p className="text-[var(--text-soft)] text-sm">
+        <p className="text-sm text-[var(--text-soft)]">
           ٣ خبراء يجلسون على طاولة واحدة ويتناقشون حول موضوعك — ثم يخرجون لك بمحتوى واحد موحّد
         </p>
       </div>
 
       {/* Topic Input */}
-      <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 mb-5">
-        <label className="block text-sm text-[var(--text-soft)] mb-2">الموضوع المطروح للنقاش</label>
+      <div className="mb-5 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5">
+        <label className="mb-2 block text-sm text-[var(--text-soft)]">الموضوع المطروح للنقاش</label>
         <div className="flex gap-3">
           <input
             value={topic}
-            onChange={(e) => { setTopic(e.target.value); setError(""); }}
-            placeholder='مثال: أهمية الموقع في اختيار العقار'
-            className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--gold-2)] text-sm"
+            onChange={(e) => {
+              setTopic(e.target.value);
+              setError("");
+            }}
+            placeholder="مثال: أهمية الموقع في اختيار العقار"
+            className="flex-1 rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm focus:border-[var(--gold-2)] focus:outline-none"
             disabled={running}
-            onKeyDown={(e) => { if (e.key === "Enter" && !running && !done) runDiscussion(); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !running && !done) runDiscussion();
+            }}
           />
           {!running && turns.length > 0 && (
-            <button onClick={resetRoom} className="px-4 py-3 rounded-lg bg-[var(--bg-surface-3)] text-[var(--text-soft)] hover:text-[var(--text-strong)] text-sm transition flex items-center gap-1">
+            <button
+              onClick={resetRoom}
+              className="flex items-center gap-1 rounded-lg bg-[var(--bg-surface-3)] px-4 py-3 text-sm text-[var(--text-soft)] transition hover:text-[var(--text-strong)]"
+            >
               <RefreshCw size={14} /> نقاش جديد
             </button>
           )}
         </div>
-        {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
+        {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
       </div>
 
       {/* Participants */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+      <div className="mb-5 grid grid-cols-1 gap-3 md:grid-cols-3">
         {roomRoles.map((role, idx) => (
-          <div key={role.id} className="bg-[var(--bg-surface-1)] border rounded-xl p-3"
-            style={{ borderColor: running && activeTurn >= 0 && TURN_PLAN[activeTurn]?.roleIdx === idx ? SPEAKER_COLORS[idx] : "var(--gold-bg)" }}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0" style={{ background: SPEAKER_COLORS[idx], color: "var(--bg-page)" }}>{idx + 1}</div>
-              <div className="flex-1 min-w-0">
-                <div className="font-bold text-sm" style={{ color: SPEAKER_COLORS[idx] }}>{role.name}</div>
-                <div className="text-xs text-[var(--text-faint)] truncate">{role.desc}</div>
+          <div
+            key={role.id}
+            className="rounded-xl border bg-[var(--bg-surface-1)] p-3"
+            style={{
+              borderColor:
+                running && activeTurn >= 0 && TURN_PLAN[activeTurn]?.roleIdx === idx
+                  ? SPEAKER_COLORS[idx]
+                  : "var(--gold-bg)",
+            }}
+          >
+            <div className="mb-2 flex items-center gap-2">
+              <div
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                style={{ background: SPEAKER_COLORS[idx], color: "var(--bg-page)" }}
+              >
+                {idx + 1}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-bold" style={{ color: SPEAKER_COLORS[idx] }}>
+                  {role.name}
+                </div>
+                <div className="truncate text-xs text-[var(--text-faint)]">{role.desc}</div>
               </div>
               {running && activeTurn >= 0 && TURN_PLAN[activeTurn]?.roleIdx === idx && (
-                <Loader2 size={15} className="animate-spin" style={{ color: SPEAKER_COLORS[idx] }} />
+                <Loader2
+                  size={15}
+                  className="animate-spin"
+                  style={{ color: SPEAKER_COLORS[idx] }}
+                />
               )}
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <select value={models[idx].provider} onChange={(e) => updateModel(idx, "provider", e.target.value)} disabled={running} className="bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[var(--gold-2)] disabled:opacity-50">
-                {providers.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              <select
+                value={models[idx].provider}
+                onChange={(e) => updateModel(idx, "provider", e.target.value)}
+                disabled={running}
+                className="rounded border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-2 py-1.5 text-xs focus:border-[var(--gold-2)] focus:outline-none disabled:opacity-50"
+              >
+                {providers.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
               </select>
-              <select value={models[idx].model} onChange={(e) => updateModel(idx, "model", e.target.value)} disabled={running} className="bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded px-2 py-1.5 text-xs focus:outline-none focus:border-[var(--gold-2)] disabled:opacity-50">
-                {providers.find((p) => p.id === models[idx].provider)?.models.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+              <select
+                value={models[idx].model}
+                onChange={(e) => updateModel(idx, "model", e.target.value)}
+                disabled={running}
+                className="rounded border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-2 py-1.5 text-xs focus:border-[var(--gold-2)] focus:outline-none disabled:opacity-50"
+              >
+                {providers
+                  .find((p) => p.id === models[idx].provider)
+                  ?.models.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
@@ -272,56 +347,95 @@ ${fullDiscussion}
 
       {/* Start Button (initial) */}
       {turns.length === 0 && !running && (
-        <div className="text-center mb-6">
-          <button onClick={runDiscussion} className="px-8 py-3 rounded-xl font-bold bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white transition flex items-center gap-2 text-sm mx-auto">
+        <div className="mb-6 text-center">
+          <button
+            onClick={runDiscussion}
+            className="mx-auto flex items-center gap-2 rounded-xl bg-[var(--gold-2)] px-8 py-3 text-sm font-bold text-white transition hover:bg-[var(--gold-3)]"
+          >
             <Play size={16} /> ابدأ النقاش
           </button>
-          <p className="text-xs text-[var(--text-faint)] mt-3">سيتناقش الثلاثة في ٦ مداخلات، ثم يخرج المحتوى الموحّد</p>
+          <p className="mt-3 text-xs text-[var(--text-faint)]">
+            سيتناقش الثلاثة في ٦ مداخلات، ثم يخرج المحتوى الموحّد
+          </p>
         </div>
       )}
 
       {/* Discussion Transcript (chat-style) */}
       {(turns.length > 0 || running) && (
-        <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden mb-5">
-          <div className="px-5 py-3 border-b border-[var(--gold-bg)] flex items-center gap-2">
+        <div className="mb-5 overflow-hidden rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)]">
+          <div className="flex items-center gap-2 border-b border-[var(--gold-bg)] px-5 py-3">
             <MessageCircle size={15} className="text-[var(--gold-2)]" />
-            <span className="font-bold text-sm text-[var(--gold-2)]">النقاش الجاري</span>
+            <span className="text-sm font-bold text-[var(--gold-2)]">النقاش الجاري</span>
             {running && activeTurn >= 0 && activeTurn < 6 && (
-              <span className="text-xs text-[var(--text-soft)] mr-auto">المداخلة {activeTurn + 1} من 6</span>
+              <span className="mr-auto text-xs text-[var(--text-soft)]">
+                المداخلة {activeTurn + 1} من 6
+              </span>
             )}
             {running && activeTurn === 6 && (
-              <span className="text-xs text-[var(--gold-2)] mr-auto flex items-center gap-1"><Loader2 size={11} className="animate-spin"/> يصيغون الخلاصة...</span>
+              <span className="mr-auto flex items-center gap-1 text-xs text-[var(--gold-2)]">
+                <Loader2 size={11} className="animate-spin" /> يصيغون الخلاصة...
+              </span>
             )}
           </div>
-          <div ref={scrollRef} className="p-5 space-y-4 max-h-[520px] overflow-y-auto">
+          <div ref={scrollRef} className="max-h-[520px] space-y-4 overflow-y-auto p-5">
             {turns.map((turn, i) => (
-              <div key={i} className="flex gap-3 animate-[fadeIn_0.3s_ease]">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: SPEAKER_COLORS[turn.roleIdx], color: "var(--bg-page)" }}>
+              <div key={i} className="flex animate-[fadeIn_0.3s_ease] gap-3">
+                <div
+                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                  style={{ background: SPEAKER_COLORS[turn.roleIdx], color: "var(--bg-page)" }}
+                >
                   {turn.roleIdx + 1}
                 </div>
-                <div className="flex-1 min-w-0 rounded-xl p-3" style={{ background: SPEAKER_BG[turn.roleIdx], border: `1px solid ${SPEAKER_COLORS[turn.roleIdx]}33` }}>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="font-bold text-sm" style={{ color: SPEAKER_COLORS[turn.roleIdx] }}>{roomRoles[turn.roleIdx].name}</span>
+                <div
+                  className="min-w-0 flex-1 rounded-xl p-3"
+                  style={{
+                    background: SPEAKER_BG[turn.roleIdx],
+                    border: `1px solid ${SPEAKER_COLORS[turn.roleIdx]}33`,
+                  }}
+                >
+                  <div className="mb-1.5 flex items-center gap-2">
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: SPEAKER_COLORS[turn.roleIdx] }}
+                    >
+                      {roomRoles[turn.roleIdx].name}
+                    </span>
                     <span className="text-xs text-[var(--text-faint)]">— {turn.action}</span>
                   </div>
-                  <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">{turn.text}</p>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-200">
+                    {turn.text}
+                  </p>
                 </div>
               </div>
             ))}
             {running && activeTurn >= 0 && activeTurn < 6 && (
               <div className="flex gap-3 opacity-60">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: SPEAKER_COLORS[TURN_PLAN[activeTurn].roleIdx] }}>
+                <div
+                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full"
+                  style={{ background: SPEAKER_COLORS[TURN_PLAN[activeTurn].roleIdx] }}
+                >
                   <Loader2 size={15} className="animate-spin" style={{ color: "var(--bg-page)" }} />
                 </div>
-                <div className="flex-1 rounded-xl p-3" style={{ background: SPEAKER_BG[TURN_PLAN[activeTurn].roleIdx], border: `1px solid ${SPEAKER_COLORS[TURN_PLAN[activeTurn].roleIdx]}33` }}>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="font-bold text-sm" style={{ color: SPEAKER_COLORS[TURN_PLAN[activeTurn].roleIdx] }}>{roomRoles[TURN_PLAN[activeTurn].roleIdx].name}</span>
+                <div
+                  className="flex-1 rounded-xl p-3"
+                  style={{
+                    background: SPEAKER_BG[TURN_PLAN[activeTurn].roleIdx],
+                    border: `1px solid ${SPEAKER_COLORS[TURN_PLAN[activeTurn].roleIdx]}33`,
+                  }}
+                >
+                  <div className="mb-1.5 flex items-center gap-2">
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: SPEAKER_COLORS[TURN_PLAN[activeTurn].roleIdx] }}
+                    >
+                      {roomRoles[TURN_PLAN[activeTurn].roleIdx].name}
+                    </span>
                     <span className="text-xs text-[var(--text-faint)]">يكتب...</span>
                   </div>
-                  <div className="space-y-1.5 mt-2">
-                    <div className="skeleton h-3 rounded w-full"/>
-                    <div className="skeleton h-3 rounded w-5/6"/>
-                    <div className="skeleton h-3 rounded w-3/4"/>
+                  <div className="mt-2 space-y-1.5">
+                    <div className="skeleton h-3 w-full rounded" />
+                    <div className="skeleton h-3 w-5/6 rounded" />
+                    <div className="skeleton h-3 w-3/4 rounded" />
                   </div>
                 </div>
               </div>
@@ -332,22 +446,60 @@ ${fullDiscussion}
 
       {/* Final Content */}
       {done && finalContent && (
-        <div className="bg-[var(--bg-surface-1)] border-2 border-[var(--gold-2)] rounded-xl overflow-hidden">
-          <div className="px-5 py-3 border-b border-[var(--gold-bg-strong)] flex items-center justify-between flex-wrap gap-2" style={{ background: "var(--gold-bg-soft)" }}>
-            <span className="font-bold text-[var(--gold-2)] flex items-center gap-2 text-sm">
+        <div className="overflow-hidden rounded-xl border-2 border-[var(--gold-2)] bg-[var(--bg-surface-1)]">
+          <div
+            className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--gold-bg-strong)] px-5 py-3"
+            style={{ background: "var(--gold-bg-soft)" }}
+          >
+            <span className="flex items-center gap-2 text-sm font-bold text-[var(--gold-2)]">
               <Sparkles size={16} /> خلاصة النقاش — المحتوى النهائي الموحّد
             </span>
             <div className="flex gap-2">
-              <button onClick={copyFinal} className={"text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1 " + (copied ? "bg-green-900/30 text-green-400" : "bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] text-[var(--text-soft)]")}>
-                {copied ? <><Check size={12}/> نُسخ</> : <><Copy size={12}/> نسخ</>}
+              <button
+                onClick={copyFinal}
+                className={
+                  "flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition " +
+                  (copied
+                    ? "bg-green-900/30 text-green-400"
+                    : "bg-[var(--bg-surface-2)] text-[var(--text-soft)] hover:bg-[var(--bg-surface-3)]")
+                }
+              >
+                {copied ? (
+                  <>
+                    <Check size={12} /> نُسخ
+                  </>
+                ) : (
+                  <>
+                    <Copy size={12} /> نسخ
+                  </>
+                )}
               </button>
-              <button onClick={saveDraft} disabled={savedDraft} className={"text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1 " + (savedDraft ? "bg-green-900/30 text-green-400" : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white")}>
-                {savedDraft ? <><Check size={12}/> حُفظ ✓</> : <><Save size={12}/> حفظ كمسودة</>}
+              <button
+                onClick={saveDraft}
+                disabled={savedDraft}
+                className={
+                  "flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition " +
+                  (savedDraft
+                    ? "bg-green-900/30 text-green-400"
+                    : "bg-[var(--gold-2)] text-white hover:bg-[var(--gold-3)]")
+                }
+              >
+                {savedDraft ? (
+                  <>
+                    <Check size={12} /> حُفظ ✓
+                  </>
+                ) : (
+                  <>
+                    <Save size={12} /> حفظ كمسودة
+                  </>
+                )}
               </button>
             </div>
           </div>
           <div className="p-6">
-            <p className="text-gray-100 leading-loose whitespace-pre-wrap text-[15px]">{finalContent}</p>
+            <p className="text-[15px] leading-loose whitespace-pre-wrap text-gray-100">
+              {finalContent}
+            </p>
           </div>
         </div>
       )}

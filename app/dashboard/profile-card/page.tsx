@@ -5,13 +5,36 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase-browser";
 import {
-  ChevronRight, ExternalLink, Eye, EyeOff, Loader2,
-  Plus, Trash2, GripVertical, X, ArrowLeft, Edit2,
-  QrCode, Sparkles, Share2, IdCard, Camera, Settings as SettingsIcon
+  ChevronRight,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  Loader2,
+  Plus,
+  Trash2,
+  GripVertical,
+  X,
+  ArrowLeft,
+  Edit2,
+  QrCode,
+  Sparkles,
+  Share2,
+  IdCard,
+  Camera,
+  Settings as SettingsIcon,
 } from "lucide-react";
 import {
-  ELEMENTS, CATEGORIES, getElement, getCategoryElements, buildAutoElements, buildElementUrl, buildElementLabel,
-  type ProfileElement, type ElementCategory, type ElementField, type AutoElement
+  ELEMENTS,
+  CATEGORIES,
+  getElement,
+  getCategoryElements,
+  buildAutoElements,
+  buildElementUrl,
+  buildElementLabel,
+  type ProfileElement,
+  type ElementCategory,
+  type ElementField,
+  type AutoElement,
 } from "@/lib/profile-elements";
 import CardThemePicker from "@/app/components/CardThemePicker";
 import BrokerQRModal from "@/app/components/BrokerQRModal";
@@ -19,12 +42,12 @@ import { getBrandIcon, getBrandBg, getBrandFg } from "@/app/components/BrandIcon
 import HelpHint from "@/app/components/HelpHint";
 
 const PRESET_THEMES = [
-  { name: "كريمي ذهبي",  bg: "#FAF7F2", text: "#1A1206", accent: "#C6914C" },
-  { name: "أسود فاخر",   bg: "#0A0A0C", text: "#F5F5F5", accent: "#E8B86D" },
-  { name: "أبيض نقي",    bg: "#FFFFFF", text: "#0F172A", accent: "#3B82F6" },
-  { name: "أخضر زمردي",  bg: "#ECFDF5", text: "#064E3B", accent: "#10B981" },
-  { name: "أزرق ملكي",   bg: "#EFF6FF", text: "#1E3A8A", accent: "#3B82F6" },
-  { name: "بنفسجي راقي",  bg: "#F5F3FF", text: "#3B0764", accent: "#8B5CF6" },
+  { name: "كريمي ذهبي", bg: "#FAF7F2", text: "#1A1206", accent: "#C6914C" },
+  { name: "أسود فاخر", bg: "#0A0A0C", text: "#F5F5F5", accent: "#E8B86D" },
+  { name: "أبيض نقي", bg: "#FFFFFF", text: "#0F172A", accent: "#3B82F6" },
+  { name: "أخضر زمردي", bg: "#ECFDF5", text: "#064E3B", accent: "#10B981" },
+  { name: "أزرق ملكي", bg: "#EFF6FF", text: "#1E3A8A", accent: "#3B82F6" },
+  { name: "بنفسجي راقي", bg: "#F5F3FF", text: "#3B0764", accent: "#8B5CF6" },
 ];
 
 export default function ProfileCardPage() {
@@ -65,7 +88,10 @@ export default function ProfileCardPage() {
       const { data: userData } = await supabase.auth.getUser();
       if (userData.user) {
         const { data: t } = await supabase
-          .from("tenants").select("id").eq("owner_id", userData.user.id).maybeSingle();
+          .from("tenants")
+          .select("id")
+          .eq("owner_id", userData.user.id)
+          .maybeSingle();
         if (t?.id) {
           const [siteRes, identityRes] = await Promise.all([
             supabase.from("site_settings").select("*").eq("tenant_id", t.id).maybeSingle(),
@@ -75,13 +101,18 @@ export default function ProfileCardPage() {
           setAutoElements(auto);
         }
       }
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   async function saveCard(updates: any) {
     const res = await fetch("/api/profile-card", {
-      method: "PUT", headers: { "Content-Type": "application/json" },
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
     });
     const j = await res.json();
@@ -93,12 +124,13 @@ export default function ProfileCardPage() {
 
   async function toggleLink(id: string, current: boolean) {
     const res = await fetch("/api/profile-card/links", {
-      method: "PATCH", headers: { "Content-Type": "application/json" },
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, is_active: !current }),
     });
     const j = await res.json();
     if (j.ok) {
-      setLinks(links.map(l => l.id === id ? { ...l, is_active: !current } : l));
+      setLinks(links.map((l) => (l.id === id ? { ...l, is_active: !current } : l)));
     } else toast.error(j.error);
   }
 
@@ -107,22 +139,25 @@ export default function ProfileCardPage() {
     const res = await fetch(`/api/profile-card/links?id=${id}`, { method: "DELETE" });
     const j = await res.json();
     if (j.ok) {
-      setLinks(links.filter(l => l.id !== id));
+      setLinks(links.filter((l) => l.id !== id));
       toast.success("تم الحذف");
     } else toast.error(j.error);
   }
 
   async function persistOrder(reordered: any[]) {
-    await Promise.all(reordered.map((l, i) =>
-      fetch("/api/profile-card/links", {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: l.id, display_order: i }),
-      })
-    ));
+    await Promise.all(
+      reordered.map((l, i) =>
+        fetch("/api/profile-card/links", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: l.id, display_order: i }),
+        })
+      )
+    );
   }
 
   async function moveLink(id: string, direction: "up" | "down") {
-    const idx = links.findIndex(l => l.id === id);
+    const idx = links.findIndex((l) => l.id === id);
     if (idx === -1) return;
     const newIdx = direction === "up" ? idx - 1 : idx + 1;
     if (newIdx < 0 || newIdx >= links.length) return;
@@ -141,7 +176,9 @@ export default function ProfileCardPage() {
     setDraggingId(id);
     e.dataTransfer.effectAllowed = "move";
     // استخدام text/plain لتفعيل السحب في كل المتصفحات
-    try { e.dataTransfer.setData("text/plain", id); } catch {}
+    try {
+      e.dataTransfer.setData("text/plain", id);
+    } catch {}
   }
 
   function handleDragOver(id: string, e: React.DragEvent) {
@@ -161,8 +198,8 @@ export default function ProfileCardPage() {
     setDragOverId(null);
     if (!sourceId || sourceId === targetId) return;
 
-    const sIdx = links.findIndex(l => l.id === sourceId);
-    const tIdx = links.findIndex(l => l.id === targetId);
+    const sIdx = links.findIndex((l) => l.id === sourceId);
+    const tIdx = links.findIndex((l) => l.id === targetId);
     if (sIdx === -1 || tIdx === -1) return;
 
     const reordered = [...links];
@@ -178,18 +215,29 @@ export default function ProfileCardPage() {
   }
 
   if (loading) {
-    return <div className="flex justify-center py-20"><Loader2 size={28} className="animate-spin" style={{ color: "var(--gold-2)" }} /></div>;
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 size={28} className="animate-spin" style={{ color: "var(--gold-2)" }} />
+      </div>
+    );
   }
-  if (!card) return <div className="text-center py-12">لا توجد بطاقة. أعد التحميل.</div>;
+  if (!card) return <div className="py-12 text-center">لا توجد بطاقة. أعد التحميل.</div>;
 
   return (
-    <div dir="rtl" className="space-y-4 max-w-3xl mx-auto">
-      <Link href="/dashboard" className="inline-flex items-center gap-1 text-xs no-underline" style={{ color: "var(--text-faint)" }}>
+    <div dir="rtl" className="mx-auto max-w-3xl space-y-4">
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-1 text-xs no-underline"
+        style={{ color: "var(--text-faint)" }}
+      >
         <ChevronRight size={12} /> العودة
       </Link>
 
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: "var(--text-strong)" }}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <h1
+          className="flex items-center gap-2 text-2xl font-bold"
+          style={{ color: "var(--text-strong)" }}
+        >
           <IdCard size={22} style={{ color: "var(--gold-2)" }} /> البروفايل
           <HelpHint
             title="بطاقتك التعريفية"
@@ -198,45 +246,83 @@ export default function ProfileCardPage() {
           />
         </h1>
         <div className="flex gap-2">
-          <Link href={`/c/${slug}`} target="_blank"
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs no-underline"
-            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+          <Link
+            href={`/c/${slug}`}
+            target="_blank"
+            className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-xs no-underline"
+            style={{
+              background: "var(--bg-surface-2)",
+              border: "1px solid var(--gold-bg)",
+              color: "var(--text-soft)",
+            }}
+          >
             <Eye size={12} /> شاهد البروفايل
           </Link>
           {/* ⭐ ثيم البطاقة — ٢٠ ثيم احترافي خاص بالبطاقة */}
           <button
             onClick={() => setCardThemeOpen(true)}
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs"
-            style={{ background: "var(--gold-bg)", border: "1px solid var(--gold-bg-strong, var(--gold-bg-hover))", color: "var(--gold-2)", cursor: "pointer", fontFamily: "inherit" }}>
+            className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-xs"
+            style={{
+              background: "var(--gold-bg)",
+              border: "1px solid var(--gold-bg-strong, var(--gold-bg-hover))",
+              color: "var(--gold-2)",
+              cursor: "pointer",
+              fontFamily: "inherit",
+            }}
+          >
             <Sparkles size={12} /> ثيم البطاقة
           </button>
           {/* QR للبطاقة */}
           <button
             onClick={() => setQrModalOpen(true)}
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs"
-            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)", cursor: "pointer", fontFamily: "inherit" }}>
+            className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-xs"
+            style={{
+              background: "var(--bg-surface-2)",
+              border: "1px solid var(--gold-bg)",
+              color: "var(--text-soft)",
+              cursor: "pointer",
+              fontFamily: "inherit",
+            }}
+          >
             <QrCode size={12} /> رمز QR
           </button>
           {/* الثيم العام لِلوحة التحكم — مصدر واحد للحقيقة */}
-          <Link href="/dashboard/settings?tab=design"
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs no-underline"
-            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+          <Link
+            href="/dashboard/settings?tab=design"
+            className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-xs no-underline"
+            style={{
+              background: "var(--bg-surface-2)",
+              border: "1px solid var(--gold-bg)",
+              color: "var(--text-soft)",
+            }}
+          >
             <SettingsIcon size={12} /> الثيم العام
           </Link>
         </div>
       </div>
 
       {/* Avatar + Name + Bio Card */}
-      <div className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
+      <div
+        className="rounded-2xl p-5"
+        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+      >
         <div className="flex flex-col items-center gap-3">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full overflow-hidden" style={{ border: `3px solid ${card.accent_color || "var(--gold-2)"}` }}>
+            <div
+              className="h-24 w-24 overflow-hidden rounded-full"
+              style={{ border: `3px solid ${card.accent_color || "var(--gold-2)"}` }}
+            >
               {card.avatar_url ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={card.avatar_url} alt="" className="w-full h-full object-cover" />
+                <img src={card.avatar_url} alt="" className="h-full w-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-3xl font-bold"
-                  style={{ background: card.accent_color || "var(--gold-2)", color: card.bg_color || "#FAF7F2" }}>
+                <div
+                  className="flex h-full w-full items-center justify-center text-3xl font-bold"
+                  style={{
+                    background: card.accent_color || "var(--gold-2)",
+                    color: card.bg_color || "#FAF7F2",
+                  }}
+                >
                   {(card.display_name || slug || "?").charAt(0).toUpperCase()}
                 </div>
               )}
@@ -244,15 +330,21 @@ export default function ProfileCardPage() {
           </div>
 
           {/* Name + Bio editable */}
-          <button onClick={() => setEditingIdentity(true)}
+          <button
+            onClick={() => setEditingIdentity(true)}
             className="w-full rounded-xl p-3 text-start"
-            style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-soft)", cursor: "pointer" }}>
+            style={{
+              background: "var(--bg-surface-2)",
+              border: "1px solid var(--gold-bg-soft)",
+              cursor: "pointer",
+            }}
+          >
             <div className="flex items-center justify-between">
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
                   {card.display_name || "أضف اسمك"}
                 </div>
-                <div className="text-xs mt-1 truncate" style={{ color: "var(--text-faint)" }}>
+                <div className="mt-1 truncate text-xs" style={{ color: "var(--text-faint)" }}>
                   {card.bio || "أضف وصفاً قصيراً يُعبّر عنك"}
                 </div>
               </div>
@@ -263,43 +355,69 @@ export default function ProfileCardPage() {
       </div>
 
       {/* Auto-pulled banner */}
-      <div className="rounded-xl p-3 flex items-start gap-2" style={{
-        background: "var(--gold-bg-soft)",
-        border: "1px solid var(--gold-bg)",
-      }}>
+      <div
+        className="flex items-start gap-2 rounded-xl p-3"
+        style={{
+          background: "var(--gold-bg-soft)",
+          border: "1px solid var(--gold-bg)",
+        }}
+      >
         <Sparkles size={14} style={{ color: "var(--gold-2)", marginTop: 2 }} />
         <div className="flex-1 text-xs" style={{ color: "var(--text-soft)" }}>
           <div className="font-bold" style={{ color: "var(--text-strong)" }}>
             روابطك ورخصك تأتي تلقائياً
           </div>
           <div className="mt-0.5">
-            وسائل التواصل، الواتساب، البريد، والرخص (فال، السجل التجاري، معروف، إلخ) تظهر في بطاقتك تلقائياً من <Link href="/dashboard/settings" className="underline" style={{ color: "var(--gold-2)" }}>الإعدادات</Link>. هنا تضيف فقط العناصر الإضافية كـ المتاجر، التوصيل، الروابط المخصصة، النماذج.
+            وسائل التواصل، الواتساب، البريد، والرخص (فال، السجل التجاري، معروف، إلخ) تظهر في بطاقتك
+            تلقائياً من{" "}
+            <Link
+              href="/dashboard/settings"
+              className="underline"
+              style={{ color: "var(--gold-2)" }}
+            >
+              الإعدادات
+            </Link>
+            . هنا تضيف فقط العناصر الإضافية كـ المتاجر، التوصيل، الروابط المخصصة، النماذج.
           </div>
         </div>
       </div>
 
       {/* ─── الروابط التلقائية من الإعدادات (للمعاينة + التعديل بنقرة) ─── */}
       {autoElements.length > 0 && (
-        <div className="rounded-2xl p-4" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <div
+          className="rounded-2xl p-4"
+          style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+        >
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Sparkles size={14} style={{ color: "var(--gold-2)" }} />
-              <h3 className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+              <h3 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
                 روابط تلقائية في بطاقتك
               </h3>
-              <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--gold-bg)", color: "var(--gold-2)", fontWeight: 600 }}>
+              <span
+                className="rounded-full px-2 py-0.5 text-xs"
+                style={{ background: "var(--gold-bg)", color: "var(--gold-2)", fontWeight: 600 }}
+              >
                 {autoElements.length}
               </span>
             </div>
-            <Link href="/dashboard/settings?tab=contact" className="text-xs flex items-center gap-1 no-underline px-3 py-1.5 rounded-lg"
-              style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)", color: "var(--gold-2)", fontWeight: 600 }}>
+            <Link
+              href="/dashboard/settings?tab=contact"
+              className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs no-underline"
+              style={{
+                background: "var(--bg-surface-2)",
+                border: "1px solid var(--gold-bg)",
+                color: "var(--gold-2)",
+                fontWeight: 600,
+              }}
+            >
               <SettingsIcon size={11} /> تعديل من الإعدادات
             </Link>
           </div>
-          <p className="text-xs mb-3" style={{ color: "var(--text-faint)" }}>
+          <p className="mb-3 text-xs" style={{ color: "var(--text-faint)" }}>
             هذه الروابط تظهر في بطاقتك تلقائياً. لتغيير قيمة أي منها، اذهب إلى الإعدادات.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
             {autoElements.map((ae) => {
               const el = getElement(ae.type);
               if (!el) return null;
@@ -310,21 +428,43 @@ export default function ProfileCardPage() {
               const url = buildElementUrl(ae.type, ae.metadata);
               const label = buildElementLabel(ae.type, ae.metadata) || el.label;
               return (
-                <div key={ae.type} className="flex items-center gap-2 p-2.5 rounded-lg"
-                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-soft)" }}>
-                  <div className="flex items-center justify-center rounded-lg flex-shrink-0"
-                    style={{ width: 32, height: 32, background: brandBg }}>
+                <div
+                  key={ae.type}
+                  className="flex items-center gap-2 rounded-lg p-2.5"
+                  style={{
+                    background: "var(--bg-surface-2)",
+                    border: "1px solid var(--gold-bg-soft)",
+                  }}
+                >
+                  <div
+                    className="flex flex-shrink-0 items-center justify-center rounded-lg"
+                    style={{ width: 32, height: 32, background: brandBg }}
+                  >
                     <Icon size={15} style={{ color: brandFg }} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold truncate" style={{ color: "var(--text-strong)" }}>{el.label}</div>
-                    <div className="text-xs truncate" style={{ color: "var(--text-faint)", direction: "ltr", textAlign: "right" }}>
+                  <div className="min-w-0 flex-1">
+                    <div
+                      className="truncate text-xs font-bold"
+                      style={{ color: "var(--text-strong)" }}
+                    >
+                      {el.label}
+                    </div>
+                    <div
+                      className="truncate text-xs"
+                      style={{ color: "var(--text-faint)", direction: "ltr", textAlign: "right" }}
+                    >
                       {label}
                     </div>
                   </div>
                   {url && (
-                    <a href={url} target="_blank" rel="noopener noreferrer" title="اختبار الرابط"
-                      className="p-1.5 rounded flex-shrink-0" style={{ color: "var(--text-faint)" }}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="اختبار الرابط"
+                      className="flex-shrink-0 rounded p-1.5"
+                      style={{ color: "var(--text-faint)" }}
+                    >
                       <ExternalLink size={12} />
                     </a>
                   )}
@@ -336,21 +476,35 @@ export default function ProfileCardPage() {
       )}
 
       {/* Add Element Button */}
-      <button onClick={() => setLibraryOpen(true)}
-        className="w-full rounded-xl py-4 font-bold flex items-center justify-center gap-2"
+      <button
+        onClick={() => setLibraryOpen(true)}
+        className="flex w-full items-center justify-center gap-2 rounded-xl py-4 font-bold"
         style={{
           background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
-          color: "var(--bg-page)", border: "none", fontSize: 15, cursor: "pointer",
-        }}>
+          color: "var(--bg-page)",
+          border: "none",
+          fontSize: 15,
+          cursor: "pointer",
+        }}
+      >
         <Plus size={18} /> أضف عنصراً مخصصاً
       </button>
 
       {/* Elements list — manual فقط */}
       <div className="space-y-2">
         {links.length === 0 ? (
-          <div className="text-center py-10 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px dashed var(--gold-bg)", color: "var(--text-faint)" }}>
+          <div
+            className="rounded-xl py-10 text-center"
+            style={{
+              background: "var(--bg-surface-1)",
+              border: "1px dashed var(--gold-bg)",
+              color: "var(--text-faint)",
+            }}
+          >
             <div className="text-sm">لم تضف أي عنصر مخصص بعد.</div>
-            <div className="text-xs mt-2">العناصر الأساسية (وسائل تواصل، رخص) تظهر تلقائياً من الإعدادات.</div>
+            <div className="mt-2 text-xs">
+              العناصر الأساسية (وسائل تواصل، رخص) تظهر تلقائياً من الإعدادات.
+            </div>
           </div>
         ) : (
           links.map((link, idx) => (
@@ -364,9 +518,10 @@ export default function ProfileCardPage() {
               onDragEnd={handleDragEnd}
               style={{
                 position: "relative",
-                outline: dragOverId === link.id && draggingId !== link.id
-                  ? "2px dashed var(--gold-2)"
-                  : "none",
+                outline:
+                  dragOverId === link.id && draggingId !== link.id
+                    ? "2px dashed var(--gold-2)"
+                    : "none",
                 outlineOffset: 2,
                 borderRadius: 12,
                 transition: "outline 0.12s ease",
@@ -403,7 +558,10 @@ export default function ProfileCardPage() {
           elementType={newElementType}
           link={null}
           onClose={() => setNewElementType(null)}
-          onSaved={async () => { setNewElementType(null); await load(); }}
+          onSaved={async () => {
+            setNewElementType(null);
+            await load();
+          }}
         />
       )}
       {editingLink && (
@@ -411,14 +569,20 @@ export default function ProfileCardPage() {
           elementType={editingLink.element_type}
           link={editingLink}
           onClose={() => setEditingLink(null)}
-          onSaved={async () => { setEditingLink(null); await load(); }}
+          onSaved={async () => {
+            setEditingLink(null);
+            await load();
+          }}
         />
       )}
       {editingIdentity && (
         <IdentityEditModal
           card={card}
           onClose={() => setEditingIdentity(false)}
-          onSave={async (updates: any) => { await saveCard(updates); setEditingIdentity(false); }}
+          onSave={async (updates: any) => {
+            await saveCard(updates);
+            setEditingIdentity(false);
+          }}
         />
       )}
       {/* ThemeModal تم حذفه — التحكم بالثيم العام في /dashboard/settings?tab=design */}
@@ -459,7 +623,18 @@ export default function ProfileCardPage() {
 // ─────────────────────────────────────────────────────────────
 // صف العنصر في القائمة
 // ─────────────────────────────────────────────────────────────
-function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveUp, onMoveDown, dragHandleProps, isDragging }: any) {
+function ElementRow({
+  link,
+  isFirst,
+  isLast,
+  onToggle,
+  onEdit,
+  onDelete,
+  onMoveUp,
+  onMoveDown,
+  dragHandleProps,
+  isDragging,
+}: any) {
   const el = getElement(link.element_type);
   if (!el) return null;
   const BrandIcon = getBrandIcon(link.element_type);
@@ -471,12 +646,15 @@ function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveU
   const subtitle = meta.username || meta.number || meta.url || meta.email || meta.phone || "";
 
   return (
-    <div className="flex items-center gap-2 rounded-xl p-3" style={{
-      background: "var(--bg-surface-1)",
-      border: "1px solid var(--gold-bg)",
-      opacity: isDragging ? 0.5 : 1,
-      transition: "opacity 0.15s ease",
-    }}>
+    <div
+      className="flex items-center gap-2 rounded-xl p-3"
+      style={{
+        background: "var(--bg-surface-1)",
+        border: "1px solid var(--gold-bg)",
+        opacity: isDragging ? 0.5 : 1,
+        transition: "opacity 0.15s ease",
+      }}
+    >
       {/* Drag handle */}
       <button
         {...(dragHandleProps || {})}
@@ -490,61 +668,121 @@ function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveU
           opacity: 0.6,
           touchAction: "none",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.6"; }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.opacity = "1";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = "0.6";
+        }}
       >
         <GripVertical size={16} />
       </button>
 
       <div className="flex flex-col gap-0.5">
-        <button onClick={onMoveUp} disabled={isFirst}
-          style={{ opacity: isFirst ? 0.25 : 0.6, background: "transparent", border: "none", cursor: isFirst ? "default" : "pointer", padding: 1, fontSize: 9 }}
-          title="نقل لأعلى">
+        <button
+          onClick={onMoveUp}
+          disabled={isFirst}
+          style={{
+            opacity: isFirst ? 0.25 : 0.6,
+            background: "transparent",
+            border: "none",
+            cursor: isFirst ? "default" : "pointer",
+            padding: 1,
+            fontSize: 9,
+          }}
+          title="نقل لأعلى"
+        >
           ▲
         </button>
-        <button onClick={onMoveDown} disabled={isLast}
-          style={{ opacity: isLast ? 0.25 : 0.6, background: "transparent", border: "none", cursor: isLast ? "default" : "pointer", padding: 1, fontSize: 9 }}
-          title="نقل لأسفل">
+        <button
+          onClick={onMoveDown}
+          disabled={isLast}
+          style={{
+            opacity: isLast ? 0.25 : 0.6,
+            background: "transparent",
+            border: "none",
+            cursor: isLast ? "default" : "pointer",
+            padding: 1,
+            fontSize: 9,
+          }}
+          title="نقل لأسفل"
+        >
           ▼
         </button>
       </div>
 
-      <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{
-        background: brandBg,
-        color: brandFg,
-      }}>
+      <div
+        className="flex h-9 w-9 items-center justify-center rounded-lg"
+        style={{
+          background: brandBg,
+          color: brandFg,
+        }}
+      >
         <Icon size={17} />
       </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-bold truncate" style={{ color: "var(--text-strong)" }}>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-bold" style={{ color: "var(--text-strong)" }}>
           {displayLabel}
         </div>
         {subtitle && (
-          <div className="text-xs truncate" style={{ color: "var(--text-faint)" }}>{subtitle}</div>
+          <div className="truncate text-xs" style={{ color: "var(--text-faint)" }}>
+            {subtitle}
+          </div>
         )}
       </div>
 
-      <button onClick={onEdit} aria-label="تعديل"
-        style={{ background: "transparent", border: "none", cursor: "pointer", padding: 6, color: "var(--text-soft)" }}>
+      <button
+        onClick={onEdit}
+        aria-label="تعديل"
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          padding: 6,
+          color: "var(--text-soft)",
+        }}
+      >
         <Edit2 size={14} />
       </button>
-      <button onClick={onDelete} aria-label="حذف"
-        style={{ background: "transparent", border: "none", cursor: "pointer", padding: 6, color: "var(--danger)" }}>
+      <button
+        onClick={onDelete}
+        aria-label="حذف"
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          padding: 6,
+          color: "var(--danger)",
+        }}
+      >
         <Trash2 size={14} />
       </button>
-      <button onClick={onToggle}
+      <button
+        onClick={onToggle}
         className="relative"
         style={{
-          width: 38, height: 22, borderRadius: 22,
+          width: 38,
+          height: 22,
+          borderRadius: 22,
           background: link.is_active ? "var(--success)" : "var(--bg-surface-3)",
-          border: "none", cursor: "pointer", padding: 0,
-        }}>
-        <span style={{
-          position: "absolute", top: 2, [link.is_active ? "left" : "right"]: 2 as any,
-          width: 18, height: 18, borderRadius: "50%", background: "#FFFFFF",
-          transition: "all 0.2s",
-        }} />
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+        }}
+      >
+        <span
+          style={{
+            position: "absolute",
+            top: 2,
+            [link.is_active ? "left" : "right"]: 2 as any,
+            width: 18,
+            height: 18,
+            borderRadius: "50%",
+            background: "#FFFFFF",
+            transition: "all 0.2s",
+          }}
+        />
       </button>
     </div>
   );
@@ -555,56 +793,87 @@ function ElementRow({ link, isFirst, isLast, onToggle, onEdit, onDelete, onMoveU
 // ─────────────────────────────────────────────────────────────
 function ElementLibraryModal({ onClose, onSelect }: any) {
   // اخفِ الفئات الفارغة (التي كل عناصرها autoFrom من الإعدادات)
-  const visibleCategories = CATEGORIES.filter(c => getCategoryElements(c.key).length > 0);
-  const [activeCategory, setActiveCategory] = useState<ElementCategory>(visibleCategories[0]?.key || "content");
+  const visibleCategories = CATEGORIES.filter((c) => getCategoryElements(c.key).length > 0);
+  const [activeCategory, setActiveCategory] = useState<ElementCategory>(
+    visibleCategories[0]?.key || "content"
+  );
   const items = getCategoryElements(activeCategory);
 
   return (
     <ModalShell onClose={onClose} title="مكتبة العناصر">
-      <p className="text-xs mb-3" style={{ color: "var(--text-faint)" }}>
-        💡 وسائل التواصل والرخص تأتي تلقائياً من <Link href="/dashboard/settings" className="underline" style={{ color: "var(--gold-2)" }}>الإعدادات</Link>. هنا فقط العناصر الإضافية.
+      <p className="mb-3 text-xs" style={{ color: "var(--text-faint)" }}>
+        💡 وسائل التواصل والرخص تأتي تلقائياً من{" "}
+        <Link href="/dashboard/settings" className="underline" style={{ color: "var(--gold-2)" }}>
+          الإعدادات
+        </Link>
+        . هنا فقط العناصر الإضافية.
       </p>
-      <div className="flex gap-2 overflow-x-auto pb-3 -mx-2 px-2" style={{ scrollbarWidth: "thin" }}>
-        {visibleCategories.map(c => (
-          <button key={c.key} onClick={() => setActiveCategory(c.key)}
-            className="px-3 py-1.5 rounded-full text-xs whitespace-nowrap"
+      <div
+        className="-mx-2 flex gap-2 overflow-x-auto px-2 pb-3"
+        style={{ scrollbarWidth: "thin" }}
+      >
+        {visibleCategories.map((c) => (
+          <button
+            key={c.key}
+            onClick={() => setActiveCategory(c.key)}
+            className="rounded-full px-3 py-1.5 text-xs whitespace-nowrap"
             style={{
               background: activeCategory === c.key ? "var(--text-strong)" : "var(--bg-surface-2)",
               color: activeCategory === c.key ? "var(--bg-page)" : "var(--text-soft)",
-              border: "none", cursor: "pointer", fontWeight: 600,
-            }}>
+              border: "none",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
+          >
             {c.emoji} {c.label}
           </button>
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        {items.map(el => {
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        {items.map((el) => {
           const BrandIcon = getBrandIcon(el.type);
           const Icon = BrandIcon || el.icon;
           const brandBg = getBrandBg(el.type) || el.brandBg || "var(--bg-surface-3)";
           const brandFg = getBrandFg(el.type) || el.brandFg || "var(--text-soft)";
           return (
-            <button key={el.type} onClick={() => onSelect(el.type)}
-              className="rounded-xl p-3 flex flex-col items-center gap-2 relative"
+            <button
+              key={el.type}
+              onClick={() => onSelect(el.type)}
+              className="relative flex flex-col items-center gap-2 rounded-xl p-3"
               style={{
                 background: "var(--bg-surface-2)",
                 border: "1px solid var(--gold-bg)",
-                cursor: "pointer", aspectRatio: "1.1/1",
-              }}>
+                cursor: "pointer",
+                aspectRatio: "1.1/1",
+              }}
+            >
               {el.isPremium && (
-                <span style={{
-                  position: "absolute", top: 6, [/* RTL */ "left" as any]: 6,
-                  fontSize: 10, color: "var(--gold-2)",
-                }}>⭐</span>
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 6,
+                    [/* RTL */ "left" as any]: 6,
+                    fontSize: 10,
+                    color: "var(--gold-2)",
+                  }}
+                >
+                  ⭐
+                </span>
               )}
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{
-                background: brandBg,
-                color: brandFg,
-              }}>
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{
+                  background: brandBg,
+                  color: brandFg,
+                }}
+              >
                 <Icon size={20} />
               </div>
-              <span className="text-xs font-bold text-center" style={{ color: "var(--text-strong)" }}>
+              <span
+                className="text-center text-xs font-bold"
+                style={{ color: "var(--text-strong)" }}
+              >
                 {el.label}
               </span>
             </button>
@@ -634,19 +903,29 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
       if (link) {
         // تحديث
         await fetch("/api/profile-card/links", {
-          method: "PATCH", headers: { "Content-Type": "application/json" },
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            id: link.id, element_type: elementType, label, value: url,
-            metadata: meta, link_type: el?.category, is_active: true,
+            id: link.id,
+            element_type: elementType,
+            label,
+            value: url,
+            metadata: meta,
+            link_type: el?.category,
+            is_active: true,
           }),
         });
       } else {
         // إضافة
         await fetch("/api/profile-card/links", {
-          method: "POST", headers: { "Content-Type": "application/json" },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            element_type: elementType, label, value: url,
-            metadata: meta, link_type: el?.category,
+            element_type: elementType,
+            label,
+            value: url,
+            metadata: meta,
+            link_type: el?.category,
           }),
         });
       }
@@ -654,7 +933,9 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
       onSaved();
     } catch (e: any) {
       toast.error(e?.message || "فشل الحفظ");
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -665,10 +946,17 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
         const headerBg = getBrandBg(el.type) || el.brandBg || "var(--bg-surface-3)";
         const headerFg = getBrandFg(el.type) || el.brandFg || "var(--text-soft)";
         return (
-          <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={{ background: "var(--bg-surface-2)" }}>
-            <div className="w-11 h-11 rounded-lg flex items-center justify-center" style={{
-              background: headerBg, color: headerFg,
-            }}>
+          <div
+            className="mb-4 flex items-center gap-3 rounded-xl p-3"
+            style={{ background: "var(--bg-surface-2)" }}
+          >
+            <div
+              className="flex h-11 w-11 items-center justify-center rounded-lg"
+              style={{
+                background: headerBg,
+                color: headerFg,
+              }}
+            >
               <HeaderIcon size={20} />
             </div>
             <div>
@@ -680,23 +968,31 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
       })()}
 
       <div className="space-y-3">
-        {el.fields.map(field => (
-          <DynamicField key={field.key} field={field}
+        {el.fields.map((field) => (
+          <DynamicField
+            key={field.key}
+            field={field}
             value={meta[field.key] ?? ""}
-            onChange={(v) => setMeta({ ...meta, [field.key]: v })} />
+            onChange={(v) => setMeta({ ...meta, [field.key]: v })}
+          />
         ))}
       </div>
 
       {/* ⭐ تخصيص التصميم لهذا العنصر فقط */}
       <ElementDesignSection meta={meta} setMeta={setMeta} />
 
-      <button onClick={save} disabled={saving}
-        className="w-full mt-5 py-3 rounded-xl font-bold"
+      <button
+        onClick={save}
+        disabled={saving}
+        className="mt-5 w-full rounded-xl py-3 font-bold"
         style={{
           background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
-          color: "var(--bg-page)", border: "none", fontSize: 14,
+          color: "var(--bg-page)",
+          border: "none",
+          fontSize: 14,
           cursor: saving ? "wait" : "pointer",
-        }}>
+        }}
+      >
         {saving ? "جاري الحفظ..." : link ? "حفظ التعديلات" : "إضافة للبروفايل"}
       </button>
     </ModalShell>
@@ -706,7 +1002,13 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
 // ─────────────────────────────────────────────────────────────
 // قسم تصميم العنصر (لكل عنصر منفرد) — يُحفَظ في metadata
 // ─────────────────────────────────────────────────────────────
-function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; setMeta: (m: Record<string, any>) => void }) {
+function ElementDesignSection({
+  meta,
+  setMeta,
+}: {
+  meta: Record<string, any>;
+  setMeta: (m: Record<string, any>) => void;
+}) {
   const [open, setOpen] = useState(false);
 
   const colorPresets = [
@@ -721,12 +1023,26 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
   ];
 
   return (
-    <div className="mt-4 rounded-xl" style={{ border: "1px solid var(--gold-bg-soft)", background: "var(--bg-surface-2)", overflow: "hidden" }}>
+    <div
+      className="mt-4 rounded-xl"
+      style={{
+        border: "1px solid var(--gold-bg-soft)",
+        background: "var(--bg-surface-2)",
+        overflow: "hidden",
+      }}
+    >
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full p-3 flex items-center justify-between"
-        style={{ background: "transparent", border: "none", cursor: "pointer", color: "var(--text-soft)", fontSize: 13, fontWeight: 600 }}
+        className="flex w-full items-center justify-between p-3"
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          color: "var(--text-soft)",
+          fontSize: 13,
+          fontWeight: 600,
+        }}
       >
         <span className="flex items-center gap-2">
           <Sparkles size={13} style={{ color: "var(--gold-2)" }} />
@@ -736,23 +1052,31 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
       </button>
 
       {open && (
-        <div className="p-3 pt-0 space-y-3" style={{ borderTop: "1px solid var(--gold-bg-soft)" }}>
+        <div className="space-y-3 p-3 pt-0" style={{ borderTop: "1px solid var(--gold-bg-soft)" }}>
           {/* Custom label */}
           <div>
-            <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>تسمية مخصّصة (اختياري)</label>
+            <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
+              تسمية مخصّصة (اختياري)
+            </label>
             <input
               type="text"
               value={meta.label || ""}
               onChange={(e) => setMeta({ ...meta, label: e.target.value })}
               placeholder="مثال: حسابي الرسمي"
               className="w-full rounded-lg px-3 py-2 text-sm"
-              style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)" }}
+              style={{
+                background: "var(--bg-surface-1)",
+                border: "1px solid var(--gold-bg)",
+                color: "var(--text-strong)",
+              }}
             />
           </div>
 
           {/* Color presets */}
           <div>
-            <label className="text-xs block mb-2" style={{ color: "var(--text-faint)" }}>نمط جاهز</label>
+            <label className="mb-2 block text-xs" style={{ color: "var(--text-faint)" }}>
+              نمط جاهز
+            </label>
             <div className="grid grid-cols-4 gap-2">
               {colorPresets.map((p) => {
                 const isActive = (meta.bg_color || "") === p.bg;
@@ -761,7 +1085,7 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
                     key={p.name}
                     type="button"
                     onClick={() => setMeta({ ...meta, bg_color: p.bg, text_color: p.text })}
-                    className="rounded-lg p-2 text-xs font-bold flex items-center justify-center"
+                    className="flex items-center justify-center rounded-lg p-2 text-xs font-bold"
                     style={{
                       background: p.bg || "var(--bg-surface-1)",
                       color: p.text || "var(--text-soft)",
@@ -780,13 +1104,23 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
           {/* Custom hex */}
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>لون الخلفية</label>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
+                لون الخلفية
+              </label>
               <div className="flex gap-2">
                 <input
                   type="color"
                   value={meta.bg_color || "#FAF7F2"}
                   onChange={(e) => setMeta({ ...meta, bg_color: e.target.value })}
-                  style={{ width: 38, height: 38, padding: 0, border: "1px solid var(--gold-bg)", borderRadius: 8, cursor: "pointer", background: "transparent" }}
+                  style={{
+                    width: 38,
+                    height: 38,
+                    padding: 0,
+                    border: "1px solid var(--gold-bg)",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    background: "transparent",
+                  }}
                 />
                 <input
                   type="text"
@@ -794,18 +1128,34 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
                   onChange={(e) => setMeta({ ...meta, bg_color: e.target.value })}
                   placeholder="#FAF7F2"
                   className="flex-1 rounded-lg px-3 py-2 text-sm"
-                  style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)", direction: "ltr", fontFamily: "monospace" }}
+                  style={{
+                    background: "var(--bg-surface-1)",
+                    border: "1px solid var(--gold-bg)",
+                    color: "var(--text-strong)",
+                    direction: "ltr",
+                    fontFamily: "monospace",
+                  }}
                 />
               </div>
             </div>
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>لون النص</label>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
+                لون النص
+              </label>
               <div className="flex gap-2">
                 <input
                   type="color"
                   value={meta.text_color || "#1A1206"}
                   onChange={(e) => setMeta({ ...meta, text_color: e.target.value })}
-                  style={{ width: 38, height: 38, padding: 0, border: "1px solid var(--gold-bg)", borderRadius: 8, cursor: "pointer", background: "transparent" }}
+                  style={{
+                    width: 38,
+                    height: 38,
+                    padding: 0,
+                    border: "1px solid var(--gold-bg)",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    background: "transparent",
+                  }}
                 />
                 <input
                   type="text"
@@ -813,7 +1163,13 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
                   onChange={(e) => setMeta({ ...meta, text_color: e.target.value })}
                   placeholder="#1A1206"
                   className="flex-1 rounded-lg px-3 py-2 text-sm"
-                  style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)", direction: "ltr", fontFamily: "monospace" }}
+                  style={{
+                    background: "var(--bg-surface-1)",
+                    border: "1px solid var(--gold-bg)",
+                    color: "var(--text-strong)",
+                    direction: "ltr",
+                    fontFamily: "monospace",
+                  }}
                 />
               </div>
             </div>
@@ -825,7 +1181,13 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
               type="button"
               onClick={() => setMeta({ ...meta, bg_color: "", text_color: "", label: "" })}
               className="text-xs underline"
-              style={{ color: "var(--text-faint)", background: "transparent", border: "none", cursor: "pointer", padding: 0 }}
+              style={{
+                color: "var(--text-faint)",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
             >
               استعادة الافتراضي
             </button>
@@ -839,7 +1201,15 @@ function ElementDesignSection({ meta, setMeta }: { meta: Record<string, any>; se
 // ─────────────────────────────────────────────────────────────
 // حقل ديناميكي حسب نوعه
 // ─────────────────────────────────────────────────────────────
-function DynamicField({ field, value, onChange }: { field: ElementField; value: any; onChange: (v: any) => void }) {
+function DynamicField({
+  field,
+  value,
+  onChange,
+}: {
+  field: ElementField;
+  value: any;
+  onChange: (v: any) => void;
+}) {
   const inputClass = "w-full rounded-lg px-3 py-2.5 text-sm";
   const inputStyle = {
     background: "var(--bg-surface-2)",
@@ -849,11 +1219,17 @@ function DynamicField({ field, value, onChange }: { field: ElementField; value: 
 
   if (field.type === "boolean") {
     return (
-      <label className="flex items-center justify-between gap-3 cursor-pointer rounded-xl p-3"
-        style={{ background: "var(--bg-surface-2)" }}>
+      <label
+        className="flex cursor-pointer items-center justify-between gap-3 rounded-xl p-3"
+        style={{ background: "var(--bg-surface-2)" }}
+      >
         <span className="text-sm">{field.label}</span>
-        <input type="checkbox" checked={!!value} onChange={e => onChange(e.target.checked)}
-          style={{ width: 18, height: 18, accentColor: "var(--gold-2)" }} />
+        <input
+          type="checkbox"
+          checked={!!value}
+          onChange={(e) => onChange(e.target.checked)}
+          style={{ width: 18, height: 18, accentColor: "var(--gold-2)" }}
+        />
       </label>
     );
   }
@@ -861,35 +1237,69 @@ function DynamicField({ field, value, onChange }: { field: ElementField; value: 
   if (field.type === "textarea") {
     return (
       <div>
-        <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>
+        <label className="mb-1.5 block text-xs" style={{ color: "var(--text-soft)" }}>
           {field.label} {field.required && <span style={{ color: "var(--danger)" }}>*</span>}
         </label>
-        <textarea value={value} onChange={e => onChange(e.target.value)}
-          placeholder={field.placeholder} rows={3}
-          className={inputClass} style={{ ...inputStyle, resize: "vertical" }} />
-        {field.helpText && <p className="text-xs mt-1" style={{ color: "var(--text-faint)" }}>{field.helpText}</p>}
+        <textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={field.placeholder}
+          rows={3}
+          className={inputClass}
+          style={{ ...inputStyle, resize: "vertical" }}
+        />
+        {field.helpText && (
+          <p className="mt-1 text-xs" style={{ color: "var(--text-faint)" }}>
+            {field.helpText}
+          </p>
+        )}
       </div>
     );
   }
 
   return (
     <div>
-      <label className="block text-xs mb-1.5" style={{ color: "var(--text-soft)" }}>
+      <label className="mb-1.5 block text-xs" style={{ color: "var(--text-soft)" }}>
         {field.label} {field.required && <span style={{ color: "var(--danger)" }}>*</span>}
       </label>
       <div style={{ display: "flex", gap: 6 }}>
         {field.prefix && (
-          <span className="px-3 py-2.5 rounded-lg text-sm flex items-center" style={{
-            background: "var(--bg-surface-3)", color: "var(--text-soft)", fontFamily: "monospace",
-          }}>{field.prefix}</span>
+          <span
+            className="flex items-center rounded-lg px-3 py-2.5 text-sm"
+            style={{
+              background: "var(--bg-surface-3)",
+              color: "var(--text-soft)",
+              fontFamily: "monospace",
+            }}
+          >
+            {field.prefix}
+          </span>
         )}
-        <input type={field.type === "tel" ? "tel" : field.type === "email" ? "email" : field.type === "url" ? "url" : "text"}
-          value={value} onChange={e => onChange(e.target.value)}
+        <input
+          type={
+            field.type === "tel"
+              ? "tel"
+              : field.type === "email"
+                ? "email"
+                : field.type === "url"
+                  ? "url"
+                  : "text"
+          }
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
-          dir={field.type === "tel" || field.type === "email" || field.type === "url" ? "ltr" : "auto"}
-          className={inputClass} style={{ ...inputStyle, flex: 1 }} />
+          dir={
+            field.type === "tel" || field.type === "email" || field.type === "url" ? "ltr" : "auto"
+          }
+          className={inputClass}
+          style={{ ...inputStyle, flex: 1 }}
+        />
       </div>
-      {field.helpText && <p className="text-xs mt-1" style={{ color: "var(--text-faint)" }}>{field.helpText}</p>}
+      {field.helpText && (
+        <p className="mt-1 text-xs" style={{ color: "var(--text-faint)" }}>
+          {field.helpText}
+        </p>
+      )}
     </div>
   );
 }
@@ -905,25 +1315,65 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
   return (
     <ModalShell onClose={onClose} title="تعديل الهوية">
       {/* تنبيه — الاسم/الصورة يُستوردان تلقائياً من إعدادات المنشأة لو تركتهما فارغين */}
-      <div className="rounded-lg p-3 mb-3 text-xs flex items-start gap-2"
-        style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--text-soft)" }}>
+      <div
+        className="mb-3 flex items-start gap-2 rounded-lg p-3 text-xs"
+        style={{
+          background: "var(--gold-bg-soft)",
+          border: "1px solid var(--gold-bg)",
+          color: "var(--text-soft)",
+        }}
+      >
         <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>💡</span>
         <div>
-          الاسم والصورة هنا يطغيان على القيم من <strong>الإعدادات → الملف الشخصي</strong>.
-          اتركهما فارغين لتستخدم بطاقتك نفس اسمك وصورتك في باقي المنصة.
+          الاسم والصورة هنا يطغيان على القيم من <strong>الإعدادات → الملف الشخصي</strong>. اتركهما
+          فارغين لتستخدم بطاقتك نفس اسمك وصورتك في باقي المنصة.
         </div>
       </div>
       <div className="space-y-3">
-        <DynamicField field={{ key: "display_name", label: "الاسم المعروض (اختياري — للبطاقة فقط)", type: "text", placeholder: "اتركه فارغاً لاستخدام اسمك من الإعدادات" }} value={name} onChange={setName} />
-        <DynamicField field={{ key: "bio", label: "الوصف القصير", type: "textarea", placeholder: "وسيط عقاري معتمد — الرياض", helpText: "حد أقصى 140 حرف، يظهر تحت اسمك" }} value={bio} onChange={setBio} />
-        <DynamicField field={{ key: "avatar", label: "رابط الصورة (اختياري — للبطاقة فقط)", type: "url", placeholder: "اتركه فارغاً لاستخدام صورتك من الإعدادات", helpText: "إذا تركته فارغاً، نستخدم صورتك في الإعدادات أو الحرف الأول من اسمك" }} value={avatar} onChange={setAvatar} />
+        <DynamicField
+          field={{
+            key: "display_name",
+            label: "الاسم المعروض (اختياري — للبطاقة فقط)",
+            type: "text",
+            placeholder: "اتركه فارغاً لاستخدام اسمك من الإعدادات",
+          }}
+          value={name}
+          onChange={setName}
+        />
+        <DynamicField
+          field={{
+            key: "bio",
+            label: "الوصف القصير",
+            type: "textarea",
+            placeholder: "وسيط عقاري معتمد — الرياض",
+            helpText: "حد أقصى 140 حرف، يظهر تحت اسمك",
+          }}
+          value={bio}
+          onChange={setBio}
+        />
+        <DynamicField
+          field={{
+            key: "avatar",
+            label: "رابط الصورة (اختياري — للبطاقة فقط)",
+            type: "url",
+            placeholder: "اتركه فارغاً لاستخدام صورتك من الإعدادات",
+            helpText: "إذا تركته فارغاً، نستخدم صورتك في الإعدادات أو الحرف الأول من اسمك",
+          }}
+          value={avatar}
+          onChange={setAvatar}
+        />
       </div>
-      <button onClick={() => onSave({ display_name: name, bio, avatar_url: avatar || null })}
-        className="w-full mt-5 py-3 rounded-xl font-bold"
+      <button
+        onClick={() => onSave({ display_name: name, bio, avatar_url: avatar || null })}
+        className="mt-5 w-full rounded-xl py-3 font-bold"
         style={{
           background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
-          color: "var(--bg-page)", border: "none", fontSize: 14, cursor: "pointer",
-        }}>
+          color: "var(--bg-page)",
+          border: "none",
+          fontSize: 14,
+          cursor: "pointer",
+        }}
+      >
         حفظ
       </button>
     </ModalShell>
@@ -939,31 +1389,52 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
 // ─────────────────────────────────────────────────────────────
 function ModalShell({ children, onClose, title }: any) {
   return (
-    <div onClick={onClose}
+    <div
+      onClick={onClose}
       style={{
-        position: "fixed", inset: 0, zIndex: 100,
+        position: "fixed",
+        inset: 0,
+        zIndex: 100,
         background: "rgba(0,0,0,0.55)",
-        display: "flex", alignItems: "flex-end",
+        display: "flex",
+        alignItems: "flex-end",
         animation: "fadeIn 0.2s ease",
-      }}>
-      <div onClick={e => e.stopPropagation()} dir="rtl"
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        dir="rtl"
         style={{
-          width: "100%", maxWidth: 540, margin: "0 auto",
-          background: "var(--bg-surface-1)", color: "var(--text-strong)",
+          width: "100%",
+          maxWidth: 540,
+          margin: "0 auto",
+          background: "var(--bg-surface-1)",
+          color: "var(--text-strong)",
           borderRadius: "20px 20px 0 0",
           padding: "20px 18px 28px",
-          maxHeight: "90vh", overflowY: "auto",
+          maxHeight: "90vh",
+          overflowY: "auto",
           animation: "slideUp 0.25s ease",
           fontFamily: "var(--font-tajawal), 'Tajawal', sans-serif",
-        }}>
-        <div className="flex justify-between items-center mb-4">
-          <button onClick={onClose} aria-label="إغلاق"
+        }}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <button
+            onClick={onClose}
+            aria-label="إغلاق"
             style={{
-              width: 36, height: 36, borderRadius: "50%",
-              background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg)",
-              color: "var(--text-soft)", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              background: "var(--bg-surface-2)",
+              border: "1px solid var(--gold-bg)",
+              color: "var(--text-soft)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <X size={16} />
           </button>
           <div className="text-sm font-bold opacity-90">{title}</div>

@@ -4,8 +4,18 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  Home, Plus, Calendar, AlertTriangle, CheckCircle2, Clock,
-  Loader2, ChevronRight, Phone, Trash2, Edit2, Send
+  Home,
+  Plus,
+  Calendar,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Loader2,
+  ChevronRight,
+  Phone,
+  Trash2,
+  Edit2,
+  Send,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase-browser";
 import SARIcon from "../../components/SARIcon";
@@ -63,10 +73,7 @@ export default function PropertyManagementPage() {
     setLoading(true);
     try {
       const [cRes, pRes, sRes] = await Promise.all([
-        supabase
-          .from("rent_contracts")
-          .select("*")
-          .order("created_at", { ascending: false }),
+        supabase.from("rent_contracts").select("*").order("created_at", { ascending: false }),
         supabase
           .from("rent_payments")
           .select("*, contract:rent_contracts(tenant_name, tenant_phone)")
@@ -95,11 +102,11 @@ export default function PropertyManagementPage() {
   }
 
   return (
-    <div dir="rtl" className="space-y-4 max-w-5xl mx-auto">
-      <div className="flex items-start justify-between flex-wrap gap-3">
+    <div dir="rtl" className="mx-auto max-w-5xl space-y-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1
-            className="text-2xl font-bold flex items-center gap-2"
+            className="flex items-center gap-2 text-2xl font-bold"
             style={{ color: "var(--text-strong)" }}
           >
             <Home size={22} style={{ color: "var(--gold-2)" }} /> إدارة الأملاك
@@ -109,14 +116,14 @@ export default function PropertyManagementPage() {
               size="sm"
             />
           </h1>
-          <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
             {contracts.length} {contracts.length === 1 ? "عقد" : "عقود"} ·{" "}
             {stats?.overdue_count || 0} متأخّر
           </p>
         </div>
         <button
           onClick={() => setShowNewContract(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs"
           style={{
             background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
             color: "var(--bg-page)",
@@ -132,7 +139,7 @@ export default function PropertyManagementPage() {
 
       {/* Stats cards */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatCard
             icon={<CheckCircle2 size={18} />}
             label="مدفوع هذا الشهر"
@@ -165,8 +172,12 @@ export default function PropertyManagementPage() {
 
       {/* Tabs */}
       <div
-        className="flex gap-1 p-1 rounded-xl"
-        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", maxWidth: "fit-content" }}
+        className="flex gap-1 rounded-xl p-1"
+        style={{
+          background: "var(--bg-surface-1)",
+          border: "1px solid var(--gold-bg)",
+          maxWidth: "fit-content",
+        }}
       >
         {[
           { id: "overview", label: "نظرة عامة" },
@@ -176,7 +187,7 @@ export default function PropertyManagementPage() {
           <button
             key={t.id}
             onClick={() => setTab(t.id as any)}
-            className="px-4 py-2 rounded-lg text-sm font-bold"
+            className="rounded-lg px-4 py-2 text-sm font-bold"
             style={{
               background: tab === t.id ? "var(--gold-bg)" : "transparent",
               color: tab === t.id ? "var(--gold-2)" : "var(--text-faint)",
@@ -192,9 +203,7 @@ export default function PropertyManagementPage() {
 
       {/* Content */}
       {tab === "overview" && <OverviewTab payments={payments} />}
-      {tab === "contracts" && (
-        <ContractsTab contracts={contracts} onChanged={load} />
-      )}
+      {tab === "contracts" && <ContractsTab contracts={contracts} onChanged={load} />}
       {tab === "payments" && <PaymentsTab payments={payments} onChanged={load} />}
 
       {/* New Contract Modal */}
@@ -232,7 +241,7 @@ function StatCard({
       className="rounded-xl p-3"
       style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
     >
-      <div className="flex items-center gap-2 mb-2">
+      <div className="mb-2 flex items-center gap-2">
         <div style={{ color }}>{icon}</div>
         <span className="text-xs" style={{ color: "var(--text-faint)" }}>
           {label}
@@ -245,7 +254,7 @@ function StatCard({
         {withSAR && <SARIcon size={11} color="current" />}
       </div>
       {sub && (
-        <div className="text-xs mt-1" style={{ color }}>
+        <div className="mt-1 text-xs" style={{ color }}>
           {sub}
         </div>
       )}
@@ -256,9 +265,7 @@ function StatCard({
 // ─────────────────────────────────────────────────────────────
 function OverviewTab({ payments }: { payments: Payment[] }) {
   const overdue = payments.filter((p) => p.status === "overdue");
-  const upcoming = payments
-    .filter((p) => p.status === "pending")
-    .slice(0, 5);
+  const upcoming = payments.filter((p) => p.status === "pending").slice(0, 5);
 
   return (
     <div className="space-y-4">
@@ -266,7 +273,7 @@ function OverviewTab({ payments }: { payments: Payment[] }) {
       {overdue.length > 0 && (
         <div>
           <h3
-            className="text-sm font-bold mb-2 flex items-center gap-2"
+            className="mb-2 flex items-center gap-2 text-sm font-bold"
             style={{ color: "#ef4444" }}
           >
             <AlertTriangle size={15} />
@@ -284,7 +291,7 @@ function OverviewTab({ payments }: { payments: Payment[] }) {
       {upcoming.length > 0 && (
         <div>
           <h3
-            className="text-sm font-bold mb-2 flex items-center gap-2"
+            className="mb-2 flex items-center gap-2 text-sm font-bold"
             style={{ color: "var(--text-strong)" }}
           >
             <Calendar size={15} style={{ color: "var(--gold-2)" }} />
@@ -300,11 +307,11 @@ function OverviewTab({ payments }: { payments: Payment[] }) {
 
       {payments.length === 0 && (
         <div
-          className="text-center py-12 rounded-xl"
+          className="rounded-xl py-12 text-center"
           style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
         >
           <Home size={36} style={{ color: "var(--gold-2)", margin: "0 auto 12px" }} />
-          <p className="font-bold mb-1" style={{ color: "var(--text-strong)" }}>
+          <p className="mb-1 font-bold" style={{ color: "var(--text-strong)" }}>
             لا توجد عقود بعد
           </p>
           <p className="text-xs" style={{ color: "var(--text-faint)" }}>
@@ -317,13 +324,7 @@ function OverviewTab({ payments }: { payments: Payment[] }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-function ContractsTab({
-  contracts,
-  onChanged,
-}: {
-  contracts: Contract[];
-  onChanged: () => void;
-}) {
+function ContractsTab({ contracts, onChanged }: { contracts: Contract[]; onChanged: () => void }) {
   async function deleteContract(id: string) {
     if (!confirm("احذف هذا العقد وكل مدفوعاته؟")) return;
     const { error } = await supabase.from("rent_contracts").delete().eq("id", id);
@@ -337,7 +338,7 @@ function ContractsTab({
   if (contracts.length === 0) {
     return (
       <div
-        className="text-center py-12 rounded-xl"
+        className="rounded-xl py-12 text-center"
         style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
       >
         <p style={{ color: "var(--text-faint)" }}>لا توجد عقود</p>
@@ -350,19 +351,20 @@ function ContractsTab({
       {contracts.map((c) => (
         <div
           key={c.id}
-          className="rounded-xl p-3 flex items-center justify-between gap-3"
+          className="flex items-center justify-between gap-3 rounded-xl p-3"
           style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
         >
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold mb-0.5" style={{ color: "var(--text-strong)" }}>
+          <div className="min-w-0 flex-1">
+            <div className="mb-0.5 text-sm font-bold" style={{ color: "var(--text-strong)" }}>
               {c.tenant_name}
             </div>
             <div className="text-xs" style={{ color: "var(--text-faint)" }}>
-              {Number(c.monthly_rent).toLocaleString("ar-SA")} ر.س/شهر · {c.start_date} → {c.end_date}
+              {Number(c.monthly_rent).toLocaleString("ar-SA")} ر.س/شهر · {c.start_date} →{" "}
+              {c.end_date}
             </div>
           </div>
           <span
-            className="text-xs font-bold px-2 py-1 rounded-full"
+            className="rounded-full px-2 py-1 text-xs font-bold"
             style={{
               background: c.status === "active" ? "rgba(74,222,128,0.1)" : "rgba(150,150,150,0.1)",
               color: c.status === "active" ? "var(--success, #4ade80)" : "var(--text-faint)",
@@ -375,7 +377,7 @@ function ContractsTab({
               href={`https://wa.me/${c.tenant_phone.replace(/^\+/, "").replace(/^0/, "966")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1.5 rounded-lg"
+              className="rounded-lg p-1.5"
               style={{ color: "#25D366", background: "transparent" }}
               title="واتساب"
             >
@@ -384,8 +386,13 @@ function ContractsTab({
           )}
           <button
             onClick={() => deleteContract(c.id)}
-            className="p-1.5 rounded-lg"
-            style={{ background: "transparent", border: "none", color: "var(--text-faint)", cursor: "pointer" }}
+            className="rounded-lg p-1.5"
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "var(--text-faint)",
+              cursor: "pointer",
+            }}
           >
             <Trash2 size={14} />
           </button>
@@ -396,17 +403,11 @@ function ContractsTab({
 }
 
 // ─────────────────────────────────────────────────────────────
-function PaymentsTab({
-  payments,
-  onChanged,
-}: {
-  payments: Payment[];
-  onChanged: () => void;
-}) {
+function PaymentsTab({ payments, onChanged }: { payments: Payment[]; onChanged: () => void }) {
   if (payments.length === 0) {
     return (
       <div
-        className="text-center py-12 rounded-xl"
+        className="rounded-xl py-12 text-center"
         style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
       >
         <p style={{ color: "var(--text-faint)" }}>لا توجد مدفوعات</p>
@@ -472,14 +473,14 @@ function PaymentRow({
 
   return (
     <div
-      className="rounded-xl p-3 flex items-center justify-between gap-3"
+      className="flex items-center justify-between gap-3 rounded-xl p-3"
       style={{ background: "var(--bg-surface-1)", border: `1px solid ${c.bg}` }}
     >
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-bold mb-0.5" style={{ color: "var(--text-strong)" }}>
+      <div className="min-w-0 flex-1">
+        <div className="mb-0.5 text-sm font-bold" style={{ color: "var(--text-strong)" }}>
           {payment.contract?.tenant_name || "—"}
         </div>
-        <div className="text-xs flex items-center gap-2" style={{ color: "var(--text-faint)" }}>
+        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-faint)" }}>
           <Calendar size={11} />
           استحقاق: {payment.due_date}
           <span>·</span>
@@ -490,7 +491,7 @@ function PaymentRow({
       </div>
 
       <span
-        className="text-xs font-bold px-2 py-1 rounded-full"
+        className="rounded-full px-2 py-1 text-xs font-bold"
         style={{ background: c.bg, color: c.text }}
       >
         {c.label}
@@ -501,8 +502,13 @@ function PaymentRow({
           {payment.contract?.tenant_phone && (
             <button
               onClick={sendReminder}
-              className="p-1.5 rounded-lg"
-              style={{ color: "#25D366", background: "transparent", border: "none", cursor: "pointer" }}
+              className="rounded-lg p-1.5"
+              style={{
+                color: "#25D366",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+              }}
               title="إرسال تذكير عبر واتساب"
             >
               <Send size={14} />
@@ -510,7 +516,7 @@ function PaymentRow({
           )}
           <button
             onClick={markPaid}
-            className="px-2 py-1 rounded-lg text-xs font-bold"
+            className="rounded-lg px-2 py-1 text-xs font-bold"
             style={{
               background: "rgba(74,222,128,0.15)",
               color: "var(--success, #4ade80)",
@@ -529,13 +535,7 @@ function PaymentRow({
 }
 
 // ─────────────────────────────────────────────────────────────
-function NewContractModal({
-  onClose,
-  onSaved,
-}: {
-  onClose: () => void;
-  onSaved: () => void;
-}) {
+function NewContractModal({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
   const [form, setForm] = useState({
     tenant_name: "",
     tenant_phone: "",
@@ -645,14 +645,14 @@ function NewContractModal({
         }}
         dir="rtl"
       >
-        <h3 className="text-lg font-bold mb-4" style={{ color: "var(--text-strong)" }}>
+        <h3 className="mb-4 text-lg font-bold" style={{ color: "var(--text-strong)" }}>
           عقد إيجار جديد
         </h3>
 
         <div className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 اسم المستأجر *
               </label>
               <input
@@ -664,7 +664,7 @@ function NewContractModal({
               />
             </div>
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 جوّال المستأجر
               </label>
               <input
@@ -676,7 +676,7 @@ function NewContractModal({
               />
             </div>
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 الإيجار الشهري (ر.س) *
               </label>
               <input
@@ -688,7 +688,7 @@ function NewContractModal({
               />
             </div>
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 يوم الاستحقاق (1-28)
               </label>
               <input
@@ -701,7 +701,7 @@ function NewContractModal({
               />
             </div>
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 تاريخ البدء *
               </label>
               <input
@@ -712,7 +712,7 @@ function NewContractModal({
               />
             </div>
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 تاريخ الانتهاء *
               </label>
               <input
@@ -725,7 +725,7 @@ function NewContractModal({
           </div>
 
           <div>
-            <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
               ملاحظات
             </label>
             <textarea
@@ -740,7 +740,7 @@ function NewContractModal({
             <button
               onClick={save}
               disabled={saving}
-              className="flex-1 py-2.5 rounded-lg font-bold text-sm"
+              className="flex-1 rounded-lg py-2.5 text-sm font-bold"
               style={{
                 background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
                 color: "var(--bg-page)",
@@ -753,7 +753,7 @@ function NewContractModal({
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2.5 rounded-lg text-sm"
+              className="rounded-lg px-4 py-2.5 text-sm"
               style={{
                 background: "var(--bg-surface-2)",
                 border: "1px solid var(--gold-bg)",

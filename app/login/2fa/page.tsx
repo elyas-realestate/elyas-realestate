@@ -12,7 +12,10 @@ export default function TwoFactorChallenge() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!code.trim()) { setError("أدخل الرمز"); return; }
+    if (!code.trim()) {
+      setError("أدخل الرمز");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -22,7 +25,11 @@ export default function TwoFactorChallenge() {
         body: JSON.stringify({ code: code.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error || "رمز غير صحيح"); setBusy(false); return; }
+      if (!res.ok) {
+        setError(data.error || "رمز غير صحيح");
+        setBusy(false);
+        return;
+      }
       window.location.href = "/dashboard";
     } catch {
       setError("خطأ في الاتصال");
@@ -75,7 +82,9 @@ export default function TwoFactorChallenge() {
           >
             <ShieldCheck size={32} color="#fff" />
           </div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 6 }}>
+          <h1
+            style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 6 }}
+          >
             التحقّق الثنائي
           </h1>
           <p style={{ fontSize: 13, color: "var(--text-soft)" }}>
@@ -89,7 +98,10 @@ export default function TwoFactorChallenge() {
           <input
             value={code}
             onChange={(e) => {
-              const v = mode === "totp" ? e.target.value.replace(/\D/g, "").slice(0, 6) : e.target.value.toUpperCase().slice(0, 14);
+              const v =
+                mode === "totp"
+                  ? e.target.value.replace(/\D/g, "").slice(0, 6)
+                  : e.target.value.toUpperCase().slice(0, 14);
               setCode(v);
               setError("");
             }}
@@ -141,7 +153,11 @@ export default function TwoFactorChallenge() {
         <div style={{ marginTop: 20, textAlign: "center" }}>
           <button
             type="button"
-            onClick={() => { setMode(mode === "totp" ? "recovery" : "totp"); setCode(""); setError(""); }}
+            onClick={() => {
+              setMode(mode === "totp" ? "recovery" : "totp");
+              setCode("");
+              setError("");
+            }}
             style={{
               background: "transparent",
               border: "none",
@@ -158,7 +174,14 @@ export default function TwoFactorChallenge() {
           </button>
         </div>
 
-        <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--overlay-soft)", textAlign: "center" }}>
+        <div
+          style={{
+            marginTop: 24,
+            paddingTop: 20,
+            borderTop: "1px solid var(--overlay-soft)",
+            textAlign: "center",
+          }}
+        >
           <button
             type="button"
             onClick={logout}

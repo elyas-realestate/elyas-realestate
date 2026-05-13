@@ -29,7 +29,9 @@ export async function POST(req: Request) {
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرّح" }, { status: 401 });
 
     const admin = createClient(
@@ -57,18 +59,16 @@ export async function POST(req: Request) {
     if (!target) return NextResponse.json({ error: `${kind} ${code} غير موجود` }, { status: 404 });
 
     // upsert إلى tenant_ai_config
-    const { error: upErr } = await admin
-      .from("tenant_ai_config")
-      .upsert(
-        {
-          tenant_id: tenant.id,
-          target_kind: kind,
-          target_id: target.id,
-          is_enabled: enabled,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "tenant_id,target_kind,target_id" }
-      );
+    const { error: upErr } = await admin.from("tenant_ai_config").upsert(
+      {
+        tenant_id: tenant.id,
+        target_kind: kind,
+        target_id: target.id,
+        is_enabled: enabled,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "tenant_id,target_kind,target_id" }
+    );
 
     if (upErr) return NextResponse.json({ error: upErr.message }, { status: 500 });
 

@@ -7,23 +7,33 @@ export const metadata: Metadata = {
 
 export default function DataProcessingPage() {
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "var(--bg-page)",
-      color: "var(--text-on-dark)",
-      direction: "rtl",
-      fontFamily: "'Tajawal', sans-serif",
-      padding: "48px 24px",
-    }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg-page)",
+        color: "var(--text-on-dark)",
+        direction: "rtl",
+        fontFamily: "'Tajawal', sans-serif",
+        padding: "48px 24px",
+      }}
+    >
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
-        <a href="/" style={{
-          color: "var(--gold-1)", textDecoration: "none", fontSize: 14, marginBottom: 32,
-          display: "inline-block",
-        }}>
+        <a
+          href="/"
+          style={{
+            color: "var(--gold-1)",
+            textDecoration: "none",
+            fontSize: 14,
+            marginBottom: 32,
+            display: "inline-block",
+          }}
+        >
           ← العودة للصفحة الرئيسية
         </a>
 
-        <h1 style={{ fontSize: 32, fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}>
+        <h1
+          style={{ fontSize: 32, fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}
+        >
           اتفاقية معالجة البيانات
         </h1>
         <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 40 }}>
@@ -32,17 +42,27 @@ export default function DataProcessingPage() {
 
         <Section title="نطاق الاتفاقية">
           <p>
-            تسري هذه الاتفاقية على معالجة منصّة <strong style={{ color: "var(--gold-1)" }}>وسيط برو</strong>
-            للبيانات الشخصية لعملائك (المشترين، المستأجرين، الملاك) عبر خدماتنا، وفقاً
-            لنظام حماية البيانات الشخصية في المملكة (PDPL) ولوائح REGA.
+            تسري هذه الاتفاقية على معالجة منصّة{" "}
+            <strong style={{ color: "var(--gold-1)" }}>وسيط برو</strong>
+            للبيانات الشخصية لعملائك (المشترين، المستأجرين، الملاك) عبر خدماتنا، وفقاً لنظام حماية
+            البيانات الشخصية في المملكة (PDPL) ولوائح REGA.
           </p>
         </Section>
 
         <Section title="الأدوار">
           <ul>
-            <li><strong>المتحكّم (Data Controller):</strong> الوسيط المشترك في المنصّة (أنت)، تحدّد أغراض ووسائل المعالجة لعملائك.</li>
-            <li><strong>المعالج (Data Processor):</strong> منصّة وسيط برو، تعالج بياناتك بالنيابة عنك ضمن تعليماتك الموثَّقة.</li>
-            <li><strong>المعالجون الفرعيون:</strong> Meta (WhatsApp Business)، Vercel (الاستضافة)، Supabase (قاعدة البيانات)، مزوّدو AI (OpenAI, Anthropic, Google, etc).</li>
+            <li>
+              <strong>المتحكّم (Data Controller):</strong> الوسيط المشترك في المنصّة (أنت)، تحدّد
+              أغراض ووسائل المعالجة لعملائك.
+            </li>
+            <li>
+              <strong>المعالج (Data Processor):</strong> منصّة وسيط برو، تعالج بياناتك بالنيابة عنك
+              ضمن تعليماتك الموثَّقة.
+            </li>
+            <li>
+              <strong>المعالجون الفرعيون:</strong> Meta (WhatsApp Business)، Vercel (الاستضافة)،
+              Supabase (قاعدة البيانات)، مزوّدو AI (OpenAI, Anthropic, Google, etc).
+            </li>
           </ul>
         </Section>
 
@@ -79,8 +99,8 @@ export default function DataProcessingPage() {
 
         <Section title="نقل البيانات">
           <p>
-            بعض المعالجات تتم خارج المملكة (مثلاً: استدعاءات AI لمزوّدين دوليين،
-            استضافة Vercel/Supabase). نضمن:
+            بعض المعالجات تتم خارج المملكة (مثلاً: استدعاءات AI لمزوّدين دوليين، استضافة
+            Vercel/Supabase). نضمن:
           </p>
           <ul>
             <li>اختيار مزوّدين ملتزمين بمعايير حماية بيانات صارمة (GDPR، SOC 2).</li>
@@ -90,9 +110,7 @@ export default function DataProcessingPage() {
         </Section>
 
         <Section title="الخروقات الأمنية">
-          <p>
-            في حال أي خرق أمني يؤثر على بياناتك أو بيانات عملائك، نلتزم بـ:
-          </p>
+          <p>في حال أي خرق أمني يؤثر على بياناتك أو بيانات عملائك، نلتزم بـ:</p>
           <ul>
             <li>إخطارك خلال ٧٢ ساعة من اكتشاف الخرق.</li>
             <li>تقديم تفاصيل كاملة عن طبيعة الخرق وحجمه.</li>
@@ -102,9 +120,7 @@ export default function DataProcessingPage() {
         </Section>
 
         <Section title="مدة الاتفاقية">
-          <p>
-            تسري هذه الاتفاقية طوال مدة اشتراكك في المنصّة. بعد إنهاء الاشتراك:
-          </p>
+          <p>تسري هذه الاتفاقية طوال مدة اشتراكك في المنصّة. بعد إنهاء الاشتراك:</p>
           <ul>
             <li>يحق لك تصدير كامل بياناتك (CSV / JSON) خلال ٣٠ يوم.</li>
             <li>بعد ٣٠ يوم، تُحذف البيانات الشخصية للعملاء بشكل آمن.</li>
@@ -114,26 +130,34 @@ export default function DataProcessingPage() {
 
         <Section title="حقوق أصحاب البيانات">
           <p>
-            للعملاء (المشترين، المستأجرين، الملاك) حقوق وفق PDPL تشمل: الوصول، التصحيح،
-            الحذف، الاعتراض. عند تلقّي طلب من أحد عملائك، يجب أن تُحيله إلينا خلال ٤٨
-            ساعة، وسنتعاون لتنفيذه ضمن الأطر النظامية.
+            للعملاء (المشترين، المستأجرين، الملاك) حقوق وفق PDPL تشمل: الوصول، التصحيح، الحذف،
+            الاعتراض. عند تلقّي طلب من أحد عملائك، يجب أن تُحيله إلينا خلال ٤٨ ساعة، وسنتعاون
+            لتنفيذه ضمن الأطر النظامية.
           </p>
         </Section>
 
         <Section title="التواصل">
           <p style={{ lineHeight: 2 }}>
-            <strong>منسّق حماية البيانات</strong><br />
-            إلياس الدخيل<br />
+            <strong>منسّق حماية البيانات</strong>
+            <br />
+            إلياس الدخيل
+            <br />
             <a href="mailto:vip.elyas@gmail.com" style={{ color: "var(--gold-1)" }}>
               vip.elyas@gmail.com
             </a>
           </p>
         </Section>
 
-        <div style={{
-          marginTop: 60, paddingTop: 24, borderTop: "1px solid #1F2937",
-          color: "var(--text-ghost)", fontSize: 12, textAlign: "center",
-        }}>
+        <div
+          style={{
+            marginTop: 60,
+            paddingTop: 24,
+            borderTop: "1px solid #1F2937",
+            color: "var(--text-ghost)",
+            fontSize: 12,
+            textAlign: "center",
+          }}
+        >
           © ٢٠٢٦ وسيط برو. جميع الحقوق محفوظة.
         </div>
       </div>

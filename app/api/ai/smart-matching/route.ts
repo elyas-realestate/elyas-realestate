@@ -95,9 +95,18 @@ export async function POST(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
 
   const url = new URL(req.url);
   const cronSecret = url.searchParams.get("secret");
@@ -113,14 +122,14 @@ export async function POST(req: NextRequest) {
   );
 
   // ── جلب active alerts (لـ tenant واحد إذا user، لكلهم إذا cron) ──
-  let alertsQuery = admin
-    .from("client_property_alerts")
-    .select("*")
-    .eq("is_active", true);
+  let alertsQuery = admin.from("client_property_alerts").select("*").eq("is_active", true);
 
   if (!isCronCall && user) {
     const { data: t } = await authClient
-      .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+      .from("tenants")
+      .select("id")
+      .eq("owner_id", user.id)
+      .maybeSingle();
     if (!t?.id) return NextResponse.json({ error: "لا يوجد tenant" }, { status: 404 });
     alertsQuery = alertsQuery.eq("tenant_id", t.id);
   }
@@ -137,7 +146,9 @@ export async function POST(req: NextRequest) {
     // ── جلب العقارات المنشورة لنفس tenant ──
     let propsQuery = admin
       .from("properties")
-      .select("id, tenant_id, title, city, district, main_category, sub_category, offer_type, price, rooms, area")
+      .select(
+        "id, tenant_id, title, city, district, main_category, sub_category, offer_type, price, rooms, area"
+      )
       .eq("tenant_id", alert.tenant_id)
       .eq("is_published", true);
 

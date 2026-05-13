@@ -19,7 +19,7 @@ export interface WhatsAppConfig {
 
 export interface SendTextOptions {
   tenantId: string;
-  toPhone: string;          // E.164 format بدون "+" مثلاً 9665xxxxxxxx
+  toPhone: string; // E.164 format بدون "+" مثلاً 9665xxxxxxxx
   text: string;
   clientId?: string;
   contactName?: string;
@@ -29,8 +29,8 @@ export interface SendTemplateOptions {
   tenantId: string;
   toPhone: string;
   templateName: string;
-  variables?: string[];      // قيم ترتيبية للمتغيرات
-  language?: string;         // ar | en
+  variables?: string[]; // قيم ترتيبية للمتغيرات
+  language?: string; // ar | en
   clientId?: string;
   contactName?: string;
 }
@@ -207,7 +207,8 @@ export async function sendTemplate(opts: SendTemplateOptions): Promise<SendResul
     const phoneNumberId = config.phone_number_id!;
     const to = normalizePhone(opts.toPhone);
 
-    const components: Array<{ type: string; parameters: Array<{ type: string; text: string }> }> = [];
+    const components: Array<{ type: string; parameters: Array<{ type: string; text: string }> }> =
+      [];
     if (opts.variables && opts.variables.length > 0) {
       components.push({
         type: "body",

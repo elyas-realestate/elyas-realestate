@@ -50,14 +50,12 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
     setTimeout(() => setCopiedId(""), 2000);
   }
 
-  const filtered = drafts.filter(
-    (d) => filter === "all" || d.status === filter
-  );
+  const filtered = drafts.filter((d) => filter === "all" || d.status === filter);
   const sc: Record<string, number> = {
     all: drafts.length,
-    "مسودة": drafts.filter((d) => d.status === "مسودة").length,
-    "جاهز": drafts.filter((d) => d.status === "جاهز").length,
-    "منشور": drafts.filter((d) => d.status === "منشور").length,
+    مسودة: drafts.filter((d) => d.status === "مسودة").length,
+    جاهز: drafts.filter((d) => d.status === "جاهز").length,
+    منشور: drafts.filter((d) => d.status === "منشور").length,
   };
 
   if (loading) return <SkeletonList count={4} />;
@@ -65,13 +63,13 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
   return (
     <div>
       <div className="mb-6">
-        <h3 className="text-xl font-bold mb-2">المسودات</h3>
-        <p className="text-[var(--text-soft)] text-sm">
+        <h3 className="mb-2 text-xl font-bold">المسودات</h3>
+        <p className="text-sm text-[var(--text-soft)]">
           جميع المحتوى المُنتج — عدّل، انسخ، أو غيّر الحالة
         </p>
       </div>
 
-      <div className="flex gap-2 mb-6 flex-wrap">
+      <div className="mb-6 flex flex-wrap gap-2">
         {(
           [
             ["all", "الكل"],
@@ -84,10 +82,10 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
             key={v}
             onClick={() => setFilter(v)}
             className={
-              "px-4 py-2 rounded-lg text-sm transition " +
+              "rounded-lg px-4 py-2 text-sm transition " +
               (filter === v
                 ? "bg-[var(--gold-2)] text-white"
-                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
+                : "border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
             }
           >
             {l} ({sc[v] || 0})
@@ -96,32 +94,30 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-20 text-[var(--text-faint)]">
-          لا يوجد محتوى بعد
-        </div>
+        <div className="py-20 text-center text-[var(--text-faint)]">لا يوجد محتوى بعد</div>
       ) : (
         <div className="space-y-4">
           {filtered.map((d) => (
             <div
               key={d.id}
-              className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-bg-hover)] transition"
+              className="rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5 transition hover:border-[var(--gold-bg-hover)]"
             >
-              <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   {d.main_channel && (
-                    <span className="text-xs bg-[var(--gold-bg)] text-[var(--gold-2)] px-2 py-1 rounded">
+                    <span className="rounded bg-[var(--gold-bg)] px-2 py-1 text-xs text-[var(--gold-2)]">
                       {d.main_channel}
                     </span>
                   )}
                   {d.content_format && (
-                    <span className="text-xs bg-[var(--bg-surface-2)] text-[var(--text-soft)] px-2 py-1 rounded">
+                    <span className="rounded bg-[var(--bg-surface-2)] px-2 py-1 text-xs text-[var(--text-soft)]">
                       {d.content_format}
                     </span>
                   )}
                   <select
                     value={d.status}
                     onChange={(e) => updateStatus(d.id, e.target.value)}
-                    className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded px-2 py-1 focus:outline-none focus:border-[var(--gold-2)]"
+                    className="rounded border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-2 py-1 text-xs focus:border-[var(--gold-2)] focus:outline-none"
                   >
                     <option value="مسودة">مسودة</option>
                     <option value="جاهز">جاهز</option>
@@ -133,13 +129,13 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                     <>
                       <button
                         onClick={() => saveEdit(d.id)}
-                        className="text-xs text-green-400 flex items-center gap-1"
+                        className="flex items-center gap-1 text-xs text-green-400"
                       >
                         <Save size={12} /> حفظ
                       </button>
                       <button
                         onClick={() => setEditingId("")}
-                        className="text-xs text-[var(--text-faint)] flex items-center gap-1"
+                        className="flex items-center gap-1 text-xs text-[var(--text-faint)]"
                       >
                         <X size={12} /> إلغاء
                       </button>
@@ -151,14 +147,11 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                           setEditingId(d.id);
                           setEditText(d.main_text);
                         }}
-                        className="text-xs text-[var(--text-faint)] hover:text-[var(--gold-2)] flex items-center gap-1"
+                        className="flex items-center gap-1 text-xs text-[var(--text-faint)] hover:text-[var(--gold-2)]"
                       >
                         <Pencil size={12} /> تعديل
                       </button>
-                      <button
-                        onClick={() => copyText(d.id, d.main_text)}
-                        className="text-xs"
-                      >
+                      <button onClick={() => copyText(d.id, d.main_text)} className="text-xs">
                         {copiedId === d.id ? (
                           <span className="text-green-400">نُسخ ✓</span>
                         ) : (
@@ -169,7 +162,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                       </button>
                       <button
                         onClick={() => deleteDraft(d.id)}
-                        className="text-xs text-[var(--text-faint)] hover:text-red-400 flex items-center gap-1"
+                        className="flex items-center gap-1 text-xs text-[var(--text-faint)] hover:text-red-400"
                       >
                         <Trash2 size={12} /> حذف
                       </button>
@@ -182,20 +175,16 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
                   rows={5}
-                  className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-2)] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none"
+                  className="w-full rounded-lg border border-[var(--gold-2)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm text-gray-200 focus:outline-none"
                 />
               ) : (
-                <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-300">
                   {d.main_text}
                 </p>
               )}
-              <div className="flex gap-2 mt-3 text-xs text-[var(--text-faint)]">
+              <div className="mt-3 flex gap-2 text-xs text-[var(--text-faint)]">
                 {d.content_goal && <span>{d.content_goal}</span>}
-                {d.created_at && (
-                  <span>
-                    {new Date(d.created_at).toLocaleDateString("ar-SA")}
-                  </span>
-                )}
+                {d.created_at && <span>{new Date(d.created_at).toLocaleDateString("ar-SA")}</span>}
               </div>
             </div>
           ))}

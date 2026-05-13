@@ -5,9 +5,22 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import {
-  ArrowRight, Send, Printer, Trash2, Copy, Check,
-  Loader2, AlertCircle, FileSignature, Shield, Clock,
-  CheckCircle2, Edit3, XCircle, Link2, RotateCw,
+  ArrowRight,
+  Send,
+  Printer,
+  Trash2,
+  Copy,
+  Check,
+  Loader2,
+  AlertCircle,
+  FileSignature,
+  Shield,
+  Clock,
+  CheckCircle2,
+  Edit3,
+  XCircle,
+  Link2,
+  RotateCw,
 } from "lucide-react";
 import SignaturePad from "@/components/SignaturePad";
 
@@ -39,13 +52,36 @@ type Signature = {
   signed_at: string;
 };
 
-const STATUS_META: Record<string, { label: string; color: string; bg: string; icon: typeof Edit3 }> = {
-  draft:               { label: "مسودة",            color: "var(--text-muted)", bg: "rgba(161,161,170,0.10)", icon: Edit3 },
-  sent_for_signature:  { label: "بانتظار التوقيع", color: "var(--info)", bg: "rgba(96,165,250,0.10)",  icon: Send },
-  partially_signed:    { label: "وُقّع جزئياً",     color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", icon: Clock },
-  signed:              { label: "موقَّع",            color: "var(--success)", bg: "rgba(74,222,128,0.10)",  icon: CheckCircle2 },
-  expired:             { label: "منتهي",            color: "var(--text-ghost)", bg: "rgba(113,113,122,0.10)", icon: XCircle },
-  void:                { label: "ملغي",              color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   icon: XCircle },
+const STATUS_META: Record<
+  string,
+  { label: string; color: string; bg: string; icon: typeof Edit3 }
+> = {
+  draft: { label: "مسودة", color: "var(--text-muted)", bg: "rgba(161,161,170,0.10)", icon: Edit3 },
+  sent_for_signature: {
+    label: "بانتظار التوقيع",
+    color: "var(--info)",
+    bg: "rgba(96,165,250,0.10)",
+    icon: Send,
+  },
+  partially_signed: {
+    label: "وُقّع جزئياً",
+    color: "var(--gold-1)",
+    bg: "rgba(232,184,109,0.10)",
+    icon: Clock,
+  },
+  signed: {
+    label: "موقَّع",
+    color: "var(--success)",
+    bg: "rgba(74,222,128,0.10)",
+    icon: CheckCircle2,
+  },
+  expired: {
+    label: "منتهي",
+    color: "var(--text-ghost)",
+    bg: "rgba(113,113,122,0.10)",
+    icon: XCircle,
+  },
+  void: { label: "ملغي", color: "var(--danger)", bg: "rgba(239,68,68,0.10)", icon: XCircle },
 };
 
 async function sha256(text: string): Promise<string> {
@@ -53,14 +89,16 @@ async function sha256(text: string): Promise<string> {
   const data = encoder.encode(text);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, "0"))
+    .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
 
 function generateToken(): string {
   const arr = new Uint8Array(24);
   crypto.getRandomValues(arr);
-  return Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
+  return Array.from(arr)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export default function ContractDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -74,10 +112,13 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
   const [showFirstPartySign, setShowFirstPartySign] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    load();
+  }, [id]);
 
   async function load() {
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
     try {
       const [{ data: c, error: cErr }, { data: sigs }] = await Promise.all([
         supabase.from("e_contracts").select("*").eq("id", id).single(),
@@ -155,13 +196,15 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
   async function handleFinalize() {
     if (!contract) return;
-    if (signatures.filter(s => s.party === "first" || s.party === "second").length < 2) {
+    if (signatures.filter((s) => s.party === "first" || s.party === "second").length < 2) {
       toast.error("يجب توقيع كلا الطرفين قبل التثبيت");
       return;
     }
     setBusy(true);
     try {
-      const sigsText = signatures.map(s => `${s.party}:${s.signer_name}:${s.signed_at}`).join("|");
+      const sigsText = signatures
+        .map((s) => `${s.party}:${s.signer_name}:${s.signed_at}`)
+        .join("|");
       const hash = await sha256(contract.body_html + "|" + sigsText);
       const { error: e } = await supabase
         .from("e_contracts")
@@ -216,7 +259,7 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
   async function handleDelete() {
     if (!contract) return;
     if (contract.status !== "draft") {
-      toast.error("لا يمكن حذف عقد بعد إرساله — استخدم \"إلغاء\"");
+      toast.error('لا يمكن حذف عقد بعد إرساله — استخدم "إلغاء"');
       return;
     }
     if (!confirm("حذف هذه المسودة نهائياً؟")) return;
@@ -260,7 +303,10 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
+        <Loader2
+          size={28}
+          style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }}
+        />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -268,19 +314,34 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
   if (error || !contract) {
     return (
-      <div style={{ padding: "16px 20px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-        <AlertCircle size={16} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
-        <span style={{ fontSize: 14, color: "var(--danger)" }}>{error || "لم يُعثر على العقد"}</span>
+      <div
+        style={{
+          padding: "16px 20px",
+          borderRadius: 10,
+          background: "rgba(239,68,68,0.07)",
+          border: "1px solid rgba(239,68,68,0.15)",
+        }}
+      >
+        <AlertCircle
+          size={16}
+          style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }}
+        />
+        <span style={{ fontSize: 14, color: "var(--danger)" }}>
+          {error || "لم يُعثر على العقد"}
+        </span>
       </div>
     );
   }
 
   const sm = STATUS_META[contract.status] || STATUS_META.draft;
-  const firstSigned = signatures.find(s => s.party === "first");
-  const secondSigned = signatures.find(s => s.party === "second");
+  const firstSigned = signatures.find((s) => s.party === "first");
+  const secondSigned = signatures.find((s) => s.party === "second");
   const canEdit = contract.status === "draft";
   const canSend = contract.status === "draft";
-  const canFinalize = (contract.status === "partially_signed" || (contract.status === "sent_for_signature" && firstSigned && secondSigned)) && !contract.final_hash;
+  const canFinalize =
+    (contract.status === "partially_signed" ||
+      (contract.status === "sent_for_signature" && firstSigned && secondSigned)) &&
+    !contract.final_hash;
 
   return (
     <div className="contract-detail">
@@ -296,20 +357,62 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
       `}</style>
 
       <div className="no-print">
-        <Link href="/dashboard/contracts"
-          style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
+        <Link
+          href="/dashboard/contracts"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            fontSize: 12,
+            color: "var(--text-ghost)",
+            marginBottom: 12,
+          }}
+        >
           <ArrowRight size={12} /> العقود
         </Link>
 
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 18 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 12,
+            marginBottom: 18,
+          }}
+        >
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
-              <h1 style={{ fontSize: 20, fontWeight: 800, color: "var(--text-primary)" }}>{contract.title}</h1>
-              <span style={{ fontSize: 12, color: "var(--gold-2)", direction: "ltr", fontWeight: 600 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "wrap",
+                marginBottom: 4,
+              }}
+            >
+              <h1 style={{ fontSize: 20, fontWeight: 800, color: "var(--text-primary)" }}>
+                {contract.title}
+              </h1>
+              <span
+                style={{ fontSize: 12, color: "var(--gold-2)", direction: "ltr", fontWeight: 600 }}
+              >
                 {contract.contract_number}
               </span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: sm.color, background: sm.bg, padding: "3px 9px", borderRadius: 6, display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: sm.color,
+                  background: sm.bg,
+                  padding: "3px 9px",
+                  borderRadius: 6,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
                 <sm.icon size={11} /> {sm.label}
               </span>
             </div>
@@ -322,30 +425,45 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
           {/* Actions */}
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {canSend && (
-              <button onClick={handleSendForSignature} disabled={busy}
-                style={btn("var(--info)", "rgba(96,165,250,0.1)")}>
+              <button
+                onClick={handleSendForSignature}
+                disabled={busy}
+                style={btn("var(--info)", "rgba(96,165,250,0.1)")}
+              >
                 <Send size={13} /> إرسال للتوقيع
               </button>
             )}
             {canFinalize && (
-              <button onClick={handleFinalize} disabled={busy}
-                style={btn("var(--success)", "rgba(74,222,128,0.1)")}>
+              <button
+                onClick={handleFinalize}
+                disabled={busy}
+                style={btn("var(--success)", "rgba(74,222,128,0.1)")}
+              >
                 <Shield size={13} /> تثبيت بختم رقمي
               </button>
             )}
-            <button onClick={handlePrint} disabled={busy}
-              style={btn("var(--text-muted)", "rgba(255,255,255,0.04)")}>
+            <button
+              onClick={handlePrint}
+              disabled={busy}
+              style={btn("var(--text-muted)", "rgba(255,255,255,0.04)")}
+            >
               <Printer size={13} /> طباعة / PDF
             </button>
             {!canEdit && contract.status !== "void" && contract.status !== "signed" && (
-              <button onClick={handleVoid} disabled={busy}
-                style={btn("var(--danger)", "rgba(239,68,68,0.08)")}>
+              <button
+                onClick={handleVoid}
+                disabled={busy}
+                style={btn("var(--danger)", "rgba(239,68,68,0.08)")}
+              >
                 <XCircle size={13} /> إلغاء
               </button>
             )}
             {canEdit && (
-              <button onClick={handleDelete} disabled={busy}
-                style={btn("var(--danger)", "rgba(239,68,68,0.08)")}>
+              <button
+                onClick={handleDelete}
+                disabled={busy}
+                style={btn("var(--danger)", "rgba(239,68,68,0.08)")}
+              >
                 <Trash2 size={13} /> حذف
               </button>
             )}
@@ -354,19 +472,52 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
         {/* Signing link */}
         {contract.signing_token && contract.status !== "signed" && contract.status !== "void" && (
-          <div style={{ marginBottom: 16, padding: 14, borderRadius: 11, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)" }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--info)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+          <div
+            style={{
+              marginBottom: 16,
+              padding: 14,
+              borderRadius: 11,
+              background: "rgba(96,165,250,0.06)",
+              border: "1px solid rgba(96,165,250,0.2)",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "var(--info)",
+                marginBottom: 8,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
               <Link2 size={13} /> رابط التوقيع للطرف الثاني
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <code style={{ flex: 1, padding: "9px 12px", background: "var(--bg-page)", borderRadius: 7, fontSize: 11, color: "var(--text-muted)", direction: "ltr", overflow: "auto", whiteSpace: "nowrap" }}>
+              <code
+                style={{
+                  flex: 1,
+                  padding: "9px 12px",
+                  background: "var(--bg-page)",
+                  borderRadius: 7,
+                  fontSize: 11,
+                  color: "var(--text-muted)",
+                  direction: "ltr",
+                  overflow: "auto",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {getSigningURL()}
               </code>
               <button onClick={copySigningLink} style={btn("var(--info)", "rgba(96,165,250,0.1)")}>
                 {linkCopied ? <Check size={13} /> : <Copy size={13} />}
                 {linkCopied ? "نُسخ" : "نسخ"}
               </button>
-              <button onClick={copyWhatsAppMessage} style={btn("var(--success-2)", "rgba(52,211,153,0.1)")}>
+              <button
+                onClick={copyWhatsAppMessage}
+                style={btn("var(--success-2)", "rgba(52,211,153,0.1)")}
+              >
                 <Copy size={13} /> رسالة واتساب
               </button>
             </div>
@@ -380,42 +531,96 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
         {/* Signatures status */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
-          <SigCard title="الطرف الأول" name={contract.party_first.name} sig={firstSigned}
+          <SigCard
+            title="الطرف الأول"
+            name={contract.party_first.name}
+            sig={firstSigned}
             actionLabel={!firstSigned && contract.status !== "void" ? "وقّع كطرف أول" : null}
-            onAction={() => setShowFirstPartySign(true)} />
-          <SigCard title="الطرف الثاني" name={contract.party_second.name} sig={secondSigned}
+            onAction={() => setShowFirstPartySign(true)}
+          />
+          <SigCard
+            title="الطرف الثاني"
+            name={contract.party_second.name}
+            sig={secondSigned}
             actionLabel={!secondSigned && contract.signing_token ? "(يوقّع عبر الرابط)" : null}
-            onAction={null} />
+            onAction={null}
+          />
         </div>
 
         {/* Hash badge */}
         {contract.final_hash && (
-          <div style={{ marginBottom: 16, padding: 12, borderRadius: 10, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.2)", display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            style={{
+              marginBottom: 16,
+              padding: 12,
+              borderRadius: 10,
+              background: "rgba(74,222,128,0.06)",
+              border: "1px solid rgba(74,222,128,0.2)",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
             <Shield size={16} style={{ color: "var(--success)" }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--success)" }}>عقد مُثبَّت بختم رقمي</div>
-              <div style={{ fontSize: 10, color: "var(--text-ghost)", direction: "ltr", marginTop: 2 }}>SHA-256: {contract.final_hash}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--success)" }}>
+                عقد مُثبَّت بختم رقمي
+              </div>
+              <div
+                style={{ fontSize: 10, color: "var(--text-ghost)", direction: "ltr", marginTop: 2 }}
+              >
+                SHA-256: {contract.final_hash}
+              </div>
             </div>
           </div>
         )}
       </div>
 
       {/* Contract body */}
-      <div className="contract-print"
-        style={{ background: "#FAFAFA", color: "var(--pure-black)", borderRadius: 12, padding: 32, direction: "rtl" }}>
-        <div className="contract-body"
+      <div
+        className="contract-print"
+        style={{
+          background: "#FAFAFA",
+          color: "var(--pure-black)",
+          borderRadius: 12,
+          padding: 32,
+          direction: "rtl",
+        }}
+      >
+        <div
+          className="contract-body"
           dangerouslySetInnerHTML={{ __html: contract.body_html }}
-          style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.9 }} />
+          style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.9 }}
+        />
 
         {/* Signatures inline */}
-        <div style={{ marginTop: 30, paddingTop: 20, borderTop: "1px dashed #999", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 30 }}>
+        <div
+          style={{
+            marginTop: 30,
+            paddingTop: 20,
+            borderTop: "1px dashed #999",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 30,
+          }}
+        >
           <SigInline label="توقيع الطرف الأول" sig={firstSigned} />
           <SigInline label="توقيع الطرف الثاني" sig={secondSigned} />
         </div>
 
         {contract.final_hash && (
-          <div style={{ marginTop: 24, fontSize: 9, color: "#666", textAlign: "center", direction: "ltr", fontFamily: "monospace" }}>
-            Digital Seal SHA-256: {contract.final_hash}<br />
+          <div
+            style={{
+              marginTop: 24,
+              fontSize: 9,
+              color: "#666",
+              textAlign: "center",
+              direction: "ltr",
+              fontFamily: "monospace",
+            }}
+          >
+            Digital Seal SHA-256: {contract.final_hash}
+            <br />
             Finalized: {contract.finalized_at}
           </div>
         )}
@@ -433,9 +638,38 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
       {/* First party signature modal */}
       {showFirstPartySign && (
-        <div style={{ position: "fixed", inset: 0, background: "var(--modal-overlay)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
-          <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 14, padding: 24, maxWidth: 600, width: "100%" }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 14 }}>توقيع الطرف الأول — {contract.party_first.name}</h3>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "var(--modal-overlay)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: "var(--bg-deep)",
+              border: "1px solid var(--overlay-mid)",
+              borderRadius: 14,
+              padding: 24,
+              maxWidth: 600,
+              width: "100%",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: 16,
+                fontWeight: 700,
+                color: "var(--text-on-dark)",
+                marginBottom: 14,
+              }}
+            >
+              توقيع الطرف الأول — {contract.party_first.name}
+            </h3>
             <SignaturePad
               onConfirm={handleFirstPartySignature}
               onCancel={() => setShowFirstPartySign(false)}
@@ -450,24 +684,53 @@ export default function ContractDetailPage({ params }: { params: Promise<{ id: s
 
 function btn(fg: string, bg: string): React.CSSProperties {
   return {
-    display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 8,
-    background: bg, border: `1px solid ${fg}30`, color: fg,
-    fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", fontWeight: 600,
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "8px 14px",
+    borderRadius: 8,
+    background: bg,
+    border: `1px solid ${fg}30`,
+    color: fg,
+    fontSize: 12,
+    cursor: "pointer",
+    fontFamily: "'Tajawal', sans-serif",
+    fontWeight: 600,
   };
 }
 
-function SigCard({ title, name, sig, actionLabel, onAction }: {
-  title: string; name?: string; sig?: Signature;
-  actionLabel: string | null; onAction: (() => void) | null;
+function SigCard({
+  title,
+  name,
+  sig,
+  actionLabel,
+  onAction,
+}: {
+  title: string;
+  name?: string;
+  sig?: Signature;
+  actionLabel: string | null;
+  onAction: (() => void) | null;
 }) {
   return (
-    <div style={{ padding: 14, background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11 }}>
+    <div
+      style={{
+        padding: 14,
+        background: "var(--bg-deep)",
+        border: "1px solid var(--overlay-soft)",
+        borderRadius: 11,
+      }}
+    >
       <div style={{ fontSize: 12, color: "var(--text-ghost)", marginBottom: 4 }}>{title}</div>
-      <div style={{ fontSize: 14, color: "var(--text-on-dark)", fontWeight: 600, marginBottom: 8 }}>{name || "—"}</div>
+      <div style={{ fontSize: 14, color: "var(--text-on-dark)", fontWeight: 600, marginBottom: 8 }}>
+        {name || "—"}
+      </div>
       {sig ? (
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <CheckCircle2 size={14} style={{ color: "var(--success)" }} />
-          <span style={{ fontSize: 11, color: "var(--success)" }}>وقّع في {new Date(sig.signed_at).toLocaleDateString("ar-SA")}</span>
+          <span style={{ fontSize: 11, color: "var(--success)" }}>
+            وقّع في {new Date(sig.signed_at).toLocaleDateString("ar-SA")}
+          </span>
         </div>
       ) : actionLabel && onAction ? (
         <button onClick={onAction} style={btn("var(--gold-2)", "var(--gold-bg)")}>
@@ -486,9 +749,23 @@ function SigInline({ label, sig }: { label: string; sig?: Signature }) {
   return (
     <div>
       <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>{label}</div>
-      <div style={{ height: 80, border: "1px solid #ccc", borderRadius: 6, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div
+        style={{
+          height: 80,
+          border: "1px solid #ccc",
+          borderRadius: 6,
+          background: "#fff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {sig ? (
-          <img src={sig.signature_data} alt="signature" style={{ maxHeight: 70, maxWidth: "100%" }} />
+          <img
+            src={sig.signature_data}
+            alt="signature"
+            style={{ maxHeight: 70, maxWidth: "100%" }}
+          />
         ) : (
           <span style={{ fontSize: 11, color: "#999" }}>لم يوقّع</span>
         )}

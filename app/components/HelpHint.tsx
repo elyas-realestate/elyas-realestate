@@ -9,11 +9,11 @@ import { HelpCircle, X } from "lucide-react";
 // ══════════════════════════════════════════════════════════════════
 
 interface Props {
-  title?: string;          // عنوان قصير في الأعلى
-  body: string;            // النص الرئيسي للشرح
-  helpUrl?: string;        // رابط (اختياري) لقسم في /dashboard/help
-  helpLabel?: string;      // اسم الرابط (default: "اقرأ المزيد")
-  size?: "sm" | "md";      // حجم الأيقونة
+  title?: string; // عنوان قصير في الأعلى
+  body: string; // النص الرئيسي للشرح
+  helpUrl?: string; // رابط (اختياري) لقسم في /dashboard/help
+  helpLabel?: string; // اسم الرابط (default: "اقرأ المزيد")
+  size?: "sm" | "md"; // حجم الأيقونة
   position?: "left" | "right" | "top" | "bottom";
 }
 
@@ -87,7 +87,10 @@ export default function HelpHint({
     <div ref={ref} style={{ position: "relative", display: "inline-block" }}>
       <button
         type="button"
-        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(!open);
+        }}
         aria-label={title || "مساعدة"}
         title={title || "مساعدة"}
         style={{
@@ -146,13 +149,20 @@ export default function HelpHint({
           </button>
 
           {title && (
-            <div className="font-kufi" style={{ fontSize: 13, fontWeight: 800, marginBottom: 6, color: "var(--text-strong, #1a1206)", paddingLeft: 22 }}>
+            <div
+              className="font-kufi"
+              style={{
+                fontSize: 13,
+                fontWeight: 800,
+                marginBottom: 6,
+                color: "var(--text-strong, #1a1206)",
+                paddingLeft: 22,
+              }}
+            >
               {title}
             </div>
           )}
-          <div style={{ color: "var(--text-soft, #555)" }}>
-            {body}
-          </div>
+          <div style={{ color: "var(--text-soft, #555)" }}>{body}</div>
 
           {helpUrl && (
             <a

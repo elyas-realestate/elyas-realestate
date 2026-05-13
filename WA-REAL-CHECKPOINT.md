@@ -4,22 +4,23 @@
 
 ## 🏆 الإنجاز الكامل لليوم
 
-| الفئة | التفاصيل |
-|---|---|
-| 📦 Migrations | 6 migrations جديدة (042-049) |
-| 🎯 ميزات Beta | إطار كامل + 23 كود |
-| 📊 SEO + Analytics | sitemap + robots + OG + AI crawlers |
-| 🔧 إصلاحات UX | 4 ملاحظات من المالك + bug hover |
-| 🛣️ Routing Audit | 96 صفحة فُحصت + ١١ إصلاح |
-| 🔍 Deep Dedup | 8 من 10 |
-| 🎨 SAR Icon | استرجاع الرمز الرسمي |
-| 🎴 Profile Card Rebuild | Phase 1 + 2 + 4 (foundations) |
+| الفئة                   | التفاصيل                            |
+| ----------------------- | ----------------------------------- |
+| 📦 Migrations           | 6 migrations جديدة (042-049)        |
+| 🎯 ميزات Beta           | إطار كامل + 23 كود                  |
+| 📊 SEO + Analytics      | sitemap + robots + OG + AI crawlers |
+| 🔧 إصلاحات UX           | 4 ملاحظات من المالك + bug hover     |
+| 🛣️ Routing Audit        | 96 صفحة فُحصت + ١١ إصلاح            |
+| 🔍 Deep Dedup           | 8 من 10                             |
+| 🎨 SAR Icon             | استرجاع الرمز الرسمي                |
+| 🎴 Profile Card Rebuild | Phase 1 + 2 + 4 (foundations)       |
 
 ---
 
 ## 📂 الميزات الجديدة في إعادة بناء البطاقة
 
 ### Phase 1 — Foundation (مكتمل)
+
 - ✅ **SARIcon** يستخدم الرمز الرسمي مع CSS Mask
 - ✅ **lead_captures** — الميزة القاتلة (gate قبل عرض المحتوى)
 - ✅ **/api/lead-capture** — استقبال + validation + cookie
@@ -33,6 +34,7 @@
 - ✅ **property_views_log** — analytics مفصّلة لكل عقار
 
 ### Phase 2 — Visual + Trust (مكتمل)
+
 - ✅ **20 ثيم احترافي** في `lib/card-themes.ts` (6 فئات)
 - ✅ **testimonials** — جدول + RLS لآراء العملاء
 - ✅ **property_comparisons** — مقارنات قابلة للمشاركة
@@ -45,6 +47,7 @@
   - service_areas[]
 
 ### Phase 4 — AI Innovations (Foundations)
+
 - ✅ **AI Voice-to-Property** — `/api/ai/voice-to-property`
   - يأخذ transcript عربي
   - GPT-4o-mini يستخرج 11 حقل عقاري
@@ -93,9 +96,11 @@
 ## 🚀 خطوات النشر النهائية
 
 ### ١) Migrations (3 ملفات بالترتيب)
+
 افتح: https://supabase.com/dashboard/project/apmdwautyqoqjlabxysz/sql/new
 
 شغّل بالترتيب:
+
 1. `supabase/047_phase1_card_features.sql`
 2. `supabase/048_phase2_card_features.sql`
 3. `supabase/049_phase4_innovative.sql`
@@ -155,7 +160,8 @@ Display Name:   Elyas Real Estate (Pending Review)
 ## 🆕 إضافات ٧ مايو (آخر تحديث)
 
 ### Phase 5 — Brand Icons + Drag/Design Freedom (مكتمل)
-- ✅ **BrandIcons.tsx** موسَّع — BRAND_ICON_MAP بـ 17+ مفتاح يغطّي social_* + contact_* + aliases
+
+- ✅ **BrandIcons.tsx** موسَّع — BRAND*ICON_MAP بـ 17+ مفتاح يغطّي social*_ + contact\__ + aliases
 - ✅ **BRAND_BG_MAP + BRAND_FG_MAP + helpers** — getBrandBg/getBrandFg/getBrandIcon
 - ✅ **ProfileCardClient.tsx** — Brand Icons في topSocials (40px) + ElementCardInner (36px)
 - ✅ **Dashboard editor** — Brand Icons في autoElements + ElementRow + library + edit modal
@@ -169,11 +175,13 @@ Display Name:   Elyas Real Estate (Pending Review)
 - ✅ **elementCardStyle** يقرأ meta.bg_color/text_color بأولوية على brand colors
 
 ### إصلاحات بعد فحص CIB ٧ مايو
+
 - ✅ SAR icon في /[slug] (بطاقات العقارات — استبدال "ر.س" نص)
 - ✅ SAR icon في /#pricing + سطر "+ ضريبة القيمة المضافة 15%" تحت كل خطة
 - ✅ /api/event endpoint (pixel beacon 1×1 + POST + log في site_analytics)
 
 ### تقرير CIB ٧ مايو — ٥/٥ ✅
+
 - SAR icon موحَّد في كل الصفحات
 - VAT 15% ظاهر
 - زر "احفظ في جهات اتصالك" بارز في /elyas + /c/elyas

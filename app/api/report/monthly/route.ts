@@ -20,7 +20,22 @@ function money(n: number | null | undefined): string {
 }
 
 function arabicMonth(m: number): string {
-  return ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"][m - 1] || "";
+  return (
+    [
+      "يناير",
+      "فبراير",
+      "مارس",
+      "أبريل",
+      "مايو",
+      "يونيو",
+      "يوليو",
+      "أغسطس",
+      "سبتمبر",
+      "أكتوبر",
+      "نوفمبر",
+      "ديسمبر",
+    ][m - 1] || ""
+  );
 }
 
 export async function GET(req: NextRequest) {
@@ -28,14 +43,23 @@ export async function GET(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const now = new Date();
-  const year  = parseInt(searchParams.get("year")  || String(now.getFullYear()), 10);
+  const year = parseInt(searchParams.get("year") || String(now.getFullYear()), 10);
   const month = parseInt(searchParams.get("month") || String(now.getMonth() + 1), 10);
   if (!year || !month || month < 1 || month > 12) {
     return NextResponse.json({ error: "التاريخ غير صالح" }, { status: 400 });
@@ -43,87 +67,136 @@ export async function GET(req: NextRequest) {
 
   const svc = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
   // ── tenant_id للمستخدم ──
   const { data: tenantRow } = await svc
-    .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   const tenantId = tenantRow?.id;
   if (!tenantId) return NextResponse.json({ error: "لا يوجد حساب مرتبط" }, { status: 403 });
 
   const startDate = new Date(Date.UTC(year, month - 1, 1));
-  const endDate   = new Date(Date.UTC(year, month, 1));
+  const endDate = new Date(Date.UTC(year, month, 1));
   const startIso = startDate.toISOString();
-  const endIso   = endDate.toISOString();
+  const endIso = endDate.toISOString();
 
   // ── جلب الهوية ──
   const { data: identity } = await svc
     .from("broker_identity")
     .select("broker_name, fal_license, phone, vat_number")
-    .eq("tenant_id", tenantId).maybeSingle();
+    .eq("tenant_id", tenantId)
+    .maybeSingle();
   const { data: settings } = await svc
     .from("site_settings")
     .select("site_name, phone, email, site_logo")
-    .eq("tenant_id", tenantId).maybeSingle();
+    .eq("tenant_id", tenantId)
+    .maybeSingle();
 
   const brokerName = identity?.broker_name || settings?.site_name || "وسيط برو";
-  const logo       = settings?.site_logo || "";
+  const logo = settings?.site_logo || "";
   const falLicense = identity?.fal_license || "";
 
   // ── استعلامات متوازية ──
   const [
-    propsAddedRes, propsTotalRes,
-    clientsAddedRes, clientsTotalRes,
-    dealsInMonthRes, dealsClosedRes,
-    invoicesPaidRes, invoicesPendingRes, invoicesOverdueRes,
-    topPropsRes, staleCountRes,
+    propsAddedRes,
+    propsTotalRes,
+    clientsAddedRes,
+    clientsTotalRes,
+    dealsInMonthRes,
+    dealsClosedRes,
+    invoicesPaidRes,
+    invoicesPendingRes,
+    invoicesOverdueRes,
+    topPropsRes,
+    staleCountRes,
   ] = await Promise.all([
-    svc.from("properties").select("id", { count: "exact", head: true })
-       .eq("tenant_id", tenantId).gte("created_at", startIso).lt("created_at", endIso),
-    svc.from("properties").select("id", { count: "exact", head: true })
-       .eq("tenant_id", tenantId),
-    svc.from("clients").select("id", { count: "exact", head: true })
-       .eq("tenant_id", tenantId).gte("created_at", startIso).lt("created_at", endIso),
-    svc.from("clients").select("id", { count: "exact", head: true })
-       .eq("tenant_id", tenantId),
-    svc.from("deals").select("*")
-       .eq("tenant_id", tenantId).gte("created_at", startIso).lt("created_at", endIso),
-    svc.from("deals").select("*")
-       .eq("tenant_id", tenantId).eq("current_stage", "مغلق - فوز")
-       .gte("updated_at", startIso).lt("updated_at", endIso),
-    svc.from("invoices").select("amount, vat_amount, status, created_at")
-       .eq("tenant_id", tenantId).eq("status", "paid")
-       .gte("created_at", startIso).lt("created_at", endIso),
-    svc.from("invoices").select("amount, vat_amount, status")
-       .eq("tenant_id", tenantId).in("status", ["pending", "sent"]),
-    svc.from("invoices").select("amount, vat_amount, due_date")
-       .eq("tenant_id", tenantId).neq("status", "paid").lt("due_date", endIso),
-    svc.from("properties").select("id, title, city, district, price")
-       .eq("tenant_id", tenantId).eq("is_published", true)
-       .order("created_at", { ascending: false }).limit(5),
-    svc.from("properties").select("id", { count: "exact", head: true })
-       .eq("tenant_id", tenantId).lt("updated_at", new Date(Date.now() - 30*24*60*60*1000).toISOString()),
+    svc
+      .from("properties")
+      .select("id", { count: "exact", head: true })
+      .eq("tenant_id", tenantId)
+      .gte("created_at", startIso)
+      .lt("created_at", endIso),
+    svc.from("properties").select("id", { count: "exact", head: true }).eq("tenant_id", tenantId),
+    svc
+      .from("clients")
+      .select("id", { count: "exact", head: true })
+      .eq("tenant_id", tenantId)
+      .gte("created_at", startIso)
+      .lt("created_at", endIso),
+    svc.from("clients").select("id", { count: "exact", head: true }).eq("tenant_id", tenantId),
+    svc
+      .from("deals")
+      .select("*")
+      .eq("tenant_id", tenantId)
+      .gte("created_at", startIso)
+      .lt("created_at", endIso),
+    svc
+      .from("deals")
+      .select("*")
+      .eq("tenant_id", tenantId)
+      .eq("current_stage", "مغلق - فوز")
+      .gte("updated_at", startIso)
+      .lt("updated_at", endIso),
+    svc
+      .from("invoices")
+      .select("amount, vat_amount, status, created_at")
+      .eq("tenant_id", tenantId)
+      .eq("status", "paid")
+      .gte("created_at", startIso)
+      .lt("created_at", endIso),
+    svc
+      .from("invoices")
+      .select("amount, vat_amount, status")
+      .eq("tenant_id", tenantId)
+      .in("status", ["pending", "sent"]),
+    svc
+      .from("invoices")
+      .select("amount, vat_amount, due_date")
+      .eq("tenant_id", tenantId)
+      .neq("status", "paid")
+      .lt("due_date", endIso),
+    svc
+      .from("properties")
+      .select("id, title, city, district, price")
+      .eq("tenant_id", tenantId)
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(5),
+    svc
+      .from("properties")
+      .select("id", { count: "exact", head: true })
+      .eq("tenant_id", tenantId)
+      .lt("updated_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
   ]);
 
-  const propsAdded    = propsAddedRes.count || 0;
-  const propsTotal    = propsTotalRes.count || 0;
-  const clientsAdded  = clientsAddedRes.count || 0;
-  const clientsTotal  = clientsTotalRes.count || 0;
-  const dealsCount    = (dealsInMonthRes.data || []).length;
-  const dealsClosed   = dealsClosedRes.data || [];
-  const closedRevenue = dealsClosed.reduce((s, d: any) => s + (Number(d.expected_commission) || 0), 0);
-  const paidRevenue   = (invoicesPaidRes.data || []).reduce(
-    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0), 0
+  const propsAdded = propsAddedRes.count || 0;
+  const propsTotal = propsTotalRes.count || 0;
+  const clientsAdded = clientsAddedRes.count || 0;
+  const clientsTotal = clientsTotalRes.count || 0;
+  const dealsCount = (dealsInMonthRes.data || []).length;
+  const dealsClosed = dealsClosedRes.data || [];
+  const closedRevenue = dealsClosed.reduce(
+    (s, d: any) => s + (Number(d.expected_commission) || 0),
+    0
+  );
+  const paidRevenue = (invoicesPaidRes.data || []).reduce(
+    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
+    0
   );
   const pendingAmount = (invoicesPendingRes.data || []).reduce(
-    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0), 0
+    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
+    0
   );
   const overdueAmount = (invoicesOverdueRes.data || []).reduce(
-    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0), 0
+    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
+    0
   );
   const staleCount = staleCountRes.count || 0;
-  const topProps   = topPropsRes.data || [];
+  const topProps = topPropsRes.data || [];
 
   // ── توزيع أسبوعي للعقارات المُضافة (sparkline) ──
   const weeklyBins = [0, 0, 0, 0, 0];
@@ -283,17 +356,23 @@ export async function GET(req: NextRequest) {
   <h2>توزيع النشاط خلال الشهر</h2>
   <h3>عقارات مُضافة حسب الأسبوع</h3>
   <div class="week-chart">
-    ${weeklyBins.map((v, i) => `
+    ${weeklyBins
+      .map(
+        (v, i) => `
       <div class="week-bar" style="height:${(v / maxWeek) * 100}%;">
         <div class="week-bar-value">${v}</div>
         <div class="week-bar-label">الأسبوع ${i + 1}</div>
       </div>
-    `).join("")}
+    `
+      )
+      .join("")}
   </div>
   <div style="height:30px;"></div>
 
   <!-- ═══ أفضل العقارات ═══ -->
-  ${topProps.length > 0 ? `
+  ${
+    topProps.length > 0
+      ? `
   <h2>آخر العقارات المنشورة</h2>
   <table>
     <thead>
@@ -304,29 +383,43 @@ export async function GET(req: NextRequest) {
       </tr>
     </thead>
     <tbody>
-      ${topProps.map((p: any) => `
+      ${topProps
+        .map(
+          (p: any) => `
         <tr>
           <td style="font-weight:700;">${h(p.title)}</td>
           <td>${h(p.city || "—")} — ${h(p.district || "—")}</td>
           <td style="text-align:left;font-weight:700;color:var(--gold-2);">${money(p.price)} ر.س</td>
         </tr>
-      `).join("")}
+      `
+        )
+        .join("")}
     </tbody>
   </table>
-  ` : ""}
+  `
+      : ""
+  }
 
   <!-- ═══ تحذيرات ═══ -->
-  ${staleCount > 0 ? `
+  ${
+    staleCount > 0
+      ? `
   <div class="alert">
     ⚠️ <strong>${staleCount}</strong> عقار لم يتحدّث منذ أكثر من 30 يوماً — راجع إتاحتها قريباً.
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 
-  ${overdueAmount > 0 ? `
+  ${
+    overdueAmount > 0
+      ? `
   <div class="alert" style="background:#fee2e2;border-color:#fca5a5;color:#991b1b;">
     💰 لديك <strong>${money(overdueAmount)} ر.س</strong> في فواتير متأخّرة — تواصل مع العملاء لتحصيلها.
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 
   <div class="footer">
     تقرير شهري مُولَّد آلياً بواسطة وسيط برو — ${h(generatedAt)}

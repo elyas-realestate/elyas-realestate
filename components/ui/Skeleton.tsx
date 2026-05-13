@@ -12,7 +12,7 @@ export function Skeleton({ className = "h-4 w-full" }: SkeletonProps) {
 /** بطاقة تحميل */
 export function SkeletonCard() {
   return (
-    <div className="rounded-2xl bg-[#16161A] border border-[rgba(198,145,76,0.09)] p-5 space-y-3">
+    <div className="space-y-3 rounded-2xl border border-[rgba(198,145,76,0.09)] bg-[#16161A] p-5">
       <Skeleton className="h-5 w-1/3" />
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-2/3" />
@@ -23,10 +23,7 @@ export function SkeletonCard() {
 /** شبكة بطاقات تحميل */
 export function SkeletonGrid({ count = 4, cols = 2 }: { count?: number; cols?: number }) {
   return (
-    <div
-      className="grid gap-4"
-      style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
-    >
+    <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
       {Array.from({ length: count }).map((_, i) => (
         <SkeletonCard key={i} />
       ))}

@@ -3,8 +3,16 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import {
-  MessageCircle, Mail, Send, Loader2, X, AlertCircle,
-  Bug, Lightbulb, CreditCard, HelpCircle as Help,
+  MessageCircle,
+  Mail,
+  Send,
+  Loader2,
+  X,
+  AlertCircle,
+  Bug,
+  Lightbulb,
+  CreditCard,
+  HelpCircle as Help,
 } from "lucide-react";
 
 // ══════════════════════════════════════════════════════════════
@@ -73,7 +81,7 @@ export default function SupportContact() {
   return (
     <section
       dir="rtl"
-      className="rounded-xl p-4 space-y-3"
+      className="space-y-3 rounded-xl p-4"
       style={{
         background: "linear-gradient(135deg, rgba(232,184,109,0.08), rgba(200,149,76,0.04))",
         border: "1px solid var(--gold-bg)",
@@ -81,7 +89,7 @@ export default function SupportContact() {
     >
       <div className="flex items-center gap-2">
         <MessageCircle size={18} style={{ color: "var(--gold-2)" }} />
-        <h2 className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+        <h2 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
           تواصل مع الدعم
         </h2>
       </div>
@@ -89,13 +97,13 @@ export default function SupportContact() {
         ما لقيت إجابة سؤالك في الأقسام؟ تواصل معنا مباشرة:
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
         {/* WhatsApp */}
         <a
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 p-3 rounded-lg no-underline transition"
+          className="flex items-center gap-2 rounded-lg p-3 no-underline transition"
           style={{
             background: "rgba(37,211,102,0.10)",
             border: "1px solid rgba(37,211,102,0.30)",
@@ -114,7 +122,7 @@ export default function SupportContact() {
         {/* Email */}
         <a
           href={emailLink}
-          className="flex items-center gap-2 p-3 rounded-lg no-underline transition"
+          className="flex items-center gap-2 rounded-lg p-3 no-underline transition"
           style={{
             background: "var(--bg-surface-2)",
             border: "1px solid var(--gold-bg)",
@@ -122,16 +130,16 @@ export default function SupportContact() {
           }}
         >
           <Mail size={16} style={{ color: "var(--gold-2)" }} />
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="text-xs font-bold">بريد إلكتروني</div>
-            <div className="text-xs opacity-75 truncate">{SUPPORT_EMAIL}</div>
+            <div className="truncate text-xs opacity-75">{SUPPORT_EMAIL}</div>
           </div>
         </a>
 
         {/* Form */}
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 p-3 rounded-lg transition"
+          className="flex items-center gap-2 rounded-lg p-3 transition"
           style={{
             background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
             border: "none",
@@ -151,19 +159,19 @@ export default function SupportContact() {
       {/* Inline Form */}
       {showForm && (
         <div
-          className="mt-3 rounded-lg p-4 space-y-3"
+          className="mt-3 space-y-3 rounded-lg p-4"
           style={{
             background: "var(--bg-surface-1)",
             border: "1px solid var(--gold-2)",
           }}
         >
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+            <h3 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
               تفاصيل الطلب
             </h3>
             <button
               onClick={() => setShowForm(false)}
-              className="p-1 rounded"
+              className="rounded p-1"
               style={{ color: "var(--text-faint)" }}
             >
               <X size={16} />
@@ -179,7 +187,7 @@ export default function SupportContact() {
                 <button
                   key={c.value}
                   onClick={() => setForm({ ...form, category: c.value })}
-                  className="text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition"
+                  className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs transition"
                   style={{
                     background: active ? "var(--gold-bg)" : "var(--bg-surface-2)",
                     border: `1px solid ${active ? "var(--gold-2)" : "var(--gold-bg)"}`,
@@ -196,7 +204,7 @@ export default function SupportContact() {
 
           {/* Subject */}
           <div>
-            <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
               العنوان
             </label>
             <input
@@ -220,7 +228,7 @@ export default function SupportContact() {
 
           {/* Message */}
           <div>
-            <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
               الرسالة
             </label>
             <textarea
@@ -245,7 +253,7 @@ export default function SupportContact() {
 
           {/* Preferred method */}
           <div>
-            <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+            <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
               نوع الرد المفضّل
             </label>
             <div className="flex gap-2">
@@ -259,13 +267,12 @@ export default function SupportContact() {
                   onClick={() =>
                     setForm({ ...form, preferred_method: opt.v as "whatsapp" | "email" | "phone" })
                   }
-                  className="text-xs px-3 py-1.5 rounded-lg flex-1"
+                  className="flex-1 rounded-lg px-3 py-1.5 text-xs"
                   style={{
                     background:
                       form.preferred_method === opt.v ? "var(--gold-bg)" : "var(--bg-surface-2)",
                     border: `1px solid ${form.preferred_method === opt.v ? "var(--gold-2)" : "var(--gold-bg)"}`,
-                    color:
-                      form.preferred_method === opt.v ? "var(--gold-2)" : "var(--text-soft)",
+                    color: form.preferred_method === opt.v ? "var(--gold-2)" : "var(--text-soft)",
                     fontWeight: form.preferred_method === opt.v ? 700 : 500,
                   }}
                 >
@@ -279,7 +286,7 @@ export default function SupportContact() {
           <button
             onClick={submit}
             disabled={submitting}
-            className="flex items-center gap-1.5 justify-center px-4 py-2 rounded-lg text-sm font-bold w-full"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold"
             style={{
               background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
               color: "#0A0A0C",

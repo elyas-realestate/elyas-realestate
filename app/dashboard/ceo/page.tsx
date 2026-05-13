@@ -5,26 +5,53 @@ import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import { DEPARTMENT_META } from "@/lib/org-constants";
 import {
-  Crown, AlertTriangle, Activity, Network, RefreshCw, ChevronLeft,
-  CheckCircle2, XCircle, Clock, Info, Loader2, Sparkles, Bot,
+  Crown,
+  AlertTriangle,
+  Activity,
+  Network,
+  RefreshCw,
+  ChevronLeft,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Info,
+  Loader2,
+  Sparkles,
+  Bot,
 } from "lucide-react";
 
 type Escalation = {
-  id: string; severity: string; type: string; title: string;
-  description: string; raised_by_kind: string; raised_by_id: string;
-  status: string; created_at: string; ceo_decision?: string;
+  id: string;
+  severity: string;
+  type: string;
+  title: string;
+  description: string;
+  raised_by_kind: string;
+  raised_by_id: string;
+  status: string;
+  created_at: string;
+  ceo_decision?: string;
 };
 
 type ActivityLog = {
-  id: string; actor_kind: string; actor_id: string; action: string;
-  details: Record<string, unknown>; created_at: string;
+  id: string;
+  actor_kind: string;
+  actor_id: string;
+  action: string;
+  details: Record<string, unknown>;
+  created_at: string;
 };
 
 type ManagerStats = {
-  manager_id: string; manager_code: string; manager_name: string;
-  department: string; manager_enabled: boolean;
-  employee_count: number; active_directives: number;
-  pending_suggestions: number; kb_items: number;
+  manager_id: string;
+  manager_code: string;
+  manager_name: string;
+  department: string;
+  manager_enabled: boolean;
+  employee_count: number;
+  active_directives: number;
+  pending_suggestions: number;
+  kb_items: number;
 };
 
 type ManagerReview = {
@@ -38,10 +65,23 @@ type ManagerReview = {
   created_at: string;
 };
 
-const SEVERITY_META: Record<string, { color: string; bg: string; icon: typeof Info; label: string }> = {
-  info:     { color: "var(--info)", bg: "rgba(96,165,250,0.10)",  icon: Info,           label: "معلومة" },
-  warning:  { color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", icon: AlertTriangle,  label: "تحذير" },
-  critical: { color: "var(--danger)", bg: "rgba(239,68,68,0.10)",   icon: AlertTriangle,  label: "حرج" },
+const SEVERITY_META: Record<
+  string,
+  { color: string; bg: string; icon: typeof Info; label: string }
+> = {
+  info: { color: "var(--info)", bg: "rgba(96,165,250,0.10)", icon: Info, label: "معلومة" },
+  warning: {
+    color: "var(--gold-1)",
+    bg: "rgba(232,184,109,0.10)",
+    icon: AlertTriangle,
+    label: "تحذير",
+  },
+  critical: {
+    color: "var(--danger)",
+    bg: "rgba(239,68,68,0.10)",
+    icon: AlertTriangle,
+    label: "حرج",
+  },
 };
 
 export default function CEODashboardPage() {
@@ -57,9 +97,21 @@ export default function CEODashboardPage() {
     try {
       const [m, e, a, r] = await Promise.all([
         supabase.rpc("org_structure_for_tenant"),
-        supabase.from("org_escalations").select("*").order("created_at", { ascending: false }).limit(20),
-        supabase.from("org_activity_log").select("*").order("created_at", { ascending: false }).limit(30),
-        supabase.from("manager_reviews").select("*").order("created_at", { ascending: false }).limit(15),
+        supabase
+          .from("org_escalations")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabase
+          .from("org_activity_log")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(30),
+        supabase
+          .from("manager_reviews")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(15),
       ]);
       setManagers((m.data || []) as ManagerStats[]);
       setEscalations((e.data || []) as Escalation[]);
@@ -71,18 +123,23 @@ export default function CEODashboardPage() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   async function decideEscalation(id: string, decision: "approved" | "rejected", note: string) {
     setBusyId(id);
     try {
       const { data: userData } = await supabase.auth.getUser();
-      const { error: e } = await supabase.from("org_escalations").update({
-        status: decision === "approved" ? "approved" : "rejected",
-        ceo_decision: note,
-        decided_by: userData.user?.id,
-        decided_at: new Date().toISOString(),
-      }).eq("id", id);
+      const { error: e } = await supabase
+        .from("org_escalations")
+        .update({
+          status: decision === "approved" ? "approved" : "rejected",
+          ceo_decision: note,
+          decided_by: userData.user?.id,
+          decided_at: new Date().toISOString(),
+        })
+        .eq("id", id);
       if (e) throw new Error(e.message);
       toast.success(decision === "approved" ? "تمت الموافقة" : "تم الرفض");
       load();
@@ -92,79 +149,247 @@ export default function CEODashboardPage() {
     setBusyId(null);
   }
 
-  const pendingEscalations = escalations.filter(e => e.status === "pending");
+  const pendingEscalations = escalations.filter((e) => e.status === "pending");
   const totalActiveDirectives = managers.reduce((s, m) => s + m.active_directives, 0);
   const totalPendingSuggestions = managers.reduce((s, m) => s + m.pending_suggestions, 0);
 
   return (
     <div>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 12,
+          marginBottom: 22,
+        }}
+      >
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+          <h1
+            style={{
+              fontSize: 22,
+              fontWeight: 800,
+              color: "var(--text-strong)",
+              marginBottom: 4,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
             <Crown size={20} style={{ color: "var(--gold-1)" }} /> فريقك من المساعدين الأذكياء
           </h1>
-          <p style={{ fontSize: 13, color: "var(--text-faint)" }}>كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.</p>
+          <p style={{ fontSize: 13, color: "var(--text-faint)" }}>
+            كل مساعد متخصّص في جانب من عملك، يقترح عليك ويعمل بإذنك. تابعهم من هنا.
+          </p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <Link href="/dashboard/project-tracker"
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 13, textDecoration: "none", fontFamily: "'Tajawal', sans-serif" }}>
+          <Link
+            href="/dashboard/project-tracker"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 14px",
+              borderRadius: 9,
+              background: "var(--gold-bg-soft)",
+              border: "1px solid var(--gold-bg-hover)",
+              color: "var(--gold-2)",
+              fontSize: 13,
+              textDecoration: "none",
+              fontFamily: "'Tajawal', sans-serif",
+            }}
+          >
             📊 تتبّع المشروع
           </Link>
-          <button onClick={load} disabled={loading}
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(232,184,109,0.08)", border: "1px solid rgba(232,184,109,0.2)", color: "var(--gold-1)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
-            <RefreshCw size={13} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} /> تحديث
+          <button
+            onClick={load}
+            disabled={loading}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 14px",
+              borderRadius: 9,
+              background: "rgba(232,184,109,0.08)",
+              border: "1px solid rgba(232,184,109,0.2)",
+              color: "var(--gold-1)",
+              fontSize: 13,
+              cursor: "pointer",
+              fontFamily: "'Tajawal', sans-serif",
+            }}
+          >
+            <RefreshCw
+              size={13}
+              style={{ animation: loading ? "spin 1s linear infinite" : "none" }}
+            />{" "}
+            تحديث
           </button>
         </div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
 
       {/* Top KPIs */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: 10, marginBottom: 18 }}>
-        <KPI label="مساعدون نشطون"   value={managers.filter(m => m.manager_enabled).length} icon={Network} color="var(--purple-ai)" />
-        <KPI label="مهام يعملون عليها" value={totalActiveDirectives} icon={Sparkles} color="var(--info)" />
-        <KPI label="اقتراحات لمراجعتك" value={totalPendingSuggestions} icon={Bot} color={totalPendingSuggestions > 0 ? "var(--gold-1)" : "var(--text-ghost)"} highlight={totalPendingSuggestions > 0} />
-        <KPI label="قرارات تنتظرك"   value={pendingEscalations.length} icon={AlertTriangle} color={pendingEscalations.length > 0 ? "var(--danger)" : "var(--text-ghost)"} highlight={pendingEscalations.length > 0} />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
+          gap: 10,
+          marginBottom: 18,
+        }}
+      >
+        <KPI
+          label="مساعدون نشطون"
+          value={managers.filter((m) => m.manager_enabled).length}
+          icon={Network}
+          color="var(--purple-ai)"
+        />
+        <KPI
+          label="مهام يعملون عليها"
+          value={totalActiveDirectives}
+          icon={Sparkles}
+          color="var(--info)"
+        />
+        <KPI
+          label="اقتراحات لمراجعتك"
+          value={totalPendingSuggestions}
+          icon={Bot}
+          color={totalPendingSuggestions > 0 ? "var(--gold-1)" : "var(--text-ghost)"}
+          highlight={totalPendingSuggestions > 0}
+        />
+        <KPI
+          label="قرارات تنتظرك"
+          value={pendingEscalations.length}
+          icon={AlertTriangle}
+          color={pendingEscalations.length > 0 ? "var(--danger)" : "var(--text-ghost)"}
+          highlight={pendingEscalations.length > 0}
+        />
       </div>
 
       {/* Pending Escalations — أعلى أولوية */}
       {pendingEscalations.length > 0 && (
         <div style={{ marginBottom: 22 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--danger)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+          <h2
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: "var(--danger)",
+              marginBottom: 10,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
             <AlertTriangle size={14} /> قرارات تنتظر اعتمادك ({pendingEscalations.length})
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {pendingEscalations.map(esc => {
+            {pendingEscalations.map((esc) => {
               const sev = SEVERITY_META[esc.severity] || SEVERITY_META.info;
               const SevIcon = sev.icon;
               return (
-                <div key={esc.id} style={{ background: "var(--bg-deep)", border: `1px solid ${sev.color}55`, borderRadius: 12, padding: 16 }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, background: sev.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div
+                  key={esc.id}
+                  style={{
+                    background: "var(--bg-deep)",
+                    border: `1px solid ${sev.color}55`,
+                    borderRadius: 12,
+                    padding: 16,
+                  }}
+                >
+                  <div
+                    style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}
+                  >
+                    <div
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        background: sev.bg,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
                       <SevIcon size={14} style={{ color: sev.color }} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{esc.title}</span>
-                        <span style={{ fontSize: 10, color: sev.color, background: sev.bg, padding: "2px 7px", borderRadius: 4 }}>{sev.label}</span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
+                          marginBottom: 4,
+                        }}
+                      >
+                        <span
+                          style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}
+                        >
+                          {esc.title}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            color: sev.color,
+                            background: sev.bg,
+                            padding: "2px 7px",
+                            borderRadius: 4,
+                          }}
+                        >
+                          {sev.label}
+                        </span>
                         <span style={{ fontSize: 10, color: "var(--text-ghost)" }}>{esc.type}</span>
                       </div>
-                      <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7 }}>{esc.description}</p>
+                      <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.7 }}>
+                        {esc.description}
+                      </p>
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                    <button onClick={() => {
-                      const note = prompt("سبب الرفض (اختياري):") || "";
-                      decideEscalation(esc.id, "rejected", note);
-                    }} disabled={busyId === esc.id}
-                      style={{ padding: "8px 14px", borderRadius: 7, background: "rgba(239,68,68,0.06)", color: "var(--danger)", border: "1px solid rgba(239,68,68,0.2)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
+                    <button
+                      onClick={() => {
+                        const note = prompt("سبب الرفض (اختياري):") || "";
+                        decideEscalation(esc.id, "rejected", note);
+                      }}
+                      disabled={busyId === esc.id}
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: 7,
+                        background: "rgba(239,68,68,0.06)",
+                        color: "var(--danger)",
+                        border: "1px solid rgba(239,68,68,0.2)",
+                        fontSize: 12,
+                        cursor: "pointer",
+                        fontFamily: "'Tajawal', sans-serif",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
                       <XCircle size={11} /> ارفض
                     </button>
-                    <button onClick={() => {
-                      const note = prompt("ملاحظة على الموافقة (اختياري):") || "";
-                      decideEscalation(esc.id, "approved", note);
-                    }} disabled={busyId === esc.id}
-                      style={{ padding: "8px 14px", borderRadius: 7, background: "rgba(74,222,128,0.1)", color: "var(--success)", border: "1px solid rgba(74,222,128,0.3)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
+                    <button
+                      onClick={() => {
+                        const note = prompt("ملاحظة على الموافقة (اختياري):") || "";
+                        decideEscalation(esc.id, "approved", note);
+                      }}
+                      disabled={busyId === esc.id}
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: 7,
+                        background: "rgba(74,222,128,0.1)",
+                        color: "var(--success)",
+                        border: "1px solid rgba(74,222,128,0.3)",
+                        fontSize: 12,
+                        cursor: "pointer",
+                        fontFamily: "'Tajawal', sans-serif",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
                       <CheckCircle2 size={11} /> اعتمد
                     </button>
                   </div>
@@ -176,34 +401,98 @@ export default function CEODashboardPage() {
       )}
 
       {/* Manager status grid */}
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+      <h2
+        style={{
+          fontSize: 14,
+          fontWeight: 700,
+          color: "var(--text-muted)",
+          marginBottom: 10,
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
         <Network size={14} /> مساعدوك حسب التخصّص
       </h2>
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", padding: 60 }}>
-          <Loader2 size={26} style={{ color: "var(--gold-1)", animation: "spin 1s linear infinite" }} />
+          <Loader2
+            size={26}
+            style={{ color: "var(--gold-1)", animation: "spin 1s linear infinite" }}
+          />
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 10, marginBottom: 22 }}>
-          {managers.map(m => {
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+            gap: 10,
+            marginBottom: 22,
+          }}
+        >
+          {managers.map((m) => {
             const dept = DEPARTMENT_META[m.department];
             const Icon = dept?.icon || Bot;
             return (
-              <Link key={m.manager_id} href={`/dashboard/organization/manager/${m.manager_id}`}
-                style={{ background: "var(--bg-deep)", border: `1px solid ${dept?.color}22`, borderRadius: 11, padding: 14, textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: dept?.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <Link
+                key={m.manager_id}
+                href={`/dashboard/organization/manager/${m.manager_id}`}
+                style={{
+                  background: "var(--bg-deep)",
+                  border: `1px solid ${dept?.color}22`,
+                  borderRadius: 11,
+                  padding: 14,
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 9,
+                    background: dept?.bg,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
                   <Icon size={16} style={{ color: dept?.color }} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.manager_name}</div>
-                  <div style={{ fontSize: 10, color: "var(--text-ghost)", marginTop: 3, display: "flex", gap: 8 }}>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--text-on-dark)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {m.manager_name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: "var(--text-ghost)",
+                      marginTop: 3,
+                      display: "flex",
+                      gap: 8,
+                    }}
+                  >
                     <span>{m.employee_count} متخصّص</span>
                     <span>•</span>
                     <span>{m.active_directives} مهمّة</span>
                     {m.pending_suggestions > 0 && (
                       <>
                         <span>•</span>
-                        <span style={{ color: "var(--gold-1)" }}>{m.pending_suggestions} تنتظرك</span>
+                        <span style={{ color: "var(--gold-1)" }}>
+                          {m.pending_suggestions} تنتظرك
+                        </span>
                       </>
                     )}
                   </div>
@@ -216,68 +505,180 @@ export default function CEODashboardPage() {
       )}
 
       {/* Recent activity feed */}
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+      <h2
+        style={{
+          fontSize: 14,
+          fontWeight: 700,
+          color: "var(--text-muted)",
+          marginBottom: 10,
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
         <Activity size={14} /> آخر أنشطة المنظومة
       </h2>
       {activity.length === 0 ? (
-        <div style={{ background: "var(--bg-deep)", border: "1px dashed var(--overlay-mid)", borderRadius: 10, padding: 24, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>
+        <div
+          style={{
+            background: "var(--bg-deep)",
+            border: "1px dashed var(--overlay-mid)",
+            borderRadius: 10,
+            padding: 24,
+            textAlign: "center",
+            color: "var(--text-disabled)",
+            fontSize: 12,
+          }}
+        >
           لا نشاط مسجَّل بعد — يبدأ الموظفون بتسجيل الإجراءات لما يشغّلون مهامهم اليومية
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {activity.slice(0, 15).map(a => (
-            <div key={a.id} style={{ background: "var(--bg-deep)", border: "1px solid rgba(255,255,255,0.04)", borderRadius: 8, padding: "9px 12px", display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 24, height: 24, borderRadius: 6, background: "rgba(167,139,250,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {activity.slice(0, 15).map((a) => (
+            <div
+              key={a.id}
+              style={{
+                background: "var(--bg-deep)",
+                border: "1px solid rgba(255,255,255,0.04)",
+                borderRadius: 8,
+                padding: "9px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: "rgba(167,139,250,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Bot size={11} style={{ color: "var(--purple-ai)" }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>{translateAction(a.action)}</div>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+                  {translateAction(a.action)}
+                </div>
                 <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>
-                  <span style={{ color: "var(--text-ghost)" }}>{a.actor_kind}</span> • {summarizeDetails(a.details)}
+                  <span style={{ color: "var(--text-ghost)" }}>{a.actor_kind}</span> •{" "}
+                  {summarizeDetails(a.details)}
                 </div>
               </div>
-              <div style={{ fontSize: 10, color: "var(--text-disabled)", flexShrink: 0 }}>{timeAgo(a.created_at)}</div>
+              <div style={{ fontSize: 10, color: "var(--text-disabled)", flexShrink: 0 }}>
+                {timeAgo(a.created_at)}
+              </div>
             </div>
           ))}
         </div>
       )}
 
       {/* ──────── Manager Reviews — التعلّم التنظيمي اليومي ──────── */}
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)", margin: "26px 0 10px", display: "flex", alignItems: "center", gap: 6 }}>
+      <h2
+        style={{
+          fontSize: 14,
+          fontWeight: 700,
+          color: "var(--text-muted)",
+          margin: "26px 0 10px",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
         <Sparkles size={14} /> آخر مراجعات المدراء ({reviews.length})
       </h2>
       {reviews.length === 0 ? (
-        <div style={{ background: "var(--bg-deep)", border: "1px dashed var(--overlay-mid)", borderRadius: 10, padding: 24, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>
+        <div
+          style={{
+            background: "var(--bg-deep)",
+            border: "1px dashed var(--overlay-mid)",
+            borderRadius: 10,
+            padding: 24,
+            textAlign: "center",
+            color: "var(--text-disabled)",
+            fontSize: 12,
+          }}
+        >
           لا توجد مراجعات بعد — يولّد كل مدير مراجعة يومياً الساعة ١١م
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {reviews.map(r => {
-            const mgr = managers.find(m => m.manager_id === r.manager_id);
+          {reviews.map((r) => {
+            const mgr = managers.find((m) => m.manager_id === r.manager_id);
             return (
-              <div key={r.id} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 10, padding: "12px 14px" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 8 }}>
+              <div
+                key={r.id}
+                style={{
+                  background: "var(--bg-deep)",
+                  border: "1px solid var(--overlay-soft)",
+                  borderRadius: 10,
+                  padding: "12px 14px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 6,
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
                   <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)" }}>
                     {mgr?.manager_name || r.manager_id.slice(0, 8)}
                   </span>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     {r.suggestions_count > 0 && (
-                      <span style={{ fontSize: 10, padding: "2px 7px", borderRadius: 4, background: "var(--gold-bg-soft)", color: "var(--gold-1)" }}>
+                      <span
+                        style={{
+                          fontSize: 10,
+                          padding: "2px 7px",
+                          borderRadius: 4,
+                          background: "var(--gold-bg-soft)",
+                          color: "var(--gold-1)",
+                        }}
+                      >
                         {r.suggestions_count} اقتراح
                       </span>
                     )}
-                    <span style={{ fontSize: 10, color: "var(--text-disabled)" }}>{timeAgo(r.created_at)}</span>
+                    <span style={{ fontSize: 10, color: "var(--text-disabled)" }}>
+                      {timeAgo(r.created_at)}
+                    </span>
                   </div>
                 </div>
                 <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.7, margin: 0 }}>
                   {r.summary}
                 </p>
                 {r.concerns && Array.isArray(r.concerns) && r.concerns.length > 0 && (
-                  <div style={{ marginTop: 8, padding: "6px 10px", background: "var(--danger-bg)", border: "1px solid var(--danger)", borderRadius: 6 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: "var(--danger)" }}>⚠ مخاوف:</span>
-                    <ul style={{ fontSize: 11, color: "var(--text-soft)", margin: "4px 0 0", paddingInlineStart: 18 }}>
+                  <div
+                    style={{
+                      marginTop: 8,
+                      padding: "6px 10px",
+                      background: "var(--danger-bg)",
+                      border: "1px solid var(--danger)",
+                      borderRadius: 6,
+                    }}
+                  >
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "var(--danger)" }}>
+                      ⚠ مخاوف:
+                    </span>
+                    <ul
+                      style={{
+                        fontSize: 11,
+                        color: "var(--text-soft)",
+                        margin: "4px 0 0",
+                        paddingInlineStart: 18,
+                      }}
+                    >
                       {r.concerns.slice(0, 3).map((c: any, i: number) => (
-                        <li key={i}>{typeof c === "string" ? c : JSON.stringify(c).slice(0, 120)}</li>
+                        <li key={i}>
+                          {typeof c === "string" ? c : JSON.stringify(c).slice(0, 120)}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -291,26 +692,43 @@ export default function CEODashboardPage() {
   );
 }
 
-function KPI({ label, value, icon: Icon, color, highlight }: { label: string; value: number; icon: typeof Crown; color: string; highlight?: boolean }) {
+function KPI({
+  label,
+  value,
+  icon: Icon,
+  color,
+  highlight,
+}: {
+  label: string;
+  value: number;
+  icon: typeof Crown;
+  color: string;
+  highlight?: boolean;
+}) {
   return (
-    <div style={{
-      background: highlight ? `${color}10` : "var(--bg-deep)",
-      border: `1px solid ${highlight ? color + "55" : "var(--overlay-soft)"}`,
-      borderRadius: 11, padding: "12px 14px",
-    }}>
+    <div
+      style={{
+        background: highlight ? `${color}10` : "var(--bg-deep)",
+        border: `1px solid ${highlight ? color + "55" : "var(--overlay-soft)"}`,
+        borderRadius: 11,
+        padding: "12px 14px",
+      }}
+    >
       <Icon size={14} style={{ color, marginBottom: 6 }} />
-      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1.1 }}>
+        {value}
+      </div>
       <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 4 }}>{label}</div>
     </div>
   );
 }
 
 const ACTION_TRANSLATIONS: Record<string, string> = {
-  generated_marketing_posts:    "ولّد منشورات تسويق",
-  generated_followup_messages:  "ولّد رسائل متابعة",
-  generated_weekly_insight:     "أنتج تقرير أسبوعي",
-  auto_replied_whatsapp:        "ردّ على رسالة واتساب",
-  triggered_suggestions:        "ولّدت اقتراحات للفريق",
+  generated_marketing_posts: "ولّد منشورات تسويق",
+  generated_followup_messages: "ولّد رسائل متابعة",
+  generated_weekly_insight: "أنتج تقرير أسبوعي",
+  auto_replied_whatsapp: "ردّ على رسالة واتساب",
+  triggered_suggestions: "ولّدت اقتراحات للفريق",
 };
 
 function translateAction(action: string): string {
@@ -322,7 +740,8 @@ function summarizeDetails(d: Record<string, unknown>): string {
   const parts: string[] = [];
   if (typeof d.inserted === "number") parts.push(`${d.inserted} عنصر`);
   if (typeof d.directives_applied === "number") parts.push(`${d.directives_applied} توجيه`);
-  if (typeof d.kb_items_loaded === "number" && d.kb_items_loaded > 0) parts.push(`${d.kb_items_loaded} KB`);
+  if (typeof d.kb_items_loaded === "number" && d.kb_items_loaded > 0)
+    parts.push(`${d.kb_items_loaded} KB`);
   if (typeof d.candidates === "number") parts.push(`${d.candidates} مرشّح`);
   if (typeof d.properties === "number") parts.push(`${d.properties} عقار`);
   if (typeof d.intent === "string") parts.push(`نية: ${d.intent}`);

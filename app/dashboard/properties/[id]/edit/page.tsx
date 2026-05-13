@@ -8,24 +8,56 @@ import SARIcon from "../../../../components/SARIcon";
 import { toast } from "sonner";
 import MapsLinkInput from "@/app/components/MapsLinkInput";
 
-
 const categoriesMap: Record<string, string[]> = {
-  "سكني":    ["شقة","فيلا","دور","استوديو","دوبلكس","تاون هاوس","عمارة سكنية","مجمع سكني","قصر","استراحة"],
-  "تجاري":   ["معرض","مكتب","محل تجاري","عمارة تجارية","مستودع","فندق","شقق فندقية","مجمع تجاري","برج تجاري"],
-  "زراعي":   ["أرض زراعية","مزرعة"],
-  "صناعي":   ["أرض صناعية","مستودع صناعي","مصنع","ورشة"],
-  "أرض":     ["أرض سكنية","أرض تجارية","أرض زراعية","أرض صناعية","أرض خام"],
+  سكني: [
+    "شقة",
+    "فيلا",
+    "دور",
+    "استوديو",
+    "دوبلكس",
+    "تاون هاوس",
+    "عمارة سكنية",
+    "مجمع سكني",
+    "قصر",
+    "استراحة",
+  ],
+  تجاري: [
+    "معرض",
+    "مكتب",
+    "محل تجاري",
+    "عمارة تجارية",
+    "مستودع",
+    "فندق",
+    "شقق فندقية",
+    "مجمع تجاري",
+    "برج تجاري",
+  ],
+  زراعي: ["أرض زراعية", "مزرعة"],
+  صناعي: ["أرض صناعية", "مستودع صناعي", "مصنع", "ورشة"],
+  أرض: ["أرض سكنية", "أرض تجارية", "أرض زراعية", "أرض صناعية", "أرض خام"],
 };
 
 const offerTypes = ["بيع", "إيجار", "استثمار", "تطوير بالشراكة"];
 
-const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
+const inp =
+  "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
 const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-wide";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-2xl p-6">
-      <h3 style={{ fontSize: 12, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1.5, marginBottom: 20, textTransform: "uppercase" }}>{title}</h3>
+    <div className="rounded-2xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-6">
+      <h3
+        style={{
+          fontSize: 12,
+          fontWeight: 700,
+          color: "var(--gold-2)",
+          letterSpacing: 1.5,
+          marginBottom: 20,
+          textTransform: "uppercase",
+        }}
+      >
+        {title}
+      </h3>
       {children}
     </div>
   );
@@ -45,15 +77,32 @@ export default function EditProperty() {
   const [aiLoading, setAiLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<any>({
-    title: "", main_category: "", sub_category: "", offer_type: "",
-    city: "", district: "", land_area: "", built_area: "",
-    rooms: "", bathrooms: "", floors: "", price: "",
-    description: "", main_image: "", extra_images: "", location_url: "",
-    latitude: null, longitude: null,
-    contact_phone: "", ad_license_number: "", is_published: false,
+    title: "",
+    main_category: "",
+    sub_category: "",
+    offer_type: "",
+    city: "",
+    district: "",
+    land_area: "",
+    built_area: "",
+    rooms: "",
+    bathrooms: "",
+    floors: "",
+    price: "",
+    description: "",
+    main_image: "",
+    extra_images: "",
+    location_url: "",
+    latitude: null,
+    longitude: null,
+    contact_phone: "",
+    ad_license_number: "",
+    is_published: false,
   });
 
-  useEffect(() => { loadProperty(); }, []);
+  useEffect(() => {
+    loadProperty();
+  }, []);
 
   useEffect(() => {
     if (form.main_category) {
@@ -68,27 +117,27 @@ export default function EditProperty() {
       setUploadedImages(allImgs);
       const extraImgs = allImgs.filter((u: string) => u !== data.main_image);
       setForm({
-        title:         data.title || "",
+        title: data.title || "",
         main_category: data.main_category || "",
-        sub_category:  data.sub_category || "",
-        offer_type:    data.offer_type || "",
-        city:          data.city || "",
-        district:      data.district || "",
-        land_area:     data.land_area || "",
-        built_area:    data.built_area || "",
-        rooms:         data.rooms || "",
-        bathrooms:     data.bathrooms || "",
-        floors:        data.floors || "",
-        price:         data.price || "",
-        description:   data.description || "",
-        main_image:    data.main_image || "",
-        extra_images:  extraImgs.join("\n"),
-        location_url:  data.location_url || "",
-        latitude:      data.latitude ?? null,
-        longitude:     data.longitude ?? null,
-        contact_phone:     data.contact_phone || "",
+        sub_category: data.sub_category || "",
+        offer_type: data.offer_type || "",
+        city: data.city || "",
+        district: data.district || "",
+        land_area: data.land_area || "",
+        built_area: data.built_area || "",
+        rooms: data.rooms || "",
+        bathrooms: data.bathrooms || "",
+        floors: data.floors || "",
+        price: data.price || "",
+        description: data.description || "",
+        main_image: data.main_image || "",
+        extra_images: extraImgs.join("\n"),
+        location_url: data.location_url || "",
+        latitude: data.latitude ?? null,
+        longitude: data.longitude ?? null,
+        contact_phone: data.contact_phone || "",
         ad_license_number: data.ad_license_number || "",
-        is_published:      data.is_published || false,
+        is_published: data.is_published || false,
       });
     }
     setLoading(false);
@@ -105,42 +154,47 @@ export default function EditProperty() {
     for (const file of Array.from(files)) {
       const ext = file.name.split(".").pop();
       const path = `properties/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("assets").upload(path, file, { upsert: true });
+      const { error: upErr } = await supabase.storage
+        .from("assets")
+        .upload(path, file, { upsert: true });
       if (!upErr) {
         const { data } = supabase.storage.from("assets").getPublicUrl(path);
         newUrls.push(data.publicUrl);
       }
     }
-    setUploadedImages(prev => [...prev, ...newUrls]);
+    setUploadedImages((prev) => [...prev, ...newUrls]);
     if (newUrls.length > 0 && !form.main_image) set("main_image", newUrls[0]);
     setUploading(false);
   }
 
   function removeImage(url: string) {
-    setUploadedImages(prev => prev.filter(u => u !== url));
+    setUploadedImages((prev) => prev.filter((u) => u !== url));
     if (form.main_image === url) {
-      const remaining = uploadedImages.filter(u => u !== url);
+      const remaining = uploadedImages.filter((u) => u !== url);
       set("main_image", remaining[0] || "");
     }
   }
 
   async function handleAIDescription() {
     const hasData = form.main_category || form.city || form.district || form.price;
-    if (!hasData) { toast.error("أدخل بعض بيانات العقار أولاً"); return; }
+    if (!hasData) {
+      toast.error("أدخل بعض بيانات العقار أولاً");
+      return;
+    }
     setAiLoading(true);
     try {
       const specs: string[] = [];
-      if (form.offer_type)    specs.push(`نوع العرض: ${form.offer_type}`);
+      if (form.offer_type) specs.push(`نوع العرض: ${form.offer_type}`);
       if (form.main_category) specs.push(`التصنيف: ${form.main_category}`);
-      if (form.sub_category)  specs.push(`النوع: ${form.sub_category}`);
-      if (form.city)          specs.push(`المدينة: ${form.city}`);
-      if (form.district)      specs.push(`الحي: ${form.district}`);
-      if (form.land_area)     specs.push(`مساحة الأرض: ${form.land_area} م²`);
-      if (form.built_area)    specs.push(`مسطح البناء: ${form.built_area} م²`);
-      if (form.rooms)         specs.push(`الغرف: ${form.rooms}`);
-      if (form.bathrooms)     specs.push(`دورات المياه: ${form.bathrooms}`);
-      if (form.floors)        specs.push(`الأدوار: ${form.floors}`);
-      if (form.price)         specs.push(`السعر: ${Number(form.price).toLocaleString("ar-SA")} ريال`);
+      if (form.sub_category) specs.push(`النوع: ${form.sub_category}`);
+      if (form.city) specs.push(`المدينة: ${form.city}`);
+      if (form.district) specs.push(`الحي: ${form.district}`);
+      if (form.land_area) specs.push(`مساحة الأرض: ${form.land_area} م²`);
+      if (form.built_area) specs.push(`مسطح البناء: ${form.built_area} م²`);
+      if (form.rooms) specs.push(`الغرف: ${form.rooms}`);
+      if (form.bathrooms) specs.push(`دورات المياه: ${form.bathrooms}`);
+      if (form.floors) specs.push(`الأدوار: ${form.floors}`);
+      if (form.price) specs.push(`السعر: ${Number(form.price).toLocaleString("ar-SA")} ريال`);
       const res = await fetch("/api/ai-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -148,7 +202,8 @@ export default function EditProperty() {
           provider: "anthropic",
           model: "claude-opus-4-6",
           mode: "single",
-          systemPrompt: "أنت خبير تسويق عقاري سعودي متميز. اكتب وصفاً عقارياً احترافياً باللغة العربية الفصحى، من 3 إلى 5 فقرات، لا يتجاوز 350 كلمة، بدون عناوين أو نقاط.",
+          systemPrompt:
+            "أنت خبير تسويق عقاري سعودي متميز. اكتب وصفاً عقارياً احترافياً باللغة العربية الفصحى، من 3 إلى 5 فقرات، لا يتجاوز 350 كلمة، بدون عناوين أو نقاط.",
           userPrompt: `اكتب وصفاً لهذا العقار:\n${specs.join("\n")}${form.title ? `\nعنوان: ${form.title}` : ""}`,
         }),
       });
@@ -172,29 +227,34 @@ export default function EditProperty() {
     e.preventDefault();
     setSaving(true);
 
-    const extraUrls = form.extra_images.split("\n").map((s: string) => s.trim()).filter(Boolean);
-    const allImages = [...new Set([...uploadedImages, form.main_image, ...extraUrls].filter(Boolean))];
+    const extraUrls = form.extra_images
+      .split("\n")
+      .map((s: string) => s.trim())
+      .filter(Boolean);
+    const allImages = [
+      ...new Set([...uploadedImages, form.main_image, ...extraUrls].filter(Boolean)),
+    ];
 
     const payload: any = {
-      title:         form.title,
+      title: form.title,
       main_category: form.main_category,
-      sub_category:  form.sub_category,
-      offer_type:    form.offer_type,
-      city:          form.city,
-      district:      form.district,
-      land_area:     form.land_area  ? Number(form.land_area)  : null,
-      built_area:    form.built_area ? Number(form.built_area) : null,
-      rooms:         form.rooms      ? Number(form.rooms)      : null,
-      bathrooms:     form.bathrooms  ? Number(form.bathrooms)  : null,
-      floors:        form.floors     ? Number(form.floors)     : null,
-      price:         form.price      ? Number(form.price)      : null,
-      description:   form.description,
-      main_image:    form.main_image || null,
-      location_url:  form.location_url || null,
-      latitude:      form.latitude,
-      longitude:     form.longitude,
+      sub_category: form.sub_category,
+      offer_type: form.offer_type,
+      city: form.city,
+      district: form.district,
+      land_area: form.land_area ? Number(form.land_area) : null,
+      built_area: form.built_area ? Number(form.built_area) : null,
+      rooms: form.rooms ? Number(form.rooms) : null,
+      bathrooms: form.bathrooms ? Number(form.bathrooms) : null,
+      floors: form.floors ? Number(form.floors) : null,
+      price: form.price ? Number(form.price) : null,
+      description: form.description,
+      main_image: form.main_image || null,
+      location_url: form.location_url || null,
+      latitude: form.latitude,
+      longitude: form.longitude,
       contact_phone: form.contact_phone || null,
-      is_published:  form.is_published,
+      is_published: form.is_published,
       ad_license_number: form.ad_license_number.trim() || null,
     };
     if (allImages.length) payload.images = allImages;
@@ -203,77 +263,140 @@ export default function EditProperty() {
 
     setSaving(false);
     setSaved(true);
-    setTimeout(() => { setSaved(false); router.push("/dashboard/properties/" + id); }, 1200);
+    setTimeout(() => {
+      setSaved(false);
+      router.push("/dashboard/properties/" + id);
+    }, 1200);
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-32" style={{ color: "var(--gold-2)" }}>
-      <div className="w-6 h-6 border-2 border-current rounded-full border-t-transparent animate-spin mr-3" />
-      جاري التحميل...
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center py-32" style={{ color: "var(--gold-2)" }}>
+        <div className="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        جاري التحميل...
+      </div>
+    );
 
   return (
     <div dir="rtl">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 mb-6" style={{ color: "var(--text-faint)", fontSize: 13 }}>
-        <Link href="/dashboard/properties" className="hover:text-[var(--gold-2)] transition no-underline" style={{ color: "var(--text-faint)" }}>العقارات</Link>
+      <div
+        className="mb-6 flex items-center gap-2"
+        style={{ color: "var(--text-faint)", fontSize: 13 }}
+      >
+        <Link
+          href="/dashboard/properties"
+          className="no-underline transition hover:text-[var(--gold-2)]"
+          style={{ color: "var(--text-faint)" }}
+        >
+          العقارات
+        </Link>
         <ArrowRight size={14} />
-        <Link href={"/dashboard/properties/" + id} className="hover:text-[var(--gold-2)] transition no-underline truncate max-w-xs" style={{ color: "var(--text-faint)" }}>{form.title || "..."}</Link>
+        <Link
+          href={"/dashboard/properties/" + id}
+          className="max-w-xs truncate no-underline transition hover:text-[var(--gold-2)]"
+          style={{ color: "var(--text-faint)" }}
+        >
+          {form.title || "..."}
+        </Link>
         <ArrowRight size={14} />
         <span style={{ color: "var(--text-strong)" }}>تعديل</span>
       </div>
 
-      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold mb-1">تعديل العقار</h2>
-          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>عدّل البيانات ثم احفظ التغييرات</p>
+          <h2 className="mb-1 text-2xl font-bold">تعديل العقار</h2>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>
+            عدّل البيانات ثم احفظ التغييرات
+          </p>
         </div>
         <button
           type="button"
           onClick={() => set("is_published", !form.is_published)}
-          className="flex items-center gap-3 px-5 py-2.5 rounded-xl transition"
-          style={{ background: form.is_published ? "var(--gold-bg)" : "var(--bg-surface-2)", border: "1px solid " + (form.is_published ? "var(--gold-bg-strong)" : "var(--gold-bg)"), color: form.is_published ? "var(--gold-2)" : "var(--text-faint)", fontSize: 13, fontWeight: 600 }}
+          className="flex items-center gap-3 rounded-xl px-5 py-2.5 transition"
+          style={{
+            background: form.is_published ? "var(--gold-bg)" : "var(--bg-surface-2)",
+            border: "1px solid " + (form.is_published ? "var(--gold-bg-strong)" : "var(--gold-bg)"),
+            color: form.is_published ? "var(--gold-2)" : "var(--text-faint)",
+            fontSize: 13,
+            fontWeight: 600,
+          }}
         >
           {form.is_published ? <Eye size={15} /> : <EyeOff size={15} />}
           {form.is_published ? "منشور" : "مسودة"}
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5 max-w-3xl">
-
+      <form onSubmit={handleSubmit} className="max-w-3xl space-y-5">
         {/* ═══ الأساسيات ═══ */}
         <Section title="الأساسيات">
           <div className="space-y-4">
             <div>
               <label className={lbl}>عنوان العقار *</label>
-              <input name="title" value={form.title} onChange={handleChange} required className={inp} />
+              <input
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                required
+                className={inp}
+              />
             </div>
             <div>
               <label className={lbl}>نوع العرض *</label>
-              <div className="flex gap-2 flex-wrap">
-                {offerTypes.map(t => (
-                  <button key={t} type="button" onClick={() => set("offer_type", t)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium transition"
-                    style={{ background: form.offer_type === t ? "var(--gold-bg-hover)" : "var(--bg-surface-2)", color: form.offer_type === t ? "var(--gold-2)" : "var(--text-soft)", border: "1px solid " + (form.offer_type === t ? "rgba(198,145,76,0.35)" : "var(--gold-bg-soft)") }}>
+              <div className="flex flex-wrap gap-2">
+                {offerTypes.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => set("offer_type", t)}
+                    className="rounded-xl px-4 py-2 text-sm font-medium transition"
+                    style={{
+                      background:
+                        form.offer_type === t ? "var(--gold-bg-hover)" : "var(--bg-surface-2)",
+                      color: form.offer_type === t ? "var(--gold-2)" : "var(--text-soft)",
+                      border:
+                        "1px solid " +
+                        (form.offer_type === t ? "rgba(198,145,76,0.35)" : "var(--gold-bg-soft)"),
+                    }}
+                  >
                     {t}
                   </button>
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className={lbl}>التصنيف الرئيسي *</label>
-                <select name="main_category" value={form.main_category} onChange={handleChange} required className={inp}>
+                <select
+                  name="main_category"
+                  value={form.main_category}
+                  onChange={handleChange}
+                  required
+                  className={inp}
+                >
                   <option value="">اختر...</option>
-                  {Object.keys(categoriesMap).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                  {Object.keys(categoriesMap).map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
                 <label className={lbl}>التصنيف الفرعي</label>
-                <select name="sub_category" value={form.sub_category} onChange={handleChange} className={inp} disabled={!form.main_category}>
+                <select
+                  name="sub_category"
+                  value={form.sub_category}
+                  onChange={handleChange}
+                  className={inp}
+                  disabled={!form.main_category}
+                >
                   <option value="">اختر...</option>
-                  {subCategories.map(sub => <option key={sub} value={sub}>{sub}</option>)}
+                  {subCategories.map((sub) => (
+                    <option key={sub} value={sub}>
+                      {sub}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -283,21 +406,42 @@ export default function EditProperty() {
         {/* ═══ الموقع ═══ */}
         <Section title="الموقع">
           <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className={lbl}>المدينة *</label>
-                <input name="city" value={form.city} onChange={handleChange} required className={inp} />
+                <input
+                  name="city"
+                  value={form.city}
+                  onChange={handleChange}
+                  required
+                  className={inp}
+                />
               </div>
               <div>
                 <label className={lbl}>الحي *</label>
-                <input name="district" value={form.district} onChange={handleChange} required className={inp} />
+                <input
+                  name="district"
+                  value={form.district}
+                  onChange={handleChange}
+                  required
+                  className={inp}
+                />
               </div>
             </div>
             <MapsLinkInput
               lat={form.latitude}
               lng={form.longitude}
-              onChange={(lat, lng) => setForm((f: any) => ({ ...f, latitude: lat, longitude: lng, location_url: `https://www.google.com/maps?q=${lat},${lng}` }))}
-              onClear={() => setForm((f: any) => ({ ...f, latitude: null, longitude: null, location_url: "" }))}
+              onChange={(lat, lng) =>
+                setForm((f: any) => ({
+                  ...f,
+                  latitude: lat,
+                  longitude: lng,
+                  location_url: `https://www.google.com/maps?q=${lat},${lng}`,
+                }))
+              }
+              onClear={() =>
+                setForm((f: any) => ({ ...f, latitude: null, longitude: null, location_url: "" }))
+              }
             />
           </div>
         </Section>
@@ -305,28 +449,63 @@ export default function EditProperty() {
         {/* ═══ المواصفات ═══ */}
         <Section title="المواصفات">
           <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className={lbl}>مساحة الأرض م²</label>
-                <input name="land_area" value={form.land_area} onChange={handleChange} type="number" className={inp} dir="ltr" />
+                <input
+                  name="land_area"
+                  value={form.land_area}
+                  onChange={handleChange}
+                  type="number"
+                  className={inp}
+                  dir="ltr"
+                />
               </div>
               <div>
                 <label className={lbl}>مسطح البناء م²</label>
-                <input name="built_area" value={form.built_area} onChange={handleChange} type="number" className={inp} dir="ltr" />
+                <input
+                  name="built_area"
+                  value={form.built_area}
+                  onChange={handleChange}
+                  type="number"
+                  className={inp}
+                  dir="ltr"
+                />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className={lbl}>الغرف</label>
-                <input name="rooms" value={form.rooms} onChange={handleChange} type="number" className={inp} dir="ltr" />
+                <input
+                  name="rooms"
+                  value={form.rooms}
+                  onChange={handleChange}
+                  type="number"
+                  className={inp}
+                  dir="ltr"
+                />
               </div>
               <div>
                 <label className={lbl}>دورات المياه</label>
-                <input name="bathrooms" value={form.bathrooms} onChange={handleChange} type="number" className={inp} dir="ltr" />
+                <input
+                  name="bathrooms"
+                  value={form.bathrooms}
+                  onChange={handleChange}
+                  type="number"
+                  className={inp}
+                  dir="ltr"
+                />
               </div>
               <div>
                 <label className={lbl}>عدد الأدوار</label>
-                <input name="floors" value={form.floors} onChange={handleChange} type="number" className={inp} dir="ltr" />
+                <input
+                  name="floors"
+                  value={form.floors}
+                  onChange={handleChange}
+                  type="number"
+                  className={inp}
+                  dir="ltr"
+                />
               </div>
             </div>
           </div>
@@ -339,28 +518,45 @@ export default function EditProperty() {
               <label className={lbl} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 السعر <SARIcon size={11} color="secondary" />
               </label>
-              <input name="price" value={form.price} onChange={handleChange} type="number" className={inp} dir="ltr" />
+              <input
+                name="price"
+                value={form.price}
+                onChange={handleChange}
+                type="number"
+                className={inp}
+                dir="ltr"
+              />
             </div>
             <div>
               <label className={lbl}>رقم التواصل</label>
-              <input name="contact_phone" value={form.contact_phone} onChange={handleChange} className={inp} dir="ltr" />
+              <input
+                name="contact_phone"
+                value={form.contact_phone}
+                onChange={handleChange}
+                className={inp}
+                dir="ltr"
+              />
             </div>
             <div>
               <label className={lbl}>
                 رقم ترخيص الإعلان
-                <span style={{ color: "var(--text-faint)", fontWeight: 400, marginRight: 6 }}>(اختياري)</span>
+                <span style={{ color: "var(--text-faint)", fontWeight: 400, marginRight: 6 }}>
+                  (اختياري)
+                </span>
               </label>
               <input
                 name="ad_license_number"
                 value={form.ad_license_number}
-                onChange={e => set("ad_license_number", e.target.value.replace(/\D/g, ""))}
+                onChange={(e) => set("ad_license_number", e.target.value.replace(/\D/g, ""))}
                 className={inp}
                 placeholder="71xxxxxxxx أو 72xxxxxxxx"
                 dir="ltr"
                 maxLength={20}
               />
               {form.ad_license_number && !/^(71|72)/.test(form.ad_license_number) && (
-                <p style={{ fontSize: 11, color: "var(--danger)", marginTop: 6 }}>⚠ الرقم يجب أن يبدأ بـ 71 أو 72</p>
+                <p style={{ fontSize: 11, color: "var(--danger)", marginTop: 6 }}>
+                  ⚠ الرقم يجب أن يبدأ بـ 71 أو 72
+                </p>
               )}
             </div>
           </div>
@@ -374,35 +570,71 @@ export default function EditProperty() {
                 type="button"
                 onClick={handleAIDescription}
                 disabled={aiLoading}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl transition disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl px-4 py-2 transition disabled:opacity-50"
                 style={{
                   background: "linear-gradient(135deg, var(--gold-bg-hover), var(--gold-bg-soft))",
                   border: "1px solid var(--gold-bg-strong)",
-                  color: "var(--gold-2)", fontSize: 13, fontWeight: 600,
+                  color: "var(--gold-2)",
+                  fontSize: 13,
+                  fontWeight: 600,
                   cursor: aiLoading ? "not-allowed" : "pointer",
                 }}
               >
-                {aiLoading
-                  ? <><Loader2 size={15} className="animate-spin" /> جاري التوليد...</>
-                  : <><Sparkles size={15} /> اكتب بالذكاء الاصطناعي</>}
+                {aiLoading ? (
+                  <>
+                    <Loader2 size={15} className="animate-spin" /> جاري التوليد...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={15} /> اكتب بالذكاء الاصطناعي
+                  </>
+                )}
               </button>
             </div>
-            <textarea name="description" value={form.description} onChange={handleChange} rows={5} className={inp} style={{ resize: "vertical" }} />
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              rows={5}
+              className={inp}
+              style={{ resize: "vertical" }}
+            />
           </div>
         </Section>
 
         {/* ═══ الصور ═══ */}
         <Section title="الصور">
           <div className="space-y-4">
-
-            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
-              onChange={e => { handleImageUpload(e.target.files); e.target.value = ""; }} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                handleImageUpload(e.target.files);
+                e.target.value = "";
+              }}
+            />
             <div
               onClick={() => fileInputRef.current?.click()}
-              onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
-              onDragEnter={e => { e.preventDefault(); setIsDragging(true); }}
-              onDragLeave={e => { e.preventDefault(); setIsDragging(false); }}
-              onDrop={e => { e.preventDefault(); setIsDragging(false); handleImageUpload(e.dataTransfer.files); }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragEnter={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                handleImageUpload(e.dataTransfer.files);
+              }}
               className="flex flex-col items-center justify-center gap-3 rounded-xl transition-all"
               style={{
                 border: "2px dashed " + (isDragging ? "var(--gold-2)" : "rgba(198,145,76,0.25)"),
@@ -410,48 +642,84 @@ export default function EditProperty() {
                 background: isDragging ? "var(--gold-bg-soft)" : "rgba(198,145,76,0.03)",
                 cursor: "pointer",
                 transform: isDragging ? "scale(1.01)" : "scale(1)",
-              }}>
+              }}
+            >
               {uploading ? (
                 <>
-                  <div className="w-7 h-7 border-2 rounded-full animate-spin"
-                    style={{ borderColor: "var(--gold-bg-strong)", borderTopColor: "var(--gold-2)" }} />
+                  <div
+                    className="h-7 w-7 animate-spin rounded-full border-2"
+                    style={{
+                      borderColor: "var(--gold-bg-strong)",
+                      borderTopColor: "var(--gold-2)",
+                    }}
+                  />
                   <span style={{ color: "var(--text-soft)", fontSize: 13 }}>جاري الرفع...</span>
                 </>
               ) : isDragging ? (
                 <>
                   <Upload size={28} style={{ color: "var(--gold-2)" }} />
-                  <p style={{ color: "var(--gold-2)", fontSize: 14, fontWeight: 700 }}>أفلت الصور هنا</p>
+                  <p style={{ color: "var(--gold-2)", fontSize: 14, fontWeight: 700 }}>
+                    أفلت الصور هنا
+                  </p>
                 </>
               ) : (
                 <>
                   <Upload size={22} style={{ color: "var(--gold-2)" }} />
                   <div className="text-center">
-                    <p style={{ color: "var(--text-strong)", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
-                    <p style={{ color: "var(--text-faint)", fontSize: 12, marginTop: 4 }}>JPG, PNG — يمكن اختيار أكثر من صورة</p>
+                    <p style={{ color: "var(--text-strong)", fontSize: 14, fontWeight: 600 }}>
+                      اسحب الصور هنا أو اضغط للاختيار
+                    </p>
+                    <p style={{ color: "var(--text-faint)", fontSize: 12, marginTop: 4 }}>
+                      JPG, PNG — يمكن اختيار أكثر من صورة
+                    </p>
                   </div>
                 </>
               )}
             </div>
 
             {uploadedImages.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {uploadedImages.map((url, i) => (
-                  <div key={url} className="relative rounded-xl overflow-hidden group"
-                    style={{ height: 110, background: "var(--bg-surface-2)", border: "2px solid " + (url === form.main_image || i === 0 ? "var(--gold-2)" : "transparent") }}>
-                    <img src={url} alt="" className="w-full h-full object-cover" />
+                  <div
+                    key={url}
+                    className="group relative overflow-hidden rounded-xl"
+                    style={{
+                      height: 110,
+                      background: "var(--bg-surface-2)",
+                      border:
+                        "2px solid " +
+                        (url === form.main_image || i === 0 ? "var(--gold-2)" : "transparent"),
+                    }}
+                  >
+                    <img src={url} alt="" className="h-full w-full object-cover" />
                     {(url === form.main_image || i === 0) && (
-                      <div className="absolute top-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg font-bold"
-                        style={{ background: "var(--gold-2)", color: "var(--bg-page)" }}>رئيسية</div>
+                      <div
+                        className="absolute top-1.5 right-1.5 rounded-lg px-2 py-0.5 text-xs font-bold"
+                        style={{ background: "var(--gold-2)", color: "var(--bg-page)" }}
+                      >
+                        رئيسية
+                      </div>
                     )}
-                    <button type="button" onClick={() => removeImage(url)}
-                      className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-                      style={{ background: "rgba(248,113,113,0.9)" }}>
+                    <button
+                      type="button"
+                      onClick={() => removeImage(url)}
+                      className="absolute top-1.5 left-1.5 flex h-6 w-6 items-center justify-center rounded-full opacity-0 transition group-hover:opacity-100"
+                      style={{ background: "rgba(248,113,113,0.9)" }}
+                    >
                       <X size={12} style={{ color: "white" }} />
                     </button>
                     {url !== form.main_image && i !== 0 && (
-                      <button type="button" onClick={() => { setUploadedImages(prev => [url, ...prev.filter(u => u !== url)]); set("main_image", url); }}
-                        className="absolute bottom-1.5 right-1.5 text-xs px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
-                        style={{ background: "var(--header-bg-3)", color: "var(--gold-2)" }}>تعيين رئيسية</button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUploadedImages((prev) => [url, ...prev.filter((u) => u !== url)]);
+                          set("main_image", url);
+                        }}
+                        className="absolute right-1.5 bottom-1.5 rounded-lg px-2 py-0.5 text-xs opacity-0 transition group-hover:opacity-100"
+                        style={{ background: "var(--header-bg-3)", color: "var(--gold-2)" }}
+                      >
+                        تعيين رئيسية
+                      </button>
                     )}
                   </div>
                 ))}
@@ -460,25 +728,59 @@ export default function EditProperty() {
 
             <div>
               <label className={lbl}>أو أدخل رابط URL مباشر</label>
-              <input name="main_image" value={form.main_image} onChange={handleChange} className={inp} placeholder="https://..." dir="ltr" />
+              <input
+                name="main_image"
+                value={form.main_image}
+                onChange={handleChange}
+                className={inp}
+                placeholder="https://..."
+                dir="ltr"
+              />
             </div>
           </div>
         </Section>
 
         {/* ═══ أزرار الحفظ ═══ */}
         <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={saving || saved}
-            className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-[var(--bg-page)] transition disabled:opacity-70"
-            style={{ background: saved ? "var(--success)" : saving ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", fontSize: 15, minWidth: 160, justifyContent: "center" }}>
-            {saved ? <><Check size={18} /> تم الحفظ</> : saving ? "جاري الحفظ..." : <><Save size={18} /> حفظ التغييرات</>}
+          <button
+            type="submit"
+            disabled={saving || saved}
+            className="flex items-center gap-2 rounded-xl px-8 py-3.5 font-bold text-[var(--bg-page)] transition disabled:opacity-70"
+            style={{
+              background: saved
+                ? "var(--success)"
+                : saving
+                  ? "rgba(198,145,76,0.4)"
+                  : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              fontSize: 15,
+              minWidth: 160,
+              justifyContent: "center",
+            }}
+          >
+            {saved ? (
+              <>
+                <Check size={18} /> تم الحفظ
+              </>
+            ) : saving ? (
+              "جاري الحفظ..."
+            ) : (
+              <>
+                <Save size={18} /> حفظ التغييرات
+              </>
+            )}
           </button>
-          <Link href={"/dashboard/properties/" + id}
-            className="px-6 py-3.5 rounded-xl text-sm font-medium no-underline transition"
-            style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", border: "1px solid var(--gold-bg)" }}>
+          <Link
+            href={"/dashboard/properties/" + id}
+            className="rounded-xl px-6 py-3.5 text-sm font-medium no-underline transition"
+            style={{
+              background: "var(--bg-surface-2)",
+              color: "var(--text-soft)",
+              border: "1px solid var(--gold-bg)",
+            }}
+          >
             إلغاء
           </Link>
         </div>
-
       </form>
     </div>
   );

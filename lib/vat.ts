@@ -67,10 +67,12 @@ export function reverseVAT(grossSAR: number): PriceBreakdown {
  * تنسيق رقم بالريال السعودي مع رمز العملة.
  */
 export function formatSAR(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount) + " ر.س";
+  return (
+    new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount) + " ر.س"
+  );
 }
 
 /**

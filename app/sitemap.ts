@@ -13,16 +13,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // ── الصفحات الثابتة ──
   const staticPages: MetadataRoute.Sitemap = [
-    { url: SITE,                       lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
-    { url: `${SITE}/search`,           lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    { url: `${SITE}/properties`,       lastModified: now, changeFrequency: "daily",   priority: 0.9 },
-    { url: `${SITE}/mortgage`,         lastModified: now, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${SITE}/login`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
-    { url: `${SITE}/register`,         lastModified: now, changeFrequency: "yearly",  priority: 0.5 },
-    { url: `${SITE}/privacy`,          lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
-    { url: `${SITE}/terms`,            lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
-    { url: `${SITE}/data-processing`,  lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
-    { url: `${SITE}/license`,          lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
+    { url: SITE, lastModified: now, changeFrequency: "weekly", priority: 1.0 },
+    { url: `${SITE}/search`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${SITE}/properties`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${SITE}/mortgage`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE}/login`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/register`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${SITE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE}/data-processing`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${SITE}/license`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
   ];
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {

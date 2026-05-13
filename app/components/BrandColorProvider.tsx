@@ -43,7 +43,9 @@ export default function BrandColorProvider() {
     async function load() {
       try {
         // 1. حاول قراءة الـ tenant الخاص بالمستخدم الحالي (الأدق مع RLS)
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         let row: any = null;
 
         if (user) {
@@ -77,9 +79,12 @@ export default function BrandColorProvider() {
 
         // كاش محلي للـ first-paint بعد reload
         try {
-          if (row.color_accent)      localStorage.setItem("wasit_brand_accent", row.color_accent);
-          if (row.color_accent_dark) localStorage.setItem("wasit_brand_accent_dark", row.color_accent_dark);
-        } catch { /* تجاهل */ }
+          if (row.color_accent) localStorage.setItem("wasit_brand_accent", row.color_accent);
+          if (row.color_accent_dark)
+            localStorage.setItem("wasit_brand_accent_dark", row.color_accent_dark);
+        } catch {
+          /* تجاهل */
+        }
       } catch {
         // تجاهُل — الوضع الافتراضي يبقى
       }
@@ -90,7 +95,9 @@ export default function BrandColorProvider() {
       const cached1 = localStorage.getItem("wasit_brand_accent");
       const cached2 = localStorage.getItem("wasit_brand_accent_dark");
       if (cached1) applyOverrides(cached1, cached2 || undefined);
-    } catch { /* تجاهل */ }
+    } catch {
+      /* تجاهل */
+    }
 
     load();
 

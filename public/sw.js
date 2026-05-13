@@ -24,9 +24,11 @@ self.addEventListener("install", (event) => {
 // ── Activate: clean old caches ──
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      )
   );
   self.clients.claim();
 });
@@ -50,7 +52,8 @@ self.addEventListener("fetch", (event) => {
     url.hostname.includes("openai.com") ||
     url.hostname.includes("anthropic.com") ||
     url.hostname.includes("googleapis.com")
-  ) return;
+  )
+    return;
 
   // ── API routes: network-first ──
   if (url.pathname.startsWith("/api/")) {
@@ -76,7 +79,9 @@ self.addEventListener("fetch", (event) => {
 
   // الباقي: try cache then network
   event.respondWith(
-    caches.match(req).then((cached) => cached || fetch(req).catch(() => new Response("", { status: 503 })))
+    caches
+      .match(req)
+      .then((cached) => cached || fetch(req).catch(() => new Response("", { status: 503 })))
   );
 });
 

@@ -10,9 +10,9 @@ import { Inbox, FileText, Settings as SettingsIcon } from "lucide-react";
 // ══════════════════════════════════════════════════════════════
 
 const TABS = [
-  { href: "/dashboard/whatsapp/inbox",    label: "المحادثات",        icon: Inbox },
-  { href: "/dashboard/whatsapp",          label: "قوالب + استيراد",  icon: FileText, exact: true },
-  { href: "/dashboard/whatsapp/settings", label: "الإعدادات",        icon: SettingsIcon },
+  { href: "/dashboard/whatsapp/inbox", label: "المحادثات", icon: Inbox },
+  { href: "/dashboard/whatsapp", label: "قوالب + استيراد", icon: FileText, exact: true },
+  { href: "/dashboard/whatsapp/settings", label: "الإعدادات", icon: SettingsIcon },
 ];
 
 export default function WhatsAppLayout({ children }: { children: React.ReactNode }) {
@@ -27,7 +27,7 @@ export default function WhatsAppLayout({ children }: { children: React.ReactNode
     <div dir="rtl" className="space-y-3">
       {/* تبويبات فقط — العنوان والوصف من صفحة كل tab */}
       <div
-        className="flex flex-wrap gap-1 p-1 rounded-xl"
+        className="flex flex-wrap gap-1 rounded-xl p-1"
         style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
       >
         {TABS.map((t) => {
@@ -36,7 +36,7 @@ export default function WhatsAppLayout({ children }: { children: React.ReactNode
             <Link
               key={t.href}
               href={t.href}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg no-underline text-sm transition"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm no-underline transition"
               style={{
                 background: active ? "var(--gold-bg)" : "transparent",
                 color: active ? "var(--gold-2)" : "var(--text-soft)",

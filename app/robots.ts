@@ -23,13 +23,13 @@ export default function robots(): MetadataRoute.Robots {
           "/terms",
           "/data-processing",
           "/license",
-          "/c/",       // بطاقات الوسطاء العامة
+          "/c/", // بطاقات الوسطاء العامة
         ],
         disallow: [
           "/dashboard/",
           "/admin/",
           "/api/",
-          "/sign/",     // روابط توقيع العقود (خاصة)
+          "/sign/", // روابط توقيع العقود (خاصة)
           "/onboarding",
         ],
       },

@@ -5,7 +5,6 @@ import { Check, X, Zap, Crown, Gift, Loader2, CreditCard, Lock } from "lucide-re
 import { PLAN_PRICES } from "@/lib/moyasar";
 import { toast } from "sonner";
 
-
 // ══ تعريف الخطط ══════════════════════════════════════════
 const PLANS = [
   {
@@ -18,13 +17,13 @@ const PLANS = [
     desc: "للبدء وتجربة المنصة",
     limits: { properties: 5, clients: 10, ai_requests: 0, documents: false },
     features: [
-      { label: "٥ عقارات",               included: true  },
-      { label: "١٠ عملاء",               included: true  },
-      { label: "إدارة الصفقات والمهام",   included: true  },
-      { label: "صفحة هبوط خاصة",         included: true  },
-      { label: "وكيل المحتوى الذكي",      included: false },
-      { label: "الوثائق القانونية",       included: false },
-      { label: "التحليل المالي",          included: false },
+      { label: "٥ عقارات", included: true },
+      { label: "١٠ عملاء", included: true },
+      { label: "إدارة الصفقات والمهام", included: true },
+      { label: "صفحة هبوط خاصة", included: true },
+      { label: "وكيل المحتوى الذكي", included: false },
+      { label: "الوثائق القانونية", included: false },
+      { label: "التحليل المالي", included: false },
       { label: "غرفة المحتوى (٣ نماذج)", included: false },
     ],
   },
@@ -39,14 +38,14 @@ const PLANS = [
     badge: "الأكثر طلباً",
     limits: { properties: 50, clients: -1, ai_requests: 50, documents: true },
     features: [
-      { label: "٥٠ عقاراً",               included: true  },
-      { label: "عملاء غير محدودين",        included: true  },
-      { label: "إدارة الصفقات والمهام",    included: true  },
-      { label: "صفحة هبوط خاصة",          included: true  },
+      { label: "٥٠ عقاراً", included: true },
+      { label: "عملاء غير محدودين", included: true },
+      { label: "إدارة الصفقات والمهام", included: true },
+      { label: "صفحة هبوط خاصة", included: true },
       { label: "وكيل المحتوى (٥٠ طلب/شهر)", included: true },
-      { label: "الوثائق القانونية",        included: true  },
-      { label: "التحليل المالي",           included: true  },
-      { label: "غرفة المحتوى (٣ نماذج)",  included: false },
+      { label: "الوثائق القانونية", included: true },
+      { label: "التحليل المالي", included: true },
+      { label: "غرفة المحتوى (٣ نماذج)", included: false },
     ],
   },
   {
@@ -59,14 +58,14 @@ const PLANS = [
     desc: "بدون قيود للمحترف",
     limits: { properties: -1, clients: -1, ai_requests: -1, documents: true },
     features: [
-      { label: "عقارات غير محدودة",        included: true },
-      { label: "عملاء غير محدودين",        included: true },
-      { label: "إدارة الصفقات والمهام",    included: true },
-      { label: "صفحة هبوط خاصة",          included: true },
+      { label: "عقارات غير محدودة", included: true },
+      { label: "عملاء غير محدودين", included: true },
+      { label: "إدارة الصفقات والمهام", included: true },
+      { label: "صفحة هبوط خاصة", included: true },
       { label: "وكيل المحتوى (غير محدود)", included: true },
-      { label: "الوثائق القانونية",        included: true },
-      { label: "التحليل المالي",           included: true },
-      { label: "غرفة المحتوى (٣ نماذج)",  included: true },
+      { label: "الوثائق القانونية", included: true },
+      { label: "التحليل المالي", included: true },
+      { label: "غرفة المحتوى (٣ نماذج)", included: true },
     ],
   },
 ];
@@ -80,17 +79,32 @@ type UsageData = {
 
 export default function SubscriptionPage() {
   const [currentPlan, setCurrentPlan] = useState<string>("free");
-  const [settingsId, setSettingsId]   = useState<string | null>(null);
-  const [usage, setUsage]             = useState<UsageData>({ properties: 0, clients: 0, ai_requests: 0, documents: 0 });
-  const [loading, setLoading]         = useState(true);
-  const [upgrading, setUpgrading]     = useState<string | null>(null);
+  const [settingsId, setSettingsId] = useState<string | null>(null);
+  const [usage, setUsage] = useState<UsageData>({
+    properties: 0,
+    clients: 0,
+    ai_requests: 0,
+    documents: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [upgrading, setUpgrading] = useState<string | null>(null);
 
   // Payment modal
-  const [payModal, setPayModal] = useState<{ plan: string; billing: "monthly" | "yearly" } | null>(null);
-  const [payForm, setPayForm]   = useState({ card_name: "", card_number: "", card_cvc: "", card_month: "", card_year: "" });
-  const [paying, setPaying]     = useState(false);
+  const [payModal, setPayModal] = useState<{ plan: string; billing: "monthly" | "yearly" } | null>(
+    null
+  );
+  const [payForm, setPayForm] = useState({
+    card_name: "",
+    card_number: "",
+    card_cvc: "",
+    card_month: "",
+    card_year: "",
+  });
+  const [paying, setPaying] = useState(false);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    loadData();
+  }, []);
 
   async function loadData() {
     const [settingsRes, propsRes, clientsRes, aiRes, docsRes] = await Promise.all([
@@ -112,7 +126,7 @@ export default function SubscriptionPage() {
           .from("site_settings")
           .update({ plan: "pro" })
           .eq("id", settingsRes.data.id);
-        
+
         if (!updateErr) {
           setCurrentPlan("pro");
         } else {
@@ -130,9 +144,9 @@ export default function SubscriptionPage() {
 
     setUsage({
       properties: propsRes.count || 0,
-      clients:    clientsRes.count || 0,
+      clients: clientsRes.count || 0,
       ai_requests: aiRes.count || 0,
-      documents:  docsRes.count || 0,
+      documents: docsRes.count || 0,
     });
     setLoading(false);
   }
@@ -163,7 +177,8 @@ export default function SubscriptionPage() {
     if (!payModal) return;
     const { card_name, card_number, card_cvc, card_month, card_year } = payForm;
     if (!card_name || !card_number || !card_cvc || !card_month || !card_year) {
-      toast.error("أكمل بيانات البطاقة"); return;
+      toast.error("أكمل بيانات البطاقة");
+      return;
     }
     setPaying(true);
     try {
@@ -188,44 +203,78 @@ export default function SubscriptionPage() {
     setPaying(false);
   }
 
-  const activePlan = PLANS.find(p => p.id === currentPlan) || PLANS[0];
+  const activePlan = PLANS.find((p) => p.id === currentPlan) || PLANS[0];
 
-  if (loading) return (
-    <div dir="rtl" className="p-4 space-y-4">
-      <div className="skeleton h-8 rounded w-48 mb-6" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[1,2,3].map(i => <div key={i} className="skeleton rounded-xl h-80" />)}
+  if (loading)
+    return (
+      <div dir="rtl" className="space-y-4 p-4">
+        <div className="skeleton mb-6 h-8 w-48 rounded" />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="skeleton h-80 rounded-xl" />
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div dir="rtl">
       {/* ── Header ── */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-1">خطط الاشتراك</h2>
-        <p style={{ color: "var(--text-soft)", fontSize: 14 }}>اختر الخطة المناسبة لنشاطك العقاري</p>
+        <h2 className="mb-1 text-2xl font-bold">خطط الاشتراك</h2>
+        <p style={{ color: "var(--text-soft)", fontSize: 14 }}>
+          اختر الخطة المناسبة لنشاطك العقاري
+        </p>
       </div>
 
       {/* ── الخطة الحالية + الاستهلاك ── */}
-      <div className="mb-8 rounded-xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-hover)" }}>
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div
+        className="mb-8 rounded-xl p-5"
+        style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-hover)" }}
+      >
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div style={{ width: 42, height: 42, borderRadius: 11, background: `${activePlan.color}18`, border: `1px solid ${activePlan.color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 11,
+                background: `${activePlan.color}18`,
+                border: `1px solid ${activePlan.color}30`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <activePlan.icon size={20} style={{ color: activePlan.color }} />
             </div>
             <div>
-              <p style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 2 }}>خطتك الحالية</p>
-              <p className="font-bold" style={{ color: activePlan.color, fontSize: 18 }}>{activePlan.name}</p>
+              <p style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 2 }}>
+                خطتك الحالية
+              </p>
+              <p className="font-bold" style={{ color: activePlan.color, fontSize: 18 }}>
+                {activePlan.name}
+              </p>
             </div>
           </div>
           {currentPlan !== "free" && (
-            <span style={{ fontSize: 12, color: "var(--success)", background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 100, padding: "5px 14px" }}>نشطة ✓</span>
+            <span
+              style={{
+                fontSize: 12,
+                color: "var(--success)",
+                background: "rgba(74,222,128,0.08)",
+                border: "1px solid rgba(74,222,128,0.2)",
+                borderRadius: 100,
+                padding: "5px 14px",
+              }}
+            >
+              نشطة ✓
+            </span>
           )}
         </div>
 
         {/* شريط الاستهلاك */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             {
               label: "العقارات",
@@ -250,21 +299,52 @@ export default function SubscriptionPage() {
           ].map((item, i) => {
             const pct = item.limit <= 0 ? 100 : Math.min((item.used / item.limit) * 100, 100);
             const isUnlimited = item.limit === -1;
-            const isBlocked   = item.limit === 0;
-            const barColor = isBlocked ? "var(--border-1)" : pct >= 90 ? "#EF4444" : pct >= 70 ? "#F59E0B" : "var(--success)";
+            const isBlocked = item.limit === 0;
+            const barColor = isBlocked
+              ? "var(--border-1)"
+              : pct >= 90
+                ? "#EF4444"
+                : pct >= 70
+                  ? "#F59E0B"
+                  : "var(--success)";
             return (
               <div key={i} className="rounded-lg p-3" style={{ background: "var(--bg-surface-2)" }}>
-                <div className="flex justify-between items-center mb-2">
+                <div className="mb-2 flex items-center justify-between">
                   <span style={{ fontSize: 12, color: "var(--text-soft)" }}>{item.label}</span>
-                  <span style={{ fontSize: 11, color: isBlocked ? "var(--border-1)" : "var(--text-strong)", fontWeight: 600 }}>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      color: isBlocked ? "var(--border-1)" : "var(--text-strong)",
+                      fontWeight: 600,
+                    }}
+                  >
                     {isBlocked ? "—" : isUnlimited ? `${item.used}` : `${item.used}/${item.limit}`}
                   </span>
                 </div>
-                <div style={{ height: 4, background: "var(--bg-surface-3)", borderRadius: 2, overflow: "hidden" }}>
-                  <div style={{ width: `${isBlocked ? 0 : pct}%`, height: "100%", background: barColor, borderRadius: 2, transition: "width 0.5s ease" }} />
+                <div
+                  style={{
+                    height: 4,
+                    background: "var(--bg-surface-3)",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${isBlocked ? 0 : pct}%`,
+                      height: "100%",
+                      background: barColor,
+                      borderRadius: 2,
+                      transition: "width 0.5s ease",
+                    }}
+                  />
                 </div>
                 <p style={{ fontSize: 10, color: "var(--text-faint)", marginTop: 4 }}>
-                  {isBlocked ? "غير متاح في خطتك" : isUnlimited ? "غير محدود" : `${Math.round(pct)}% مستخدم`}
+                  {isBlocked
+                    ? "غير متاح في خطتك"
+                    : isUnlimited
+                      ? "غير محدود"
+                      : `${Math.round(pct)}% مستخدم`}
                 </p>
               </div>
             );
@@ -273,16 +353,16 @@ export default function SubscriptionPage() {
       </div>
 
       {/* ── بطاقات الخطط ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        {PLANS.map(plan => {
-          const isCurrent  = plan.id === currentPlan;
+      <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
+        {PLANS.map((plan) => {
+          const isCurrent = plan.id === currentPlan;
           const isUpgrading = upgrading === plan.id;
-          const PlanIcon   = plan.icon;
+          const PlanIcon = plan.icon;
 
           return (
             <div
               key={plan.id}
-              className="rounded-xl p-6 flex flex-col"
+              className="flex flex-col rounded-xl p-6"
               style={{
                 background: "var(--bg-surface-1)",
                 border: isCurrent ? `1px solid ${plan.color}50` : "1px solid var(--gold-bg)",
@@ -292,23 +372,62 @@ export default function SubscriptionPage() {
             >
               {/* Badge */}
               {"badge" in plan && plan.badge && (
-                <div style={{ position: "absolute", top: -12, right: 20, fontSize: 11, fontWeight: 700, color: "var(--bg-page)", background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", padding: "4px 12px", borderRadius: 100 }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: -12,
+                    right: 20,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "var(--bg-page)",
+                    background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                    padding: "4px 12px",
+                    borderRadius: 100,
+                  }}
+                >
                   {plan.badge}
                 </div>
               )}
               {isCurrent && (
-                <div style={{ position: "absolute", top: -12, left: 20, fontSize: 11, fontWeight: 700, color: plan.color, background: `${plan.color}15`, border: `1px solid ${plan.color}30`, padding: "4px 12px", borderRadius: 100 }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: -12,
+                    left: 20,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: plan.color,
+                    background: `${plan.color}15`,
+                    border: `1px solid ${plan.color}30`,
+                    padding: "4px 12px",
+                    borderRadius: 100,
+                  }}
+                >
                   خطتك الحالية
                 </div>
               )}
 
               {/* أيقونة واسم */}
-              <div className="flex items-center gap-3 mb-4">
-                <div style={{ width: 44, height: 44, borderRadius: 11, background: `${plan.color}12`, border: `1px solid ${plan.color}25`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <div className="mb-4 flex items-center gap-3">
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 11,
+                    background: `${plan.color}12`,
+                    border: `1px solid ${plan.color}25`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
                   <PlanIcon size={20} style={{ color: plan.color }} />
                 </div>
                 <div>
-                  <h3 className="font-bold" style={{ fontSize: 17, color: "var(--text-strong)" }}>{plan.name}</h3>
+                  <h3 className="font-bold" style={{ fontSize: 17, color: "var(--text-strong)" }}>
+                    {plan.name}
+                  </h3>
                   <p style={{ fontSize: 12, color: "var(--text-faint)" }}>{plan.desc}</p>
                 </div>
               </div>
@@ -317,32 +436,66 @@ export default function SubscriptionPage() {
               <div className="mb-5 pb-5" style={{ borderBottom: "1px solid var(--gold-bg)" }}>
                 {plan.price === 0 ? (
                   <>
-                    <span className="font-bold" style={{ fontSize: 26, color: "var(--text-strong)" }}>مجاناً</span>
-                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 4 }}>للأبد</div>
+                    <span
+                      className="font-bold"
+                      style={{ fontSize: 26, color: "var(--text-strong)" }}
+                    >
+                      مجاناً
+                    </span>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 4 }}>
+                      للأبد
+                    </div>
                   </>
                 ) : (
                   <>
                     <div className="flex items-end gap-1">
-                      <span className="font-bold" style={{ fontSize: 28, color: plan.color }}>{plan.price}</span>
-                      <span style={{ fontSize: 13, color: "var(--text-faint)", marginBottom: 4 }}>ر.س / شهر</span>
+                      <span className="font-bold" style={{ fontSize: 28, color: plan.color }}>
+                        {plan.price}
+                      </span>
+                      <span style={{ fontSize: 13, color: "var(--text-faint)", marginBottom: 4 }}>
+                        ر.س / شهر
+                      </span>
                     </div>
                     {/* السعر السنوي بخصم ١٧٪ */}
-                    <div style={{ marginTop: 6, fontSize: 11.5, color: "var(--text-soft)", display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                    <div
+                      style={{
+                        marginTop: 6,
+                        fontSize: 11.5,
+                        color: "var(--text-soft)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        flexWrap: "wrap",
+                      }}
+                    >
                       <span>أو</span>
                       <strong style={{ color: "var(--gold-2)", fontSize: 12.5 }}>
                         {/* السعر السنوي بخصم ١٧٪: ١٢ شهر × السعر × ٠.٨٣ */}
-                        {Math.round(plan.price * 12 * 0.83 / 10) * 10} ر.س
+                        {Math.round((plan.price * 12 * 0.83) / 10) * 10} ر.س
                       </strong>
                       <span>سنوياً</span>
-                      <span style={{ background:"var(--success-bg)", color:"var(--success)", padding:"1px 6px", borderRadius:4, fontSize:10, fontWeight:700 }}>وفّر ١٧٪</span>
+                      <span
+                        style={{
+                          background: "var(--success-bg)",
+                          color: "var(--success)",
+                          padding: "1px 6px",
+                          borderRadius: 4,
+                          fontSize: 10,
+                          fontWeight: 700,
+                        }}
+                      >
+                        وفّر ١٧٪
+                      </span>
                     </div>
-                    <div style={{ fontSize: 10.5, color: "var(--text-faint)", marginTop: 4 }}>الأسعار شاملة ضريبة القيمة المضافة (١٥٪)</div>
+                    <div style={{ fontSize: 10.5, color: "var(--text-faint)", marginTop: 4 }}>
+                      الأسعار شاملة ضريبة القيمة المضافة (١٥٪)
+                    </div>
                   </>
                 )}
               </div>
 
               {/* المميزات */}
-              <ul className="space-y-2 flex-1 mb-6">
+              <ul className="mb-6 flex-1 space-y-2">
                 {plan.features.map((feat, i) => (
                   <li key={i} className="flex items-center gap-2" style={{ fontSize: 13 }}>
                     {feat.included ? (
@@ -350,7 +503,12 @@ export default function SubscriptionPage() {
                     ) : (
                       <X size={14} style={{ color: "var(--border-1)", flexShrink: 0 }} />
                     )}
-                    <span style={{ color: feat.included ? "var(--text-secondary)" : "var(--border-1)", textDecoration: feat.included ? "none" : "line-through" }}>
+                    <span
+                      style={{
+                        color: feat.included ? "var(--text-secondary)" : "var(--border-1)",
+                        textDecoration: feat.included ? "none" : "line-through",
+                      }}
+                    >
                       {feat.label}
                     </span>
                   </li>
@@ -378,18 +536,26 @@ export default function SubscriptionPage() {
                   background: isCurrent
                     ? `${plan.color}15`
                     : plan.id === "basic"
-                    ? "linear-gradient(135deg, var(--gold-2), var(--gold-3))"
-                    : plan.id === "pro"
-                    ? "linear-gradient(135deg, var(--gold-1), var(--gold-2))"
-                    : "var(--bg-surface-2)",
-                  color: isCurrent ? plan.color : plan.id === "free" ? "var(--text-soft)" : "var(--bg-page)",
+                      ? "linear-gradient(135deg, var(--gold-2), var(--gold-3))"
+                      : plan.id === "pro"
+                        ? "linear-gradient(135deg, var(--gold-1), var(--gold-2))"
+                        : "var(--bg-surface-2)",
+                  color: isCurrent
+                    ? plan.color
+                    : plan.id === "free"
+                      ? "var(--text-soft)"
+                      : "var(--bg-page)",
                   opacity: isUpgrading !== null && !isUpgrading ? 0.5 : 1,
                 }}
               >
                 {isUpgrading ? (
-                  <><Loader2 size={15} className="animate-spin" /> جاري الترقية...</>
+                  <>
+                    <Loader2 size={15} className="animate-spin" /> جاري الترقية...
+                  </>
                 ) : isCurrent ? (
-                  <><Check size={15} /> خطتك الحالية</>
+                  <>
+                    <Check size={15} /> خطتك الحالية
+                  </>
                 ) : plan.id === "free" ? (
                   "الرجوع للمجاني"
                 ) : (
@@ -402,40 +568,70 @@ export default function SubscriptionPage() {
       </div>
 
       {/* ── ملاحظة الأمان ── */}
-      <div className="rounded-xl p-4" style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}>
+      <div
+        className="rounded-xl p-4"
+        style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}
+      >
         <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8 }}>
-          <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>🔒 دفع آمن:</span>{" "}
-          نعتمد بوابة <strong style={{ color:"var(--text-strong)" }}>ميسر</strong> المرخّصة من البنك المركزي السعودي.
-          جميع المعاملات مشفّرة ومتوافقة مع معيار <strong>PCI-DSS</strong>.
-          الأسعار شاملة ضريبة القيمة المضافة (١٥٪).
+          <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>🔒 دفع آمن:</span> نعتمد بوابة{" "}
+          <strong style={{ color: "var(--text-strong)" }}>ميسر</strong> المرخّصة من البنك المركزي
+          السعودي. جميع المعاملات مشفّرة ومتوافقة مع معيار <strong>PCI-DSS</strong>. الأسعار شاملة
+          ضريبة القيمة المضافة (١٥٪).
         </p>
       </div>
 
       {/* ══ Payment Modal ══ */}
       {payModal && (
         <>
-          <div className="fixed inset-0 z-50" style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }} onClick={() => !paying && setPayModal(null)} />
+          <div
+            className="fixed inset-0 z-50"
+            style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}
+            onClick={() => !paying && setPayModal(null)}
+          />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl p-6" style={{ background: "var(--bg-deep)", border: "1px solid var(--gold-bg-hover)" }} onClick={e => e.stopPropagation()}>
+            <div
+              className="w-full max-w-md rounded-2xl p-6"
+              style={{ background: "var(--bg-deep)", border: "1px solid var(--gold-bg-hover)" }}
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Header */}
-              <div className="flex items-center justify-between mb-5">
+              <div className="mb-5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CreditCard size={18} style={{ color: "var(--gold-2)" }} />
                   <h3 className="font-bold" style={{ fontSize: 16, color: "var(--text-strong)" }}>
                     ادفع واشترك — {PLAN_PRICES[payModal.plan]?.label}
                   </h3>
                 </div>
-                <button onClick={() => setPayModal(null)} style={{ background: "none", border: "none", color: "var(--text-faint)", cursor: "pointer" }}>
+                <button
+                  onClick={() => setPayModal(null)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "var(--text-faint)",
+                    cursor: "pointer",
+                  }}
+                >
                   <X size={18} />
                 </button>
               </div>
 
               {/* Billing toggle */}
-              <div className="flex gap-2 mb-5 p-1 rounded-xl" style={{ background: "var(--bg-surface-2)" }}>
-                {(["monthly", "yearly"] as const).map(b => (
-                  <button key={b} onClick={() => setPayModal(m => m ? { ...m, billing: b } : null)}
-                    className="flex-1 py-2 rounded-lg text-sm font-bold transition"
-                    style={{ background: payModal.billing === b ? "var(--gold-bg-hover)" : "transparent", color: payModal.billing === b ? "var(--gold-2)" : "var(--text-faint)", border: "none", cursor: "pointer" }}>
+              <div
+                className="mb-5 flex gap-2 rounded-xl p-1"
+                style={{ background: "var(--bg-surface-2)" }}
+              >
+                {(["monthly", "yearly"] as const).map((b) => (
+                  <button
+                    key={b}
+                    onClick={() => setPayModal((m) => (m ? { ...m, billing: b } : null))}
+                    className="flex-1 rounded-lg py-2 text-sm font-bold transition"
+                    style={{
+                      background: payModal.billing === b ? "var(--gold-bg-hover)" : "transparent",
+                      color: payModal.billing === b ? "var(--gold-2)" : "var(--text-faint)",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
                     {b === "monthly"
                       ? `شهري — ${PLAN_PRICES[payModal.plan]?.monthly} ر.س`
                       : `سنوي — ${PLAN_PRICES[payModal.plan]?.yearly} ر.س`}
@@ -445,39 +641,110 @@ export default function SubscriptionPage() {
 
               {/* Card fields */}
               {[
-                { key: "card_name",   label: "اسم حامل البطاقة", placeholder: "AHMED AL-OTAIBI", dir: "ltr" as const },
-                { key: "card_number", label: "رقم البطاقة",      placeholder: "4111 1111 1111 1111", dir: "ltr" as const },
-              ].map(f => (
+                {
+                  key: "card_name",
+                  label: "اسم حامل البطاقة",
+                  placeholder: "AHMED AL-OTAIBI",
+                  dir: "ltr" as const,
+                },
+                {
+                  key: "card_number",
+                  label: "رقم البطاقة",
+                  placeholder: "4111 1111 1111 1111",
+                  dir: "ltr" as const,
+                },
+              ].map((f) => (
                 <div key={f.key} className="mb-3">
-                  <label style={{ display: "block", fontSize: 11, color: "var(--text-soft)", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
-                  <input value={(payForm as any)[f.key]} onChange={e => setPayForm(p => ({ ...p, [f.key]: e.target.value }))}
-                    placeholder={f.placeholder} dir={f.dir}
-                    className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition"
-                    style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)" }} />
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      color: "var(--text-soft)",
+                      fontWeight: 600,
+                      marginBottom: 6,
+                    }}
+                  >
+                    {f.label}
+                  </label>
+                  <input
+                    value={(payForm as any)[f.key]}
+                    onChange={(e) => setPayForm((p) => ({ ...p, [f.key]: e.target.value }))}
+                    placeholder={f.placeholder}
+                    dir={f.dir}
+                    className="w-full rounded-xl px-4 py-3 text-sm transition focus:outline-none"
+                    style={{
+                      background: "var(--bg-surface-2)",
+                      border: "1px solid var(--gold-bg-hover)",
+                      color: "var(--text-strong)",
+                    }}
+                  />
                 </div>
               ))}
-              <div className="grid grid-cols-3 gap-3 mb-5">
+              <div className="mb-5 grid grid-cols-3 gap-3">
                 {[
-                  { key: "card_cvc",   label: "CVV",    placeholder: "123" },
-                  { key: "card_month", label: "الشهر",  placeholder: "12"  },
-                  { key: "card_year",  label: "السنة",  placeholder: "2027" },
-                ].map(f => (
+                  { key: "card_cvc", label: "CVV", placeholder: "123" },
+                  { key: "card_month", label: "الشهر", placeholder: "12" },
+                  { key: "card_year", label: "السنة", placeholder: "2027" },
+                ].map((f) => (
                   <div key={f.key}>
-                    <label style={{ display: "block", fontSize: 11, color: "var(--text-soft)", fontWeight: 600, marginBottom: 6 }}>{f.label}</label>
-                    <input value={(payForm as any)[f.key]} onChange={e => setPayForm(p => ({ ...p, [f.key]: e.target.value }))}
-                      placeholder={f.placeholder} dir="ltr"
-                      className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none transition"
-                      style={{ background: "var(--bg-surface-2)", border: "1px solid var(--gold-bg-hover)", color: "var(--text-strong)" }} />
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: 11,
+                        color: "var(--text-soft)",
+                        fontWeight: 600,
+                        marginBottom: 6,
+                      }}
+                    >
+                      {f.label}
+                    </label>
+                    <input
+                      value={(payForm as any)[f.key]}
+                      onChange={(e) => setPayForm((p) => ({ ...p, [f.key]: e.target.value }))}
+                      placeholder={f.placeholder}
+                      dir="ltr"
+                      className="w-full rounded-xl px-3 py-3 text-sm transition focus:outline-none"
+                      style={{
+                        background: "var(--bg-surface-2)",
+                        border: "1px solid var(--gold-bg-hover)",
+                        color: "var(--text-strong)",
+                      }}
+                    />
                   </div>
                 ))}
               </div>
 
-              <button onClick={handlePay} disabled={paying}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition"
-                style={{ background: paying ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", border: "none", cursor: paying ? "not-allowed" : "pointer" }}>
-                {paying ? <><Loader2 size={15} className="animate-spin" /> جارٍ الدفع...</> : <><Lock size={14} /> ادفع بأمان الآن</>}
+              <button
+                onClick={handlePay}
+                disabled={paying}
+                className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-bold transition"
+                style={{
+                  background: paying
+                    ? "rgba(198,145,76,0.4)"
+                    : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                  color: "var(--bg-page)",
+                  border: "none",
+                  cursor: paying ? "not-allowed" : "pointer",
+                }}
+              >
+                {paying ? (
+                  <>
+                    <Loader2 size={15} className="animate-spin" /> جارٍ الدفع...
+                  </>
+                ) : (
+                  <>
+                    <Lock size={14} /> ادفع بأمان الآن
+                  </>
+                )}
               </button>
-              <p style={{ fontSize: 11, color: "var(--border-1)", textAlign: "center", marginTop: 10 }}>
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--border-1)",
+                  textAlign: "center",
+                  marginTop: 10,
+                }}
+              >
                 مُؤمَّن عبر بوابة ميسر · تشفير SSL
               </p>
             </div>

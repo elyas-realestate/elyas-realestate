@@ -33,7 +33,9 @@ export async function POST(req: Request) {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرّح" }, { status: 401 });
 
     // اعثر على tenant المستخدم
@@ -49,19 +51,17 @@ export async function POST(req: Request) {
       .limit(1)
       .single();
 
-    if (!tenant) return NextResponse.json({ error: "لا يوجد tenant مرتبط بحسابك" }, { status: 404 });
+    if (!tenant)
+      return NextResponse.json({ error: "لا يوجد tenant مرتبط بحسابك" }, { status: 404 });
 
     // حدّث الحالة
     const updates: Record<string, unknown> = {
       system_master_active: active,
       master_paused_at: active ? null : new Date().toISOString(),
-      master_paused_reason: active ? null : (reason || "إيقاف يدوي من المالك"),
+      master_paused_reason: active ? null : reason || "إيقاف يدوي من المالك",
     };
 
-    const { error: upErr } = await admin
-      .from("tenants")
-      .update(updates)
-      .eq("id", tenant.id);
+    const { error: upErr } = await admin.from("tenants").update(updates).eq("id", tenant.id);
 
     if (upErr) return NextResponse.json({ error: upErr.message }, { status: 500 });
 

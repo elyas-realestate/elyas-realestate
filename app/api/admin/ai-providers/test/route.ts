@@ -29,18 +29,22 @@ interface ProviderResult {
 
 // روابط مباشرة لصفحات الفواتير لكل مزوّد
 const BILLING_URLS: Record<string, string> = {
-  openai:    "https://platform.openai.com/settings/organization/billing/overview",
+  openai: "https://platform.openai.com/settings/organization/billing/overview",
   anthropic: "https://console.anthropic.com/settings/billing",
-  google:    "https://console.cloud.google.com/billing",
-  groq:      "https://console.groq.com/settings/billing",
-  deepseek:  "https://platform.deepseek.com/usage",
-  xai:       "https://console.x.ai",
-  manus:     "https://manus.ai",
+  google: "https://console.cloud.google.com/billing",
+  groq: "https://console.groq.com/settings/billing",
+  deepseek: "https://platform.deepseek.com/usage",
+  xai: "https://console.x.ai",
+  manus: "https://manus.ai",
 };
 
 const TIMEOUT_MS = 15000;
 
-async function fetchWithTimeout(url: string, init: RequestInit, timeout = TIMEOUT_MS): Promise<Response> {
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit,
+  timeout = TIMEOUT_MS
+): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   try {
@@ -82,15 +86,21 @@ async function testOpenAI(apiKey: string): Promise<Partial<ProviderResult>> {
     // محاولة جلب رصيد عبر endpoint قديم — يعمل لبعض الحسابات الترايل
     let balance_usd: number | undefined;
     try {
-      const balRes = await fetchWithTimeout("https://api.openai.com/dashboard/billing/credit_grants", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${apiKey}` },
-      }, 4000);
+      const balRes = await fetchWithTimeout(
+        "https://api.openai.com/dashboard/billing/credit_grants",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${apiKey}` },
+        },
+        4000
+      );
       if (balRes.ok) {
         const balData = await balRes.json();
         if (typeof balData.total_available === "number") balance_usd = balData.total_available;
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     // rate limit headers
     const rateLimitRemaining = res.headers.get("x-ratelimit-remaining-tokens");
@@ -217,17 +227,25 @@ async function testDeepSeek(apiKey: string): Promise<Partial<ProviderResult>> {
     // اجلب الرصيد إذا متاح
     let balance_usd: number | undefined;
     try {
-      const balRes = await fetchWithTimeout("https://api.deepseek.com/user/balance", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${apiKey}` },
-      }, 5000);
+      const balRes = await fetchWithTimeout(
+        "https://api.deepseek.com/user/balance",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${apiKey}` },
+        },
+        5000
+      );
       if (balRes.ok) {
         const balData = await balRes.json();
         // قد يحتوي على balance_infos[0].total_balance بدولار
-        const usdInfo = balData.balance_infos?.find((b: { currency?: string }) => b.currency === "USD");
+        const usdInfo = balData.balance_infos?.find(
+          (b: { currency?: string }) => b.currency === "USD"
+        );
         if (usdInfo?.total_balance) balance_usd = Number(usdInfo.total_balance);
       }
-    } catch { /* ignore balance failures */ }
+    } catch {
+      /* ignore balance failures */
+    }
 
     return { status: "ok", latency_ms, test_model: "deepseek-chat", balance_usd };
   } catch (e) {
@@ -261,15 +279,25 @@ async function testXAI(apiKey: string): Promise<Partial<ProviderResult>> {
     // اجلب معلومات key
     let team_status: string | undefined;
     try {
-      const keyRes = await fetchWithTimeout("https://api.x.ai/v1/api-key", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${apiKey}` },
-      }, 4000);
+      const keyRes = await fetchWithTimeout(
+        "https://api.x.ai/v1/api-key",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${apiKey}` },
+        },
+        4000
+      );
       if (keyRes.ok) {
         const keyData = await keyRes.json();
-        team_status = keyData.team_blocked ? "محظور" : keyData.api_key_blocked ? "مفتاح محظور" : "نشط";
+        team_status = keyData.team_blocked
+          ? "محظور"
+          : keyData.api_key_blocked
+            ? "مفتاح محظور"
+            : "نشط";
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     return { status: "ok", latency_ms, test_model: "grok-3", team_status };
   } catch (e) {
@@ -316,13 +344,33 @@ export async function GET(req: NextRequest) {
     apiKey: string;
     test: (k: string) => Promise<Partial<ProviderResult>>;
   }> = [
-    { provider: "openai",    label: "OpenAI (GPT)",        apiKey: process.env.OPENAI_API_KEY    || "", test: testOpenAI    },
-    { provider: "anthropic", label: "Anthropic (Claude)",   apiKey: process.env.ANTHROPIC_API_KEY || "", test: testAnthropic },
-    { provider: "google",    label: "Google (Gemini)",      apiKey: process.env.GOOGLE_API_KEY    || "", test: testGoogle    },
-    { provider: "groq",      label: "Groq",                 apiKey: process.env.GROQ_API_KEY      || "", test: testGroq      },
-    { provider: "deepseek",  label: "DeepSeek",             apiKey: process.env.DEEPSEEK_API_KEY  || "", test: testDeepSeek  },
-    { provider: "xai",       label: "xAI (Grok)",           apiKey: process.env.XAI_API_KEY       || "", test: testXAI       },
-    { provider: "manus",     label: "Manus",                apiKey: process.env.MANUS_API_KEY     || "", test: testManus     },
+    {
+      provider: "openai",
+      label: "OpenAI (GPT)",
+      apiKey: process.env.OPENAI_API_KEY || "",
+      test: testOpenAI,
+    },
+    {
+      provider: "anthropic",
+      label: "Anthropic (Claude)",
+      apiKey: process.env.ANTHROPIC_API_KEY || "",
+      test: testAnthropic,
+    },
+    {
+      provider: "google",
+      label: "Google (Gemini)",
+      apiKey: process.env.GOOGLE_API_KEY || "",
+      test: testGoogle,
+    },
+    { provider: "groq", label: "Groq", apiKey: process.env.GROQ_API_KEY || "", test: testGroq },
+    {
+      provider: "deepseek",
+      label: "DeepSeek",
+      apiKey: process.env.DEEPSEEK_API_KEY || "",
+      test: testDeepSeek,
+    },
+    { provider: "xai", label: "xAI (Grok)", apiKey: process.env.XAI_API_KEY || "", test: testXAI },
+    { provider: "manus", label: "Manus", apiKey: process.env.MANUS_API_KEY || "", test: testManus },
   ];
 
   const results: ProviderResult[] = await Promise.all(

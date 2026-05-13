@@ -8,7 +8,12 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export type GateResult =
   | { ok: true; count: number; limit: number }
-  | { ok: false; reason: "tenant_not_found" | "system_paused" | "daily_limit_reached"; count?: number; limit?: number };
+  | {
+      ok: false;
+      reason: "tenant_not_found" | "system_paused" | "daily_limit_reached";
+      count?: number;
+      limit?: number;
+    };
 
 let _admin: SupabaseClient | null = null;
 function admin(): SupabaseClient {
@@ -61,13 +66,15 @@ export async function gateAndLog(
   const gate = await assertSystemActive(tenantId);
   if (!gate.ok) {
     try {
-      await admin().from("org_activity_log").insert({
-        tenant_id: tenantId,
-        actor_kind: actorKind,
-        actor_id: actorId,
-        action: `${action}_skipped`,
-        details: { reason: gate.reason, gated: true },
-      });
+      await admin()
+        .from("org_activity_log")
+        .insert({
+          tenant_id: tenantId,
+          actor_kind: actorKind,
+          actor_id: actorId,
+          action: `${action}_skipped`,
+          details: { reason: gate.reason, gated: true },
+        });
     } catch (e) {
       console.warn("[system-gate] failed to log skip:", e);
     }
@@ -79,20 +86,26 @@ export async function gateAndLog(
  * تقدير تكلفة استدعاء AI (تقريبي بالدولار).
  * يستخدم لعرض cost meter في الـ UI.
  */
-export function estimateCallCost(provider: string, model: string, tokensIn = 1000, tokensOut = 500): number {
+export function estimateCallCost(
+  provider: string,
+  model: string,
+  tokensIn = 1000,
+  tokensOut = 500
+): number {
   // أسعار تقريبية ($/1M tokens) — حدّثها لو تغيّرت
   const rates: Record<string, { in: number; out: number }> = {
-    "openai/gpt-4o-mini":    { in: 0.15, out: 0.60 },
-    "openai/gpt-4o":         { in: 2.50, out: 10.00 },
-    "anthropic/claude-haiku-4-5-20251001": { in: 1.00, out: 5.00 },
-    "anthropic/claude-sonnet-4-5": { in: 3.00, out: 15.00 },
-    "google/gemini-2.5-flash": { in: 0.00, out: 0.00 }, // ضمن الـ free tier
-    "google/gemini-2.5-pro":   { in: 1.25, out: 5.00 },
-    "deepseek/deepseek-chat": { in: 0.27, out: 1.10 },
+    "openai/gpt-4o-mini": { in: 0.15, out: 0.6 },
+    "openai/gpt-4o": { in: 2.5, out: 10.0 },
+    "anthropic/claude-haiku-4-5-20251001": { in: 1.0, out: 5.0 },
+    "anthropic/claude-sonnet-4-5": { in: 3.0, out: 15.0 },
+    "google/gemini-2.5-flash": { in: 0.0, out: 0.0 }, // ضمن الـ free tier
+    "google/gemini-2.5-pro": { in: 1.25, out: 5.0 },
+    "deepseek/deepseek-chat": { in: 0.27, out: 1.1 },
     "groq/llama-3.3-70b-versatile": { in: 0.59, out: 0.79 },
-    "xai/grok-3":             { in: 5.00, out: 15.00 },
+    "xai/grok-3": { in: 5.0, out: 15.0 },
   };
   const key = `${provider}/${model}`;
-  const r = rates[key] || rates[`${provider}/${model.split("-").slice(0, 3).join("-")}`] || { in: 0.5, out: 2.0 };
-  return ((tokensIn * r.in) + (tokensOut * r.out)) / 1_000_000;
+  const r = rates[key] ||
+    rates[`${provider}/${model.split("-").slice(0, 3).join("-")}`] || { in: 0.5, out: 2.0 };
+  return (tokensIn * r.in + tokensOut * r.out) / 1_000_000;
 }

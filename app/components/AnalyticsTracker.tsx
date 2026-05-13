@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase-browser";
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-
 // الصفحات التي لا نريد تتبعها
 function isPrivatePage(pathname: string) {
   return pathname.startsWith("/dashboard") || pathname.startsWith("/login");

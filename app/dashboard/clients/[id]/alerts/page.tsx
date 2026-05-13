@@ -5,8 +5,17 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  Bell, Plus, Trash2, ChevronRight, Loader2, Sparkles,
-  MapPin, Home, AlertCircle, CheckCircle2, ExternalLink
+  Bell,
+  Plus,
+  Trash2,
+  ChevronRight,
+  Loader2,
+  Sparkles,
+  MapPin,
+  Home,
+  AlertCircle,
+  CheckCircle2,
+  ExternalLink,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase-browser";
 import SARIcon from "@/app/components/SARIcon";
@@ -153,7 +162,7 @@ export default function ClientAlertsPage() {
 
   if (!client) {
     return (
-      <div dir="rtl" className="text-center py-20">
+      <div dir="rtl" className="py-20 text-center">
         <p style={{ color: "var(--text-faint)" }}>العميل غير موجود</p>
         <Link href="/dashboard/clients" style={{ color: "var(--gold-2)" }}>
           العودة للعملاء
@@ -163,7 +172,7 @@ export default function ClientAlertsPage() {
   }
 
   return (
-    <div dir="rtl" className="space-y-4 max-w-4xl mx-auto">
+    <div dir="rtl" className="mx-auto max-w-4xl space-y-4">
       <Link
         href={`/dashboard/clients/${clientId}`}
         className="inline-flex items-center gap-1 text-xs no-underline"
@@ -172,10 +181,10 @@ export default function ClientAlertsPage() {
         <ChevronRight size={12} /> العودة للعميل
       </Link>
 
-      <div className="flex items-start justify-between flex-wrap gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1
-            className="text-2xl font-bold flex items-center gap-2"
+            className="flex items-center gap-2 text-2xl font-bold"
             style={{ color: "var(--text-strong)" }}
           >
             <Bell size={22} style={{ color: "var(--gold-2)" }} /> تنبيهات {client.full_name}
@@ -185,9 +194,8 @@ export default function ClientAlertsPage() {
               size="sm"
             />
           </h1>
-          <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
-            {alerts.length} {alerts.length === 1 ? "تنبيه" : "تنبيهات"} ·{" "}
-            {matches.length} مطابقة
+          <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
+            {alerts.length} {alerts.length === 1 ? "تنبيه" : "تنبيهات"} · {matches.length} مطابقة
           </p>
         </div>
 
@@ -195,28 +203,27 @@ export default function ClientAlertsPage() {
           <button
             onClick={runMatching}
             disabled={running || alerts.filter((a) => a.is_active).length === 0}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs"
             style={{
               background: running
                 ? "var(--bg-surface-2)"
                 : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
               color: running ? "var(--text-faint)" : "var(--bg-page)",
               border: "none",
-              cursor: running || alerts.filter((a) => a.is_active).length === 0 ? "not-allowed" : "pointer",
+              cursor:
+                running || alerts.filter((a) => a.is_active).length === 0
+                  ? "not-allowed"
+                  : "pointer",
               fontFamily: "inherit",
               fontWeight: 700,
             }}
           >
-            {running ? (
-              <Loader2 size={12} className="animate-spin" />
-            ) : (
-              <Sparkles size={12} />
-            )}
+            {running ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
             {running ? "جاري المطابقة..." : "تشغيل المطابقة الآن"}
           </button>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs"
             style={{
               background: "var(--bg-surface-2)",
               border: "1px solid var(--gold-bg)",
@@ -245,11 +252,11 @@ export default function ClientAlertsPage() {
       {/* قائمة التنبيهات */}
       {alerts.length === 0 ? (
         <div
-          className="text-center py-12 rounded-xl"
+          className="rounded-xl py-12 text-center"
           style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
         >
           <Bell size={36} style={{ color: "var(--gold-2)", margin: "0 auto 12px" }} />
-          <p className="font-bold mb-1" style={{ color: "var(--text-strong)" }}>
+          <p className="mb-1 font-bold" style={{ color: "var(--text-strong)" }}>
             لا توجد تنبيهات بعد
           </p>
           <p className="text-xs" style={{ color: "var(--text-faint)" }}>
@@ -274,7 +281,7 @@ export default function ClientAlertsPage() {
       {matches.length > 0 && (
         <div className="mt-8">
           <h2
-            className="text-lg font-bold mb-3 flex items-center gap-2"
+            className="mb-3 flex items-center gap-2 text-lg font-bold"
             style={{ color: "var(--text-strong)" }}
           >
             <CheckCircle2 size={18} style={{ color: "var(--success, #4ade80)" }} />
@@ -305,14 +312,14 @@ function AlertRow({
 }) {
   return (
     <div
-      className="rounded-xl p-3 flex items-center justify-between gap-3"
+      className="flex items-center justify-between gap-3 rounded-xl p-3"
       style={{
         background: "var(--bg-surface-1)",
         border: "1px solid var(--gold-bg)",
         opacity: alert.is_active ? 1 : 0.55,
       }}
     >
-      <div className="flex items-center gap-3 flex-1 min-w-0">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
         <button
           onClick={onToggle}
           title={alert.is_active ? "تعطيل" : "تفعيل"}
@@ -341,14 +348,9 @@ function AlertRow({
           />
         </button>
 
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-bold mb-0.5" style={{ color: "var(--text-strong)" }}>
-            {[
-              alert.city,
-              alert.district,
-              alert.offer_type,
-              alert.sub_category,
-            ]
+        <div className="min-w-0 flex-1">
+          <div className="mb-0.5 text-sm font-bold" style={{ color: "var(--text-strong)" }}>
+            {[alert.city, alert.district, alert.offer_type, alert.sub_category]
               .filter(Boolean)
               .join(" · ") || "تنبيه عام"}
           </div>
@@ -357,8 +359,7 @@ function AlertRow({
               <span>
                 {alert.min_price ? Number(alert.min_price).toLocaleString("ar-SA") : "0"}
                 {" — "}
-                {alert.max_price ? Number(alert.max_price).toLocaleString("ar-SA") : "∞"}{" "}
-                ر.س
+                {alert.max_price ? Number(alert.max_price).toLocaleString("ar-SA") : "∞"} ر.س
               </span>
             ) : (
               "بدون نطاق سعر"
@@ -369,10 +370,10 @@ function AlertRow({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex flex-shrink-0 items-center gap-2">
         {matchCount > 0 && (
           <span
-            className="text-xs font-bold px-2 py-1 rounded-full"
+            className="rounded-full px-2 py-1 text-xs font-bold"
             style={{
               background: "rgba(74,222,128,0.1)",
               color: "var(--success, #4ade80)",
@@ -383,8 +384,13 @@ function AlertRow({
         )}
         <button
           onClick={onDelete}
-          className="p-1.5 rounded-lg"
-          style={{ background: "transparent", border: "none", color: "var(--text-faint)", cursor: "pointer" }}
+          className="rounded-lg p-1.5"
+          style={{
+            background: "transparent",
+            border: "none",
+            color: "var(--text-faint)",
+            cursor: "pointer",
+          }}
           title="حذف"
         >
           <Trash2 size={14} />
@@ -404,7 +410,7 @@ function MatchRow({ match }: { match: Match }) {
     <Link
       href={`/properties/${match.property_id}`}
       target="_blank"
-      className="rounded-xl p-3 flex items-center gap-3 no-underline"
+      className="flex items-center gap-3 rounded-xl p-3 no-underline"
       style={{
         background: "var(--bg-surface-1)",
         border: "1px solid var(--gold-bg)",
@@ -442,10 +448,10 @@ function MatchRow({ match }: { match: Match }) {
         </div>
       )}
 
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-bold truncate">{match.property?.title || "—"}</div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-bold">{match.property?.title || "—"}</div>
         <div
-          className="text-xs flex items-center gap-2 mt-0.5"
+          className="mt-0.5 flex items-center gap-2 text-xs"
           style={{ color: "var(--text-faint)" }}
         >
           <MapPin size={11} />
@@ -462,9 +468,9 @@ function MatchRow({ match }: { match: Match }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex flex-shrink-0 items-center gap-2">
         <span
-          className="text-xs font-bold px-2 py-1 rounded-full"
+          className="rounded-full px-2 py-1 text-xs font-bold"
           style={{
             background: isHigh
               ? "rgba(74,222,128,0.15)"
@@ -565,18 +571,18 @@ function AddAlertForm({
 
   return (
     <div
-      className="rounded-xl p-4 space-y-3"
+      className="space-y-3 rounded-xl p-4"
       style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-2)" }}
     >
       <div className="flex items-center justify-between">
-        <h3 className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+        <h3 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
           تنبيه جديد
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             المدينة
           </label>
           <input
@@ -588,7 +594,7 @@ function AddAlertForm({
           />
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             الحي
           </label>
           <input
@@ -600,7 +606,7 @@ function AddAlertForm({
           />
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             نوع العرض
           </label>
           <select
@@ -614,7 +620,7 @@ function AddAlertForm({
           </select>
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             التصنيف الفرعي
           </label>
           <input
@@ -626,7 +632,7 @@ function AddAlertForm({
           />
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             السعر من
           </label>
           <input
@@ -638,7 +644,7 @@ function AddAlertForm({
           />
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             السعر إلى
           </label>
           <input
@@ -650,7 +656,7 @@ function AddAlertForm({
           />
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             الغرف (الأدنى)
           </label>
           <input
@@ -662,7 +668,7 @@ function AddAlertForm({
           />
         </div>
         <div>
-          <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+          <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
             المساحة الأدنى (م²)
           </label>
           <input
@@ -679,7 +685,7 @@ function AddAlertForm({
         <button
           onClick={save}
           disabled={saving}
-          className="flex-1 py-2.5 rounded-lg font-bold text-sm"
+          className="flex-1 rounded-lg py-2.5 text-sm font-bold"
           style={{
             background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
             color: "var(--bg-page)",
@@ -692,7 +698,7 @@ function AddAlertForm({
         </button>
         <button
           onClick={onCancel}
-          className="px-4 py-2.5 rounded-lg text-sm"
+          className="rounded-lg px-4 py-2.5 text-sm"
           style={{
             background: "var(--bg-surface-2)",
             border: "1px solid var(--gold-bg)",

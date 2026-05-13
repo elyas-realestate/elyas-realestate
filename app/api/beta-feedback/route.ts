@@ -42,21 +42,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "JSON غير صالح" }, { status: 400 });
   }
 
-  const category = String(body.category || "").trim().toLowerCase();
-  const severity = String(body.severity || "normal").trim().toLowerCase();
-  const message = String(body.message || "").trim().slice(0, 4000);
+  const category = String(body.category || "")
+    .trim()
+    .toLowerCase();
+  const severity = String(body.severity || "normal")
+    .trim()
+    .toLowerCase();
+  const message = String(body.message || "")
+    .trim()
+    .slice(0, 4000);
 
   if (!VALID_CATEGORIES.includes(category)) {
-    return NextResponse.json(
-      { ok: false, error: "category غير صالح" },
-      { status: 400 }
-    );
+    return NextResponse.json({ ok: false, error: "category غير صالح" }, { status: 400 });
   }
   if (!VALID_SEVERITIES.includes(severity)) {
-    return NextResponse.json(
-      { ok: false, error: "severity غير صالح" },
-      { status: 400 }
-    );
+    return NextResponse.json({ ok: false, error: "severity غير صالح" }, { status: 400 });
   }
   if (!message || message.length < 5) {
     return NextResponse.json(
@@ -108,10 +108,7 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     console.error("[beta-feedback] insert error:", error);
-    return NextResponse.json(
-      { ok: false, error: "فشل حفظ الملاحظة" },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: false, error: "فشل حفظ الملاحظة" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, message: "شكراً! تم استلام ملاحظتك." });

@@ -15,15 +15,17 @@ export async function GET(req: NextRequest) {
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
 
-  const { data } = await supabase
-    .from("tenants")
-    .select("id")
-    .eq("slug", slug)
-    .limit(1)
-    .single();
+  const { data } = await supabase.from("tenants").select("id").eq("slug", slug).limit(1).single();
 
   return NextResponse.json({ available: !data });
 }

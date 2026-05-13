@@ -4,30 +4,41 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ExternalLink, Menu, X } from "lucide-react";
 
-
 export default function PropertiesLayout({ children }: { children: React.ReactNode }) {
   const [s, setS] = useState<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    supabase.from("site_settings").select("*").single().then(({ data }) => {
-      if (data) setS(data);
-    });
+    supabase
+      .from("site_settings")
+      .select("*")
+      .single()
+      .then(({ data }) => {
+        if (data) setS(data);
+      });
   }, []);
 
-  const siteName    = s?.site_name      || "إلياس الدخيل";
-  const heroBadge   = s?.hero_badge     || "وسيط عقاري مرخّص";
+  const siteName = s?.site_name || "إلياس الدخيل";
+  const heroBadge = s?.hero_badge || "وسيط عقاري مرخّص";
   const navbarLinks: any[] = s?.navbar_links || [];
-  const loginText   = s?.login_link_text || "دخول الفريق";
-  const whatsapp    = s?.whatsapp       || "";
-  const phone       = s?.phone          || "";
-  const footerText  = s?.footer_text    || "وسيط ومسوق عقاري مرخّص.";
-  const falLicense  = s?.fal_license    || "";
-  const siteLogo    = s?.site_logo      || "";
+  const loginText = s?.login_link_text || "دخول الفريق";
+  const whatsapp = s?.whatsapp || "";
+  const phone = s?.phone || "";
+  const footerText = s?.footer_text || "وسيط ومسوق عقاري مرخّص.";
+  const falLicense = s?.fal_license || "";
+  const siteLogo = s?.site_logo || "";
   const year = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen" dir="rtl" style={{ background: "var(--bg-page)", color: "var(--text-strong)", fontFamily: "'Tajawal', sans-serif" }}>
+    <div
+      className="min-h-screen"
+      dir="rtl"
+      style={{
+        background: "var(--bg-page)",
+        color: "var(--text-strong)",
+        fontFamily: "'Tajawal', sans-serif",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
         .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
@@ -60,16 +71,54 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
       `}</style>
 
       {/* NAVBAR */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, height: 72, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px", background: "rgba(22,22,26,0.9)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: "1px solid var(--gold-bg)" }}>
+      <nav
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          height: 72,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 20px",
+          background: "rgba(22,22,26,0.9)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1px solid var(--gold-bg)",
+        }}
+      >
         <Link href="/" className="flex items-center gap-3 no-underline">
           {siteLogo ? (
-            <img src={siteLogo} alt={siteName} style={{ width: 40, height: 40, borderRadius: 10, objectFit: "cover", flexShrink: 0 }} />
+            <img
+              src={siteLogo}
+              alt={siteName}
+              style={{ width: 40, height: 40, borderRadius: 10, objectFit: "cover", flexShrink: 0 }}
+            />
           ) : (
-            <div className="accent-bg flex items-center justify-center font-kufi font-black" style={{ width: 40, height: 40, borderRadius: 10, fontSize: 18, color: "var(--bg-page)", flexShrink: 0 }}>إ</div>
+            <div
+              className="accent-bg font-kufi flex items-center justify-center font-black"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                fontSize: 18,
+                color: "var(--bg-page)",
+                flexShrink: 0,
+              }}
+            >
+              إ
+            </div>
           )}
           <div className="flex flex-col" style={{ lineHeight: 1.2 }}>
-            <span className="font-kufi font-extrabold" style={{ fontSize: 16, color: "var(--text-strong)" }}>{siteName}</span>
-            <span className="accent" style={{ fontSize: 10, fontWeight: 500 }}>{heroBadge}</span>
+            <span
+              className="font-kufi font-extrabold"
+              style={{ fontSize: 16, color: "var(--text-strong)" }}
+            >
+              {siteName}
+            </span>
+            <span className="accent" style={{ fontSize: 10, fontWeight: 500 }}>
+              {heroBadge}
+            </span>
           </div>
         </Link>
 
@@ -77,19 +126,49 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
         <div className="prop-nav-desktop">
           {navbarLinks.map((link: any, i: number) =>
             link.type === "cta" ? (
-              <a key={i} href={link.href} className="accent-bg no-underline font-bold text-sm" style={{ padding: "10px 24px", borderRadius: 10, color: "var(--bg-page)" }}>{link.label}</a>
+              <a
+                key={i}
+                href={link.href}
+                className="accent-bg text-sm font-bold no-underline"
+                style={{ padding: "10px 24px", borderRadius: 10, color: "var(--bg-page)" }}
+              >
+                {link.label}
+              </a>
             ) : link.type === "anchor" ? (
-              <a key={i} href={"/" + link.href} className="prop-nav-link">{link.label}</a>
+              <a key={i} href={"/" + link.href} className="prop-nav-link">
+                {link.label}
+              </a>
             ) : (
-              <Link key={i} href={link.href} className="prop-nav-link">{link.label}</Link>
+              <Link key={i} href={link.href} className="prop-nav-link">
+                {link.label}
+              </Link>
             )
           )}
-          <Link href="/properties" className="prop-nav-link accent" style={{ fontWeight: 600 }}>العقارات</Link>
-          <Link href="/login" className="prop-nav-link" style={{ fontSize: 12, borderRight: "1px solid var(--gold-bg)", paddingRight: 16, marginRight: -8, color: "var(--text-faint)" }}>{loginText}</Link>
+          <Link href="/properties" className="prop-nav-link accent" style={{ fontWeight: 600 }}>
+            العقارات
+          </Link>
+          <Link
+            href="/login"
+            className="prop-nav-link"
+            style={{
+              fontSize: 12,
+              borderRight: "1px solid var(--gold-bg)",
+              paddingRight: 16,
+              marginRight: -8,
+              color: "var(--text-faint)",
+            }}
+          >
+            {loginText}
+          </Link>
         </div>
 
         {/* Hamburger */}
-        <button className="prop-hamburger" onClick={() => setMenuOpen(v => !v)} aria-label="القائمة" style={{ minWidth: 40, minHeight: 40 }}>
+        <button
+          className="prop-hamburger"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="القائمة"
+          style={{ minWidth: 40, minHeight: 40 }}
+        >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
@@ -98,53 +177,197 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
       <div className={"prop-drawer" + (menuOpen ? " open" : "")}>
         {navbarLinks.map((link: any, i: number) =>
           link.type === "anchor" ? (
-            <a key={i} href={"/" + link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
+            <a key={i} href={"/" + link.href} onClick={() => setMenuOpen(false)}>
+              {link.label}
+            </a>
           ) : (
-            <Link key={i} href={link.href} onClick={() => setMenuOpen(false)} style={{ padding: "14px 0", borderBottom: "1px solid var(--overlay-soft)", fontSize: 15, color: "var(--text-soft)", textDecoration: "none", display: "block" }}>{link.label}</Link>
+            <Link
+              key={i}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                padding: "14px 0",
+                borderBottom: "1px solid var(--overlay-soft)",
+                fontSize: 15,
+                color: "var(--text-soft)",
+                textDecoration: "none",
+                display: "block",
+              }}
+            >
+              {link.label}
+            </Link>
           )
         )}
-        <Link href="/properties" onClick={() => setMenuOpen(false)} style={{ padding: "14px 0", borderBottom: "1px solid var(--overlay-soft)", fontSize: 15, color: "var(--gold-2)", textDecoration: "none", display: "block", fontWeight: 600 }}>العقارات</Link>
-        <Link href="/login" onClick={() => setMenuOpen(false)} style={{ padding: "14px 0", fontSize: 14, color: "var(--text-faint)", textDecoration: "none", display: "block" }}>{loginText}</Link>
+        <Link
+          href="/properties"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            padding: "14px 0",
+            borderBottom: "1px solid var(--overlay-soft)",
+            fontSize: 15,
+            color: "var(--gold-2)",
+            textDecoration: "none",
+            display: "block",
+            fontWeight: 600,
+          }}
+        >
+          العقارات
+        </Link>
+        <Link
+          href="/login"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            padding: "14px 0",
+            fontSize: 14,
+            color: "var(--text-faint)",
+            textDecoration: "none",
+            display: "block",
+          }}
+        >
+          {loginText}
+        </Link>
       </div>
 
-      <main style={{ minHeight: "calc(100vh - 72px)" }}>
-        {children}
-      </main>
+      <main style={{ minHeight: "calc(100vh - 72px)" }}>{children}</main>
 
       {/* FOOTER */}
-      <footer style={{ background: "var(--bg-deep)", borderTop: "1px solid var(--gold-bg)", padding: "48px 24px 28px" }}>
-        <div className="prop-footer-grid" style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 32, flexWrap: "wrap", marginBottom: 32 }}>
+      <footer
+        style={{
+          background: "var(--bg-deep)",
+          borderTop: "1px solid var(--gold-bg)",
+          padding: "48px 24px 28px",
+        }}
+      >
+        <div
+          className="prop-footer-grid"
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 32,
+            flexWrap: "wrap",
+            marginBottom: 32,
+          }}
+        >
           <div>
             <div className="flex items-center gap-3" style={{ marginBottom: 12 }}>
               {siteLogo ? (
-                <img src={siteLogo} alt={siteName} style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }} />
+                <img
+                  src={siteLogo}
+                  alt={siteName}
+                  style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }}
+                />
               ) : (
-                <div className="accent-bg flex items-center justify-center font-kufi font-black" style={{ width: 36, height: 36, borderRadius: 8, fontSize: 16, color: "var(--bg-page)" }}>إ</div>
+                <div
+                  className="accent-bg font-kufi flex items-center justify-center font-black"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 8,
+                    fontSize: 16,
+                    color: "var(--bg-page)",
+                  }}
+                >
+                  إ
+                </div>
               )}
-              <span className="font-kufi font-extrabold" style={{ fontSize: 16, color: "var(--text-strong)" }}>{siteName}</span>
+              <span
+                className="font-kufi font-extrabold"
+                style={{ fontSize: 16, color: "var(--text-strong)" }}
+              >
+                {siteName}
+              </span>
             </div>
-            <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8, maxWidth: 280 }}>{footerText}</p>
+            <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.8, maxWidth: 280 }}>
+              {footerText}
+            </p>
           </div>
           <div className="prop-footer-nav flex gap-12">
             <div>
-              <p className="font-kufi" style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, color: "var(--text-strong)" }}>التنقل</p>
+              <p
+                className="font-kufi"
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  marginBottom: 16,
+                  color: "var(--text-strong)",
+                }}
+              >
+                التنقل
+              </p>
               <div className="flex flex-col gap-2">
-                <Link href="/" className="prop-nav-link" style={{ fontSize: 13 }}>الرئيسية</Link>
-                <Link href="/properties" className="prop-nav-link accent" style={{ fontSize: 13, fontWeight: 600 }}>العقارات</Link>
+                <Link href="/" className="prop-nav-link" style={{ fontSize: 13 }}>
+                  الرئيسية
+                </Link>
+                <Link
+                  href="/properties"
+                  className="prop-nav-link accent"
+                  style={{ fontSize: 13, fontWeight: 600 }}
+                >
+                  العقارات
+                </Link>
               </div>
             </div>
             <div>
-              <p className="font-kufi" style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, color: "var(--text-strong)" }}>التواصل</p>
+              <p
+                className="font-kufi"
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  marginBottom: 16,
+                  color: "var(--text-strong)",
+                }}
+              >
+                التواصل
+              </p>
               <div className="flex flex-col gap-2">
-                {whatsapp && <a href={"https://wa.me/" + whatsapp} target="_blank" rel="noopener noreferrer" className="prop-nav-link" style={{ fontSize: 13 }}>واتساب</a>}
-                {phone && <a href={"tel:" + phone} className="prop-nav-link" style={{ fontSize: 13 }}>{phone}</a>}
-                <Link href="/" className="prop-nav-link flex items-center gap-1" style={{ fontSize: 13 }}><ExternalLink size={12} /> الرئيسية</Link>
+                {whatsapp && (
+                  <a
+                    href={"https://wa.me/" + whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="prop-nav-link"
+                    style={{ fontSize: 13 }}
+                  >
+                    واتساب
+                  </a>
+                )}
+                {phone && (
+                  <a href={"tel:" + phone} className="prop-nav-link" style={{ fontSize: 13 }}>
+                    {phone}
+                  </a>
+                )}
+                <Link
+                  href="/"
+                  className="prop-nav-link flex items-center gap-1"
+                  style={{ fontSize: 13 }}
+                >
+                  <ExternalLink size={12} /> الرئيسية
+                </Link>
               </div>
             </div>
           </div>
         </div>
-        <div style={{ maxWidth: 1200, margin: "0 auto", paddingTop: 24, borderTop: "1px solid var(--gold-bg-soft)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, fontSize: 12, color: "var(--text-faint)" }}>
-          <span>© {year} {siteName}. جميع الحقوق محفوظة.</span>
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            paddingTop: 24,
+            borderTop: "1px solid var(--gold-bg-soft)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 8,
+            fontSize: 12,
+            color: "var(--text-faint)",
+          }}
+        >
+          <span>
+            © {year} {siteName}. جميع الحقوق محفوظة.
+          </span>
           {falLicense && <span className="accent">رخصة فال — {falLicense}</span>}
         </div>
       </footer>

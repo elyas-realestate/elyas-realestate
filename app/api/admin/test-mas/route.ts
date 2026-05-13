@@ -43,13 +43,17 @@ export async function POST(req: Request) {
     // ابنِ context الموظف
     const ctx = await buildEmployeeContext(tenant.id, employee_code);
     if (!ctx) {
-      return NextResponse.json({
-        error: `الموظف ${employee_code} غير موجود أو معطّل`,
-        hint: "تحقق من /dashboard/organization",
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: `الموظف ${employee_code} غير موجود أو معطّل`,
+          hint: "تحقق من /dashboard/organization",
+        },
+        { status: 404 }
+      );
     }
 
-    const userPrompt = test_input || "اعرض قدراتك الأساسية في جملتين فقط، ثم اقترح مهمة تستطيع تنفيذها الآن.";
+    const userPrompt =
+      test_input || "اعرض قدراتك الأساسية في جملتين فقط، ثم اقترح مهمة تستطيع تنفيذها الآن.";
 
     // استدعاء AI مع timer
     const startTime = Date.now();
@@ -111,12 +115,13 @@ export async function GET() {
     .order("display_order", { ascending: true });
 
   if (empErr) {
-    return NextResponse.json({ error: empErr.message, employees: [], total: 0, active: 0 }, { status: 500 });
+    return NextResponse.json(
+      { error: empErr.message, employees: [], total: 0, active: 0 },
+      { status: 500 }
+    );
   }
 
-  const { data: managers } = await admin
-    .from("ai_managers")
-    .select("id, code, name, department");
+  const { data: managers } = await admin.from("ai_managers").select("id, code, name, department");
 
   const enriched = (employees || []).map((e: any) => ({
     code: e.code,

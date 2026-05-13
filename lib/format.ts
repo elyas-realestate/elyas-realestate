@@ -2,7 +2,10 @@
  * تنسيق الأسعار بالريال السعودي — يُستخدم في كل أنحاء المنصة
  * مثال: formatSAR(1500000) → "1,500,000 ر.س"
  */
-export function formatSAR(amount: number | string | null | undefined, opts?: { short?: boolean }): string {
+export function formatSAR(
+  amount: number | string | null | undefined,
+  opts?: { short?: boolean }
+): string {
   if (amount === null || amount === undefined || amount === "") return "—";
   const num = Number(amount);
   if (isNaN(num)) return "—";

@@ -145,7 +145,15 @@ export default function SaveContactButton({
         {downloaded ? <CheckIcon size={22} /> : <ContactIcon size={22} />}
       </span>
 
-      <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", textAlign: "right", flex: 1 }}>
+      <span
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          textAlign: "right",
+          flex: 1,
+        }}
+      >
         <span style={{ fontSize: 16, fontWeight: 800, lineHeight: 1.25 }}>
           {downloaded ? "تم التنزيل ✓" : "اضغط لحفظ في جهات اتصالك"}
         </span>
@@ -181,7 +189,13 @@ export default function SaveContactButton({
 // ── أيقونات SVG inline (لا اعتماد خارجي) ──
 function ContactIcon({ size = 22 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11ZM8 11C9.66 11 10.99 9.66 10.99 8C10.99 6.34 9.66 5 8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11ZM8 13C5.67 13 1 14.17 1 16.5V19H15V16.5C15 14.17 10.33 13 8 13ZM16 13C15.71 13 15.38 13.02 15.03 13.05C16.19 13.89 17 15.02 17 16.5V19H23V16.5C23 14.17 18.33 13 16 13Z"
         fill="currentColor"
@@ -192,11 +206,14 @@ function ContactIcon({ size = 22 }: { size?: number }) {
 
 function CheckIcon({ size = 22 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"
-        fill="currentColor"
-      />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="currentColor" />
     </svg>
   );
 }
@@ -205,7 +222,15 @@ function CheckIcon({ size = 22 }: { size?: number }) {
 function shadeColor(hex: string, percent: number): string {
   try {
     const c = hex.replace("#", "");
-    const num = parseInt(c.length === 3 ? c.split("").map(x => x + x).join("") : c, 16);
+    const num = parseInt(
+      c.length === 3
+        ? c
+            .split("")
+            .map((x) => x + x)
+            .join("")
+        : c,
+      16
+    );
     let r = (num >> 16) + Math.round((percent / 100) * 255);
     let g = ((num >> 8) & 0x00ff) + Math.round((percent / 100) * 255);
     let b = (num & 0x0000ff) + Math.round((percent / 100) * 255);
@@ -221,7 +246,15 @@ function shadeColor(hex: string, percent: number): string {
 function pickContrastColor(hex: string): string {
   try {
     const c = hex.replace("#", "");
-    const num = parseInt(c.length === 3 ? c.split("").map(x => x + x).join("") : c, 16);
+    const num = parseInt(
+      c.length === 3
+        ? c
+            .split("")
+            .map((x) => x + x)
+            .join("")
+        : c,
+      16
+    );
     const r = num >> 16;
     const g = (num >> 8) & 0x00ff;
     const b = num & 0x0000ff;

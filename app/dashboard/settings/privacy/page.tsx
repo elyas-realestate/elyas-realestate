@@ -4,8 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  Shield, Download, Trash2, AlertTriangle, ChevronRight,
-  Loader2, FileText, Lock, CheckCircle2
+  Shield,
+  Download,
+  Trash2,
+  AlertTriangle,
+  ChevronRight,
+  Loader2,
+  FileText,
+  Lock,
+  CheckCircle2,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase-browser";
 
@@ -90,7 +97,7 @@ export default function PrivacyPage() {
   }
 
   return (
-    <div dir="rtl" className="space-y-6 max-w-3xl mx-auto">
+    <div dir="rtl" className="mx-auto max-w-3xl space-y-6">
       <Link
         href="/dashboard/settings"
         className="inline-flex items-center gap-1 text-xs no-underline"
@@ -101,19 +108,19 @@ export default function PrivacyPage() {
 
       <div>
         <h1
-          className="text-2xl font-bold flex items-center gap-2"
+          className="flex items-center gap-2 text-2xl font-bold"
           style={{ color: "var(--text-strong)" }}
         >
           <Shield size={22} style={{ color: "var(--gold-2)" }} /> الخصوصية وحقوقك
         </h1>
-        <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
+        <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
           حقوقك وفقاً لنظام حماية البيانات الشخصية السعودي (PDPL)
         </p>
       </div>
 
       {/* PDPL info box */}
       <div
-        className="rounded-xl p-4 flex items-start gap-3"
+        className="flex items-start gap-3 rounded-xl p-4"
         style={{
           background: "var(--gold-bg-soft)",
           border: "1px solid var(--gold-bg)",
@@ -150,24 +157,23 @@ export default function PrivacyPage() {
         className="rounded-xl p-5"
         style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
       >
-        <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <h2
-              className="text-base font-bold flex items-center gap-2"
+              className="flex items-center gap-2 text-base font-bold"
               style={{ color: "var(--text-strong)" }}
             >
               <Download size={16} style={{ color: "var(--gold-2)" }} /> تصدير بياناتك
             </h2>
-            <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
-              نزّل نسخة كاملة من كل بياناتك (عقارات، عملاء، مدفوعات، إعدادات...)
-              بصيغة JSON.
+            <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
+              نزّل نسخة كاملة من كل بياناتك (عقارات، عملاء، مدفوعات، إعدادات...) بصيغة JSON.
             </p>
           </div>
         </div>
         <button
           onClick={exportData}
           disabled={exporting}
-          className="px-4 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2"
+          className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold"
           style={{
             background: exporting
               ? "var(--bg-surface-2)"
@@ -200,15 +206,15 @@ export default function PrivacyPage() {
           border: "1px solid rgba(239,68,68,0.25)",
         }}
       >
-        <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <h2
-              className="text-base font-bold flex items-center gap-2"
+              className="flex items-center gap-2 text-base font-bold"
               style={{ color: "#ef4444" }}
             >
               <Trash2 size={16} /> حذف الحساب نهائياً
             </h2>
-            <p className="text-sm mt-1" style={{ color: "var(--text-faint)" }}>
+            <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
               سيُحذف حسابك وكل بياناتك خلال ٣٠ يوماً وفقاً لـ PDPL.
               <strong style={{ color: "#ef4444" }}> لا يمكن التراجع.</strong>
             </p>
@@ -218,7 +224,7 @@ export default function PrivacyPage() {
         {!showDeleteForm ? (
           <button
             onClick={() => setShowDeleteForm(true)}
-            className="px-4 py-2 rounded-lg text-sm font-bold"
+            className="rounded-lg px-4 py-2 text-sm font-bold"
             style={{
               background: "transparent",
               border: "1px solid #ef4444",
@@ -231,30 +237,36 @@ export default function PrivacyPage() {
           </button>
         ) : deleteSubmitted ? (
           <div
-            className="rounded-lg p-4 flex items-start gap-3"
-            style={{ background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.2)" }}
+            className="flex items-start gap-3 rounded-lg p-4"
+            style={{
+              background: "rgba(74,222,128,0.08)",
+              border: "1px solid rgba(74,222,128,0.2)",
+            }}
           >
             <CheckCircle2 size={20} style={{ color: "var(--success, #4ade80)", flexShrink: 0 }} />
             <div className="text-sm" style={{ color: "var(--text-strong)" }}>
-              <strong>تم استلام طلبك.</strong> سيتم تنفيذ الحذف خلال ٣٠ يوماً.
-              ستصلك رسالة تأكيد على بريدك. تقدر تتراجع خلال ٧ أيام بمراسلتنا.
+              <strong>تم استلام طلبك.</strong> سيتم تنفيذ الحذف خلال ٣٠ يوماً. ستصلك رسالة تأكيد على
+              بريدك. تقدر تتراجع خلال ٧ أيام بمراسلتنا.
             </div>
           </div>
         ) : (
           <div className="space-y-3">
             <div
-              className="rounded-lg p-3 flex items-start gap-2"
-              style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
+              className="flex items-start gap-2 rounded-lg p-3"
+              style={{
+                background: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.2)",
+              }}
             >
               <AlertTriangle size={14} style={{ color: "#ef4444", flexShrink: 0, marginTop: 2 }} />
               <div className="text-xs" style={{ color: "var(--text-soft)" }}>
-                هذا الإجراء سيحذف: ملفك، عقاراتك، عملاءك، صفقاتك، فواتيرك،
-                واتساب، البطاقة التعريفية، وكل البيانات المرتبطة. <strong>لا يمكن التراجع بعد التنفيذ.</strong>
+                هذا الإجراء سيحذف: ملفك، عقاراتك، عملاءك، صفقاتك، فواتيرك، واتساب، البطاقة
+                التعريفية، وكل البيانات المرتبطة. <strong>لا يمكن التراجع بعد التنفيذ.</strong>
               </div>
             </div>
 
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
                 سبب الحذف (اختياري — يساعدنا للتحسين)
               </label>
               <textarea
@@ -277,8 +289,19 @@ export default function PrivacyPage() {
             </div>
 
             <div>
-              <label className="text-xs block mb-1" style={{ color: "var(--text-faint)" }}>
-                للتأكيد، اكتب: <code style={{ direction: "ltr", background: "var(--bg-surface-2)", padding: "2px 6px", borderRadius: 4, fontFamily: "monospace" }}>DELETE_MY_ACCOUNT</code>
+              <label className="mb-1 block text-xs" style={{ color: "var(--text-faint)" }}>
+                للتأكيد، اكتب:{" "}
+                <code
+                  style={{
+                    direction: "ltr",
+                    background: "var(--bg-surface-2)",
+                    padding: "2px 6px",
+                    borderRadius: 4,
+                    fontFamily: "monospace",
+                  }}
+                >
+                  DELETE_MY_ACCOUNT
+                </code>
               </label>
               <input
                 type="text"
@@ -303,7 +326,7 @@ export default function PrivacyPage() {
               <button
                 onClick={deleteAccount}
                 disabled={deleting || deleteForm.confirm !== "DELETE_MY_ACCOUNT"}
-                className="flex-1 py-2.5 rounded-lg font-bold text-sm"
+                className="flex-1 rounded-lg py-2.5 text-sm font-bold"
                 style={{
                   background:
                     deleting || deleteForm.confirm !== "DELETE_MY_ACCOUNT"
@@ -328,7 +351,7 @@ export default function PrivacyPage() {
                   setShowDeleteForm(false);
                   setDeleteForm({ confirm: "", reason: "" });
                 }}
-                className="px-4 py-2.5 rounded-lg text-sm"
+                className="rounded-lg px-4 py-2.5 text-sm"
                 style={{
                   background: "var(--bg-surface-2)",
                   border: "1px solid var(--gold-bg)",
@@ -345,7 +368,7 @@ export default function PrivacyPage() {
       </div>
 
       {/* روابط ذات صلة */}
-      <div className="text-center pt-4">
+      <div className="pt-4 text-center">
         <Link
           href="/dashboard/help"
           style={{

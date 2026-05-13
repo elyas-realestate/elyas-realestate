@@ -24,10 +24,19 @@ export async function POST(req: NextRequest) {
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   let body: SupportPayload;
@@ -38,8 +47,12 @@ export async function POST(req: NextRequest) {
   }
 
   // تحقق من الحقول
-  const subject = String(body.subject || "").trim().slice(0, 200);
-  const message = String(body.message || "").trim().slice(0, 5000);
+  const subject = String(body.subject || "")
+    .trim()
+    .slice(0, 200);
+  const message = String(body.message || "")
+    .trim()
+    .slice(0, 5000);
   if (!subject || !message) {
     return NextResponse.json({ error: "العنوان والرسالة مطلوبان" }, { status: 400 });
   }
@@ -47,21 +60,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "الرسالة قصيرة جداً" }, { status: 400 });
   }
 
-  const category = VALID_CATEGORIES.includes(body.category || "")
-    ? body.category!
-    : "general";
+  const category = VALID_CATEGORIES.includes(body.category || "") ? body.category! : "general";
   const preferred_method = ["whatsapp", "email", "phone"].includes(body.preferred_method || "")
     ? body.preferred_method!
     : "whatsapp";
 
   // ابحث عن tenant_id
   const { data: t } = await supabase
-    .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   let tenantId = t?.id as string | undefined;
   if (!tenantId) {
     const { data: m } = await supabase
-      .from("tenant_members").select("tenant_id")
-      .eq("user_id", user.id).eq("status", "active").maybeSingle();
+      .from("tenant_members")
+      .select("tenant_id")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
     tenantId = m?.tenant_id as string | undefined;
   }
 
@@ -102,10 +119,19 @@ export async function GET(req: NextRequest) {
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const { data, error } = await supabase

@@ -23,12 +23,7 @@ interface Props {
   textColor: string;
 }
 
-export default function TestimonialsSection({
-  testimonials,
-  accent,
-  bgColor,
-  textColor,
-}: Props) {
+export default function TestimonialsSection({ testimonials, accent, bgColor, textColor }: Props) {
   if (!testimonials || testimonials.length === 0) return null;
 
   return (

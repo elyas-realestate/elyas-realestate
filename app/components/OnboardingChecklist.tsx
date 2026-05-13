@@ -3,8 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  CheckCircle2, Circle, X, ArrowLeft, IdCard, Building2,
-  MessageCircle, Bot, Sparkles,
+  CheckCircle2,
+  Circle,
+  X,
+  ArrowLeft,
+  IdCard,
+  Building2,
+  MessageCircle,
+  Bot,
+  Sparkles,
 } from "lucide-react";
 
 // ══════════════════════════════════════════════════════════════
@@ -107,7 +114,7 @@ export default function OnboardingChecklist() {
     return (
       <div
         dir="rtl"
-        className="rounded-xl p-4 mb-5 flex items-center justify-between gap-3 flex-wrap"
+        className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
         style={{
           background: "linear-gradient(135deg, rgba(232,184,109,0.10), rgba(200,149,76,0.05))",
           border: "1px solid var(--gold-2)",
@@ -116,7 +123,7 @@ export default function OnboardingChecklist() {
         <div className="flex items-center gap-3">
           <Sparkles size={20} style={{ color: "var(--gold-2)" }} />
           <div>
-            <div className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+            <div className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
               ممتاز! أنجزت كل خطوات الإعداد ✨
             </div>
             <div className="text-xs" style={{ color: "var(--text-faint)" }}>
@@ -127,7 +134,7 @@ export default function OnboardingChecklist() {
         <button
           onClick={dismiss}
           disabled={dismissing}
-          className="text-xs px-3 py-1.5 rounded-lg"
+          className="rounded-lg px-3 py-1.5 text-xs"
           style={{
             background: "var(--gold-2)",
             color: "#0A0A0C",
@@ -144,21 +151,21 @@ export default function OnboardingChecklist() {
   return (
     <div
       dir="rtl"
-      className="rounded-xl p-4 mb-5 relative"
+      className="relative mb-5 rounded-xl p-4"
       style={{
         background: "var(--bg-surface-1)",
         border: "1px solid var(--gold-bg)",
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Sparkles size={18} style={{ color: "var(--gold-2)" }} />
-          <h2 className="font-bold text-sm" style={{ color: "var(--text-strong)" }}>
+          <h2 className="text-sm font-bold" style={{ color: "var(--text-strong)" }}>
             خطوات إعداد منصتك
           </h2>
           <span
-            className="text-xs px-2 py-0.5 rounded-full"
+            className="rounded-full px-2 py-0.5 text-xs"
             style={{
               background: "var(--gold-bg)",
               color: "var(--gold-2)",
@@ -172,7 +179,7 @@ export default function OnboardingChecklist() {
           onClick={dismiss}
           disabled={dismissing}
           title="إخفاء"
-          className="p-1 rounded hover:opacity-80"
+          className="rounded p-1 hover:opacity-80"
           style={{ color: "var(--text-faint)" }}
         >
           <X size={16} />
@@ -181,7 +188,7 @@ export default function OnboardingChecklist() {
 
       {/* Progress bar */}
       <div
-        className="h-1.5 w-full rounded-full mb-4 overflow-hidden"
+        className="mb-4 h-1.5 w-full overflow-hidden rounded-full"
         style={{ background: "var(--bg-surface-2)" }}
       >
         <div
@@ -194,7 +201,7 @@ export default function OnboardingChecklist() {
       </div>
 
       {/* Steps */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
         {STEPS.map((step) => {
           const done = state[step.key];
           const StepIcon = step.icon;
@@ -202,7 +209,7 @@ export default function OnboardingChecklist() {
             <Link
               key={step.key}
               href={done ? "#" : step.href}
-              className="flex items-center gap-3 p-3 rounded-lg no-underline transition"
+              className="flex items-center gap-3 rounded-lg p-3 no-underline transition"
               style={{
                 background: done ? "var(--gold-bg-soft)" : "var(--bg-surface-2)",
                 border: `1px solid ${done ? "var(--gold-2)" : "var(--gold-bg)"}`,
@@ -226,9 +233,9 @@ export default function OnboardingChecklist() {
               )}
 
               {/* Content */}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div
-                  className="text-xs font-bold flex items-center gap-1.5"
+                  className="flex items-center gap-1.5 text-xs font-bold"
                   style={{
                     color: done ? "var(--text-faint)" : "var(--text-strong)",
                     textDecoration: done ? "line-through" : "none",
@@ -237,24 +244,19 @@ export default function OnboardingChecklist() {
                   <StepIcon size={12} />
                   {step.title}
                 </div>
-                <div className="text-xs mt-0.5" style={{ color: "var(--text-faint)" }}>
+                <div className="mt-0.5 text-xs" style={{ color: "var(--text-faint)" }}>
                   {done ? "مكتمل ✓" : step.description}
                 </div>
               </div>
 
-              {!done && (
-                <ArrowLeft size={14} style={{ color: "var(--gold-2)", flexShrink: 0 }} />
-              )}
+              {!done && <ArrowLeft size={14} style={{ color: "var(--gold-2)", flexShrink: 0 }} />}
             </Link>
           );
         })}
       </div>
 
       {/* Footer hint */}
-      <p
-        className="text-xs mt-3 text-center"
-        style={{ color: "var(--text-faint)" }}
-      >
+      <p className="mt-3 text-center text-xs" style={{ color: "var(--text-faint)" }}>
         الخطوات تكتمل تلقائياً عند إنجازك لكل بند. تقدر تخفي البطاقة في أي وقت.
       </p>
     </div>

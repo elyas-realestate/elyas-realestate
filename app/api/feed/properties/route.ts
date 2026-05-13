@@ -23,12 +23,15 @@ export async function GET(req: NextRequest) {
 
   const svc = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
   // اعثر على المستأجر
   const { data: tenant } = await svc
-    .from("tenants").select("id, slug, is_active").eq("slug", tenantSlug).maybeSingle();
+    .from("tenants")
+    .select("id, slug, is_active")
+    .eq("slug", tenantSlug)
+    .maybeSingle();
   if (!tenant || !tenant.is_active) {
     return NextResponse.json({ error: "tenant not found" }, { status: 404 });
   }
@@ -36,7 +39,9 @@ export async function GET(req: NextRequest) {
   // العقارات المنشورة
   const { data: props } = await svc
     .from("properties")
-    .select("id, code, title, description, price, city, district, main_category, sub_category, offer_type, land_area, rooms, main_image, images, created_at, updated_at")
+    .select(
+      "id, code, title, description, price, city, district, main_category, sub_category, offer_type, land_area, rooms, main_image, images, created_at, updated_at"
+    )
     .eq("tenant_id", tenant.id)
     .eq("is_published", true)
     .order("updated_at", { ascending: false })
@@ -47,28 +52,30 @@ export async function GET(req: NextRequest) {
   const siteUrl = `${origin}/broker/${tenantSlug}`;
   const now = new Date().toUTCString();
 
-  const items = (props || []).map((p: any) => {
-    const link = `${origin}/property/${p.code || p.id}`;
-    const pubDate = new Date(p.updated_at || p.created_at).toUTCString();
-    const imgUrl = p.main_image || (p.images?.[0]);
-    return `
+  const items = (props || [])
+    .map((p: any) => {
+      const link = `${origin}/property/${p.code || p.id}`;
+      const pubDate = new Date(p.updated_at || p.created_at).toUTCString();
+      const imgUrl = p.main_image || p.images?.[0];
+      return `
     <item>
       <title>${xmlEsc(p.title)}</title>
       <link>${xmlEsc(link)}</link>
       <guid isPermaLink="true">${xmlEsc(link)}</guid>
       <pubDate>${pubDate}</pubDate>
       <description><![CDATA[${p.description || p.title}]]></description>
-      ${p.city     ? `<city>${xmlEsc(p.city)}</city>` : ""}
+      ${p.city ? `<city>${xmlEsc(p.city)}</city>` : ""}
       ${p.district ? `<district>${xmlEsc(p.district)}</district>` : ""}
-      ${p.price    ? `<price currency="SAR">${Number(p.price)}</price>` : ""}
-      ${p.land_area? `<area unit="sqm">${Number(p.land_area)}</area>` : ""}
-      ${p.rooms    ? `<bedrooms>${Number(p.rooms)}</bedrooms>` : ""}
+      ${p.price ? `<price currency="SAR">${Number(p.price)}</price>` : ""}
+      ${p.land_area ? `<area unit="sqm">${Number(p.land_area)}</area>` : ""}
+      ${p.rooms ? `<bedrooms>${Number(p.rooms)}</bedrooms>` : ""}
       ${p.main_category ? `<category>${xmlEsc(p.main_category)}</category>` : ""}
-      ${p.sub_category  ? `<subcategory>${xmlEsc(p.sub_category)}</subcategory>` : ""}
-      ${p.offer_type    ? `<listing_type>${xmlEsc(p.offer_type)}</listing_type>` : ""}
-      ${imgUrl          ? `<enclosure url="${xmlEsc(imgUrl)}" type="image/jpeg"/>` : ""}
+      ${p.sub_category ? `<subcategory>${xmlEsc(p.sub_category)}</subcategory>` : ""}
+      ${p.offer_type ? `<listing_type>${xmlEsc(p.offer_type)}</listing_type>` : ""}
+      ${imgUrl ? `<enclosure url="${xmlEsc(imgUrl)}" type="image/jpeg"/>` : ""}
     </item>`;
-  }).join("\n");
+    })
+    .join("\n");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">

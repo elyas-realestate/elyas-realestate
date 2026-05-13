@@ -27,7 +27,9 @@ export async function POST(req: Request) {
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرّح" }, { status: 401 });
 
     const admin = createClient(

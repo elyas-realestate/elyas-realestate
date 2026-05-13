@@ -14,21 +14,32 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return req.cookies.getAll(); },
+        getAll() {
+          return req.cookies.getAll();
+        },
         setAll() {},
       },
     }
   );
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   // tenant_id
   const { data: tenant } = await supabase
-    .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   let tenantId = tenant?.id;
   if (!tenantId) {
     const { data: m } = await supabase
-      .from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle();
+      .from("tenant_members")
+      .select("tenant_id")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
     tenantId = m?.tenant_id;
   }
   if (!tenantId) return NextResponse.json({ error: "لم يُعثر على المستأجر" }, { status: 400 });

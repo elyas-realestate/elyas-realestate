@@ -22,7 +22,7 @@ export default function RootError({
   return (
     <div
       dir="rtl"
-      className="min-h-screen flex flex-col items-center justify-center"
+      className="flex min-h-screen flex-col items-center justify-center"
       style={{
         background: "var(--bg-page)",
         color: "var(--text-strong)",
@@ -82,7 +82,10 @@ export default function RootError({
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center" style={{ flexWrap: "wrap" }}>
+        <div
+          className="flex flex-col justify-center gap-3 sm:flex-row"
+          style={{ flexWrap: "wrap" }}
+        >
           <button
             onClick={reset}
             style={{
@@ -125,7 +128,13 @@ export default function RootError({
 
       <div
         className="fade-up-delay font-kufi"
-        style={{ marginTop: 64, fontSize: 12, color: "var(--border-1, #555)", fontWeight: 700, letterSpacing: 1 }}
+        style={{
+          marginTop: 64,
+          fontSize: 12,
+          color: "var(--border-1, #555)",
+          fontWeight: 700,
+          letterSpacing: 1,
+        }}
       >
         وسيط برو
       </div>

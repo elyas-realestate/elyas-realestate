@@ -193,8 +193,8 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
       </div>
 
       <p style={{ fontSize: 11.5, color: "var(--text-faint)", marginBottom: 12, lineHeight: 1.7 }}>
-        اضغط الميكروفون واحكِ تفاصيل العقار باللهجة العربية. النظام يستخرج الحقول تلقائياً.
-        مثال: "فيلا للبيع في حي العليا بالرياض، مساحة الأرض ٦٠٠ متر، خمس غرف، السعر ٢ مليون".
+        اضغط الميكروفون واحكِ تفاصيل العقار باللهجة العربية. النظام يستخرج الحقول تلقائياً. مثال:
+        "فيلا للبيع في حي العليا بالرياض، مساحة الأرض ٦٠٠ متر، خمس غرف، السعر ٢ مليون".
       </p>
 
       {/* Buttons */}
@@ -292,9 +292,7 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
           }}
         >
           {transcript}
-          {interim && (
-            <span style={{ color: "var(--text-faint)", opacity: 0.6 }}>{interim}</span>
-          )}
+          {interim && <span style={{ color: "var(--text-faint)", opacity: 0.6 }}>{interim}</span>}
         </div>
       )}
 
@@ -312,9 +310,7 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
             gap: 8,
             padding: "10px 14px",
             borderRadius: 10,
-            background: extracting
-              ? "var(--bg-surface-2)"
-              : "var(--text-strong)",
+            background: extracting ? "var(--bg-surface-2)" : "var(--text-strong)",
             color: extracting ? "var(--text-faint)" : "var(--bg-page)",
             border: "none",
             fontWeight: 700,

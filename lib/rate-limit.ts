@@ -42,10 +42,7 @@ interface RateLimitResult {
 /**
  * فحص Rate Limit لمفتاح محدد (IP أو User ID)
  */
-export function checkRateLimit(
-  key: string,
-  config: RateLimitConfig
-): RateLimitResult {
+export function checkRateLimit(key: string, config: RateLimitConfig): RateLimitResult {
   cleanup();
 
   const now = Date.now();

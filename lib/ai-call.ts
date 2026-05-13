@@ -29,7 +29,12 @@ export async function generateText(opts: AICallOptions): Promise<string> {
     const model = opts.model || "gpt-4o-mini";
     return callOpenAIStyle(
       "https://api.openai.com/v1/chat/completions",
-      model, opts.systemPrompt, opts.userPrompt, key, temperature, maxTokens
+      model,
+      opts.systemPrompt,
+      opts.userPrompt,
+      key,
+      temperature,
+      maxTokens
     );
   }
   if (provider === "anthropic") {
@@ -44,21 +49,36 @@ export async function generateText(opts: AICallOptions): Promise<string> {
     const model = opts.model || "llama-3.3-70b-versatile";
     return callOpenAIStyle(
       "https://api.groq.com/openai/v1/chat/completions",
-      model, opts.systemPrompt, opts.userPrompt, key, temperature, maxTokens
+      model,
+      opts.systemPrompt,
+      opts.userPrompt,
+      key,
+      temperature,
+      maxTokens
     );
   }
   if (provider === "deepseek") {
     const model = opts.model || "deepseek-chat";
     return callOpenAIStyle(
       "https://api.deepseek.com/v1/chat/completions",
-      model, opts.systemPrompt, opts.userPrompt, key, temperature, maxTokens
+      model,
+      opts.systemPrompt,
+      opts.userPrompt,
+      key,
+      temperature,
+      maxTokens
     );
   }
   if (provider === "xai") {
     const model = opts.model || "grok-3";
     return callOpenAIStyle(
       "https://api.x.ai/v1/chat/completions",
-      model, opts.systemPrompt, opts.userPrompt, key, temperature, maxTokens
+      model,
+      opts.systemPrompt,
+      opts.userPrompt,
+      key,
+      temperature,
+      maxTokens
     );
   }
   throw new Error(`مزود AI غير مدعوم: ${provider}`);
@@ -66,18 +86,29 @@ export async function generateText(opts: AICallOptions): Promise<string> {
 
 function providerKey(p: AIProvider): string {
   switch (p) {
-    case "openai":    return process.env.OPENAI_API_KEY    || "";
-    case "anthropic": return process.env.ANTHROPIC_API_KEY || "";
-    case "google":    return process.env.GOOGLE_API_KEY    || "";
-    case "groq":      return process.env.GROQ_API_KEY      || "";
-    case "deepseek":  return process.env.DEEPSEEK_API_KEY  || "";
-    case "xai":       return process.env.XAI_API_KEY       || "";
+    case "openai":
+      return process.env.OPENAI_API_KEY || "";
+    case "anthropic":
+      return process.env.ANTHROPIC_API_KEY || "";
+    case "google":
+      return process.env.GOOGLE_API_KEY || "";
+    case "groq":
+      return process.env.GROQ_API_KEY || "";
+    case "deepseek":
+      return process.env.DEEPSEEK_API_KEY || "";
+    case "xai":
+      return process.env.XAI_API_KEY || "";
   }
 }
 
 async function callOpenAIStyle(
-  url: string, model: string, systemPrompt: string, userPrompt: string,
-  apiKey: string, temperature: number, maxTokens: number
+  url: string,
+  model: string,
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey: string,
+  temperature: number,
+  maxTokens: number
 ): Promise<string> {
   const res = await fetch(url, {
     method: "POST",
@@ -86,7 +117,7 @@ async function callOpenAIStyle(
       model,
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user",   content: userPrompt   },
+        { role: "user", content: userPrompt },
       ],
       temperature,
       max_tokens: maxTokens,
@@ -98,8 +129,12 @@ async function callOpenAIStyle(
 }
 
 async function callAnthropic(
-  model: string, systemPrompt: string, userPrompt: string,
-  apiKey: string, temperature: number, maxTokens: number
+  model: string,
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey: string,
+  temperature: number,
+  maxTokens: number
 ): Promise<string> {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -122,8 +157,12 @@ async function callAnthropic(
 }
 
 async function callGoogle(
-  model: string, systemPrompt: string, userPrompt: string,
-  apiKey: string, temperature: number, maxTokens: number
+  model: string,
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey: string,
+  temperature: number,
+  maxTokens: number
 ): Promise<string> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   // Gemini 2.5 لديها "thinking budget" يستهلك tokens قبل الـ output.
@@ -151,7 +190,12 @@ async function callGoogle(
     // Diagnostic: Gemini أحياناً يرجع candidate بدون نص عند MAX_TOKENS أو safety
     const finishReason = data.candidates?.[0]?.finishReason;
     const promptFeedback = data.promptFeedback;
-    console.warn("[ai-call/google] empty text, finishReason:", finishReason, "promptFeedback:", JSON.stringify(promptFeedback || {}).slice(0, 200));
+    console.warn(
+      "[ai-call/google] empty text, finishReason:",
+      finishReason,
+      "promptFeedback:",
+      JSON.stringify(promptFeedback || {}).slice(0, 200)
+    );
   }
   return text;
 }
@@ -161,11 +205,13 @@ async function callGoogle(
 // ─────────────────────────────────────────────────────────────
 export function isQuotaError(err: unknown): boolean {
   const msg = (err instanceof Error ? err.message : String(err || "")).toLowerCase();
-  return msg.includes("quota") ||
-         msg.includes("rate limit") ||
-         msg.includes("rate_limit") ||
-         msg.includes("429") ||
-         msg.includes("exceeded");
+  return (
+    msg.includes("quota") ||
+    msg.includes("rate limit") ||
+    msg.includes("rate_limit") ||
+    msg.includes("429") ||
+    msg.includes("exceeded")
+  );
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -177,7 +223,12 @@ export function isQuotaError(err: unknown): boolean {
  */
 export async function generateJSONWithFallback<T = unknown>(
   opts: AICallOptions
-): Promise<{ result: T | null; usedProvider: AIProvider; usedModel: string; fallbackReason?: string }> {
+): Promise<{
+  result: T | null;
+  usedProvider: AIProvider;
+  usedModel: string;
+  fallbackReason?: string;
+}> {
   const primary: AIProvider = opts.provider || "openai";
   // جرّب الأساسي
   try {
@@ -188,17 +239,31 @@ export async function generateJSONWithFallback<T = unknown>(
     // null = parse failed — جرّب fallback
     if (primary !== "deepseek" && process.env.DEEPSEEK_API_KEY) {
       const r2 = await generateJSON<T>({ ...opts, provider: "deepseek", model: "deepseek-chat" });
-      return { result: r2, usedProvider: "deepseek", usedModel: "deepseek-chat", fallbackReason: "primary returned invalid JSON" };
+      return {
+        result: r2,
+        usedProvider: "deepseek",
+        usedModel: "deepseek-chat",
+        fallbackReason: "primary returned invalid JSON",
+      };
     }
     return { result: null, usedProvider: primary, usedModel: opts.model || "" };
   } catch (e) {
     // فشل كامل (quota, network, etc) — جرّب DeepSeek
     if (opts.provider !== "deepseek" && process.env.DEEPSEEK_API_KEY) {
-      const reason = isQuotaError(e) ? "quota exceeded on primary" : (e instanceof Error ? e.message.slice(0, 100) : "unknown");
+      const reason = isQuotaError(e)
+        ? "quota exceeded on primary"
+        : e instanceof Error
+          ? e.message.slice(0, 100)
+          : "unknown";
       console.warn(`[ai-call] fallback to DeepSeek: ${reason}`);
       try {
         const r2 = await generateJSON<T>({ ...opts, provider: "deepseek", model: "deepseek-chat" });
-        return { result: r2, usedProvider: "deepseek", usedModel: "deepseek-chat", fallbackReason: reason };
+        return {
+          result: r2,
+          usedProvider: "deepseek",
+          usedModel: "deepseek-chat",
+          fallbackReason: reason,
+        };
       } catch (e2) {
         // حتى DeepSeek فشل
         throw e2;
@@ -215,7 +280,10 @@ export async function generateJSON<T = unknown>(opts: AICallOptions): Promise<T 
     temperature: opts.temperature ?? 0.5,
   });
   // حاول استخراج JSON من نص قد يحتوي ```json ... ```
-  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
+  const cleaned = raw
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/```\s*$/i, "")
+    .trim();
   try {
     return JSON.parse(cleaned) as T;
   } catch {

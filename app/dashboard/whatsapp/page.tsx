@@ -1,6 +1,17 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { MessageCircle, UploadCloud, FileText, CheckCircle2, Bot, AlertCircle, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  MessageCircle,
+  UploadCloud,
+  FileText,
+  CheckCircle2,
+  Bot,
+  AlertCircle,
+  Copy,
+  Check,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 
@@ -119,7 +130,7 @@ export default function WhatsAppPage() {
 
     try {
       const text = await file.text();
-      
+
       // هنا سنستدعي الـ API الخاص بتحليل النص عبر الذكاء الاصطناعي
       const res = await fetch("/api/ai-whatsapp", {
         method: "POST",
@@ -128,14 +139,13 @@ export default function WhatsAppPage() {
       });
 
       const data = await res.json();
-      
+
       if (!res.ok) {
         throw new Error(data.error || "فشل تحليل الملف");
       }
 
       setResults(data.extracted);
       toast.success("تم تحليل المحادثة بنجاح!");
-      
     } catch (error: any) {
       toast.error(error.message || "حدث خطأ غير متوقع أثناء المعالجة");
     } finally {
@@ -145,64 +155,119 @@ export default function WhatsAppPage() {
 
   return (
     <div dir="rtl">
-      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="font-cairo font-bold flex items-center gap-2" style={{ fontSize: 22 }}>
+          <h2 className="font-cairo flex items-center gap-2 font-bold" style={{ fontSize: 22 }}>
             <MessageCircle className="text-[var(--whatsapp)]" size={26} />
             قوالب رسائل + استيراد دردشات
           </h2>
           <p style={{ color: "var(--text-faint)", fontSize: 13, marginTop: 2 }}>
-            قسمان في صفحة واحدة: <strong>أعلى الصفحة</strong> أداة استيراد محادثات WhatsApp وتحليلها بالذكاء الاصطناعي،
-            و<strong>أسفل الصفحة</strong> مكتبة قوالب رسائل جاهزة للنسخ.
+            قسمان في صفحة واحدة: <strong>أعلى الصفحة</strong> أداة استيراد محادثات WhatsApp وتحليلها
+            بالذكاء الاصطناعي، و<strong>أسفل الصفحة</strong> مكتبة قوالب رسائل جاهزة للنسخ.
           </p>
         </div>
-        <a href="#قوالب-الرسائل" className="text-xs px-3 py-2 rounded-lg no-underline"
-          style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-2)" }}>
+        <a
+          href="#قوالب-الرسائل"
+          className="rounded-lg px-3 py-2 text-xs no-underline"
+          style={{
+            background: "var(--gold-bg)",
+            color: "var(--gold-2)",
+            border: "1px solid var(--gold-2)",
+          }}
+        >
           ↓ القفز إلى القوالب
         </a>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left Side / Details & Uploader */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="card-luxury p-6 relative overflow-hidden">
-            <div style={{ position: "absolute", top: 0, right: 0, width: "150px", height: "150px", background: "radial-gradient(circle, rgba(37,211,102,0.1) 0%, transparent 70%)" }} />
-            
-            <h3 className="font-cairo font-bold mb-4" style={{ fontSize: 16 }}>الاستيراد الذكي (Chat Export)</h3>
-            
-            <div 
-              className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${isDragging ? "border-[var(--whatsapp)] bg-[var(--whatsapp)]/5" : "border-[var(--bg-surface-2)] bg-[var(--bg-surface-1)]/50"} `}
+        <div className="space-y-6 lg:col-span-2">
+          <div className="card-luxury relative overflow-hidden p-6">
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "150px",
+                height: "150px",
+                background: "radial-gradient(circle, rgba(37,211,102,0.1) 0%, transparent 70%)",
+              }}
+            />
+
+            <h3 className="font-cairo mb-4 font-bold" style={{ fontSize: 16 }}>
+              الاستيراد الذكي (Chat Export)
+            </h3>
+
+            <div
+              className={`rounded-xl border-2 border-dashed p-8 text-center transition-all ${isDragging ? "border-[var(--whatsapp)] bg-[var(--whatsapp)]/5" : "border-[var(--bg-surface-2)] bg-[var(--bg-surface-1)]/50"} `}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
-              <input type="file" accept=".txt" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-              
+              <input
+                type="file"
+                accept=".txt"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
+
               {!file ? (
                 <>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(37,211,102,0.1)", color: "var(--whatsapp)" }}>
+                  <div
+                    className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                    style={{ background: "rgba(37,211,102,0.1)", color: "var(--whatsapp)" }}
+                  >
                     <UploadCloud size={28} />
                   </div>
-                  <p className="font-bold text-[var(--text-strong)] mb-2">اسحب وأفلت الملف النصي هنا</p>
-                  <p className="text-sm text-[var(--text-faint)] mb-6">يجب تصدير الدردشة من الواتساب (بدون وسائط) كملف بصيغة .txt</p>
-                  <button onClick={() => fileInputRef.current?.click()} className="btn-ghost px-6 py-2.5 text-sm">
+                  <p className="mb-2 font-bold text-[var(--text-strong)]">
+                    اسحب وأفلت الملف النصي هنا
+                  </p>
+                  <p className="mb-6 text-sm text-[var(--text-faint)]">
+                    يجب تصدير الدردشة من الواتساب (بدون وسائط) كملف بصيغة .txt
+                  </p>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="btn-ghost px-6 py-2.5 text-sm"
+                  >
                     تصفح الملفات
                   </button>
                 </>
               ) : (
                 <>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "var(--gold-bg)", color: "var(--gold-2)" }}>
+                  <div
+                    className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                    style={{ background: "var(--gold-bg)", color: "var(--gold-2)" }}
+                  >
                     <FileText size={28} />
                   </div>
-                  <p className="font-bold text-[var(--text-strong)] mb-1">{file.name}</p>
-                  <p className="text-xs text-[var(--text-faint)] mb-6">{(file.size / 1024).toFixed(2)} KB</p>
-                  
+                  <p className="mb-1 font-bold text-[var(--text-strong)]">{file.name}</p>
+                  <p className="mb-6 text-xs text-[var(--text-faint)]">
+                    {(file.size / 1024).toFixed(2)} KB
+                  </p>
+
                   <div className="flex justify-center gap-3">
-                    <button onClick={processFile} disabled={isUploading} className="btn-gold px-6 py-2.5 text-sm flex items-center gap-2">
-                       {isUploading ? <><Bot className="animate-pulse" size={16}/> جاري التحليل الذكي...</> : "بدء الاستخراج والتصنيف"}
+                    <button
+                      onClick={processFile}
+                      disabled={isUploading}
+                      className="btn-gold flex items-center gap-2 px-6 py-2.5 text-sm"
+                    >
+                      {isUploading ? (
+                        <>
+                          <Bot className="animate-pulse" size={16} /> جاري التحليل الذكي...
+                        </>
+                      ) : (
+                        "بدء الاستخراج والتصنيف"
+                      )}
                     </button>
-                    <button onClick={() => {setFile(null); setResults(null);}} disabled={isUploading} className="btn-ghost px-4 py-2.5 text-sm text-[var(--danger)] bg-[var(--danger)] bg-opacity-10">
+                    <button
+                      onClick={() => {
+                        setFile(null);
+                        setResults(null);
+                      }}
+                      disabled={isUploading}
+                      className="btn-ghost bg-opacity-10 bg-[var(--danger)] px-4 py-2.5 text-sm text-[var(--danger)]"
+                    >
                       إلغاء
                     </button>
                   </div>
@@ -213,77 +278,133 @@ export default function WhatsAppPage() {
 
           {/* Results Area */}
           {results && (
-            <div className="card-luxury p-6 fade-up border !border-[var(--whatsapp)]/30">
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="font-cairo font-bold flex items-center gap-2" style={{ fontSize: 16 }}>
+            <div className="card-luxury fade-up border !border-[var(--whatsapp)]/30 p-6">
+              <div className="mb-5 flex items-center justify-between">
+                <h3
+                  className="font-cairo flex items-center gap-2 font-bold"
+                  style={{ fontSize: 16 }}
+                >
                   <CheckCircle2 className="text-[var(--whatsapp)]" size={18} />
                   النتائج المستخرجة
                 </h3>
-                <button className="bg-[var(--whatsapp)] text-[var(--bg-page)] font-bold text-sm px-4 py-2 rounded-lg hover:bg-opacity-90 transition">
+                <button className="hover:bg-opacity-90 rounded-lg bg-[var(--whatsapp)] px-4 py-2 text-sm font-bold text-[var(--bg-page)] transition">
                   حفظ الكل كعملاء مباشرين
                 </button>
               </div>
 
-               {results.leads && results.leads.length > 0 ? (
-                 <div className="space-y-3">
-                   {results.leads.map((lead: any, i: number) => (
-                     <div key={i} className="flex justify-between items-center p-4 bg-[var(--bg-surface-2)] rounded-xl border border-white/5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold" style={{background: "var(--whatsapp)/20", color: "var(--whatsapp)"}}>
-                            {lead.name ? lead.name.charAt(0) : "؟"}
-                          </div>
-                          <div>
-                            <p className="font-bold text-sm text-white">{lead.name || "عميل محتمل"}</p>
-                            <p className="text-xs text-[var(--text-soft)] mt-1" dir="ltr">{lead.phone || "بدون رقم"}</p>
-                          </div>
+              {results.leads && results.leads.length > 0 ? (
+                <div className="space-y-3">
+                  {results.leads.map((lead: any, i: number) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between rounded-xl border border-white/5 bg-[var(--bg-surface-2)] p-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-10 w-10 items-center justify-center rounded-full font-bold"
+                          style={{ background: "var(--whatsapp)/20", color: "var(--whatsapp)" }}
+                        >
+                          {lead.name ? lead.name.charAt(0) : "؟"}
                         </div>
-                        <div className="text-left">
-                          {lead.category && <span className="bg-[var(--purple-ai)]/10 text-[var(--purple-ai)] text-xs px-2 py-1 rounded">{lead.category}</span>}
-                          {lead.budget && <p className="text-xs text-[var(--gold-2)] mt-2 font-bold">{lead.budget}</p>}
+                        <div>
+                          <p className="text-sm font-bold text-white">
+                            {lead.name || "عميل محتمل"}
+                          </p>
+                          <p className="mt-1 text-xs text-[var(--text-soft)]" dir="ltr">
+                            {lead.phone || "بدون رقم"}
+                          </p>
                         </div>
-                     </div>
-                   ))}
-                 </div>
-               ) : (
-                 <div className="text-center p-6 bg-[var(--bg-surface-2)] rounded-xl">
-                   <p className="text-[var(--text-soft)] text-sm">لم يجد الذكاء الاصطناعي بيانات عملاء واضحة في المحادثة.</p>
-                 </div>
-               )}
+                      </div>
+                      <div className="text-left">
+                        {lead.category && (
+                          <span className="rounded bg-[var(--purple-ai)]/10 px-2 py-1 text-xs text-[var(--purple-ai)]">
+                            {lead.category}
+                          </span>
+                        )}
+                        {lead.budget && (
+                          <p className="mt-2 text-xs font-bold text-[var(--gold-2)]">
+                            {lead.budget}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-xl bg-[var(--bg-surface-2)] p-6 text-center">
+                  <p className="text-sm text-[var(--text-soft)]">
+                    لم يجد الذكاء الاصطناعي بيانات عملاء واضحة في المحادثة.
+                  </p>
+                </div>
+              )}
             </div>
           )}
-
         </div>
 
         {/* Right Side / Instructions */}
         <div className="space-y-4">
-           <div className="card-luxury p-5 border-t-4 !border-t-[var(--whatsapp)]">
-              <h4 className="font-bold text-[var(--text-strong)] mb-3 text-sm">طريقة الإستخدام</h4>
-              <ul className="text-sm text-[var(--text-soft)] space-y-3 leading-relaxed">
-                 <li className="flex gap-2"><span className="text-[var(--whatsapp)]">1.</span> افتح الدردشة المطلوبة من تطبيق الواتساب.</li>
-                 <li className="flex gap-2"><span className="text-[var(--whatsapp)]">2.</span> اذهب لخيارات الدردشة واختر "تصدير الدردشة" (Export Chat).</li>
-                 <li className="flex gap-2"><span className="text-[var(--whatsapp)]">3.</span> اختر "بدون وسائط" ليكون حجم الملف خفيف.</li>
-                 <li className="flex gap-2"><span className="text-[var(--whatsapp)]">4.</span> سيتم حفظ الملف بصيغة (.txt). ارفعه هنا.</li>
-              </ul>
-           </div>
+          <div className="card-luxury border-t-4 !border-t-[var(--whatsapp)] p-5">
+            <h4 className="mb-3 text-sm font-bold text-[var(--text-strong)]">طريقة الإستخدام</h4>
+            <ul className="space-y-3 text-sm leading-relaxed text-[var(--text-soft)]">
+              <li className="flex gap-2">
+                <span className="text-[var(--whatsapp)]">1.</span> افتح الدردشة المطلوبة من تطبيق
+                الواتساب.
+              </li>
+              <li className="flex gap-2">
+                <span className="text-[var(--whatsapp)]">2.</span> اذهب لخيارات الدردشة واختر "تصدير
+                الدردشة" (Export Chat).
+              </li>
+              <li className="flex gap-2">
+                <span className="text-[var(--whatsapp)]">3.</span> اختر "بدون وسائط" ليكون حجم الملف
+                خفيف.
+              </li>
+              <li className="flex gap-2">
+                <span className="text-[var(--whatsapp)]">4.</span> سيتم حفظ الملف بصيغة (.txt).
+                ارفعه هنا.
+              </li>
+            </ul>
+          </div>
 
-           <div className="bg-[var(--bg-surface-2)] p-5 rounded-xl border border-white/5 flex gap-3 text-sm">
-             <AlertCircle className="text-[var(--gold-2)] flex-shrink-0 mt-0.5" size={16} />
-             <p className="text-[var(--text-soft)] leading-relaxed">
-               <strong className="text-white">ملاحظة الخصوصية:</strong> الملفات المرفوعة يتم تحليلها لحظياً عبر نماذج الذكاء الاصطناعي لاستخراج البيانات وفوراً مسحها دون حفظ المحادثات.
-             </p>
-           </div>
+          <div className="flex gap-3 rounded-xl border border-white/5 bg-[var(--bg-surface-2)] p-5 text-sm">
+            <AlertCircle className="mt-0.5 flex-shrink-0 text-[var(--gold-2)]" size={16} />
+            <p className="leading-relaxed text-[var(--text-soft)]">
+              <strong className="text-white">ملاحظة الخصوصية:</strong> الملفات المرفوعة يتم تحليلها
+              لحظياً عبر نماذج الذكاء الاصطناعي لاستخراج البيانات وفوراً مسحها دون حفظ المحادثات.
+            </p>
+          </div>
         </div>
-
       </div>
 
       {/* ══════════ قوالب الرسائل ══════════ */}
       <div id="قوالب-الرسائل" style={{ marginTop: 32, scrollMarginTop: 80 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 9,
+              background: "rgba(37,211,102,0.1)",
+              border: "1px solid rgba(37,211,102,0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <MessageCircle size={16} style={{ color: "var(--whatsapp)" }} />
           </div>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-strong)" }}>قوالب الرسائل الجاهزة</h3>
-          <span style={{ fontSize: 11, color: "var(--text-faint)", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)", borderRadius: 99, padding: "2px 10px" }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-strong)" }}>
+            قوالب الرسائل الجاهزة
+          </h3>
+          <span
+            style={{
+              fontSize: 11,
+              color: "var(--text-faint)",
+              background: "var(--bg-surface-2)",
+              border: "1px solid var(--overlay-mid)",
+              borderRadius: 99,
+              padding: "2px 10px",
+            }}
+          >
             {MESSAGE_TEMPLATES.reduce((n, c) => n + c.templates.length, 0)} قالب
           </span>
         </div>
@@ -291,43 +412,126 @@ export default function WhatsAppPage() {
           انسخ القالب بضغطة واحدة — عدّل المتغيرات بين الأقواس بالمعلومات الفعلية قبل الإرسال
         </p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
-          {MESSAGE_TEMPLATES.map(cat => {
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+            gap: 12,
+          }}
+        >
+          {MESSAGE_TEMPLATES.map((cat) => {
             const isOpen = expandedCat === cat.category;
             return (
-              <div key={cat.category} style={{ background: "var(--bg-surface-1)", border: `1px solid ${cat.color}18`, borderRadius: 14, overflow: "hidden" }}>
+              <div
+                key={cat.category}
+                style={{
+                  background: "var(--bg-surface-1)",
+                  border: `1px solid ${cat.color}18`,
+                  borderRadius: 14,
+                  overflow: "hidden",
+                }}
+              >
                 {/* Category header */}
                 <button
                   onClick={() => setExpandedCat(isOpen ? null : cat.category)}
-                  style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", background: "none", border: "none", cursor: "pointer", borderBottom: isOpen ? `1px solid ${cat.color}14` : "none" }}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "14px 16px",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    borderBottom: isOpen ? `1px solid ${cat.color}14` : "none",
+                  }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: cat.color }} />
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)" }}>{cat.category}</span>
-                    <span style={{ fontSize: 10, color: "var(--text-disabled)" }}>{cat.templates.length} قوالب</span>
+                    <div
+                      style={{ width: 8, height: 8, borderRadius: "50%", background: cat.color }}
+                    />
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)" }}>
+                      {cat.category}
+                    </span>
+                    <span style={{ fontSize: 10, color: "var(--text-disabled)" }}>
+                      {cat.templates.length} قوالب
+                    </span>
                   </div>
-                  {isOpen ? <ChevronUp size={14} style={{ color: "var(--text-disabled)" }} /> : <ChevronDown size={14} style={{ color: "var(--text-disabled)" }} />}
+                  {isOpen ? (
+                    <ChevronUp size={14} style={{ color: "var(--text-disabled)" }} />
+                  ) : (
+                    <ChevronDown size={14} style={{ color: "var(--text-disabled)" }} />
+                  )}
                 </button>
 
                 {/* Templates */}
                 {isOpen && (
-                  <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div
+                    style={{
+                      padding: "10px 12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
                     {cat.templates.map((tpl, idx) => {
                       const id = `${cat.category}-${idx}`;
                       const copied = copiedId === id;
                       return (
-                        <div key={idx} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 10, overflow: "hidden" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                            <span style={{ fontSize: 12, fontWeight: 600, color: cat.color }}>{tpl.title}</span>
+                        <div
+                          key={idx}
+                          style={{
+                            background: "var(--bg-deep)",
+                            border: "1px solid var(--overlay-soft)",
+                            borderRadius: 10,
+                            overflow: "hidden",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              padding: "10px 12px",
+                              borderBottom: "1px solid rgba(255,255,255,0.04)",
+                            }}
+                          >
+                            <span style={{ fontSize: 12, fontWeight: 600, color: cat.color }}>
+                              {tpl.title}
+                            </span>
                             <button
                               onClick={() => copyTemplate(tpl.text, id)}
-                              style={{ display: "flex", alignItems: "center", gap: 5, padding: "4px 10px", borderRadius: 7, background: copied ? "rgba(74,222,128,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${copied ? "rgba(74,222,128,0.2)" : "var(--overlay-mid)"}`, color: copied ? "var(--success)" : "var(--text-soft)", fontSize: 11, cursor: "pointer", transition: "all 0.2s" }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 5,
+                                padding: "4px 10px",
+                                borderRadius: 7,
+                                background: copied
+                                  ? "rgba(74,222,128,0.1)"
+                                  : "rgba(255,255,255,0.04)",
+                                border: `1px solid ${copied ? "rgba(74,222,128,0.2)" : "var(--overlay-mid)"}`,
+                                color: copied ? "var(--success)" : "var(--text-soft)",
+                                fontSize: 11,
+                                cursor: "pointer",
+                                transition: "all 0.2s",
+                              }}
                             >
                               {copied ? <Check size={11} /> : <Copy size={11} />}
                               {copied ? "تم النسخ!" : "نسخ"}
                             </button>
                           </div>
-                          <pre style={{ margin: 0, padding: "10px 12px", fontSize: 12, color: "var(--text-soft)", whiteSpace: "pre-wrap", lineHeight: 1.7, fontFamily: "inherit" }}>
+                          <pre
+                            style={{
+                              margin: 0,
+                              padding: "10px 12px",
+                              fontSize: 12,
+                              color: "var(--text-soft)",
+                              whiteSpace: "pre-wrap",
+                              lineHeight: 1.7,
+                              fontFamily: "inherit",
+                            }}
+                          >
                             {tpl.text}
                           </pre>
                         </div>

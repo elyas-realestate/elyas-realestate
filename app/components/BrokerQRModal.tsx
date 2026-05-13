@@ -10,9 +10,9 @@ import { X, Download, QrCode, IdCard, MessageCircle, Map } from "lucide-react";
 
 interface Props {
   slug: string;
-  whatsapp?: string;       // رقم واتساب (e.g., "966501234567")
+  whatsapp?: string; // رقم واتساب (e.g., "966501234567")
   brokerName?: string;
-  mapsUrl?: string;        // رابط Google Maps
+  mapsUrl?: string; // رابط Google Maps
   accentColor?: string;
   bgColor?: string;
   textColor?: string;
@@ -26,7 +26,7 @@ const TYPES = [
   { id: "maps", label: "موقعي", icon: Map, hint: "موقع المكتب على الخريطة" },
 ] as const;
 
-type QRType = typeof TYPES[number]["id"];
+type QRType = (typeof TYPES)[number]["id"];
 
 export default function BrokerQRModal({
   slug,
@@ -90,7 +90,7 @@ export default function BrokerQRModal({
       }}
     >
       <div
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         dir="rtl"
         style={{
           width: "100%",
@@ -104,24 +104,38 @@ export default function BrokerQRModal({
           border: `1px solid ${accentColor}33`,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 16,
+          }}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <QrCode size={20} style={{ color: accentColor }} />
             <h3 style={{ fontSize: 17, fontWeight: 800 }}>رمز QR</h3>
           </div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", cursor: "pointer", color: textColor, padding: 4 }}>
+          <button
+            onClick={onClose}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: textColor,
+              padding: 4,
+            }}
+          >
             <X size={18} />
           </button>
         </div>
 
         {/* Tabs */}
         <div style={{ display: "flex", gap: 6, marginBottom: 18, flexWrap: "wrap" }}>
-          {TYPES.map(t => {
+          {TYPES.map((t) => {
             const Icon = t.icon;
             const active = activeType === t.id;
-            const disabled =
-              (t.id === "whatsapp" && !whatsapp) ||
-              (t.id === "maps" && !mapsUrl);
+            const disabled = (t.id === "whatsapp" && !whatsapp) || (t.id === "maps" && !mapsUrl);
             return (
               <button
                 key={t.id}
@@ -133,7 +147,7 @@ export default function BrokerQRModal({
                   borderRadius: 10,
                   border: `1px solid ${active ? accentColor : `${accentColor}33`}`,
                   background: active ? `${accentColor}1a` : "transparent",
-                  color: disabled ? `${textColor}66` : (active ? accentColor : textColor),
+                  color: disabled ? `${textColor}66` : active ? accentColor : textColor,
                   cursor: disabled ? "not-allowed" : "pointer",
                   fontSize: 12,
                   fontWeight: 600,
@@ -153,25 +167,31 @@ export default function BrokerQRModal({
 
         {/* Hint */}
         <p style={{ fontSize: 12, opacity: 0.7, textAlign: "center", marginBottom: 14 }}>
-          {TYPES.find(t => t.id === activeType)?.hint}
+          {TYPES.find((t) => t.id === activeType)?.hint}
         </p>
 
         {/* QR Image */}
-        <div style={{
-          width: 280,
-          height: 280,
-          margin: "0 auto",
-          background: bgColor,
-          borderRadius: 16,
-          padding: 8,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: `1px solid ${accentColor}22`,
-        }}>
+        <div
+          style={{
+            width: 280,
+            height: 280,
+            margin: "0 auto",
+            background: bgColor,
+            borderRadius: 16,
+            padding: 8,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: `1px solid ${accentColor}22`,
+          }}
+        >
           {qrUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={qrUrl} alt="QR" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img
+              src={qrUrl}
+              alt="QR"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           ) : (
             <p style={{ fontSize: 12, opacity: 0.5 }}>غير متاح</p>
           )}

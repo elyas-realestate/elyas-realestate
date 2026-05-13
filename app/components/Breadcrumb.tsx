@@ -9,7 +9,7 @@ interface Crumb {
 
 export default function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   return (
-    <nav className="flex items-center gap-1 mb-5 text-sm" aria-label="breadcrumb">
+    <nav className="mb-5 flex items-center gap-1 text-sm" aria-label="breadcrumb">
       {crumbs.map((crumb, i) => {
         const isLast = i === crumbs.length - 1;
         return (
@@ -24,7 +24,12 @@ export default function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
                 {crumb.label}
               </Link>
             ) : (
-              <span style={{ color: isLast ? "var(--gold-2)" : "var(--text-soft)", fontWeight: isLast ? 600 : 400 }}>
+              <span
+                style={{
+                  color: isLast ? "var(--gold-2)" : "var(--text-soft)",
+                  fontWeight: isLast ? 600 : 400,
+                }}
+              >
                 {crumb.label}
               </span>
             )}

@@ -15,23 +15,30 @@
 export type Coords = { lat: number; lng: number };
 
 const SAUDI_BOUNDS = {
-  latMin: 16, latMax: 33,
-  lngMin: 34, lngMax: 56,
+  latMin: 16,
+  latMax: 33,
+  lngMin: 34,
+  lngMax: 56,
 };
 
 function isInSaudiBounds(lat: number, lng: number): boolean {
   return (
-    lat >= SAUDI_BOUNDS.latMin && lat <= SAUDI_BOUNDS.latMax &&
-    lng >= SAUDI_BOUNDS.lngMin && lng <= SAUDI_BOUNDS.lngMax
+    lat >= SAUDI_BOUNDS.latMin &&
+    lat <= SAUDI_BOUNDS.latMax &&
+    lng >= SAUDI_BOUNDS.lngMin &&
+    lng <= SAUDI_BOUNDS.lngMax
   );
 }
 
 /** صحّة عامة للإحداثيات (نطاق العالم) */
 function isValidLatLng(lat: number, lng: number): boolean {
   return (
-    !isNaN(lat) && !isNaN(lng) &&
-    lat >= -90 && lat <= 90 &&
-    lng >= -180 && lng <= 180 &&
+    !isNaN(lat) &&
+    !isNaN(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180 &&
     !(lat === 0 && lng === 0)
   );
 }

@@ -10,9 +10,18 @@ export async function GET(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } },
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
@@ -21,7 +30,7 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
   // ── Fetch invoice (tenant scoped) ──
@@ -36,14 +45,19 @@ export async function GET(req: NextRequest) {
   // ── Fetch seller identity ──
   const { data: identity } = await supabase
     .from("broker_identity")
-    .select("broker_name, vat_number, commercial_register, commercial_street, commercial_district, commercial_city, commercial_postal, commercial_building")
+    .select(
+      "broker_name, vat_number, commercial_register, commercial_street, commercial_district, commercial_city, commercial_postal, commercial_building"
+    )
     .eq("tenant_id", user.id)
     .maybeSingle();
 
   if (!identity?.vat_number || !isValidSaudiVat(identity.vat_number)) {
-    return NextResponse.json({
-      error: "الرقم الضريبي غير موجود أو غير صالح — أضفه في الإعدادات → الشهادات",
-    }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: "الرقم الضريبي غير موجود أو غير صالح — أضفه في الإعدادات → الشهادات",
+      },
+      { status: 400 }
+    );
   }
 
   // ── previous hash (آخر فاتورة لنفس الـ tenant) ──
@@ -61,33 +75,33 @@ export async function GET(req: NextRequest) {
   const issueTime = issueDateTime.toISOString().slice(11, 19);
 
   const xml = buildUblXml({
-    invoiceUuid:    inv.xml_uuid || inv.id,
-    invoiceNumber:  inv.invoice_number || `INV-${inv.invoice_counter || 0}`,
+    invoiceUuid: inv.xml_uuid || inv.id,
+    invoiceNumber: inv.invoice_number || `INV-${inv.invoice_counter || 0}`,
     invoiceCounter: Number(inv.invoice_counter || 1),
     issueDate,
     issueTime,
-    invoiceType:    (inv.invoice_type === "simplified" ? "simplified" : "standard"),
-    previousHash:   prev?.invoice_hash || null,
+    invoiceType: inv.invoice_type === "simplified" ? "simplified" : "standard",
+    previousHash: prev?.invoice_hash || null,
     seller: {
-      name:           identity.broker_name || "وسيط عقاري",
-      vatNumber:      identity.vat_number,
-      crNumber:       identity.commercial_register || "",
-      street:         identity.commercial_street    || "",
-      buildingNumber: identity.commercial_building  || "",
-      district:       identity.commercial_district  || "",
-      city:           identity.commercial_city      || "الرياض",
-      postalCode:     identity.commercial_postal    || "",
+      name: identity.broker_name || "وسيط عقاري",
+      vatNumber: identity.vat_number,
+      crNumber: identity.commercial_register || "",
+      street: identity.commercial_street || "",
+      buildingNumber: identity.commercial_building || "",
+      district: identity.commercial_district || "",
+      city: identity.commercial_city || "الرياض",
+      postalCode: identity.commercial_postal || "",
     },
     buyer: {
-      name:  inv.client_name || "عميل نقدي",
+      name: inv.client_name || "عميل نقدي",
     },
     lines: [
       {
-        id:          1,
+        id: 1,
         description: inv.title || "خدمة وساطة عقارية",
-        quantity:    1,
-        unitPrice:   Number(inv.amount || 0),
-        vatRate:     15,
+        quantity: 1,
+        unitPrice: Number(inv.amount || 0),
+        vatRate: 15,
       },
     ],
     currency: inv.currency || "SAR",
@@ -98,19 +112,19 @@ export async function GET(req: NextRequest) {
   await supabase
     .from("invoices")
     .update({
-      invoice_hash:  hash,
+      invoice_hash: hash,
       previous_hash: prev?.invoice_hash || null,
     })
     .eq("id", inv.id)
     .eq("tenant_id", user.id);
 
-  const filename = `invoice-${inv.invoice_number || inv.invoice_counter || inv.id.slice(0,8)}.xml`;
+  const filename = `invoice-${inv.invoice_number || inv.invoice_counter || inv.id.slice(0, 8)}.xml`;
 
   return new NextResponse(xml, {
     headers: {
-      "Content-Type":        "application/xml; charset=utf-8",
+      "Content-Type": "application/xml; charset=utf-8",
       "Content-Disposition": `attachment; filename="${filename}"`,
-      "X-Invoice-Hash":      hash,
+      "X-Invoice-Hash": hash,
     },
   });
 }

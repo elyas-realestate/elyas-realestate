@@ -122,7 +122,9 @@ export async function toolClientsSummary(tenantId: string): Promise<string> {
   return [
     `👥 ${data.length} عميل: 🔥${counts.hot} ☀️${counts.warm} ❄️${counts.cold}`,
     recent ? `آخر إضافات: ${recent}` : "",
-  ].filter(Boolean).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -157,8 +159,10 @@ export async function toolPropertiesSummary(tenantId: string): Promise<string> {
 
 export async function toolTodayTasks(tenantId: string): Promise<string> {
   const admin = makeAdmin();
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
   const { data, error } = await admin
     .from("tasks")
@@ -174,7 +178,12 @@ export async function toolTodayTasks(tenantId: string): Promise<string> {
 
   const lines = [`📅 ${data.length} مهمة اليوم:`];
   data.slice(0, 5).forEach((t: any) => {
-    const status = t.status === "مكتمل" || t.status === "completed" ? "✅" : t.priority === "عاجل" || t.priority === "high" ? "🔴" : "⏳";
+    const status =
+      t.status === "مكتمل" || t.status === "completed"
+        ? "✅"
+        : t.priority === "عاجل" || t.priority === "high"
+          ? "🔴"
+          : "⏳";
     lines.push(`${status} ${t.title}`);
   });
 
@@ -200,7 +209,9 @@ export async function toolPropertyRequests(tenantId: string): Promise<string> {
 
   const lines = [`📩 ${data.length} طلب عقاري نشط:`];
   data.slice(0, 4).forEach((r: any) => {
-    lines.push(`• ${r.contact_name || "عميل"} — ${r.request_type || ""} ${r.main_category || ""}${r.district ? " في " + r.district : ""}`);
+    lines.push(
+      `• ${r.contact_name || "عميل"} — ${r.request_type || ""} ${r.main_category || ""}${r.district ? " في " + r.district : ""}`
+    );
   });
 
   return lines.join("\n");
@@ -215,8 +226,15 @@ export async function toolDailySummary(tenantId: string): Promise<string> {
   const [dealsRes, clientsRes, propsRes, requestsRes] = await Promise.all([
     admin.from("deals").select("id, current_stage", { count: "exact" }).eq("tenant_id", tenantId),
     admin.from("clients").select("id, sentiment", { count: "exact" }).eq("tenant_id", tenantId),
-    admin.from("properties").select("id, is_published", { count: "exact" }).eq("tenant_id", tenantId),
-    admin.from("property_requests").select("id, status", { count: "exact" }).eq("tenant_id", tenantId).neq("status", "محول"),
+    admin
+      .from("properties")
+      .select("id, is_published", { count: "exact" })
+      .eq("tenant_id", tenantId),
+    admin
+      .from("property_requests")
+      .select("id, status", { count: "exact" })
+      .eq("tenant_id", tenantId)
+      .neq("status", "محول"),
   ]);
 
   const deals = dealsRes.data || [];
@@ -226,7 +244,9 @@ export async function toolDailySummary(tenantId: string): Promise<string> {
 
   const hotClients = clients.filter((c: any) => c.sentiment === "hot").length;
   const publishedProps = props.filter((p: any) => p.is_published).length;
-  const activeDeals = deals.filter((d: any) => d.current_stage !== "ملغاة" && d.current_stage !== "مكتملة").length;
+  const activeDeals = deals.filter(
+    (d: any) => d.current_stage !== "ملغاة" && d.current_stage !== "مكتملة"
+  ).length;
 
   const greeting = (() => {
     const h = new Date().getHours();
@@ -237,7 +257,9 @@ export async function toolDailySummary(tenantId: string): Promise<string> {
     `${greeting} أستاذ إلياس، ملخّص اليوم:`,
     `🏠 ${publishedProps}/${props.length} عقار منشور`,
     `💼 ${activeDeals} صفقة نشطة، 🔥 ${hotClients} عميل ساخن`,
-    requests.length > 0 ? `📩 ${requests.length} طلب جديد لم يُحوَّل لصفقة` : "📩 لا طلبات جديدة معلّقة",
+    requests.length > 0
+      ? `📩 ${requests.length} طلب جديد لم يُحوَّل لصفقة`
+      : "📩 لا طلبات جديدة معلّقة",
   ].join("\n");
 }
 
@@ -245,22 +267,24 @@ export async function toolDailySummary(tenantId: string): Promise<string> {
 // 7) Add task — تسجيل مهمة جديدة
 // ════════════════════════════════════════════════════════════════
 
-export async function toolAddTask(tenantId: string, title: string, dueAt?: string): Promise<string> {
+export async function toolAddTask(
+  tenantId: string,
+  title: string,
+  dueAt?: string
+): Promise<string> {
   const admin = makeAdmin();
   const due = dueAt || new Date(Date.now() + 24 * 3600 * 1000).toISOString();
   const dueDate = due.slice(0, 10); // YYYY-MM-DD
 
-  const { error } = await admin
-    .from("tasks")
-    .insert({
-      tenant_id: tenantId,
-      title: title.slice(0, 200),
-      due_date: dueDate,
-      status: "جديد",
-      priority: "متوسط",
-      task_type: "أخرى",
-      notes: "أُضيفت عبر السكرتير الذكي (واتساب)",
-    } as never);
+  const { error } = await admin.from("tasks").insert({
+    tenant_id: tenantId,
+    title: title.slice(0, 200),
+    due_date: dueDate,
+    status: "جديد",
+    priority: "متوسط",
+    task_type: "أخرى",
+    notes: "أُضيفت عبر السكرتير الذكي (واتساب)",
+  } as never);
 
   if (error) return `تعذّر إضافة المهمة: ${error.message}`;
   return `✅ سجّلت المهمة: "${title.slice(0, 60)}" — موعدها ${new Date(due).toLocaleDateString("en-US")}`;
@@ -276,19 +300,27 @@ export async function executeIntent(
   text: string
 ): Promise<string | null> {
   switch (intent) {
-    case "deals_summary":     return toolDealsSummary(tenantId);
-    case "clients_summary":   return toolClientsSummary(tenantId);
-    case "properties_summary":return toolPropertiesSummary(tenantId);
-    case "today_tasks":       return toolTodayTasks(tenantId);
-    case "property_requests": return toolPropertyRequests(tenantId);
-    case "daily_summary":     return toolDailySummary(tenantId);
+    case "deals_summary":
+      return toolDealsSummary(tenantId);
+    case "clients_summary":
+      return toolClientsSummary(tenantId);
+    case "properties_summary":
+      return toolPropertiesSummary(tenantId);
+    case "today_tasks":
+      return toolTodayTasks(tenantId);
+    case "property_requests":
+      return toolPropertyRequests(tenantId);
+    case "daily_summary":
+      return toolDailySummary(tenantId);
     case "add_task": {
       // استخراج العنوان من النص: "أضف مهمة: عنوان المهمة"
       const m = text.match(/(?:أضف|إضاف|أنشئ|سجّل|add|create)\s*(?:مهمة|task)?\s*[:\-،,]?\s*(.+)/i);
       const title = m?.[1]?.trim() || text.replace(/(?:أضف|إضاف|أنشئ|سجّل|مهمة|task)/gi, "").trim();
-      if (!title || title.length < 3) return "صيغة غير واضحة. مثال: 'أضف مهمة: زيارة فيلا النرجس غداً ٤م'";
+      if (!title || title.length < 3)
+        return "صيغة غير واضحة. مثال: 'أضف مهمة: زيارة فيلا النرجس غداً ٤م'";
       return toolAddTask(tenantId, title);
     }
-    case "none": return null;
+    case "none":
+      return null;
   }
 }

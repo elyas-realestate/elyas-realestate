@@ -14,10 +14,7 @@ function escapeVCard(value: string): string {
     .replace(/;/g, "\\;");
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (!slug) return new NextResponse("Bad Request", { status: 400 });
 
@@ -28,7 +25,10 @@ export async function GET(
 
   // ── جلب tenant + identity + settings ──
   const { data: tenant } = await admin
-    .from("tenants").select("id, slug").eq("slug", slug).maybeSingle();
+    .from("tenants")
+    .select("id, slug")
+    .eq("slug", slug)
+    .maybeSingle();
   if (!tenant?.id) return new NextResponse("Not Found", { status: 404 });
 
   const [identityRes, settingsRes] = await Promise.all([
@@ -42,11 +42,13 @@ export async function GET(
   // ── بناء الـ vCard ──
   const fullName = (identity.broker_name as string) || (settings.site_name as string) || slug;
   const org = (identity.vcard_org as string) || (settings.site_name as string) || "";
-  const title = (identity.vcard_title as string) || (identity.specialization as string) || "وسيط عقاري";
+  const title =
+    (identity.vcard_title as string) || (identity.specialization as string) || "وسيط عقاري";
   const phone = (settings.phone as string) || "";
   const whatsapp = (settings.whatsapp as string) || phone;
   const email = (settings.email as string) || (settings.contact_email as string) || "";
-  const website = (identity.vcard_website as string) || `https://elyas-realestate.vercel.app/${slug}`;
+  const website =
+    (identity.vcard_website as string) || `https://elyas-realestate.vercel.app/${slug}`;
   const address = (identity.vcard_address as string) || "";
   const photoUrl = (identity.photo_url as string) || (settings.site_logo as string) || "";
 
@@ -57,11 +59,11 @@ export async function GET(
     `N:${escapeVCard(fullName)};;;;`,
   ];
 
-  if (org)     lines.push(`ORG:${escapeVCard(org)}`);
-  if (title)   lines.push(`TITLE:${escapeVCard(title)}`);
-  if (phone)   lines.push(`TEL;TYPE=CELL,VOICE:${phone}`);
+  if (org) lines.push(`ORG:${escapeVCard(org)}`);
+  if (title) lines.push(`TITLE:${escapeVCard(title)}`);
+  if (phone) lines.push(`TEL;TYPE=CELL,VOICE:${phone}`);
   if (whatsapp && whatsapp !== phone) lines.push(`TEL;TYPE=WORK,VOICE:${whatsapp}`);
-  if (email)   lines.push(`EMAIL;TYPE=INTERNET:${escapeVCard(email)}`);
+  if (email) lines.push(`EMAIL;TYPE=INTERNET:${escapeVCard(email)}`);
   if (website) lines.push(`URL:${escapeVCard(website)}`);
   if (address) lines.push(`ADR;TYPE=WORK:;;${escapeVCard(address)};;;;`);
   if (photoUrl && photoUrl.startsWith("http")) {

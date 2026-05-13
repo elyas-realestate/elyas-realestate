@@ -83,8 +83,17 @@ async function getCardData(slug: string) {
 
   const [cardRes, linksRes, identityRes, settingsRes, testimonialsRes] = await Promise.all([
     admin.from("profile_cards").select("*").eq("tenant_id", tenant.id).maybeSingle(),
-    admin.from("profile_links").select("*").eq("tenant_id", tenant.id).eq("is_active", true).order("display_order"),
-    admin.from("broker_identity").select("broker_name, specialization, photo_url, bio_short, commercial_register, vat_number").eq("tenant_id", tenant.id).maybeSingle(),
+    admin
+      .from("profile_links")
+      .select("*")
+      .eq("tenant_id", tenant.id)
+      .eq("is_active", true)
+      .order("display_order"),
+    admin
+      .from("broker_identity")
+      .select("broker_name, specialization, photo_url, bio_short, commercial_register, vat_number")
+      .eq("tenant_id", tenant.id)
+      .maybeSingle(),
     admin.from("site_settings").select("*").eq("tenant_id", tenant.id).maybeSingle(),
     admin
       .from("testimonials")
@@ -98,29 +107,29 @@ async function getCardData(slug: string) {
   ]);
 
   // دمج الحقول من المصدرين — site_settings له الأولوية للحقول التواصلية
-  const s = settingsRes.data || {} as any;
-  const bi = identityRes.data || {} as any;
+  const s = settingsRes.data || ({} as any);
+  const bi = identityRes.data || ({} as any);
 
   const identity: Identity = {
-    broker_name:    bi.broker_name || s.site_name || null,
+    broker_name: bi.broker_name || s.site_name || null,
     specialization: bi.specialization || null,
-    photo_url:      bi.photo_url || s.site_logo || null,
-    fal_license:    s.fal_license || null,
-    cr_number:      bi.commercial_register || null,
-    vat_number:     bi.vat_number || null,
-    phone:          s.phone || null,
-    email:          s.email || s.contact_email || null,
-    business_hours_weekday: null,  // لاحقاً
+    photo_url: bi.photo_url || s.site_logo || null,
+    fal_license: s.fal_license || null,
+    cr_number: bi.commercial_register || null,
+    vat_number: bi.vat_number || null,
+    phone: s.phone || null,
+    email: s.email || s.contact_email || null,
+    business_hours_weekday: null, // لاحقاً
     business_hours_weekend: null,
-    social_x:         s.social_x || null,
+    social_x: s.social_x || null,
     social_instagram: s.social_instagram || null,
-    social_tiktok:    s.social_tiktok || null,
-    social_snapchat:  s.social_snapchat || null,
-    social_linkedin:  s.social_linkedin || null,
-    social_youtube:   s.social_youtube || null,
-    social_threads:   s.social_threads || null,
-    social_facebook:  s.social_facebook || null,
-    social_whatsapp:  s.social_whatsapp || s.whatsapp || null,
+    social_tiktok: s.social_tiktok || null,
+    social_snapchat: s.social_snapchat || null,
+    social_linkedin: s.social_linkedin || null,
+    social_youtube: s.social_youtube || null,
+    social_threads: s.social_threads || null,
+    social_facebook: s.social_facebook || null,
+    social_whatsapp: s.social_whatsapp || s.whatsapp || null,
   };
 
   // ✨ AUTO-PULL: عناصر تلقائية من الإعدادات (سوشال + رخص + تواصل مباشر)
@@ -143,7 +152,7 @@ async function getCardData(slug: string) {
     metadata: a.metadata,
     bg_color: null,
     text_color: null,
-    display_order: -1000 + i,  // قبل أي manual
+    display_order: -1000 + i, // قبل أي manual
     is_active: true,
     isAuto: true,
   }));

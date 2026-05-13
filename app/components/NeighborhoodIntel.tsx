@@ -35,9 +35,11 @@ export default function NeighborhoodIntel({ city, district, accentColor = "#C691
     if (!city || !district) return;
     setLoading(true);
     setError(false);
-    fetch(`/api/ai/neighborhood-intel?city=${encodeURIComponent(city)}&district=${encodeURIComponent(district)}`)
-      .then(r => r.json())
-      .then(res => {
+    fetch(
+      `/api/ai/neighborhood-intel?city=${encodeURIComponent(city)}&district=${encodeURIComponent(district)}`
+    )
+      .then((r) => r.json())
+      .then((res) => {
         if (res.ok && res.data) setData(res.data);
         else setError(true);
       })
@@ -76,7 +78,9 @@ export default function NeighborhoodIntel({ city, district, accentColor = "#C691
         >
           <MapPin size={16} />
         </span>
-        <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text-strong, #1a1206)", margin: 0 }}>
+        <h3
+          style={{ fontSize: 16, fontWeight: 800, color: "var(--text-strong, #1a1206)", margin: 0 }}
+        >
           عن الحي — {district}، {city}
         </h3>
         <span
@@ -99,7 +103,15 @@ export default function NeighborhoodIntel({ city, district, accentColor = "#C691
       </div>
 
       {loading && !data && (
-        <div style={{ fontSize: 13, color: "var(--text-faint, #888)", display: "flex", alignItems: "center", gap: 8 }}>
+        <div
+          style={{
+            fontSize: 13,
+            color: "var(--text-faint, #888)",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
           <span
             style={{
               width: 14,
@@ -150,30 +162,54 @@ export default function NeighborhoodIntel({ city, district, accentColor = "#C691
         </div>
       )}
 
-      {data && (data.schools_count || data.mosques_count || data.hospitals_count || data.restaurants_count) && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-            gap: 10,
-            paddingTop: 14,
-            borderTop: "1px solid var(--gold-bg-soft, rgba(198,145,76,0.15))",
-          }}
-        >
-          {data.schools_count != null && (
-            <StatBox icon={<GraduationCap size={15} />} label="مدارس" value={data.schools_count} accent={accentColor} />
-          )}
-          {data.mosques_count != null && (
-            <StatBox icon={<MosqueIcon size={15} />} label="مساجد" value={data.mosques_count} accent={accentColor} />
-          )}
-          {data.hospitals_count != null && (
-            <StatBox icon={<Hospital size={15} />} label="مستشفيات/عيادات" value={data.hospitals_count} accent={accentColor} />
-          )}
-          {data.restaurants_count != null && (
-            <StatBox icon={<Coffee size={15} />} label="مطاعم/مقاهي" value={data.restaurants_count} accent={accentColor} />
-          )}
-        </div>
-      )}
+      {data &&
+        (data.schools_count ||
+          data.mosques_count ||
+          data.hospitals_count ||
+          data.restaurants_count) && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+              gap: 10,
+              paddingTop: 14,
+              borderTop: "1px solid var(--gold-bg-soft, rgba(198,145,76,0.15))",
+            }}
+          >
+            {data.schools_count != null && (
+              <StatBox
+                icon={<GraduationCap size={15} />}
+                label="مدارس"
+                value={data.schools_count}
+                accent={accentColor}
+              />
+            )}
+            {data.mosques_count != null && (
+              <StatBox
+                icon={<MosqueIcon size={15} />}
+                label="مساجد"
+                value={data.mosques_count}
+                accent={accentColor}
+              />
+            )}
+            {data.hospitals_count != null && (
+              <StatBox
+                icon={<Hospital size={15} />}
+                label="مستشفيات/عيادات"
+                value={data.hospitals_count}
+                accent={accentColor}
+              />
+            )}
+            {data.restaurants_count != null && (
+              <StatBox
+                icon={<Coffee size={15} />}
+                label="مطاعم/مقاهي"
+                value={data.restaurants_count}
+                accent={accentColor}
+              />
+            )}
+          </div>
+        )}
 
       <div style={{ marginTop: 12, fontSize: 10, color: "var(--text-faint, #999)", opacity: 0.7 }}>
         المعلومات إرشادية ومُولَّدة آلياً — يُرجى التحقق ميدانياً.
@@ -197,7 +233,14 @@ function StatBox({
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <span style={{ color: accent, flexShrink: 0 }}>{icon}</span>
       <div>
-        <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text-strong, #1a1206)", lineHeight: 1.2 }}>
+        <div
+          style={{
+            fontSize: 16,
+            fontWeight: 800,
+            color: "var(--text-strong, #1a1206)",
+            lineHeight: 1.2,
+          }}
+        >
           {value}+
         </div>
         <div style={{ fontSize: 11, color: "var(--text-faint, #777)" }}>{label}</div>
@@ -209,7 +252,16 @@ function StatBox({
 // أيقونة المسجد المخصّصة
 function MosqueIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M3 21V11a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10" />
       <path d="M12 7c0-1.5-1.5-2-1.5-3.5C10.5 2.5 11 2 12 2s1.5.5 1.5 1.5c0 1.5-1.5 2-1.5 3.5z" />
       <path d="M3 21h18" />

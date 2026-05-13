@@ -1,4 +1,13 @@
-import { Sparkles, Factory, MessageSquare, Calendar, TrendingUp, Settings, FileText, Users2 } from "lucide-react";
+import {
+  Sparkles,
+  Factory,
+  MessageSquare,
+  Calendar,
+  TrendingUp,
+  Settings,
+  FileText,
+  Users2,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 // ── Tabs ──
@@ -12,9 +21,24 @@ export interface TabDef {
 
 export const tabs: TabDef[] = [
   { id: "identity", label: "هوية الوسيط", icon: Settings, desc: "إعدادات الهوية والأسلوب" },
-  { id: "factory", label: "مصنع المحتوى", icon: Factory, desc: "إنتاج دفعات محتوى مرتبطة بعقاراتك" },
-  { id: "expert", label: "خبير المحتوى", icon: MessageSquare, desc: "من الفكرة إلى المحتوى الجاهز" },
-  { id: "room", label: "غرفة المحتوى", icon: Users2, desc: "٣ نماذج ذكاء اصطناعي تتحاور لإنتاج محتوى استثنائي" },
+  {
+    id: "factory",
+    label: "مصنع المحتوى",
+    icon: Factory,
+    desc: "إنتاج دفعات محتوى مرتبطة بعقاراتك",
+  },
+  {
+    id: "expert",
+    label: "خبير المحتوى",
+    icon: MessageSquare,
+    desc: "من الفكرة إلى المحتوى الجاهز",
+  },
+  {
+    id: "room",
+    label: "غرفة المحتوى",
+    icon: Users2,
+    desc: "٣ نماذج ذكاء اصطناعي تتحاور لإنتاج محتوى استثنائي",
+  },
   { id: "drafts", label: "المسودات", icon: FileText, desc: "المحتوى المحفوظ والجاهز للنشر" },
   { id: "calendar", label: "الخطة الشهرية", icon: Calendar, desc: "تقويم بصري لجدولة المحتوى" },
   { id: "trends", label: "ترندات ومناسبات", icon: TrendingUp, desc: "أفكار مرتبطة بأحداث السوق" },
@@ -52,7 +76,11 @@ export const providers: AIProvider[] = [
     name: "Anthropic",
     desc: "صانعة Claude — ممتاز في الفهم والكتابة العربية",
     models: [
-      { id: "claude-sonnet-4-20250514", name: "Claude Sonnet 4", desc: "ممتاز في الكتابة والفهم العربي" },
+      {
+        id: "claude-sonnet-4-20250514",
+        name: "Claude Sonnet 4",
+        desc: "ممتاز في الكتابة والفهم العربي",
+      },
       { id: "claude-3-5-sonnet-20241022", name: "Claude 3.5 Sonnet", desc: "مستقر وموثوق" },
       { id: "claude-3-haiku-20240307", name: "Claude 3 Haiku", desc: "سريع جداً وأرخص" },
     ],
@@ -72,9 +100,7 @@ export const providers: AIProvider[] = [
     id: "manus",
     name: "Manus",
     desc: "نموذج Manus — متخصص في التنفيذ والتحليل",
-    models: [
-      { id: "manus-1", name: "Manus 1", desc: "النموذج الرئيسي" },
-    ],
+    models: [{ id: "manus-1", name: "Manus 1", desc: "النموذج الرئيسي" }],
   },
   {
     id: "groq",
@@ -82,8 +108,8 @@ export const providers: AIProvider[] = [
     desc: "سريع جداً ومجاني — مثالي للاستخدام اليومي",
     models: [
       { id: "llama-3.3-70b-versatile", name: "Llama 3.3 70B", desc: "الأقوى من Groq — جودة عالية" },
-      { id: "llama-3.1-8b-instant",    name: "Llama 3.1 8B Instant", desc: "الأسرع — للردود الفورية" },
-      { id: "mixtral-8x7b-32768",      name: "Mixtral 8x7B", desc: "قوي في المحتوى العربي" },
+      { id: "llama-3.1-8b-instant", name: "Llama 3.1 8B Instant", desc: "الأسرع — للردود الفورية" },
+      { id: "mixtral-8x7b-32768", name: "Mixtral 8x7B", desc: "قوي في المحتوى العربي" },
     ],
   },
   {
@@ -91,7 +117,7 @@ export const providers: AIProvider[] = [
     name: "DeepSeek",
     desc: "نموذج صيني قوي — أداء ممتاز بسعر منخفض",
     models: [
-      { id: "deepseek-chat",     name: "DeepSeek Chat",     desc: "النموذج الرئيسي" },
+      { id: "deepseek-chat", name: "DeepSeek Chat", desc: "النموذج الرئيسي" },
       { id: "deepseek-reasoner", name: "DeepSeek Reasoner", desc: "ممتاز للتحليل والتفكير" },
     ],
   },
@@ -100,7 +126,7 @@ export const providers: AIProvider[] = [
     name: "xAI (Grok)",
     desc: "نموذج Elon Musk — إبداعي وجريء",
     models: [
-      { id: "grok-3",      name: "Grok 3",      desc: "الأقوى من xAI" },
+      { id: "grok-3", name: "Grok 3", desc: "الأقوى من xAI" },
       { id: "grok-3-mini", name: "Grok 3 Mini", desc: "أسرع وأرخص" },
     ],
   },
@@ -121,7 +147,7 @@ export const platformColors: Record<string, string> = {
   Snapchat: "bg-yellow-400 text-black",
   LinkedIn: "bg-[var(--gold-3)]",
   Threads: "bg-gray-400",
-  "متعدد": "bg-purple-500",
+  متعدد: "bg-purple-500",
 };
 
 export const platformDots: Record<string, string> = {
@@ -131,66 +157,199 @@ export const platformDots: Record<string, string> = {
   Snapchat: "bg-yellow-400",
   LinkedIn: "bg-[var(--gold-3)]",
   Threads: "bg-gray-400",
-  "متعدد": "bg-purple-500",
+  متعدد: "bg-purple-500",
 };
 
 export const arabicDays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
 export const arabicDaysShort = ["أحد", "إثن", "ثلث", "أرب", "خمس", "جمع", "سبت"];
 export const arabicMonths = [
-  "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
-  "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر",
+  "يناير",
+  "فبراير",
+  "مارس",
+  "أبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
 ];
 
 // ── Trends Data ──
 
-export const saudiEvents: Record<number, { date: string; title: string; type: string; contentIdea: string }[]> = {
+export const saudiEvents: Record<
+  number,
+  { date: string; title: string; type: string; contentIdea: string }[]
+> = {
   1: [
-    { date: "1 يناير", title: "رأس السنة الميلادية", type: "مناسبة", contentIdea: "أهداف عقارية للسنة الجديدة — خطط لاستثمارك العقاري" },
-    { date: "يناير", title: "موسم الإيجارات الشتوي", type: "سوق", contentIdea: "نصائح للمستأجرين في موسم الشتاء — كيف تختار الشقة المناسبة" },
+    {
+      date: "1 يناير",
+      title: "رأس السنة الميلادية",
+      type: "مناسبة",
+      contentIdea: "أهداف عقارية للسنة الجديدة — خطط لاستثمارك العقاري",
+    },
+    {
+      date: "يناير",
+      title: "موسم الإيجارات الشتوي",
+      type: "سوق",
+      contentIdea: "نصائح للمستأجرين في موسم الشتاء — كيف تختار الشقة المناسبة",
+    },
   ],
   2: [
-    { date: "22 فبراير", title: "يوم التأسيس السعودي", type: "مناسبة", contentIdea: "من بيوت الطين إلى الأبراج — تطور العقار السعودي منذ التأسيس" },
-    { date: "فبراير", title: "اجتماعات البنك المركزي", type: "سوق", contentIdea: "تأثير قرارات الفائدة على السوق العقاري السعودي" },
+    {
+      date: "22 فبراير",
+      title: "يوم التأسيس السعودي",
+      type: "مناسبة",
+      contentIdea: "من بيوت الطين إلى الأبراج — تطور العقار السعودي منذ التأسيس",
+    },
+    {
+      date: "فبراير",
+      title: "اجتماعات البنك المركزي",
+      type: "سوق",
+      contentIdea: "تأثير قرارات الفائدة على السوق العقاري السعودي",
+    },
   ],
   3: [
-    { date: "مارس", title: "بداية موسم البيع الربيعي", type: "سوق", contentIdea: "الربيع = موسم شراء العقارات — لماذا هذا الوقت مثالي للمشتري؟" },
-    { date: "مارس", title: "معرض ريستاتكس العقاري", type: "سوق", contentIdea: "أبرز ما جاء في معرض ريستاتكس — فرص وعروض عقارية" },
+    {
+      date: "مارس",
+      title: "بداية موسم البيع الربيعي",
+      type: "سوق",
+      contentIdea: "الربيع = موسم شراء العقارات — لماذا هذا الوقت مثالي للمشتري؟",
+    },
+    {
+      date: "مارس",
+      title: "معرض ريستاتكس العقاري",
+      type: "سوق",
+      contentIdea: "أبرز ما جاء في معرض ريستاتكس — فرص وعروض عقارية",
+    },
   ],
   4: [
-    { date: "أبريل", title: "موسم الصيف يقترب", type: "سوق", contentIdea: "استعد لموسم الإيجارات الصيفي — نصائح للملاك والمستأجرين" },
-    { date: "أبريل", title: "تحديثات أنظمة إيجار", type: "سوق", contentIdea: "كل ما تحتاج معرفته عن تحديثات منصة إيجار" },
+    {
+      date: "أبريل",
+      title: "موسم الصيف يقترب",
+      type: "سوق",
+      contentIdea: "استعد لموسم الإيجارات الصيفي — نصائح للملاك والمستأجرين",
+    },
+    {
+      date: "أبريل",
+      title: "تحديثات أنظمة إيجار",
+      type: "سوق",
+      contentIdea: "كل ما تحتاج معرفته عن تحديثات منصة إيجار",
+    },
   ],
   5: [
-    { date: "مايو", title: "نهاية العام الدراسي", type: "مناسبة", contentIdea: "موسم الانتقالات العائلية — كيف تختار حيك الجديد في الرياض" },
-    { date: "مايو", title: "ارتفاع الطلب على الفلل", type: "سوق", contentIdea: "لماذا يرتفع الطلب على الفلل في الصيف؟ تحليل سوقي" },
+    {
+      date: "مايو",
+      title: "نهاية العام الدراسي",
+      type: "مناسبة",
+      contentIdea: "موسم الانتقالات العائلية — كيف تختار حيك الجديد في الرياض",
+    },
+    {
+      date: "مايو",
+      title: "ارتفاع الطلب على الفلل",
+      type: "سوق",
+      contentIdea: "لماذا يرتفع الطلب على الفلل في الصيف؟ تحليل سوقي",
+    },
   ],
   6: [
-    { date: "يونيو", title: "بداية الإجازة الصيفية", type: "مناسبة", contentIdea: "الإجازة الصيفية فرصة للبحث عن عقار — دليل المشتري" },
-    { date: "يونيو", title: "موسم الاستراحات", type: "سوق", contentIdea: "الاستثمار في الاستراحات — هل هو مجدي في الرياض؟" },
+    {
+      date: "يونيو",
+      title: "بداية الإجازة الصيفية",
+      type: "مناسبة",
+      contentIdea: "الإجازة الصيفية فرصة للبحث عن عقار — دليل المشتري",
+    },
+    {
+      date: "يونيو",
+      title: "موسم الاستراحات",
+      type: "سوق",
+      contentIdea: "الاستثمار في الاستراحات — هل هو مجدي في الرياض؟",
+    },
   ],
   7: [
-    { date: "يوليو", title: "ذروة الصيف", type: "سوق", contentIdea: "أحياء الرياض الأكثر طلباً في الصيف — تحليل بيانات" },
-    { date: "يوليو", title: "موسم السياحة الداخلية", type: "مناسبة", contentIdea: "العقارات السياحية في السعودية — فرصة استثمارية" },
+    {
+      date: "يوليو",
+      title: "ذروة الصيف",
+      type: "سوق",
+      contentIdea: "أحياء الرياض الأكثر طلباً في الصيف — تحليل بيانات",
+    },
+    {
+      date: "يوليو",
+      title: "موسم السياحة الداخلية",
+      type: "مناسبة",
+      contentIdea: "العقارات السياحية في السعودية — فرصة استثمارية",
+    },
   ],
   8: [
-    { date: "أغسطس", title: "قرب العام الدراسي الجديد", type: "مناسبة", contentIdea: "أفضل الأحياء للعائلات قرب المدارس المميزة في الرياض" },
-    { date: "أغسطس", title: "حركة نقل الموظفين", type: "سوق", contentIdea: "نصائح للموظف المنتقل — كيف تجد سكن مناسب بسرعة" },
+    {
+      date: "أغسطس",
+      title: "قرب العام الدراسي الجديد",
+      type: "مناسبة",
+      contentIdea: "أفضل الأحياء للعائلات قرب المدارس المميزة في الرياض",
+    },
+    {
+      date: "أغسطس",
+      title: "حركة نقل الموظفين",
+      type: "سوق",
+      contentIdea: "نصائح للموظف المنتقل — كيف تجد سكن مناسب بسرعة",
+    },
   ],
   9: [
-    { date: "23 سبتمبر", title: "اليوم الوطني السعودي", type: "مناسبة", contentIdea: "إنجازات القطاع العقاري السعودي — أرقام تفخر بها" },
-    { date: "سبتمبر", title: "بداية العام الدراسي", type: "مناسبة", contentIdea: "ارتفاع الطلب على الشقق قرب الجامعات — فرصة للملاك" },
+    {
+      date: "23 سبتمبر",
+      title: "اليوم الوطني السعودي",
+      type: "مناسبة",
+      contentIdea: "إنجازات القطاع العقاري السعودي — أرقام تفخر بها",
+    },
+    {
+      date: "سبتمبر",
+      title: "بداية العام الدراسي",
+      type: "مناسبة",
+      contentIdea: "ارتفاع الطلب على الشقق قرب الجامعات — فرصة للملاك",
+    },
   ],
   10: [
-    { date: "أكتوبر", title: "موسم الرياض", type: "مناسبة", contentIdea: "تأثير موسم الرياض على أسعار العقارات والإيجارات" },
-    { date: "أكتوبر", title: "معارض عقارية", type: "سوق", contentIdea: "أبرز المعارض العقارية في الربع الأخير — لا تفوتها" },
+    {
+      date: "أكتوبر",
+      title: "موسم الرياض",
+      type: "مناسبة",
+      contentIdea: "تأثير موسم الرياض على أسعار العقارات والإيجارات",
+    },
+    {
+      date: "أكتوبر",
+      title: "معارض عقارية",
+      type: "سوق",
+      contentIdea: "أبرز المعارض العقارية في الربع الأخير — لا تفوتها",
+    },
   ],
   11: [
-    { date: "نوفمبر", title: "يوم العقار السعودي", type: "سوق", contentIdea: "مستقبل العقار السعودي — رؤية 2030 والفرص القادمة" },
-    { date: "نوفمبر", title: "تقارير السوق الربعية", type: "سوق", contentIdea: "قراءة في تقرير السوق العقاري للربع الثالث" },
+    {
+      date: "نوفمبر",
+      title: "يوم العقار السعودي",
+      type: "سوق",
+      contentIdea: "مستقبل العقار السعودي — رؤية 2030 والفرص القادمة",
+    },
+    {
+      date: "نوفمبر",
+      title: "تقارير السوق الربعية",
+      type: "سوق",
+      contentIdea: "قراءة في تقرير السوق العقاري للربع الثالث",
+    },
   ],
   12: [
-    { date: "ديسمبر", title: "نهاية السنة", type: "مناسبة", contentIdea: "ملخص السوق العقاري هذا العام — أرقام وتحليلات" },
-    { date: "ديسمبر", title: "موسم التخطيط", type: "سوق", contentIdea: "خطط استثمارك العقاري للسنة القادمة — دليل شامل" },
+    {
+      date: "ديسمبر",
+      title: "نهاية السنة",
+      type: "مناسبة",
+      contentIdea: "ملخص السوق العقاري هذا العام — أرقام وتحليلات",
+    },
+    {
+      date: "ديسمبر",
+      title: "موسم التخطيط",
+      type: "سوق",
+      contentIdea: "خطط استثمارك العقاري للسنة القادمة — دليل شامل",
+    },
   ],
 };
 

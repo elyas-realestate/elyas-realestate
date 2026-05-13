@@ -21,31 +21,37 @@
 ### Phase 7 — الموجة الكبرى (٧ مايو)
 
 **Phase 3 — UI Integration مكتمل ١٠٠٪:**
+
 - ✅ P3-9 Voice-to-Property UI (تسجيل صوتي → استخراج تلقائي بالـ AI)
 - ✅ P3-10 Smart Matching UI (`/dashboard/clients/[id]/alerts`)
 - ✅ P3-11 Themes Picker preview محسّن
 
 **D2 — إدارة الأملاك مكتمل ١٠٠٪:**
+
 - ✅ Migration 050 (rent_contracts + rent_payments)
 - ✅ صفحة `/dashboard/property-management` بـ ٣ تبويبات
 - ✅ توليد مدفوعات تلقائي + تذكير WhatsApp مباشر
 - ✅ تتبّع المتأخرات + dashboard stats
 
 **B-4 — نظام Feedback مكتمل:**
+
 - ✅ Migration 051 (beta_feedback)
 - ✅ `/api/beta-feedback` مع rate limit
 - ✅ FeedbackWidget عائم في كل dashboard pages
 
 **PDPL Rights مكتمل (قانون):**
+
 - ✅ `/api/pdpl/export` (تنزيل كل البيانات JSON)
 - ✅ `/api/pdpl/delete` (طلب حذف 30 يوم)
 - ✅ `/dashboard/settings/privacy`
 
 **Polish:**
+
 - ✅ Loading states موحَّدة (`LoadingStates.tsx`)
 - ✅ Rate limiting على lead-capture/waitlist/feedback
 
 ### Phase 6 — Stability (٧ مايو)
+
 - ✅ تصحيح ٧ تناقضات في LAUNCH_READINESS
 - ✅ توحيد رسالة كود الدعوة
 - ✅ Reserved slugs guard (`/pricing` → `/#pricing`)
@@ -55,11 +61,13 @@
 - ✅ صفحة 500 error boundary
 
 ### Phase 5 — Brand Icons + Design Freedom (٧ مايو)
+
 - ✅ Brand Icons في كل المواضع (17+ أيقونة)
 - ✅ Drag & Drop reorder
 - ✅ تخصيص لون/تسمية كل عنصر منفرد
 
 ### Phase 1+2+4 — البنية التحتية (٦ مايو)
+
 - ✅ 49 migrations (042-049)
 - ✅ 11+ API جديد
 - ✅ SAR icon + 20 ثيم + 23 Beta code
@@ -74,6 +82,7 @@
 افتح: https://supabase.com/dashboard/project/apmdwautyqoqjlabxysz/sql/new
 
 شغّل بالترتيب:
+
 1. `supabase/050_property_management.sql` (rent_contracts + rent_payments)
 2. `supabase/051_beta_feedback.sql` (beta_feedback)
 
@@ -101,16 +110,16 @@ teamId: team_ZsF4MPBHFOGtB2pSe4jZJFoJ
 
 ## 🎯 الحالة الحالية للمنصة
 
-| الفئة | الحالة |
-|---|:---:|
-| 🔴 بلوكر تطويري | **0** |
+| الفئة                       |     الحالة      |
+| --------------------------- | :-------------: |
+| 🔴 بلوكر تطويري             |      **0**      |
 | 🟡 Phase 3 (UI Integration) | **مكتمل 11/11** |
-| 🟠 D2 (إدارة الأملاك) | **مكتمل 4/4** |
-| 🟠 B-4 (Feedback) | **مكتمل** |
-| ⚪ PDPL Rights | **مكتمل** |
-| ⚪ Loading states | **مكتمل** |
-| ⚪ Rate limiting | **مكتمل** |
-| ⏸️ القرارات التجارية | تنتظرك |
+| 🟠 D2 (إدارة الأملاك)       |  **مكتمل 4/4**  |
+| 🟠 B-4 (Feedback)           |    **مكتمل**    |
+| ⚪ PDPL Rights              |    **مكتمل**    |
+| ⚪ Loading states           |    **مكتمل**    |
+| ⚪ Rate limiting            |    **مكتمل**    |
+| ⏸️ القرارات التجارية        |     تنتظرك      |
 
 **حالة الإطلاق:** جاهزة ١٠٠٪ تطويرياً. الباقي قرارات + شراء دومين.
 
@@ -119,15 +128,18 @@ teamId: team_ZsF4MPBHFOGtB2pSe4jZJFoJ
 ## ⏭️ ما تبقّى (قرارات + خارجي فقط)
 
 ### قرارات تجارية (٥ دقائق - ساعة لكل واحد)
+
 - [ ] **B-1** تثبيت التسعير (99/149/249 أم 99/249؟)
 - [ ] **B-3** اختيار أول 5-10 وسطاء Beta
 - [ ] **B-5** صياغة Onboarding يدوي (Zoom 30min/كل وسيط)
 
 ### يحتاج خارجي
+
 - [ ] **OO-1/2/3** Subdomain `elyas.wpro.sa` (يحتاج شراء دومين) ← **قرار المالك الأولوي**
 - [ ] **WA-7** Display Name "Elyas Real Estate" (Meta review — خارج تحكمك)
 
 ### اختياري (بعد Beta)
+
 - [ ] **RR-1** Onboarding tour (Joyride)
 - [ ] **RR-4** Simplified mode
 - [ ] **RR-5** كتيّب PDF عربي
@@ -136,6 +148,7 @@ teamId: team_ZsF4MPBHFOGtB2pSe4jZJFoJ
 - [ ] **2FA**, **transactional emails**, **mobile audit شامل**, **analytics** (PostHog)
 
 ### مؤجَّل عمداً
+
 - [ ] DEEP-9, DEEP-10, DUP-4, DUP-10
 
 ---

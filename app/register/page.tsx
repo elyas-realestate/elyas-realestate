@@ -15,20 +15,22 @@ function toSlug(value: string) {
 }
 
 export default function Register() {
-  const [name, setName]         = useState("");
-  const [email, setEmail]       = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fal, setFal]           = useState("");
+  const [fal, setFal] = useState("");
   const [inviteCode, setInviteCode] = useState("");
-  const [slug, setSlug]         = useState("");
+  const [slug, setSlug] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
-  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
-  const [slugMsg, setSlugMsg]   = useState("");
+  const [slugStatus, setSlugStatus] = useState<
+    "idle" | "checking" | "available" | "taken" | "invalid"
+  >("idle");
+  const [slugMsg, setSlugMsg] = useState("");
   const slugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState("");
-  const [step, setStep]         = useState<"form" | "verify">("form");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [step, setStep] = useState<"form" | "verify">("form");
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -86,8 +88,8 @@ export default function Register() {
       const msg = signUpError.message.includes("already registered")
         ? "هذا البريد الإلكتروني مسجّل مسبقاً — جرّب تسجيل الدخول"
         : signUpError.message.includes("weak")
-        ? "كلمة المرور ضعيفة — استخدم ٨ أحرف على الأقل مع أرقام"
-        : "حدث خطأ أثناء التسجيل — حاول مجدداً";
+          ? "كلمة المرور ضعيفة — استخدم ٨ أحرف على الأقل مع أرقام"
+          : "حدث خطأ أثناء التسجيل — حاول مجدداً";
       setError(msg);
       setLoading(false);
       return;
@@ -158,21 +160,44 @@ export default function Register() {
     if (slugTimer.current) clearTimeout(slugTimer.current);
     if (!cleaned) return;
     const v = validateSlug(cleaned);
-    if (!v.valid) { setSlugStatus("invalid"); setSlugMsg(v.error); return; }
+    if (!v.valid) {
+      setSlugStatus("invalid");
+      setSlugMsg(v.error);
+      return;
+    }
     slugTimer.current = setTimeout(async () => {
       setSlugStatus("checking");
       const res = await fetch(`/api/slug/check?slug=${cleaned}`);
       const data = await res.json();
-      if (data.error) { setSlugStatus("invalid"); setSlugMsg(data.error); }
-      else if (data.available) { setSlugStatus("available"); setSlugMsg("متاح ✓"); }
-      else { setSlugStatus("taken"); setSlugMsg("محجوز — جرّب اسماً آخر"); }
+      if (data.error) {
+        setSlugStatus("invalid");
+        setSlugMsg(data.error);
+      } else if (data.available) {
+        setSlugStatus("available");
+        setSlugMsg("متاح ✓");
+      } else {
+        setSlugStatus("taken");
+        setSlugMsg("محجوز — جرّب اسماً آخر");
+      }
     }, 600);
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("https://", "") || "waseet-pro.com";
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "var(--bg-page)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif", padding: "24px" }}>
+    <div
+      dir="rtl"
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg-page)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Tajawal', sans-serif",
+        padding: "24px",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
         .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
@@ -186,50 +211,183 @@ export default function Register() {
       `}</style>
 
       {/* Background */}
-      <div className="dot-pattern" style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }} />
-      <div style={{ position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 300, background: "radial-gradient(ellipse, rgba(198,145,76,0.05) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div
+        className="dot-pattern"
+        style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}
+      />
+      <div
+        style={{
+          position: "fixed",
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 600,
+          height: 300,
+          background: "radial-gradient(ellipse, rgba(198,145,76,0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
 
-      <div className="fade-up" style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 440 }}>
-
+      <div
+        className="fade-up"
+        style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 440 }}
+      >
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-block" }}>
-            <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px", fontSize: 22, fontWeight: 900, color: "var(--bg-page)", fontFamily: "'Noto Kufi Arabic', serif" }}>و</div>
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 16,
+                background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 12px",
+                fontSize: 22,
+                fontWeight: 900,
+                color: "var(--bg-page)",
+                fontFamily: "'Noto Kufi Arabic', serif",
+              }}
+            >
+              و
+            </div>
           </Link>
-          <h1 className="font-kufi" style={{ fontSize: 20, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4 }}>وسيط برو</h1>
-          <p style={{ fontSize: 12, color: "var(--text-faint)" }}>المنصة العقارية الذكية للوسطاء السعوديين</p>
+          <h1
+            className="font-kufi"
+            style={{ fontSize: 20, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4 }}
+          >
+            وسيط برو
+          </h1>
+          <p style={{ fontSize: 12, color: "var(--text-faint)" }}>
+            المنصة العقارية الذكية للوسطاء السعوديين
+          </p>
         </div>
 
         {step === "verify" ? (
           /* ═══ شاشة التحقق ═══ */
-          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "40px 32px", boxShadow: "0 24px 60px var(--shadow-overlay)", textAlign: "center" }}>
-            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>📧</div>
-            <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 10 }}>تحقق من بريدك</h2>
-            <p style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.7, marginBottom: 24 }}>
-              أرسلنا رابط تأكيد إلى<br />
+          <div
+            style={{
+              background: "var(--bg-surface-1)",
+              border: "1px solid rgba(198,145,76,0.14)",
+              borderRadius: 24,
+              padding: "40px 32px",
+              boxShadow: "0 24px 60px var(--shadow-overlay)",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                background: "var(--gold-bg-soft)",
+                border: "1px solid var(--gold-bg-hover)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 20px",
+                fontSize: 28,
+              }}
+            >
+              📧
+            </div>
+            <h2
+              className="font-kufi"
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--text-strong)",
+                marginBottom: 10,
+              }}
+            >
+              تحقق من بريدك
+            </h2>
+            <p
+              style={{ fontSize: 13, color: "var(--text-soft)", lineHeight: 1.7, marginBottom: 24 }}
+            >
+              أرسلنا رابط تأكيد إلى
+              <br />
               <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>{email}</span>
-              <br />افتح البريد واضغط على الرابط للدخول
+              <br />
+              افتح البريد واضغط على الرابط للدخول
             </p>
-            <Link href="/login" style={{ display: "inline-block", fontSize: 14, fontWeight: 700, color: "var(--bg-page)", background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", padding: "12px 28px", borderRadius: 10, textDecoration: "none" }}>
+            <Link
+              href="/login"
+              style={{
+                display: "inline-block",
+                fontSize: 14,
+                fontWeight: 700,
+                color: "var(--bg-page)",
+                background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                padding: "12px 28px",
+                borderRadius: 10,
+                textDecoration: "none",
+              }}
+            >
               الذهاب لتسجيل الدخول
             </Link>
-            <p style={{ fontSize: 12, color: "var(--border-1)", marginTop: 20 }}>لم يصل البريد؟ تحقق من مجلد Spam</p>
+            <p style={{ fontSize: 12, color: "var(--border-1)", marginTop: 20 }}>
+              لم يصل البريد؟ تحقق من مجلد Spam
+            </p>
           </div>
         ) : (
           /* ═══ نموذج التسجيل ═══ */
-          <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px var(--shadow-overlay)" }}>
-            <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 4, textAlign: "center" }}>إنشاء حساب جديد</h2>
-            <p style={{ fontSize: 13, color: "var(--text-faint)", textAlign: "center", marginBottom: 28 }}>ابدأ مجاناً — بدون بطاقة ائتمان</p>
+          <div
+            style={{
+              background: "var(--bg-surface-1)",
+              border: "1px solid rgba(198,145,76,0.14)",
+              borderRadius: 24,
+              padding: "36px 32px",
+              boxShadow: "0 24px 60px var(--shadow-overlay)",
+            }}
+          >
+            <h2
+              className="font-kufi"
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "var(--text-strong)",
+                marginBottom: 4,
+                textAlign: "center",
+              }}
+            >
+              إنشاء حساب جديد
+            </h2>
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--text-faint)",
+                textAlign: "center",
+                marginBottom: 28,
+              }}
+            >
+              ابدأ مجاناً — بدون بطاقة ائتمان
+            </p>
 
-            <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-
+            <form
+              onSubmit={handleRegister}
+              style={{ display: "flex", flexDirection: "column", gap: 14 }}
+            >
               {/* الاسم */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>الاسم الكامل</label>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 13,
+                    color: "var(--text-soft)",
+                    marginBottom: 7,
+                    fontWeight: 500,
+                  }}
+                >
+                  الاسم الكامل
+                </label>
                 <input
                   type="text"
                   value={name}
-                  onChange={e => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   required
                   className="reg-input"
                   placeholder="إلياس الدخيل"
@@ -238,11 +396,21 @@ export default function Register() {
 
               {/* البريد */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>البريد الإلكتروني</label>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 13,
+                    color: "var(--text-soft)",
+                    marginBottom: 7,
+                    fontWeight: 500,
+                  }}
+                >
+                  البريد الإلكتروني
+                </label>
                 <input
                   type="email"
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="reg-input"
                   placeholder="example@email.com"
@@ -252,12 +420,22 @@ export default function Register() {
 
               {/* كلمة المرور */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>كلمة المرور</label>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 13,
+                    color: "var(--text-soft)",
+                    marginBottom: 7,
+                    fontWeight: 500,
+                  }}
+                >
+                  كلمة المرور
+                </label>
                 <div style={{ position: "relative" }}>
                   <input
                     type={showPass ? "text" : "password"}
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                     className="reg-input"
                     placeholder="٨ أحرف على الأقل"
@@ -266,22 +444,76 @@ export default function Register() {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPass(v => !v)}
-                    style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", display: "flex", alignItems: "center", padding: 0 }}
+                    onClick={() => setShowPass((v) => !v)}
+                    style={{
+                      position: "absolute",
+                      left: 14,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "var(--text-faint)",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: 0,
+                    }}
                   >
                     {showPass ? (
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
                     ) : (
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
                     )}
                   </button>
                 </div>
                 {password.length > 0 && (
                   <div style={{ display: "flex", gap: 4, marginTop: 8 }}>
-                    {[1,2,3,4].map(i => (
-                      <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: password.length >= i * 2 ? (password.length >= 8 ? "var(--success)" : "var(--gold-2)") : "var(--bg-surface-3)", transition: "background 0.3s" }} />
+                    {[1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        style={{
+                          flex: 1,
+                          height: 3,
+                          borderRadius: 2,
+                          background:
+                            password.length >= i * 2
+                              ? password.length >= 8
+                                ? "var(--success)"
+                                : "var(--gold-2)"
+                              : "var(--bg-surface-3)",
+                          transition: "background 0.3s",
+                        }}
+                      />
                     ))}
-                    <span style={{ fontSize: 11, color: password.length >= 8 ? "var(--success)" : "var(--gold-2)", marginRight: 4, whiteSpace: "nowrap" }}>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: password.length >= 8 ? "var(--success)" : "var(--gold-2)",
+                        marginRight: 4,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
                       {password.length >= 8 ? "قوية ✓" : password.length >= 4 ? "متوسطة" : "ضعيفة"}
                     </span>
                   </div>
@@ -290,55 +522,140 @@ export default function Register() {
 
               {/* رابط الملف الشخصي */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 13,
+                    color: "var(--text-soft)",
+                    marginBottom: 7,
+                    fontWeight: 500,
+                  }}
+                >
                   رابط صفحتك الشخصية
-                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>(يراه عملاؤك)</span>
+                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>
+                    (يراه عملاؤك)
+                  </span>
                 </label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="text"
                     value={slug}
-                    onChange={e => handleSlugInput(e.target.value)}
-                    onBlur={() => { if (!slugTouched && !slug && email) handleSlugInput(email.split("@")[0]); }}
+                    onChange={(e) => handleSlugInput(e.target.value)}
+                    onBlur={() => {
+                      if (!slugTouched && !slug && email) handleSlugInput(email.split("@")[0]);
+                    }}
                     className="reg-input"
                     placeholder="elyas-aldakheel"
                     dir="ltr"
                     style={{ paddingLeft: 44, paddingRight: 130 }}
                   />
-                  <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "var(--text-faint)", pointerEvents: "none", whiteSpace: "nowrap" }}>
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: 14,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: 11,
+                      color: "var(--text-faint)",
+                      pointerEvents: "none",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {siteUrl}/
                   </span>
                   {/* مؤشر الحالة */}
                   {slugStatus === "checking" && (
-                    <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, border: "2px solid var(--gold-bg-strong)", borderTopColor: "var(--gold-2)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 14,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 14,
+                        height: 14,
+                        border: "2px solid var(--gold-bg-strong)",
+                        borderTopColor: "var(--gold-2)",
+                        borderRadius: "50%",
+                        animation: "spin 0.8s linear infinite",
+                      }}
+                    />
                   )}
                   {slugStatus === "available" && (
-                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--success)", fontSize: 16 }}>✓</span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: 14,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "var(--success)",
+                        fontSize: 16,
+                      }}
+                    >
+                      ✓
+                    </span>
                   )}
                   {(slugStatus === "taken" || slugStatus === "invalid") && (
-                    <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--danger)", fontSize: 16 }}>✕</span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: 14,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "var(--danger)",
+                        fontSize: 16,
+                      }}
+                    >
+                      ✕
+                    </span>
                   )}
                 </div>
                 {slug && slugStatus !== "idle" && (
-                  <p style={{ fontSize: 11, marginTop: 5, color: slugStatus === "available" ? "var(--success)" : slugStatus === "checking" ? "var(--text-soft)" : "var(--danger)" }}>
-                    {slugStatus === "checking" ? "جاري الفحص..." : slugStatus === "available" ? `رابطك: ${siteUrl}/${slug}` : slugMsg}
+                  <p
+                    style={{
+                      fontSize: 11,
+                      marginTop: 5,
+                      color:
+                        slugStatus === "available"
+                          ? "var(--success)"
+                          : slugStatus === "checking"
+                            ? "var(--text-soft)"
+                            : "var(--danger)",
+                    }}
+                  >
+                    {slugStatus === "checking"
+                      ? "جاري الفحص..."
+                      : slugStatus === "available"
+                        ? `رابطك: ${siteUrl}/${slug}`
+                        : slugMsg}
                   </p>
                 )}
                 {slug && slugStatus === "idle" && (
-                  <p style={{ fontSize: 11, marginTop: 5, color: "var(--text-faint)" }}>{siteUrl}/{slug}</p>
+                  <p style={{ fontSize: 11, marginTop: 5, color: "var(--text-faint)" }}>
+                    {siteUrl}/{slug}
+                  </p>
                 )}
               </div>
 
               {/* رخصة فال (اختياري) */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 13,
+                    color: "var(--text-soft)",
+                    marginBottom: 7,
+                    fontWeight: 500,
+                  }}
+                >
                   رقم رخصة فال
-                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>(اختياري)</span>
+                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>
+                    (اختياري)
+                  </span>
                 </label>
                 <input
                   type="text"
                   value={fal}
-                  onChange={e => setFal(e.target.value)}
+                  onChange={(e) => setFal(e.target.value)}
                   className="reg-input"
                   placeholder="FAL-XXXXXXX"
                   dir="ltr"
@@ -347,14 +664,24 @@ export default function Register() {
 
               {/* كود دعوة Beta (اختياري) */}
               <div>
-                <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 7, fontWeight: 500 }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 13,
+                    color: "var(--text-soft)",
+                    marginBottom: 7,
+                    fontWeight: 500,
+                  }}
+                >
                   كود دعوة Beta
-                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>(اختياري — للأعضاء المدعوّين)</span>
+                  <span style={{ color: "var(--border-1)", fontWeight: 400, marginRight: 6 }}>
+                    (اختياري — للأعضاء المدعوّين)
+                  </span>
                 </label>
                 <input
                   type="text"
                   value={inviteCode}
-                  onChange={e => setInviteCode(e.target.value.toUpperCase())}
+                  onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                   className="reg-input"
                   placeholder="WP-W1-XXXXXX"
                   dir="ltr"
@@ -367,8 +694,29 @@ export default function Register() {
 
               {/* خطأ */}
               {error && (
-                <div style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8 }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div
+                  style={{
+                    background: "rgba(239,68,68,0.08)",
+                    border: "1px solid rgba(239,68,68,0.2)",
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#EF4444"
+                    strokeWidth="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
                   <p style={{ fontSize: 13, color: "#EF4444", margin: 0 }}>{error}</p>
                 </div>
               )}
@@ -377,24 +725,79 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={loading}
-                style={{ width: "100%", padding: "15px", borderRadius: 14, background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", border: "none", color: "var(--bg-page)", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", transition: "all 0.3s", fontFamily: "'Tajawal', sans-serif", marginTop: 6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                style={{
+                  width: "100%",
+                  padding: "15px",
+                  borderRadius: 14,
+                  background: loading
+                    ? "rgba(198,145,76,0.4)"
+                    : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                  border: "none",
+                  color: "var(--bg-page)",
+                  fontSize: 15,
+                  fontWeight: 800,
+                  cursor: loading ? "not-allowed" : "pointer",
+                  transition: "all 0.3s",
+                  fontFamily: "'Tajawal', sans-serif",
+                  marginTop: 6,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                }}
               >
                 {loading ? (
                   <>
-                    <div style={{ width: 16, height: 16, border: "2px solid var(--shadow-overlay)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    <div
+                      style={{
+                        width: 16,
+                        height: 16,
+                        border: "2px solid var(--shadow-overlay)",
+                        borderTopColor: "var(--bg-page)",
+                        borderRadius: "50%",
+                        animation: "spin 0.8s linear infinite",
+                      }}
+                    />
                     جاري إنشاء الحساب...
                   </>
-                ) : "إنشاء الحساب"}
+                ) : (
+                  "إنشاء الحساب"
+                )}
               </button>
 
               {/* شروط — متوافقة مع PDPL */}
-              <p style={{ fontSize: 11, color: "var(--text-faint)", textAlign: "center", lineHeight: 1.7 }}>
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--text-faint)",
+                  textAlign: "center",
+                  lineHeight: 1.7,
+                }}
+              >
                 بالتسجيل أنت توافق على{" "}
-                <Link href="/terms" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>الشروط والأحكام</Link>
+                <Link
+                  href="/terms"
+                  target="_blank"
+                  style={{ color: "var(--gold-2)", textDecoration: "underline" }}
+                >
+                  الشروط والأحكام
+                </Link>
                 {" و "}
-                <Link href="/privacy" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>سياسة الخصوصية</Link>
+                <Link
+                  href="/privacy"
+                  target="_blank"
+                  style={{ color: "var(--gold-2)", textDecoration: "underline" }}
+                >
+                  سياسة الخصوصية
+                </Link>
                 {" و "}
-                <Link href="/data-processing" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>اتفاقية معالجة البيانات</Link>
+                <Link
+                  href="/data-processing"
+                  target="_blank"
+                  style={{ color: "var(--gold-2)", textDecoration: "underline" }}
+                >
+                  اتفاقية معالجة البيانات
+                </Link>
                 {" — وفق نظام حماية البيانات الشخصية (PDPL)"}
               </p>
             </form>
@@ -402,13 +805,26 @@ export default function Register() {
         )}
 
         {/* رابط تسجيل الدخول */}
-        <div style={{ textAlign: "center", marginTop: 20, display: "flex", justifyContent: "center", gap: 16 }}>
-          <Link href="/login" style={{ fontSize: 13, color: "var(--text-faint)", textDecoration: "none" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: 20,
+            display: "flex",
+            justifyContent: "center",
+            gap: 16,
+          }}
+        >
+          <Link
+            href="/login"
+            style={{ fontSize: 13, color: "var(--text-faint)", textDecoration: "none" }}
+          >
             عندك حساب؟ <span style={{ color: "var(--gold-2)", fontWeight: 600 }}>سجّل الدخول</span>
           </Link>
         </div>
         <div style={{ textAlign: "center", marginTop: 10 }}>
-          <Link href="/" style={{ fontSize: 12, color: "var(--border-1)", textDecoration: "none" }}>← العودة للموقع</Link>
+          <Link href="/" style={{ fontSize: 12, color: "var(--border-1)", textDecoration: "none" }}>
+            ← العودة للموقع
+          </Link>
         </div>
       </div>
     </div>

@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { checkLimit } from "@/lib/plan-limits";
 // safeDecrypt removed — kept for future migration when ai_config gains api_key_encrypted column
-import {
-  checkRateLimit,
-  AI_RATE_LIMIT,
-  getClientKey,
-} from "@/lib/rate-limit";
+import { checkRateLimit, AI_RATE_LIMIT, getClientKey } from "@/lib/rate-limit";
 
 // ── الحد الأقصى لطول الرسالة (حرف) ──
 const MAX_MESSAGE_LENGTH = 8000;
@@ -14,7 +10,15 @@ const MAX_MESSAGES_COUNT = 50;
 const MAX_SYSTEM_PROMPT_LENGTH = 4000;
 
 // ── المزودات والنماذج المسموحة ──
-const ALLOWED_PROVIDERS = ["openai", "anthropic", "google", "manus", "groq", "deepseek", "xai"] as const;
+const ALLOWED_PROVIDERS = [
+  "openai",
+  "anthropic",
+  "google",
+  "manus",
+  "groq",
+  "deepseek",
+  "xai",
+] as const;
 const ALLOWED_MODES = ["single", "chain", "compare"] as const;
 
 // ── التحقق من صحة المدخلات ──
@@ -32,7 +36,10 @@ function validateInput(body: any): { valid: true } | { valid: false; error: stri
   // التحقق من System Prompt
   if (body.systemPrompt && typeof body.systemPrompt === "string") {
     if (body.systemPrompt.length > MAX_SYSTEM_PROMPT_LENGTH) {
-      return { valid: false, error: `System prompt طويل جداً (الحد: ${MAX_SYSTEM_PROMPT_LENGTH} حرف)` };
+      return {
+        valid: false,
+        error: `System prompt طويل جداً (الحد: ${MAX_SYSTEM_PROMPT_LENGTH} حرف)`,
+      };
     }
   }
 
@@ -78,9 +85,12 @@ function sanitizeError(err: any): string {
 
   // رسائل معروفة وآمنة — أعدها كما هي
   if (msg.includes("API key")) return "مفتاح API غير صالح أو منتهي الصلاحية";
-  if (msg.includes("rate limit") || msg.includes("429")) return "عدد الطلبات كبير — انتظر قليلاً ثم حاول مجدداً";
-  if (msg.includes("timeout") || msg.includes("ECONNREFUSED")) return "تعذّر الاتصال بخدمة AI — حاول لاحقاً";
-  if (msg.includes("content_policy") || msg.includes("safety")) return "المحتوى مرفوض بسبب سياسة الأمان";
+  if (msg.includes("rate limit") || msg.includes("429"))
+    return "عدد الطلبات كبير — انتظر قليلاً ثم حاول مجدداً";
+  if (msg.includes("timeout") || msg.includes("ECONNREFUSED"))
+    return "تعذّر الاتصال بخدمة AI — حاول لاحقاً";
+  if (msg.includes("content_policy") || msg.includes("safety"))
+    return "المحتوى مرفوض بسبب سياسة الأمان";
   if (msg.includes("model")) {
     // نكشف اسم الموديل اللي فشل + اختصار السبب — يساعد في التشخيص دون تسريب أسرار
     const shortMsg = msg.slice(0, 200).replace(/[^\x20-\x7E\u0600-\u06FF\s]/g, "");
@@ -96,8 +106,13 @@ async function callOpenAI(model: string, systemPrompt: string, messages: any[], 
   if (!apiKey) throw new Error("مفتاح OpenAI منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
-    body: JSON.stringify({ model, messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
+      temperature: 0.8,
+      max_tokens: 4000,
+    }),
   });
   const data = await response.json();
   if (data.error) throw new Error(data.error.message);
@@ -108,7 +123,11 @@ async function callAnthropic(model: string, systemPrompt: string, messages: any[
   if (!apiKey) throw new Error("مفتاح Anthropic منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
     body: JSON.stringify({ model, max_tokens: 4000, system: systemPrompt, messages }),
   });
   const data = await response.json();
@@ -118,12 +137,26 @@ async function callAnthropic(model: string, systemPrompt: string, messages: any[
 
 async function callGoogle(model: string, systemPrompt: string, messages: any[], apiKey: string) {
   if (!apiKey) throw new Error("مفتاح Google منسني أو غير متاح في الإعدادات");
-  const fullPrompt = systemPrompt + "\n\n" + messages.map((m: any) => (m.role === "user" ? "المستخدم: " : "المساعد: ") + m.content).join("\n");
-  const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }], generationConfig: { temperature: 0.8, maxOutputTokens: 4000 } }),
-  });
+  const fullPrompt =
+    systemPrompt +
+    "\n\n" +
+    messages
+      .map((m: any) => (m.role === "user" ? "المستخدم: " : "المساعد: ") + m.content)
+      .join("\n");
+  const response = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/" +
+      model +
+      ":generateContent?key=" +
+      apiKey,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: fullPrompt }] }],
+        generationConfig: { temperature: 0.8, maxOutputTokens: 4000 },
+      }),
+    }
+  );
   const data = await response.json();
   if (data.error) throw new Error(data.error.message);
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -133,8 +166,13 @@ async function callManus(model: string, systemPrompt: string, messages: any[], a
   if (!apiKey) throw new Error("مفتاح Manus منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.manus.ai/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
-    body: JSON.stringify({ model: model || "manus-1", messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
+    body: JSON.stringify({
+      model: model || "manus-1",
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
+      temperature: 0.8,
+      max_tokens: 4000,
+    }),
   });
   const data = await response.json();
   if (data.error) throw new Error(data.error.message);
@@ -142,26 +180,68 @@ async function callManus(model: string, systemPrompt: string, messages: any[], a
 }
 
 // OpenAI-compatible endpoint helper (Groq, DeepSeek, xAI all use same schema)
-async function callOpenAICompat(baseUrl: string, model: string, systemPrompt: string, messages: any[], apiKey: string, providerName: string) {
+async function callOpenAICompat(
+  baseUrl: string,
+  model: string,
+  systemPrompt: string,
+  messages: any[],
+  apiKey: string,
+  providerName: string
+) {
   if (!apiKey) throw new Error(`مفتاح ${providerName} غير متاح في الإعدادات`);
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
-    body: JSON.stringify({ model, messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.8, max_tokens: 4000 }),
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
+      temperature: 0.8,
+      max_tokens: 4000,
+    }),
   });
   const data = await response.json();
   if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
   return data.choices?.[0]?.message?.content || "";
 }
 
-async function callModel(provider: string, model: string, systemPrompt: string, messages: any[], apiKey: string) {
-  if (provider === "openai")    return callOpenAI(model, systemPrompt, messages, apiKey);
+async function callModel(
+  provider: string,
+  model: string,
+  systemPrompt: string,
+  messages: any[],
+  apiKey: string
+) {
+  if (provider === "openai") return callOpenAI(model, systemPrompt, messages, apiKey);
   if (provider === "anthropic") return callAnthropic(model, systemPrompt, messages, apiKey);
-  if (provider === "google")    return callGoogle(model, systemPrompt, messages, apiKey);
-  if (provider === "manus")     return callManus(model, systemPrompt, messages, apiKey);
-  if (provider === "groq")      return callOpenAICompat("https://api.groq.com/openai/v1", model || "llama-3.3-70b-versatile", systemPrompt, messages, apiKey, "Groq");
-  if (provider === "deepseek")  return callOpenAICompat("https://api.deepseek.com/v1", model || "deepseek-chat", systemPrompt, messages, apiKey, "DeepSeek");
-  if (provider === "xai")       return callOpenAICompat("https://api.x.ai/v1", model || "grok-3", systemPrompt, messages, apiKey, "xAI");
+  if (provider === "google") return callGoogle(model, systemPrompt, messages, apiKey);
+  if (provider === "manus") return callManus(model, systemPrompt, messages, apiKey);
+  if (provider === "groq")
+    return callOpenAICompat(
+      "https://api.groq.com/openai/v1",
+      model || "llama-3.3-70b-versatile",
+      systemPrompt,
+      messages,
+      apiKey,
+      "Groq"
+    );
+  if (provider === "deepseek")
+    return callOpenAICompat(
+      "https://api.deepseek.com/v1",
+      model || "deepseek-chat",
+      systemPrompt,
+      messages,
+      apiKey,
+      "DeepSeek"
+    );
+  if (provider === "xai")
+    return callOpenAICompat(
+      "https://api.x.ai/v1",
+      model || "grok-3",
+      systemPrompt,
+      messages,
+      apiKey,
+      "xAI"
+    );
   throw new Error("مزود غير معروف: " + provider);
 }
 
@@ -190,13 +270,18 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          getAll() { return req.cookies.getAll(); },
+          getAll() {
+            return req.cookies.getAll();
+          },
           setAll(_cookiesToSet) {},
         },
       }
     );
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "غير مصرح — يرجى تسجيل الدخول أولاً" }, { status: 401 });
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user)
+      return NextResponse.json({ error: "غير مصرح — يرجى تسجيل الدخول أولاً" }, { status: 401 });
 
     // ── التحقق من حد AI حسب الخطة ──
     const limitCheck = await checkLimit(supabase, "ai_requests");
@@ -226,20 +311,25 @@ export async function POST(req: NextRequest) {
     // فاعتمدنا على env vars بشكل كامل. لو أردت تخصيص لكل مستأجر مستقبلاً،
     // أضف الأعمدة عبر migration ثم استعد القراءة من DB.
     const getProviderKey = (prov: string): string => {
-      if (prov === "openai")    return process.env.OPENAI_API_KEY    || "";
+      if (prov === "openai") return process.env.OPENAI_API_KEY || "";
       if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
-      if (prov === "google")    return process.env.GOOGLE_API_KEY    || "";
-      if (prov === "manus")     return process.env.MANUS_API_KEY     || "";
-      if (prov === "groq")      return process.env.GROQ_API_KEY      || "";
-      if (prov === "deepseek")  return process.env.DEEPSEEK_API_KEY  || "";
-      if (prov === "xai")       return process.env.XAI_API_KEY       || "";
+      if (prov === "google") return process.env.GOOGLE_API_KEY || "";
+      if (prov === "manus") return process.env.MANUS_API_KEY || "";
+      if (prov === "groq") return process.env.GROQ_API_KEY || "";
+      if (prov === "deepseek") return process.env.DEEPSEEK_API_KEY || "";
+      if (prov === "xai") return process.env.XAI_API_KEY || "";
       return "";
     };
 
     const apiKey1 = getProviderKey(p);
-    if (!apiKey1) return NextResponse.json({ error: `مفتاح ${p} غير موجود — يرجى ربطه في مركز الذكاء الاصطناعي` }, { status: 400 });
+    if (!apiKey1)
+      return NextResponse.json(
+        { error: `مفتاح ${p} غير موجود — يرجى ربطه في مركز الذكاء الاصطناعي` },
+        { status: 400 }
+      );
 
-    const chatMessages = messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
+    const chatMessages =
+      messages && messages.length > 0 ? messages : [{ role: "user", content: userPrompt }];
 
     // ── وضع نموذج واحد ──
     if (!mode || mode === "single") {
@@ -255,11 +345,23 @@ export async function POST(req: NextRequest) {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
       const apiKey2 = getProviderKey(p2);
-      if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج المراجع` }, { status: 400 });
+      if (!apiKey2)
+        return NextResponse.json(
+          { error: `مفتاح ${p2} غير موجود للنموذج المراجع` },
+          { status: 400 }
+        );
 
       const draft = await callModel(p, m, systemPrompt, chatMessages, apiKey1);
-      const reviewPrompt = "أنت مراجع محتوى عقاري محترف. راجع المحتوى التالي وحسّنه مع الحفاظ على نفس الفكرة والأسلوب. أعد كتابة المحتوى المحسّن فقط بدون شرح:\n\n" + draft;
-      const reviewed = await callModel(p2, m2, systemPrompt, [{ role: "user", content: reviewPrompt }], apiKey2);
+      const reviewPrompt =
+        "أنت مراجع محتوى عقاري محترف. راجع المحتوى التالي وحسّنه مع الحفاظ على نفس الفكرة والأسلوب. أعد كتابة المحتوى المحسّن فقط بدون شرح:\n\n" +
+        draft;
+      const reviewed = await callModel(
+        p2,
+        m2,
+        systemPrompt,
+        [{ role: "user", content: reviewPrompt }],
+        apiKey2
+      );
       return NextResponse.json({ result: reviewed, draft });
     }
 
@@ -268,7 +370,11 @@ export async function POST(req: NextRequest) {
       const p2 = provider2 || "openai";
       const m2 = model2 || "gpt-4o";
       const apiKey2 = getProviderKey(p2);
-      if (!apiKey2) return NextResponse.json({ error: `مفتاح ${p2} غير موجود للنموذج الثاني` }, { status: 400 });
+      if (!apiKey2)
+        return NextResponse.json(
+          { error: `مفتاح ${p2} غير موجود للنموذج الثاني` },
+          { status: 400 }
+        );
 
       const [result1, result2] = await Promise.all([
         callModel(p, m, systemPrompt, chatMessages, apiKey1),
@@ -284,5 +390,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: sanitizeError(err) }, { status: 500 });
   }
 }
-
-

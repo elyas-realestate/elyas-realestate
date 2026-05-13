@@ -14,9 +14,7 @@ function getSecret(): string {
 }
 
 async function importKey(secret: string): Promise<CryptoKey> {
-  const raw = new Uint8Array(
-    secret.match(/.{1,2}/g)!.map((b) => parseInt(b, 16))
-  );
+  const raw = new Uint8Array(secret.match(/.{1,2}/g)!.map((b) => parseInt(b, 16)));
   return crypto.subtle.importKey("raw", raw, { name: ALG, length: KEY_LENGTH }, false, [
     "encrypt",
     "decrypt",
@@ -51,7 +49,11 @@ export async function decrypt(encrypted: string): Promise<string> {
 export async function safeDecrypt(value: string): Promise<string> {
   if (!value) return "";
   if (value.includes(":")) {
-    try { return await decrypt(value); } catch { /* ليس مشفراً */ }
+    try {
+      return await decrypt(value);
+    } catch {
+      /* ليس مشفراً */
+    }
   }
   return value; // plaintext قديم — يُعاد مباشرة للتوافق
 }

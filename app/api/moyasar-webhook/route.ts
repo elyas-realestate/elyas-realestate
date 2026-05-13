@@ -65,13 +65,17 @@ export async function POST(req: NextRequest) {
     );
 
     // سجّل الحدث في jdaول التدقيق
-    await admin.from("payment_events").insert({
-      payment_id: payment.id,
-      event_type: eventType,
-      status: payment.status,
-      amount: payment.amount,
-      raw_payload: event,
-    }).select().maybeSingle();
+    await admin
+      .from("payment_events")
+      .insert({
+        payment_id: payment.id,
+        event_type: eventType,
+        status: payment.status,
+        amount: payment.amount,
+        raw_payload: event,
+      })
+      .select()
+      .maybeSingle();
 
     // عالج كل حدث
     switch (eventType) {
@@ -93,15 +97,21 @@ export async function POST(req: NextRequest) {
             expiresAt.setMonth(expiresAt.getMonth() + 1);
           }
 
-          await admin.from("tenant_payments").update({
-            status: "paid",
-            paid_at: new Date().toISOString(),
-          }).eq("id", tp.id);
+          await admin
+            .from("tenant_payments")
+            .update({
+              status: "paid",
+              paid_at: new Date().toISOString(),
+            })
+            .eq("id", tp.id);
 
-          await admin.from("site_settings").update({
-            plan: tp.plan,
-            plan_expires_at: expiresAt.toISOString(),
-          }).eq("tenant_id", tp.tenant_id);
+          await admin
+            .from("site_settings")
+            .update({
+              plan: tp.plan,
+              plan_expires_at: expiresAt.toISOString(),
+            })
+            .eq("tenant_id", tp.tenant_id);
 
           console.log(`[moyasar-webhook] ✅ تفعيل ${tp.plan} للـ tenant ${tp.tenant_id}`);
 
@@ -120,14 +130,16 @@ export async function POST(req: NextRequest) {
 
       case "payment_failed":
       case "payment_voided": {
-        await admin.from("tenant_payments")
+        await admin
+          .from("tenant_payments")
           .update({ status: "failed" })
           .eq("payment_id", payment.id);
         break;
       }
 
       case "payment_refunded": {
-        await admin.from("tenant_payments")
+        await admin
+          .from("tenant_payments")
           .update({ status: "refunded" })
           .eq("payment_id", payment.id);
         // اختياري: downgrade للـ free
@@ -168,10 +180,9 @@ async function createSubscriptionInvoice(
       : reverseVAT(grossSAR);
 
     // ── العداد التسلسلي عبر RPC (atomic) ──
-    const { data: nextCounterData } = await admin.rpc(
-      "next_subscription_invoice_counter",
-      { p_tenant_id: args.tenantId }
-    );
+    const { data: nextCounterData } = await admin.rpc("next_subscription_invoice_counter", {
+      p_tenant_id: args.tenantId,
+    });
     const nextCounter = (nextCounterData as number) || 1;
     const invoiceNumber = `WP-${args.tenantId.slice(0, 8).toUpperCase()}-${String(nextCounter).padStart(6, "0")}`;
 

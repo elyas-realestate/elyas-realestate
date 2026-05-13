@@ -8,9 +8,18 @@ export async function POST(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const body = await req.json();
@@ -40,10 +49,7 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  const { error } = await supabase
-    .from("tenants")
-    .update({ slug })
-    .eq("owner_id", user.id);
+  const { error } = await supabase.from("tenants").update({ slug }).eq("owner_id", user.id);
 
   if (error) return NextResponse.json({ error: "فشل التحديث — حاول مجدداً" }, { status: 500 });
 

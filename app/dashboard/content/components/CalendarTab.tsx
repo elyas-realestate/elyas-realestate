@@ -10,16 +10,7 @@ import {
   platformDots,
 } from "../constants";
 import type { ContentDraft } from "@/types/database";
-import {
-  Calendar,
-  Plus,
-  X,
-  Pencil,
-  Copy,
-  Check,
-  Save,
-  Trash2,
-} from "lucide-react";
+import { Calendar, Plus, X, Pencil, Copy, Check, Save, Trash2 } from "lucide-react";
 import { SkeletonList } from "@/components/ui/Skeleton";
 
 export default function CalendarTab({
@@ -31,8 +22,7 @@ export default function CalendarTab({
 }) {
   const [view, setView] = useState<"month" | "week" | "agenda">("month");
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 768)
-      setView("agenda");
+    if (typeof window !== "undefined" && window.innerWidth < 768) setView("agenda");
   }, []);
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -57,8 +47,16 @@ export default function CalendarTab({
 
   async function loadPosts() {
     const [postsRes, draftsRes] = await Promise.all([
-      supabase.from("content").select("*").not("scheduled_date", "is", null).order("scheduled_date", { ascending: true }),
-      supabase.from("content").select("*").is("scheduled_date", null).order("created_at", { ascending: false }),
+      supabase
+        .from("content")
+        .select("*")
+        .not("scheduled_date", "is", null)
+        .order("scheduled_date", { ascending: true }),
+      supabase
+        .from("content")
+        .select("*")
+        .is("scheduled_date", null)
+        .order("created_at", { ascending: false }),
     ]);
     setPosts((postsRes.data as ContentDraft[]) || []);
     setAllDrafts((draftsRes.data as ContentDraft[]) || []);
@@ -83,7 +81,11 @@ export default function CalendarTab({
     const start = new Date(currentDate);
     start.setDate(start.getDate() - start.getDay());
     const days: Date[] = [];
-    for (let i = 0; i < 7; i++) { const d = new Date(start); d.setDate(start.getDate() + i); days.push(d); }
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      days.push(d);
+    }
     return days;
   }
 
@@ -96,7 +98,8 @@ export default function CalendarTab({
 
   function getPostsForDate(dateStr: string) {
     let filtered = posts.filter((p) => p.scheduled_date === dateStr);
-    if (filterPlatform !== "all") filtered = filtered.filter((p) => p.main_channel === filterPlatform);
+    if (filterPlatform !== "all")
+      filtered = filtered.filter((p) => p.main_channel === filterPlatform);
     if (filterStatus !== "all") filtered = filtered.filter((p) => p.status === filterStatus);
     return filtered;
   }
@@ -110,44 +113,77 @@ export default function CalendarTab({
 
   async function assignDraft() {
     if (!assignDraftId || !assignDate) return;
-    await supabase.from("content").update({ scheduled_date: assignDate, scheduled_time: assignTime || "09:00" }).eq("id", assignDraftId);
-    setShowAssign(false); setAssignDraftId(""); setAssignDate(""); setAssignTime("09:00");
-    loadPosts(); onDraftsCreated();
+    await supabase
+      .from("content")
+      .update({ scheduled_date: assignDate, scheduled_time: assignTime || "09:00" })
+      .eq("id", assignDraftId);
+    setShowAssign(false);
+    setAssignDraftId("");
+    setAssignDate("");
+    setAssignTime("09:00");
+    loadPosts();
+    onDraftsCreated();
   }
 
   async function unschedulePost(id: string) {
-    await supabase.from("content").update({ scheduled_date: null, scheduled_time: null }).eq("id", id);
-    setSelectedPost(null); loadPosts(); onDraftsCreated();
+    await supabase
+      .from("content")
+      .update({ scheduled_date: null, scheduled_time: null })
+      .eq("id", id);
+    setSelectedPost(null);
+    loadPosts();
+    onDraftsCreated();
   }
 
   async function updatePostStatus(id: string, status: string) {
-    await supabase.from("content").update({ status }).eq("id", id); loadPosts();
+    await supabase.from("content").update({ status }).eq("id", id);
+    loadPosts();
   }
 
   async function savePostEdit(id: string) {
     await supabase.from("content").update({ main_text: editText }).eq("id", id);
-    setEditingPost(null); setEditText(""); loadPosts();
+    setEditingPost(null);
+    setEditText("");
+    loadPosts();
   }
 
   async function deletePost(id: string) {
     if (!confirm("حذف هذا المحتوى؟")) return;
     await supabase.from("content").delete().eq("id", id);
-    setSelectedPost(null); loadPosts(); onDraftsCreated();
+    setSelectedPost(null);
+    loadPosts();
+    onDraftsCreated();
   }
 
   function copyText(id: string, text: string) {
-    navigator.clipboard.writeText(text); setCopiedId(id);
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
     setTimeout(() => setCopiedId(""), 2000);
   }
 
   function exportExcel() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const monthPosts = posts.filter((p) => { const d = new Date(p.scheduled_date!); return d.getFullYear() === year && d.getMonth() === month; });
+    const monthPosts = posts.filter((p) => {
+      const d = new Date(p.scheduled_date!);
+      return d.getFullYear() === year && d.getMonth() === month;
+    });
     let csv = "\uFEFF" + "التاريخ,الوقت,المنصة,الصيغة,الحالة,المحتوى\n";
     monthPosts.forEach((p) => {
       const text = (p.main_text || "").replace(/"/g, '""').replace(/\n/g, " ");
-      csv += p.scheduled_date + "," + (p.scheduled_time || "") + "," + (p.main_channel || "") + "," + (p.content_format || "") + "," + (p.status || "") + ',"' + text + '"\n';
+      csv +=
+        p.scheduled_date +
+        "," +
+        (p.scheduled_time || "") +
+        "," +
+        (p.main_channel || "") +
+        "," +
+        (p.content_format || "") +
+        "," +
+        (p.status || "") +
+        ',"' +
+        text +
+        '"\n';
     });
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -159,45 +195,129 @@ export default function CalendarTab({
   }
 
   const today = new Date();
-  const todayStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
-  const monthPostsCount = posts.filter((p) => { const d = new Date(p.scheduled_date!); return d.getFullYear() === currentDate.getFullYear() && d.getMonth() === currentDate.getMonth(); }).length;
+  const todayStr =
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0");
+  const monthPostsCount = posts.filter((p) => {
+    const d = new Date(p.scheduled_date!);
+    return d.getFullYear() === currentDate.getFullYear() && d.getMonth() === currentDate.getMonth();
+  }).length;
 
   if (loading) return <SkeletonList count={4} />;
 
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-xl font-bold mb-1">الخطة الشهرية</h3>
-          <p className="text-[var(--text-soft)] text-sm hidden sm:block">خطط لمحتواك على تقويم بصري</p>
+          <h3 className="mb-1 text-xl font-bold">الخطة الشهرية</h3>
+          <p className="hidden text-sm text-[var(--text-soft)] sm:block">
+            خطط لمحتواك على تقويم بصري
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={exportExcel} className="hidden sm:flex items-center gap-2 text-sm bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg text-[var(--text-soft)] hover:text-[var(--text-strong)] transition">📥 تصدير</button>
-          <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="flex items-center gap-2 text-sm bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-2 rounded-lg text-white transition"><Plus size={14} /> <span>جدولة</span></button>
+          <button
+            onClick={exportExcel}
+            className="hidden items-center gap-2 rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm text-[var(--text-soft)] transition hover:text-[var(--text-strong)] sm:flex"
+          >
+            📥 تصدير
+          </button>
+          <button
+            onClick={() => {
+              setShowAssign(true);
+              setAssignDate("");
+            }}
+            className="flex items-center gap-2 rounded-lg bg-[var(--gold-2)] px-3 py-2 text-sm text-white transition hover:bg-[var(--gold-3)]"
+          >
+            <Plus size={14} /> <span>جدولة</span>
+          </button>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <button onClick={() => navigate(-1)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-soft)]">→</button>
-          <h4 className="font-bold text-sm min-w-[130px] text-center">{view === "week" ? "الأسبوع" : arabicMonths[currentDate.getMonth()] + " " + currentDate.getFullYear()}</h4>
-          <button onClick={() => navigate(1)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-soft)]">←</button>
-          <button onClick={() => setCurrentDate(new Date())} className="text-xs text-[var(--gold-2)]">اليوم</button>
+          <button
+            onClick={() => navigate(-1)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] text-[var(--text-soft)]"
+          >
+            →
+          </button>
+          <h4 className="min-w-[130px] text-center text-sm font-bold">
+            {view === "week"
+              ? "الأسبوع"
+              : arabicMonths[currentDate.getMonth()] + " " + currentDate.getFullYear()}
+          </h4>
+          <button
+            onClick={() => navigate(1)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] text-[var(--text-soft)]"
+          >
+            ←
+          </button>
+          <button
+            onClick={() => setCurrentDate(new Date())}
+            className="text-xs text-[var(--gold-2)]"
+          >
+            اليوم
+          </button>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <select value={filterPlatform} onChange={(e) => setFilterPlatform(e.target.value)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[var(--gold-2)]" style={{ color: "var(--text-strong)" }}>
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={filterPlatform}
+            onChange={(e) => setFilterPlatform(e.target.value)}
+            className="rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-2 py-1.5 text-xs focus:border-[var(--gold-2)] focus:outline-none"
+            style={{ color: "var(--text-strong)" }}
+          >
             <option value="all">كل المنصات</option>
-            <option value="X (تويتر)">X</option><option value="Instagram">Instagram</option><option value="TikTok">TikTok</option><option value="Snapchat">Snapchat</option><option value="LinkedIn">LinkedIn</option><option value="Threads">Threads</option>
+            <option value="X (تويتر)">X</option>
+            <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Snapchat">Snapchat</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Threads">Threads</option>
           </select>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[var(--gold-2)]" style={{ color: "var(--text-strong)" }}>
-            <option value="all">كل الحالات</option><option value="مسودة">مسودة</option><option value="جاهز">جاهز</option><option value="منشور">منشور</option>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-2 py-1.5 text-xs focus:border-[var(--gold-2)] focus:outline-none"
+            style={{ color: "var(--text-strong)" }}
+          >
+            <option value="all">كل الحالات</option>
+            <option value="مسودة">مسودة</option>
+            <option value="جاهز">جاهز</option>
+            <option value="منشور">منشور</option>
           </select>
-          <div className="flex bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg overflow-hidden">
-            <button onClick={() => setView("month")} className={"px-2 py-1.5 text-xs transition " + (view === "month" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")}>شهري</button>
-            <button onClick={() => setView("week")} className={"px-2 py-1.5 text-xs transition " + (view === "week" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")}>أسبوعي</button>
-            <button onClick={() => setView("agenda")} className={"px-2 py-1.5 text-xs transition " + (view === "agenda" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")}>قائمة</button>
+          <div className="flex overflow-hidden rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)]">
+            <button
+              onClick={() => setView("month")}
+              className={
+                "px-2 py-1.5 text-xs transition " +
+                (view === "month" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")
+              }
+            >
+              شهري
+            </button>
+            <button
+              onClick={() => setView("week")}
+              className={
+                "px-2 py-1.5 text-xs transition " +
+                (view === "week" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")
+              }
+            >
+              أسبوعي
+            </button>
+            <button
+              onClick={() => setView("agenda")}
+              className={
+                "px-2 py-1.5 text-xs transition " +
+                (view === "agenda" ? "bg-[var(--gold-2)] text-white" : "text-[var(--text-soft)]")
+              }
+            >
+              قائمة
+            </button>
           </div>
           <span className="text-xs text-[var(--text-faint)]">{monthPostsCount} منشور</span>
         </div>
@@ -206,10 +326,16 @@ export default function CalendarTab({
       {/* Monthly View */}
       {view === "month" && (
         <div className="overflow-x-auto">
-          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden" style={{ minWidth: 420 }}>
+          <div
+            className="overflow-hidden rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)]"
+            style={{ minWidth: 420 }}
+          >
             <div className="grid grid-cols-7 border-b border-[var(--gold-bg)]">
               {arabicDays.map((d, i) => (
-                <div key={d} className="px-1 py-2 sm:px-2 sm:py-3 text-center text-xs font-bold text-[var(--text-faint)] border-l border-[var(--gold-bg)] last:border-l-0">
+                <div
+                  key={d}
+                  className="border-l border-[var(--gold-bg)] px-1 py-2 text-center text-xs font-bold text-[var(--text-faint)] last:border-l-0 sm:px-2 sm:py-3"
+                >
                   <span className="hidden sm:inline">{d}</span>
                   <span className="sm:hidden">{arabicDaysShort[i]}</span>
                 </div>
@@ -221,17 +347,58 @@ export default function CalendarTab({
                 const dayPosts = item.current ? getPostsForDate(dateStr) : [];
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} onClick={() => { if (item.current) { setSelectedDay(dateStr); setSelectedPost(null); } }} className={"min-h-[70px] sm:min-h-[100px] border-l border-b border-[var(--gold-bg)] last:border-l-0 p-1 sm:p-1.5 cursor-pointer transition " + (item.current ? "hover:bg-[var(--bg-surface-2)]/50" : "bg-gray-950/30") + (selectedDay === dateStr ? " bg-[rgba(193,141,74,0.06)]" : "")}>
-                    <div className={"text-xs font-bold mb-1 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center rounded-full " + (isToday ? "bg-[var(--gold-2)] text-white" : item.current ? "text-[var(--text-soft)]" : "text-[var(--border-1)]")}>{item.day}</div>
+                  <div
+                    key={idx}
+                    onClick={() => {
+                      if (item.current) {
+                        setSelectedDay(dateStr);
+                        setSelectedPost(null);
+                      }
+                    }}
+                    className={
+                      "min-h-[70px] cursor-pointer border-b border-l border-[var(--gold-bg)] p-1 transition last:border-l-0 sm:min-h-[100px] sm:p-1.5 " +
+                      (item.current ? "hover:bg-[var(--bg-surface-2)]/50" : "bg-gray-950/30") +
+                      (selectedDay === dateStr ? " bg-[rgba(193,141,74,0.06)]" : "")
+                    }
+                  >
+                    <div
+                      className={
+                        "mb-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold sm:h-6 sm:w-6 " +
+                        (isToday
+                          ? "bg-[var(--gold-2)] text-white"
+                          : item.current
+                            ? "text-[var(--text-soft)]"
+                            : "text-[var(--border-1)]")
+                      }
+                    >
+                      {item.day}
+                    </div>
                     {item.current && (
                       <div className="space-y-0.5">
                         {dayPosts.slice(0, 2).map((p) => (
-                          <div key={p.id} onClick={(e) => { e.stopPropagation(); setSelectedPost(p); setSelectedDay(dateStr); }} className={"text-xs px-1 py-0.5 rounded truncate cursor-pointer transition hover:opacity-80 " + (platformColors[p.main_channel || ""] || "bg-[var(--bg-surface-3)]")}>
-                            <span className="hidden sm:inline">{p.main_text?.substring(0, 20)}</span>
+                          <div
+                            key={p.id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPost(p);
+                              setSelectedDay(dateStr);
+                            }}
+                            className={
+                              "cursor-pointer truncate rounded px-1 py-0.5 text-xs transition hover:opacity-80 " +
+                              (platformColors[p.main_channel || ""] || "bg-[var(--bg-surface-3)]")
+                            }
+                          >
+                            <span className="hidden sm:inline">
+                              {p.main_text?.substring(0, 20)}
+                            </span>
                             <span className="sm:hidden">●</span>
                           </div>
                         ))}
-                        {dayPosts.length > 2 && <div className="text-xs text-[var(--text-faint)] text-center">+{dayPosts.length - 2}</div>}
+                        {dayPosts.length > 2 && (
+                          <div className="text-center text-xs text-[var(--text-faint)]">
+                            +{dayPosts.length - 2}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -245,26 +412,80 @@ export default function CalendarTab({
       {/* Weekly View */}
       {view === "week" && (
         <div className="overflow-x-auto">
-          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden" style={{ minWidth: 500 }}>
+          <div
+            className="overflow-hidden rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)]"
+            style={{ minWidth: 500 }}
+          >
             <div className="grid grid-cols-7">
               {getWeekDays().map((d, idx) => {
-                const dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+                const dateStr =
+                  d.getFullYear() +
+                  "-" +
+                  String(d.getMonth() + 1).padStart(2, "0") +
+                  "-" +
+                  String(d.getDate()).padStart(2, "0");
                 const dayPosts = getPostsForDate(dateStr);
                 const isToday = dateStr === todayStr;
                 return (
-                  <div key={idx} className={"border-l border-[var(--gold-bg)] last:border-l-0 min-h-[300px] " + (isToday ? "bg-[rgba(193,141,74,0.04)]" : "")}>
-                    <div className={"px-1 py-2 border-b border-[var(--gold-bg)] text-center " + (isToday ? "bg-[var(--gold-bg-soft)]" : "")}>
-                      <div className="text-xs text-[var(--text-faint)]"><span className="hidden sm:inline">{arabicDays[d.getDay()]}</span><span className="sm:hidden">{arabicDaysShort[d.getDay()]}</span></div>
-                      <div className={"text-base font-bold " + (isToday ? "text-[var(--gold-2)]" : "text-gray-300")}>{d.getDate()}</div>
+                  <div
+                    key={idx}
+                    className={
+                      "min-h-[300px] border-l border-[var(--gold-bg)] last:border-l-0 " +
+                      (isToday ? "bg-[rgba(193,141,74,0.04)]" : "")
+                    }
+                  >
+                    <div
+                      className={
+                        "border-b border-[var(--gold-bg)] px-1 py-2 text-center " +
+                        (isToday ? "bg-[var(--gold-bg-soft)]" : "")
+                      }
+                    >
+                      <div className="text-xs text-[var(--text-faint)]">
+                        <span className="hidden sm:inline">{arabicDays[d.getDay()]}</span>
+                        <span className="sm:hidden">{arabicDaysShort[d.getDay()]}</span>
+                      </div>
+                      <div
+                        className={
+                          "text-base font-bold " +
+                          (isToday ? "text-[var(--gold-2)]" : "text-gray-300")
+                        }
+                      >
+                        {d.getDate()}
+                      </div>
                     </div>
-                    <div className="p-1 sm:p-2 space-y-1 sm:space-y-2">
+                    <div className="space-y-1 p-1 sm:space-y-2 sm:p-2">
                       {dayPosts.map((p) => (
-                        <div key={p.id} onClick={() => { setSelectedPost(p); setSelectedDay(dateStr); }} className="bg-[var(--bg-surface-2)] rounded p-1 sm:p-2 cursor-pointer hover:bg-[var(--bg-surface-3)] transition">
-                          <div className="flex items-center gap-1 mb-1"><div className={"w-2 h-2 rounded-full flex-shrink-0 " + (platformDots[p.main_channel || ""] || "bg-gray-500")} /><span className="text-xs text-[var(--text-faint)] hidden sm:inline">{p.scheduled_time || ""}</span></div>
-                          <p className="text-xs text-gray-300 line-clamp-2">{p.main_text}</p>
+                        <div
+                          key={p.id}
+                          onClick={() => {
+                            setSelectedPost(p);
+                            setSelectedDay(dateStr);
+                          }}
+                          className="cursor-pointer rounded bg-[var(--bg-surface-2)] p-1 transition hover:bg-[var(--bg-surface-3)] sm:p-2"
+                        >
+                          <div className="mb-1 flex items-center gap-1">
+                            <div
+                              className={
+                                "h-2 w-2 flex-shrink-0 rounded-full " +
+                                (platformDots[p.main_channel || ""] || "bg-gray-500")
+                              }
+                            />
+                            <span className="hidden text-xs text-[var(--text-faint)] sm:inline">
+                              {p.scheduled_time || ""}
+                            </span>
+                          </div>
+                          <p className="line-clamp-2 text-xs text-gray-300">{p.main_text}</p>
                         </div>
                       ))}
-                      <button onClick={() => { setShowAssign(true); setAssignDate(dateStr); }} className="w-full text-center text-xs text-[var(--text-faint)] hover:text-[var(--gold-2)] py-1 transition">+</button>
+                      <button
+                        onClick={() => {
+                          setShowAssign(true);
+                          setAssignDate(dateStr);
+                        }}
+                        className="w-full py-1 text-center text-xs text-[var(--text-faint)] transition hover:text-[var(--gold-2)]"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 );
@@ -275,89 +496,224 @@ export default function CalendarTab({
       )}
 
       {/* Agenda View */}
-      {view === "agenda" && (() => {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const agendaDays: { dateStr: string; dayPosts: ContentDraft[] }[] = [];
-        for (let i = 1; i <= daysInMonth; i++) {
-          const dateStr = year + "-" + String(month + 1).padStart(2, "0") + "-" + String(i).padStart(2, "0");
-          const dayPosts = getPostsForDate(dateStr);
-          if (dayPosts.length > 0) agendaDays.push({ dateStr, dayPosts });
-        }
-        return (
-          <div className="space-y-3">
-            {agendaDays.length === 0 && (
-              <div className="text-center py-16 text-[var(--text-faint)]">
-                <Calendar size={40} className="mx-auto mb-3 opacity-30" />
-                <p>لا يوجد محتوى مجدول هذا الشهر</p>
-                <button onClick={() => { setShowAssign(true); setAssignDate(""); }} className="mt-4 text-sm text-[var(--gold-2)] hover:underline">+ جدولة محتوى</button>
-              </div>
-            )}
-            {agendaDays.map(({ dateStr, dayPosts }) => {
-              const d = new Date(dateStr);
-              const isToday = dateStr === todayStr;
-              const dayLabel = arabicDays[d.getDay()] + " " + d.getDate() + " " + arabicMonths[d.getMonth()];
-              return (
-                <div key={dateStr} className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden">
-                  <div className={"flex items-center gap-3 px-4 py-2.5 border-b border-[var(--gold-bg)] " + (isToday ? "bg-[var(--gold-bg-soft)]" : "")}>
-                    <span className={"text-sm font-bold " + (isToday ? "text-[var(--gold-2)]" : "text-gray-300")}>{dayLabel}</span>
-                    {isToday && <span className="text-xs bg-[var(--gold-2)] text-white px-2 py-0.5 rounded-full">اليوم</span>}
-                    <span className="text-xs text-[var(--text-faint)] mr-auto">{dayPosts.length} منشور</span>
-                  </div>
-                  <div className="divide-y divide-[var(--gold-bg-soft)]">
-                    {dayPosts.map((p) => (
-                      <div key={p.id} onClick={() => setSelectedPost(p)} className="flex items-start gap-3 px-4 py-3 hover:bg-[var(--bg-surface-2)] cursor-pointer transition">
-                        <div className="flex-shrink-0 mt-1"><div className={"w-2.5 h-2.5 rounded-full " + (platformDots[p.main_channel || ""] || "bg-gray-500")} /></div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className={"text-xs px-2 py-0.5 rounded " + (platformColors[p.main_channel || ""] || "bg-[var(--bg-surface-3)]")}>{p.main_channel}</span>
-                            {p.scheduled_time && <span className="text-xs text-[var(--text-faint)]">{p.scheduled_time}</span>}
-                            <span className="text-xs text-[var(--text-faint)]">{p.status || "مسودة"}</span>
-                          </div>
-                          <p className="text-sm text-gray-300 line-clamp-2">{p.main_text}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+      {view === "agenda" &&
+        (() => {
+          const year = currentDate.getFullYear();
+          const month = currentDate.getMonth();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const agendaDays: { dateStr: string; dayPosts: ContentDraft[] }[] = [];
+          for (let i = 1; i <= daysInMonth; i++) {
+            const dateStr =
+              year + "-" + String(month + 1).padStart(2, "0") + "-" + String(i).padStart(2, "0");
+            const dayPosts = getPostsForDate(dateStr);
+            if (dayPosts.length > 0) agendaDays.push({ dateStr, dayPosts });
+          }
+          return (
+            <div className="space-y-3">
+              {agendaDays.length === 0 && (
+                <div className="py-16 text-center text-[var(--text-faint)]">
+                  <Calendar size={40} className="mx-auto mb-3 opacity-30" />
+                  <p>لا يوجد محتوى مجدول هذا الشهر</p>
+                  <button
+                    onClick={() => {
+                      setShowAssign(true);
+                      setAssignDate("");
+                    }}
+                    className="mt-4 text-sm text-[var(--gold-2)] hover:underline"
+                  >
+                    + جدولة محتوى
+                  </button>
                 </div>
-              );
-            })}
-          </div>
-        );
-      })()}
+              )}
+              {agendaDays.map(({ dateStr, dayPosts }) => {
+                const d = new Date(dateStr);
+                const isToday = dateStr === todayStr;
+                const dayLabel =
+                  arabicDays[d.getDay()] + " " + d.getDate() + " " + arabicMonths[d.getMonth()];
+                return (
+                  <div
+                    key={dateStr}
+                    className="overflow-hidden rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)]"
+                  >
+                    <div
+                      className={
+                        "flex items-center gap-3 border-b border-[var(--gold-bg)] px-4 py-2.5 " +
+                        (isToday ? "bg-[var(--gold-bg-soft)]" : "")
+                      }
+                    >
+                      <span
+                        className={
+                          "text-sm font-bold " +
+                          (isToday ? "text-[var(--gold-2)]" : "text-gray-300")
+                        }
+                      >
+                        {dayLabel}
+                      </span>
+                      {isToday && (
+                        <span className="rounded-full bg-[var(--gold-2)] px-2 py-0.5 text-xs text-white">
+                          اليوم
+                        </span>
+                      )}
+                      <span className="mr-auto text-xs text-[var(--text-faint)]">
+                        {dayPosts.length} منشور
+                      </span>
+                    </div>
+                    <div className="divide-y divide-[var(--gold-bg-soft)]">
+                      {dayPosts.map((p) => (
+                        <div
+                          key={p.id}
+                          onClick={() => setSelectedPost(p)}
+                          className="flex cursor-pointer items-start gap-3 px-4 py-3 transition hover:bg-[var(--bg-surface-2)]"
+                        >
+                          <div className="mt-1 flex-shrink-0">
+                            <div
+                              className={
+                                "h-2.5 w-2.5 rounded-full " +
+                                (platformDots[p.main_channel || ""] || "bg-gray-500")
+                              }
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="mb-1 flex flex-wrap items-center gap-2">
+                              <span
+                                className={
+                                  "rounded px-2 py-0.5 text-xs " +
+                                  (platformColors[p.main_channel || ""] ||
+                                    "bg-[var(--bg-surface-3)]")
+                                }
+                              >
+                                {p.main_channel}
+                              </span>
+                              {p.scheduled_time && (
+                                <span className="text-xs text-[var(--text-faint)]">
+                                  {p.scheduled_time}
+                                </span>
+                              )}
+                              <span className="text-xs text-[var(--text-faint)]">
+                                {p.status || "مسودة"}
+                              </span>
+                            </div>
+                            <p className="line-clamp-2 text-sm text-gray-300">{p.main_text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
       {/* Post Detail Modal */}
       {selectedPost && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setSelectedPost(null)}>
-          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setSelectedPost(null)}
+        >
+          <div
+            className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] p-6"
+            dir="rtl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className={"text-xs px-2 py-1 rounded " + (platformColors[selectedPost.main_channel || ""] || "bg-[var(--bg-surface-3)]")}>{selectedPost.main_channel}</span>
-                <select value={selectedPost.status} onChange={(e) => { updatePostStatus(selectedPost.id, e.target.value); setSelectedPost({ ...selectedPost, status: e.target.value }); }} className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded px-2 py-1 focus:outline-none">
-                  <option value="مسودة">مسودة</option><option value="جاهز">جاهز</option><option value="منشور">منشور</option>
+                <span
+                  className={
+                    "rounded px-2 py-1 text-xs " +
+                    (platformColors[selectedPost.main_channel || ""] || "bg-[var(--bg-surface-3)]")
+                  }
+                >
+                  {selectedPost.main_channel}
+                </span>
+                <select
+                  value={selectedPost.status}
+                  onChange={(e) => {
+                    updatePostStatus(selectedPost.id, e.target.value);
+                    setSelectedPost({ ...selectedPost, status: e.target.value });
+                  }}
+                  className="rounded border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-2 py-1 text-xs focus:outline-none"
+                >
+                  <option value="مسودة">مسودة</option>
+                  <option value="جاهز">جاهز</option>
+                  <option value="منشور">منشور</option>
                 </select>
               </div>
-              <button onClick={() => setSelectedPost(null)} className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"><X size={18} /></button>
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <div className="text-xs text-[var(--text-faint)] mb-3">{selectedPost.scheduled_date} — {selectedPost.scheduled_time || "بدون وقت"}</div>
+            <div className="mb-3 text-xs text-[var(--text-faint)]">
+              {selectedPost.scheduled_date} — {selectedPost.scheduled_time || "بدون وقت"}
+            </div>
             {editingPost?.id === selectedPost.id ? (
               <div>
-                <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows={6} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-2)] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none mb-3" />
+                <textarea
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  rows={6}
+                  className="mb-3 w-full rounded-lg border border-[var(--gold-2)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm text-gray-200 focus:outline-none"
+                />
                 <div className="flex gap-2">
-                  <button onClick={() => savePostEdit(selectedPost.id)} className="text-sm bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition">حفظ</button>
-                  <button onClick={() => setEditingPost(null)} className="text-sm bg-[var(--bg-surface-3)] px-4 py-2 rounded-lg transition">إلغاء</button>
+                  <button
+                    onClick={() => savePostEdit(selectedPost.id)}
+                    className="rounded-lg bg-green-600 px-4 py-2 text-sm transition hover:bg-green-700"
+                  >
+                    حفظ
+                  </button>
+                  <button
+                    onClick={() => setEditingPost(null)}
+                    className="rounded-lg bg-[var(--bg-surface-3)] px-4 py-2 text-sm transition"
+                  >
+                    إلغاء
+                  </button>
                 </div>
               </div>
             ) : (
-              <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap mb-4">{selectedPost.main_text}</p>
+              <p className="mb-4 text-sm leading-relaxed whitespace-pre-wrap text-gray-200">
+                {selectedPost.main_text}
+              </p>
             )}
             {editingPost?.id !== selectedPost.id && (
-              <div className="flex gap-2 flex-wrap">
-                <button onClick={() => { setEditingPost(selectedPost); setEditText(selectedPost.main_text); }} className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-2 rounded-lg flex items-center gap-1 transition"><Pencil size={12} /> تعديل</button>
-                <button onClick={() => copyText(selectedPost.id, selectedPost.main_text)} className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-2 rounded-lg flex items-center gap-1 transition">{copiedId === selectedPost.id ? <><Check size={12} className="text-green-400" /> نُسخ</> : <><Copy size={12} /> نسخ</>}</button>
-                <button onClick={() => unschedulePost(selectedPost.id)} className="text-xs bg-yellow-900/30 hover:bg-yellow-900/50 text-yellow-400 px-3 py-2 rounded-lg transition">إلغاء الجدولة</button>
-                <button onClick={() => deletePost(selectedPost.id)} className="text-xs bg-red-900/30 hover:bg-red-900/50 text-red-400 px-3 py-2 rounded-lg transition">حذف</button>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => {
+                    setEditingPost(selectedPost);
+                    setEditText(selectedPost.main_text);
+                  }}
+                  className="flex items-center gap-1 rounded-lg bg-[var(--bg-surface-2)] px-3 py-2 text-xs transition hover:bg-[var(--bg-surface-3)]"
+                >
+                  <Pencil size={12} /> تعديل
+                </button>
+                <button
+                  onClick={() => copyText(selectedPost.id, selectedPost.main_text)}
+                  className="flex items-center gap-1 rounded-lg bg-[var(--bg-surface-2)] px-3 py-2 text-xs transition hover:bg-[var(--bg-surface-3)]"
+                >
+                  {copiedId === selectedPost.id ? (
+                    <>
+                      <Check size={12} className="text-green-400" /> نُسخ
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} /> نسخ
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => unschedulePost(selectedPost.id)}
+                  className="rounded-lg bg-yellow-900/30 px-3 py-2 text-xs text-yellow-400 transition hover:bg-yellow-900/50"
+                >
+                  إلغاء الجدولة
+                </button>
+                <button
+                  onClick={() => deletePost(selectedPost.id)}
+                  className="rounded-lg bg-red-900/30 px-3 py-2 text-xs text-red-400 transition hover:bg-red-900/50"
+                >
+                  حذف
+                </button>
               </div>
             )}
           </div>
@@ -366,28 +722,79 @@ export default function CalendarTab({
 
       {/* Schedule Draft Modal */}
       {showAssign && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowAssign(false)}>
-          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg-hover)] rounded-2xl max-w-md w-full p-6" dir="rtl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="font-bold text-lg">جدولة مسودة</h4>
-              <button onClick={() => setShowAssign(false)} className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"><X size={18} /></button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setShowAssign(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] p-6"
+            dir="rtl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h4 className="text-lg font-bold">جدولة مسودة</h4>
+              <button
+                onClick={() => setShowAssign(false)}
+                className="text-[var(--text-faint)] hover:text-[var(--text-strong)]"
+              >
+                <X size={18} />
+              </button>
             </div>
             {allDrafts.length === 0 ? (
-              <p className="text-[var(--text-faint)] text-center py-8">لا توجد مسودات — أنتج محتوى أولاً من مصنع المحتوى أو خبير المحتوى</p>
+              <p className="py-8 text-center text-[var(--text-faint)]">
+                لا توجد مسودات — أنتج محتوى أولاً من مصنع المحتوى أو خبير المحتوى
+              </p>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-[var(--text-soft)] mb-2">اختر المسودة</label>
-                  <select value={assignDraftId} onChange={(e) => setAssignDraftId(e.target.value)} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]">
+                  <label className="mb-2 block text-sm text-[var(--text-soft)]">اختر المسودة</label>
+                  <select
+                    value={assignDraftId}
+                    onChange={(e) => setAssignDraftId(e.target.value)}
+                    className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                  >
                     <option value="">اختر مسودة...</option>
-                    {allDrafts.map((d) => (<option key={d.id} value={d.id}>{(d.main_channel || "") + " — " + (d.main_text || "").substring(0, 50)}</option>))}
+                    {allDrafts.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {(d.main_channel || "") + " — " + (d.main_text || "").substring(0, 50)}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div><label className="block text-sm text-[var(--text-soft)] mb-2">تاريخ النشر</label><input type="date" value={assignDate} onChange={(e) => setAssignDate(e.target.value)} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]" /></div>
-                  <div><label className="block text-sm text-[var(--text-soft)] mb-2">وقت النشر</label><input type="time" value={assignTime} onChange={(e) => setAssignTime(e.target.value)} className="w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]" /></div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm text-[var(--text-soft)]">
+                      تاريخ النشر
+                    </label>
+                    <input
+                      type="date"
+                      value={assignDate}
+                      onChange={(e) => setAssignDate(e.target.value)}
+                      className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm text-[var(--text-soft)]">وقت النشر</label>
+                    <input
+                      type="time"
+                      value={assignTime}
+                      onChange={(e) => setAssignTime(e.target.value)}
+                      className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                    />
+                  </div>
                 </div>
-                <button onClick={assignDraft} disabled={!assignDraftId || !assignDate} className={"w-full py-3 rounded-lg font-bold transition " + (assignDraftId && assignDate ? "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white" : "bg-[var(--bg-surface-3)] text-[var(--text-faint)]")}>جدولة المسودة</button>
+                <button
+                  onClick={assignDraft}
+                  disabled={!assignDraftId || !assignDate}
+                  className={
+                    "w-full rounded-lg py-3 font-bold transition " +
+                    (assignDraftId && assignDate
+                      ? "bg-[var(--gold-2)] text-white hover:bg-[var(--gold-3)]"
+                      : "bg-[var(--bg-surface-3)] text-[var(--text-faint)]")
+                  }
+                >
+                  جدولة المسودة
+                </button>
               </div>
             )}
           </div>

@@ -14,12 +14,16 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return req.cookies.getAll(); },
+        getAll() {
+          return req.cookies.getAll();
+        },
         setAll() {},
       },
     }
   );
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   let body: { token?: string };
@@ -39,8 +43,11 @@ export async function POST(req: NextRequest) {
     const encrypted = await encrypt(body.token);
     return NextResponse.json({ encrypted });
   } catch (e) {
-    return NextResponse.json({
-      error: e instanceof Error ? e.message : "فشل التشفير"
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: e instanceof Error ? e.message : "فشل التشفير",
+      },
+      { status: 500 }
+    );
   }
 }

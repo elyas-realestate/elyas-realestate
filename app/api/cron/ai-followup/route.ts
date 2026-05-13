@@ -55,27 +55,40 @@ export async function GET(req: NextRequest) {
 
   const { data: settingsList, error: settingsErr } = await admin
     .from("ai_employee_settings")
-    .select("tenant_id, followup_enabled, voice_style, language, ai_provider, ai_model, followup_cold_days")
+    .select(
+      "tenant_id, followup_enabled, voice_style, language, ai_provider, ai_model, followup_cold_days"
+    )
     .eq("followup_enabled", true);
 
   if (settingsErr) return NextResponse.json({ error: settingsErr.message }, { status: 500 });
 
   const tenants = (settingsList || []) as TenantSettings[];
-  const results: Array<{ tenant_id: string; ok: boolean; inserted: number; candidates: number; error?: string }> = [];
+  const results: Array<{
+    tenant_id: string;
+    ok: boolean;
+    inserted: number;
+    candidates: number;
+    error?: string;
+  }> = [];
 
   for (const t of tenants) {
     try {
       // نشاط المستأجر
       const { data: tenantRow } = await admin
-        .from("tenants").select("is_active").eq("id", t.tenant_id).single();
+        .from("tenants")
+        .select("is_active")
+        .eq("id", t.tenant_id)
+        .single();
       if (!tenantRow?.is_active) continue;
 
       // ✨ بوّاب التشغيل
       const gate = await assertSystemActive(t.tenant_id);
       if (!gate.ok) {
         await admin.from("org_activity_log").insert({
-          tenant_id: t.tenant_id, actor_kind: "system", action: "ai_followup_skipped",
-          details: { reason: gate.reason, gated: true }
+          tenant_id: t.tenant_id,
+          actor_kind: "system",
+          action: "ai_followup_skipped",
+          details: { reason: gate.reason, gated: true },
         });
         continue;
       }
@@ -93,7 +106,9 @@ export async function GET(req: NextRequest) {
       // العملاء الباردون
       const { data: clients } = await admin
         .from("clients")
-        .select("id, tenant_id, full_name, phone, category, city, district, notes, sentiment, created_at")
+        .select(
+          "id, tenant_id, full_name, phone, category, city, district, notes, sentiment, created_at"
+        )
         .eq("tenant_id", t.tenant_id)
         .eq("sentiment", "cold")
         .lte("created_at", cutoff)
@@ -108,8 +123,10 @@ export async function GET(req: NextRequest) {
         .eq("tenant_id", t.tenant_id)
         .gte("created_at", cutoff);
 
-      const recentIds = new Set((recentActivity || []).map((a: { client_id: string }) => a.client_id));
-      const candidates = coldClients.filter(c => !recentIds.has(c.id));
+      const recentIds = new Set(
+        (recentActivity || []).map((a: { client_id: string }) => a.client_id)
+      );
+      const candidates = coldClients.filter((c) => !recentIds.has(c.id));
 
       // تجنب التكرار — إذا عنده رسالة pending في آخر 48 ساعة، تخطاه
       const recent48 = new Date(Date.now() - 2 * 86400_000).toISOString();
@@ -120,11 +137,18 @@ export async function GET(req: NextRequest) {
         .gte("created_at", recent48)
         .in("status", ["pending", "sent"]);
 
-      const queuedRecently = new Set((existingQueue || []).map((q: { client_id: string }) => q.client_id));
-      const finalList = candidates.filter(c => !queuedRecently.has(c.id));
+      const queuedRecently = new Set(
+        (existingQueue || []).map((q: { client_id: string }) => q.client_id)
+      );
+      const finalList = candidates.filter((c) => !queuedRecently.has(c.id));
 
       if (finalList.length === 0) {
-        results.push({ tenant_id: t.tenant_id, ok: true, candidates: candidates.length, inserted: 0 });
+        results.push({
+          tenant_id: t.tenant_id,
+          ok: true,
+          candidates: candidates.length,
+          inserted: 0,
+        });
         continue;
       }
 
@@ -140,7 +164,9 @@ export async function GET(req: NextRequest) {
           c.category && `التصنيف: ${c.category}`,
           (c.city || c.district) && `الموقع: ${[c.district, c.city].filter(Boolean).join(", ")}`,
           c.notes && `ملاحظات سابقة: ${c.notes.slice(0, 300)}`,
-        ].filter(Boolean).join("\n");
+        ]
+          .filter(Boolean)
+          .join("\n");
 
         const userPrompt = `${clientBrief}
 
@@ -195,10 +221,18 @@ export async function GET(req: NextRequest) {
         },
       });
 
-      results.push({ tenant_id: t.tenant_id, ok: true, candidates: candidates.length, inserted: insertedForTenant });
+      results.push({
+        tenant_id: t.tenant_id,
+        ok: true,
+        candidates: candidates.length,
+        inserted: insertedForTenant,
+      });
     } catch (e) {
       results.push({
-        tenant_id: t.tenant_id, ok: false, candidates: 0, inserted: 0,
+        tenant_id: t.tenant_id,
+        ok: false,
+        candidates: 0,
+        inserted: 0,
         error: e instanceof Error ? e.message : "unknown",
       });
     }

@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireSuperAdmin } from "@/lib/admin-auth";
 
 // ── GET /api/admin/tenants/[id] — تفاصيل كاملة ──
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const check = await requireSuperAdmin(req);
   if (check instanceof NextResponse) return check;
   const { supabase } = check;

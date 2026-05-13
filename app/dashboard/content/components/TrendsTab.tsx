@@ -18,9 +18,7 @@ export default function TrendsTab({
   onSendToFactory: (idea: string) => void;
 }) {
   const [activeSection, setActiveSection] = useState("events");
-  const [selectedMonth, setSelectedMonth] = useState(
-    new Date().getMonth() + 1
-  );
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [generating, setGenerating] = useState(false);
   const [generatedIdeas, setGeneratedIdeas] = useState<string[]>([]);
   const [customTopic, setCustomTopic] = useState("");
@@ -31,11 +29,7 @@ export default function TrendsTab({
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from("broker_identity")
-        .select("*")
-        .limit(1)
-        .single();
+      const { data } = await supabase.from("broker_identity").select("*").limit(1).single();
       if (data) setIdentity(data as BrokerIdentity);
     })();
   }, []);
@@ -98,24 +92,22 @@ export default function TrendsTab({
 
   const trendColor: Record<string, string> = {
     "صاعد بقوة": "text-green-400 bg-green-900/30",
-    "صاعد": "text-green-300 bg-green-900/20",
+    صاعد: "text-green-300 bg-green-900/20",
     "مستقر مرتفع": "text-[var(--gold-2)] bg-[var(--gold-bg)]",
-    "مستقر": "text-[var(--text-soft)] bg-[var(--bg-surface-2)]",
+    مستقر: "text-[var(--text-soft)] bg-[var(--bg-surface-2)]",
   };
 
   return (
     <div>
       <div className="mb-4">
-        <h3 className="text-lg sm:text-xl font-bold mb-1">
-          ترندات ومناسبات عقارية
-        </h3>
-        <p className="text-[var(--text-soft)] text-xs sm:text-sm hidden sm:block">
+        <h3 className="mb-1 text-lg font-bold sm:text-xl">ترندات ومناسبات عقارية</h3>
+        <p className="hidden text-xs text-[var(--text-soft)] sm:block sm:text-sm">
           أفكار محتوى مرتبطة بالسوق والمناسبات
         </p>
       </div>
 
       {/* Mobile: dropdown */}
-      <div className="md:hidden mb-4">
+      <div className="mb-4 md:hidden">
         <select
           value={activeSection}
           onChange={(e) => setActiveSection(e.target.value)}
@@ -135,16 +127,16 @@ export default function TrendsTab({
       </div>
 
       {/* Desktop: tab buttons */}
-      <div className="hidden md:flex gap-2 mb-6 overflow-x-auto pb-2">
+      <div className="mb-6 hidden gap-2 overflow-x-auto pb-2 md:flex">
         {sections.map((s) => (
           <button
             key={s.id}
             onClick={() => setActiveSection(s.id)}
             className={
-              "flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition whitespace-nowrap " +
+              "flex items-center gap-2 rounded-lg px-4 py-2 text-sm whitespace-nowrap transition " +
               (activeSection === s.id
                 ? "bg-[var(--gold-2)] text-white"
-                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
+                : "border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
             }
           >
             <span>{s.icon}</span>
@@ -156,7 +148,7 @@ export default function TrendsTab({
       {/* مناسبات الشهر */}
       {activeSection === "events" && (
         <div>
-          <div className="md:hidden mb-4">
+          <div className="mb-4 md:hidden">
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(Number(e.target.value))}
@@ -174,32 +166,32 @@ export default function TrendsTab({
               ))}
             </select>
           </div>
-          <div className="hidden md:flex gap-2 mb-4 overflow-x-auto pb-2">
+          <div className="mb-4 hidden gap-2 overflow-x-auto pb-2 md:flex">
             {arabicMonths.map((m, idx) => (
               <button
                 key={idx}
                 onClick={() => setSelectedMonth(idx + 1)}
                 className={
-                  "px-3 py-2 rounded-lg text-xs transition whitespace-nowrap " +
+                  "rounded-lg px-3 py-2 text-xs whitespace-nowrap transition " +
                   (selectedMonth === idx + 1
                     ? "bg-[var(--gold-2)] text-white"
-                    : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
+                    : "border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] text-[var(--text-soft)] hover:text-[var(--text-strong)]")
                 }
               >
                 {m}
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {(saudiEvents[selectedMonth] || []).map((event, idx) => (
               <div
                 key={idx}
-                className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-2)] transition"
+                className="rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5 transition hover:border-[var(--gold-2)]"
               >
-                <div className="flex items-center gap-2 mb-3">
+                <div className="mb-3 flex items-center gap-2">
                   <span
                     className={
-                      "text-xs px-2 py-1 rounded " +
+                      "rounded px-2 py-1 text-xs " +
                       (event.type === "مناسبة"
                         ? "bg-purple-900/30 text-purple-400"
                         : "bg-[var(--gold-bg)] text-[var(--gold-2)]")
@@ -209,22 +201,18 @@ export default function TrendsTab({
                   </span>
                   <span className="text-xs text-[var(--text-faint)]">{event.date}</span>
                 </div>
-                <h4 className="font-bold mb-2">{event.title}</h4>
-                <p className="text-[var(--text-soft)] text-sm mb-4">
-                  {event.contentIdea}
-                </p>
+                <h4 className="mb-2 font-bold">{event.title}</h4>
+                <p className="mb-4 text-sm text-[var(--text-soft)]">{event.contentIdea}</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => onSendToFactory(event.contentIdea)}
-                    className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
+                    className="rounded-lg bg-[var(--gold-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--gold-3)]"
                   >
                     أرسل لمصنع المحتوى
                   </button>
                   <button
-                    onClick={() =>
-                      generateIdeas(event.title + " — " + event.contentIdea)
-                    }
-                    className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
+                    onClick={() => generateIdeas(event.title + " — " + event.contentIdea)}
+                    className="rounded-lg bg-[var(--bg-surface-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--bg-surface-3)]"
                   >
                     ولّد أفكار AI
                   </button>
@@ -237,26 +225,26 @@ export default function TrendsTab({
 
       {/* أخبار السوق */}
       {activeSection === "market" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {marketTopics.map((topic, idx) => (
             <div
               key={idx}
-              className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-2)] transition"
+              className="rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5 transition hover:border-[var(--gold-2)]"
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="mb-3 flex items-center gap-3">
                 <span className="text-2xl">{topic.icon}</span>
                 <h4 className="font-bold">{topic.title}</h4>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => onSendToFactory(topic.title)}
-                  className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
+                  className="rounded-lg bg-[var(--gold-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--gold-3)]"
                 >
                   أرسل لمصنع المحتوى
                 </button>
                 <button
                   onClick={() => generateIdeas(topic.title)}
-                  className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
+                  className="rounded-lg bg-[var(--bg-surface-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--bg-surface-3)]"
                 >
                   ولّد أفكار AI
                 </button>
@@ -268,38 +256,34 @@ export default function TrendsTab({
 
       {/* أحياء صاعدة */}
       {activeSection === "areas" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {riyadhTrendingAreas.map((area, idx) => (
             <div
               key={idx}
-              className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-5 hover:border-[var(--gold-2)] transition"
+              className="rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-5 transition hover:border-[var(--gold-2)]"
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <h4 className="font-bold">{area.name}</h4>
                 <span
                   className={
-                    "text-xs px-2 py-1 rounded " +
+                    "rounded px-2 py-1 text-xs " +
                     (trendColor[area.trend] || "bg-[var(--bg-surface-2)] text-[var(--text-soft)]")
                   }
                 >
                   {area.trend}
                 </span>
               </div>
-              <p className="text-[var(--text-soft)] text-sm mb-3">{area.reason}</p>
+              <p className="mb-3 text-sm text-[var(--text-soft)]">{area.reason}</p>
               <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    onSendToFactory("محتوى عن " + area.name + " — " + area.reason)
-                  }
-                  className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
+                  onClick={() => onSendToFactory("محتوى عن " + area.name + " — " + area.reason)}
+                  className="rounded-lg bg-[var(--gold-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--gold-3)]"
                 >
                   أرسل لمصنع المحتوى
                 </button>
                 <button
-                  onClick={() =>
-                    generateIdeas(area.name + " في الرياض — " + area.reason)
-                  }
-                  className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
+                  onClick={() => generateIdeas(area.name + " في الرياض — " + area.reason)}
+                  className="rounded-lg bg-[var(--bg-surface-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--bg-surface-3)]"
                 >
                   ولّد أفكار AI
                 </button>
@@ -312,11 +296,11 @@ export default function TrendsTab({
       {/* توليد أفكار AI */}
       {activeSection === "generate" && (
         <div>
-          <div className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4 sm:p-5 mb-6">
-            <h4 className="font-bold text-[var(--gold-2)] text-sm mb-4">
+          <div className="mb-6 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-4 sm:p-5">
+            <h4 className="mb-4 text-sm font-bold text-[var(--gold-2)]">
               توليد أفكار محتوى بالذكاء الاصطناعي
             </h4>
-            <div className="flex gap-2 mb-4 flex-wrap">
+            <div className="mb-4 flex flex-wrap gap-2">
               <select
                 value={aiProvider}
                 onChange={(e) => {
@@ -324,7 +308,7 @@ export default function TrendsTab({
                   const prov = providers.find((p) => p.id === e.target.value);
                   if (prov) setAiModel(prov.models[0].id);
                 }}
-                className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)]"
+                className="flex-1 rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
                 style={{ minWidth: 100 }}
               >
                 {providers.map((p) => (
@@ -336,7 +320,7 @@ export default function TrendsTab({
               <select
                 value={aiModel}
                 onChange={(e) => setAiModel(e.target.value)}
-                className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)]"
+                className="flex-1 rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
                 style={{ minWidth: 120 }}
               >
                 {providers
@@ -348,15 +332,14 @@ export default function TrendsTab({
                   ))}
               </select>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <input
                 value={customTopic}
                 onChange={(e) => setCustomTopic(e.target.value)}
                 placeholder="اكتب موضوع أو ترند..."
-                className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)]"
+                className="flex-1 rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-4 py-3 text-sm focus:border-[var(--gold-2)] focus:outline-none"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && customTopic.trim())
-                    generateIdeas(customTopic);
+                  if (e.key === "Enter" && customTopic.trim()) generateIdeas(customTopic);
                 }}
               />
               <button
@@ -365,16 +348,15 @@ export default function TrendsTab({
                 }}
                 disabled={generating || !customTopic.trim()}
                 className={
-                  "w-full sm:w-auto px-5 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 " +
+                  "flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 font-bold transition sm:w-auto " +
                   (generating
                     ? "bg-[var(--bg-surface-3)] text-[var(--text-soft)]"
-                    : "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white")
+                    : "bg-[var(--gold-2)] text-white hover:bg-[var(--gold-3)]")
                 }
               >
                 {generating ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" /> جاري
-                    التوليد...
+                    <Loader2 size={16} className="animate-spin" /> جاري التوليد...
                   </>
                 ) : (
                   <>
@@ -386,42 +368,33 @@ export default function TrendsTab({
           </div>
 
           {generating && (
-            <div className="text-center py-12">
-              <Loader2
-                size={40}
-                className="text-[var(--gold-2)] animate-spin mx-auto mb-4"
-              />
-              <p className="text-[var(--text-soft)]">
-                الذكاء الاصطناعي يولّد أفكار محتوى...
-              </p>
+            <div className="py-12 text-center">
+              <Loader2 size={40} className="mx-auto mb-4 animate-spin text-[var(--gold-2)]" />
+              <p className="text-[var(--text-soft)]">الذكاء الاصطناعي يولّد أفكار محتوى...</p>
             </div>
           )}
 
           {generatedIdeas.length > 0 && !generating && (
             <div className="space-y-3">
-              <h4 className="font-bold text-sm mb-2">
-                {generatedIdeas.length} فكرة محتوى
-              </h4>
+              <h4 className="mb-2 text-sm font-bold">{generatedIdeas.length} فكرة محتوى</h4>
               {generatedIdeas.map((idea, idx) => (
                 <div
                   key={idx}
-                  className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl p-4 hover:border-[var(--gold-bg-hover)] transition"
+                  className="rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-4 transition hover:border-[var(--gold-bg-hover)]"
                 >
-                  <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap mb-3">
+                  <p className="mb-3 text-sm leading-relaxed whitespace-pre-wrap text-gray-200">
                     {idea}
                   </p>
                   <div className="flex gap-2">
                     <button
-                      onClick={() =>
-                        onSendToFactory(idea.split("\n")[0])
-                      }
-                      className="text-xs bg-[var(--gold-2)] hover:bg-[var(--gold-3)] px-3 py-1.5 rounded-lg transition"
+                      onClick={() => onSendToFactory(idea.split("\n")[0])}
+                      className="rounded-lg bg-[var(--gold-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--gold-3)]"
                     >
                       أرسل لمصنع المحتوى
                     </button>
                     <button
                       onClick={() => copyIdea(idx, idea)}
-                      className="text-xs bg-[var(--bg-surface-2)] hover:bg-[var(--bg-surface-3)] px-3 py-1.5 rounded-lg transition"
+                      className="rounded-lg bg-[var(--bg-surface-2)] px-3 py-1.5 text-xs transition hover:bg-[var(--bg-surface-3)]"
                     >
                       {copiedIdx === idx ? "نُسخ ✓" : "نسخ"}
                     </button>

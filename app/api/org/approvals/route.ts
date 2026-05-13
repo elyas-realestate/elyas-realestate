@@ -29,10 +29,13 @@ async function handleGet(req: NextRequest) {
   // فحص env vars مبكراً
   const envCheck = checkServerEnv();
   if (!envCheck.ok) {
-    return NextResponse.json({
-      error: `متغيرات بيئة الخادم ناقصة: ${envCheck.missing.join(", ")}. أضفها في إعدادات Vercel ثم أعد المحاولة.`,
-      items: [],
-    }, { status: 503 });
+    return NextResponse.json(
+      {
+        error: `متغيرات بيئة الخادم ناقصة: ${envCheck.missing.join(", ")}. أضفها في إعدادات Vercel ثم أعد المحاولة.`,
+        items: [],
+      },
+      { status: 503 }
+    );
   }
 
   // Auth
@@ -41,20 +44,32 @@ async function handleGet(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return req.cookies.getAll(); },
+        getAll() {
+          return req.cookies.getAll();
+        },
         setAll() {},
       },
     }
   );
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   // tenant_id
-  const { data: t } = await supabase.from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+  const { data: t } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   let tenantId = t?.id;
   if (!tenantId) {
     const { data: m } = await supabase
-      .from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle();
+      .from("tenant_members")
+      .select("tenant_id")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
     tenantId = m?.tenant_id;
   }
   if (!tenantId) return NextResponse.json({ error: "لم يُعثر على المستأجر" }, { status: 400 });
@@ -78,9 +93,13 @@ async function handleGet(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // إثراء بمعلومات الموظف
-  const empIds = Array.from(new Set((rows || [])
-    .filter(r => r.raised_by_kind === "employee" && r.raised_by_id)
-    .map(r => r.raised_by_id)));
+  const empIds = Array.from(
+    new Set(
+      (rows || [])
+        .filter((r) => r.raised_by_kind === "employee" && r.raised_by_id)
+        .map((r) => r.raised_by_id)
+    )
+  );
 
   let empMap: Record<string, { code: string; name: string; department: string }> = {};
   if (empIds.length > 0) {
@@ -88,19 +107,23 @@ async function handleGet(req: NextRequest) {
       .from("ai_employees")
       .select("id, code, name, department")
       .in("id", empIds);
-    empMap = Object.fromEntries((emps || []).map(e => [e.id, { code: e.code, name: e.name, department: e.department }]));
+    empMap = Object.fromEntries(
+      (emps || []).map((e) => [e.id, { code: e.code, name: e.name, department: e.department }])
+    );
   }
 
-  const enriched = (rows || []).map(r => ({
+  const enriched = (rows || []).map((r) => ({
     ...r,
-    employee: r.raised_by_kind === "employee" && r.raised_by_id ? empMap[r.raised_by_id] || null : null,
-    is_expired: r.expires_at && r.status === "pending" ? new Date(r.expires_at) < new Date() : false,
+    employee:
+      r.raised_by_kind === "employee" && r.raised_by_id ? empMap[r.raised_by_id] || null : null,
+    is_expired:
+      r.expires_at && r.status === "pending" ? new Date(r.expires_at) < new Date() : false,
   }));
 
   return NextResponse.json({
     items: enriched,
     counts: {
-      pending: enriched.filter(r => r.status === "pending").length,
+      pending: enriched.filter((r) => r.status === "pending").length,
       total: enriched.length,
     },
   });

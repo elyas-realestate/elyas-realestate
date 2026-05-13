@@ -61,7 +61,9 @@ export function mergeRules(
   return {
     max_amount_sar: o.max_amount_sar !== undefined ? o.max_amount_sar : d.max_amount_sar,
     block_actions: Array.from(new Set([...(d.block_actions || []), ...(o.block_actions || [])])),
-    require_approval_for: Array.from(new Set([...(d.require_approval_for || []), ...(o.require_approval_for || [])])),
+    require_approval_for: Array.from(
+      new Set([...(d.require_approval_for || []), ...(o.require_approval_for || [])])
+    ),
   };
 }
 
@@ -70,10 +72,7 @@ export function mergeRules(
 /**
  * يفحص هل الإجراء يحتاج موافقة قبل التنفيذ
  */
-export function evaluate(
-  rules: ApprovalRules,
-  ctx: ApprovalContext
-): ApprovalVerdict {
+export function evaluate(rules: ApprovalRules, ctx: ApprovalContext): ApprovalVerdict {
   const blockActions = rules.block_actions || [];
   const requireApproval = rules.require_approval_for || [];
   const tags = ctx.tags || [];
@@ -262,11 +261,12 @@ export async function decideApproval(opts: {
  * حتى يعرف AI الإجراءات التي يجب أن يتجنّبها أو يصعّدها بنفسه.
  */
 export function rulesToPromptText(rules: ApprovalRules): string {
-  if (!rules || (
-    !rules.max_amount_sar &&
-    !(rules.block_actions || []).length &&
-    !(rules.require_approval_for || []).length
-  )) {
+  if (
+    !rules ||
+    (!rules.max_amount_sar &&
+      !(rules.block_actions || []).length &&
+      !(rules.require_approval_for || []).length)
+  ) {
     return "";
   }
   const lines: string[] = ["=== حدود الصلاحية والموافقات ==="];
@@ -279,6 +279,8 @@ export function rulesToPromptText(rules: ApprovalRules): string {
   if ((rules.require_approval_for || []).length) {
     lines.push(`- مواضيع تتطلب موافقة قبل المتابعة: ${rules.require_approval_for!.join("، ")}`);
   }
-  lines.push("- إذا واجهت أي حالة أعلاه: لا تنفّذ الإجراء، رد بأنه قيد المراجعة، وسيُصعَّد للـ CEO تلقائياً.");
+  lines.push(
+    "- إذا واجهت أي حالة أعلاه: لا تنفّذ الإجراء، رد بأنه قيد المراجعة، وسيُصعَّد للـ CEO تلقائياً."
+  );
   return lines.join("\n");
 }

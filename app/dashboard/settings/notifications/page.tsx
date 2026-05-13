@@ -4,8 +4,18 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import {
-  ArrowRight, Smartphone, Bell, BellOff, Download, CheckCircle2,
-  AlertCircle, Apple, Loader2, Trash2, Globe, Send,
+  ArrowRight,
+  Smartphone,
+  Bell,
+  BellOff,
+  Download,
+  CheckCircle2,
+  AlertCircle,
+  Apple,
+  Loader2,
+  Trash2,
+  Globe,
+  Send,
 } from "lucide-react";
 
 type Subscription = {
@@ -44,7 +54,10 @@ export default function NotificationsSettings() {
     };
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
 
-    const onInstalled = () => { setInstalled(true); setInstallEvent(null); };
+    const onInstalled = () => {
+      setInstalled(true);
+      setInstallEvent(null);
+    };
     window.addEventListener("appinstalled", onInstalled);
 
     if ("Notification" in window) setPermission(Notification.permission);
@@ -104,7 +117,9 @@ export default function NotificationsSettings() {
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "") as unknown as BufferSource,
+        applicationServerKey: urlBase64ToUint8Array(
+          process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ""
+        ) as unknown as BufferSource,
       });
 
       // save to DB
@@ -114,25 +129,35 @@ export default function NotificationsSettings() {
 
       // get tenant_id
       const { data: tenant } = await supabase
-        .from("tenants").select("id").eq("owner_id", userData.user.id).maybeSingle();
+        .from("tenants")
+        .select("id")
+        .eq("owner_id", userData.user.id)
+        .maybeSingle();
       let tid = tenant?.id;
       if (!tid) {
         const { data: m } = await supabase
-          .from("tenant_members").select("tenant_id").eq("user_id", userData.user.id).eq("status", "active").maybeSingle();
+          .from("tenant_members")
+          .select("tenant_id")
+          .eq("user_id", userData.user.id)
+          .eq("status", "active")
+          .maybeSingle();
         tid = m?.tenant_id;
       }
       if (!tid) throw new Error("لم يُعثر على المستأجر");
 
-      await supabase.from("push_subscriptions").upsert({
-        tenant_id: tid,
-        user_id: userData.user.id,
-        endpoint: json.endpoint || "",
-        p256dh: json.keys?.p256dh || "",
-        auth_secret: json.keys?.auth || "",
-        user_agent: navigator.userAgent.slice(0, 500),
-        device_label: detectDevice(),
-        is_active: true,
-      }, { onConflict: "user_id,endpoint" });
+      await supabase.from("push_subscriptions").upsert(
+        {
+          tenant_id: tid,
+          user_id: userData.user.id,
+          endpoint: json.endpoint || "",
+          p256dh: json.keys?.p256dh || "",
+          auth_secret: json.keys?.auth || "",
+          user_agent: navigator.userAgent.slice(0, 500),
+          device_label: detectDevice(),
+          is_active: true,
+        },
+        { onConflict: "user_id,endpoint" }
+      );
 
       toast.success("تم تفعيل الإشعارات على هذا الجهاز");
       await loadSubs();
@@ -157,8 +182,17 @@ export default function NotificationsSettings() {
 
   return (
     <div>
-      <Link href="/dashboard"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 14 }}>
+      <Link
+        href="/dashboard"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontSize: 12,
+          color: "var(--text-ghost)",
+          marginBottom: 14,
+        }}
+      >
         <ArrowRight size={12} /> الداشبورد
       </Link>
 
@@ -172,22 +206,45 @@ export default function NotificationsSettings() {
       {/* القسم 1: تثبيت كتطبيق */}
       <Card title="تثبيت كتطبيق على الشاشة الرئيسية" icon={Smartphone}>
         {installed ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 9, padding: 12, background: "rgba(74,222,128,0.07)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 9 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 9,
+              padding: 12,
+              background: "rgba(74,222,128,0.07)",
+              border: "1px solid rgba(74,222,128,0.2)",
+              borderRadius: 9,
+            }}
+          >
             <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
-            <span style={{ fontSize: 13, color: "var(--success)" }}>التطبيق مُثبَّت بالفعل على هذا الجهاز</span>
+            <span style={{ fontSize: 13, color: "var(--success)" }}>
+              التطبيق مُثبَّت بالفعل على هذا الجهاز
+            </span>
           </div>
         ) : installEvent ? (
           <div>
             <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>
-              ثبّت "وسيط برو" كتطبيق مستقل — يفتح بدون شريط المتصفح، أيقونة على الشاشة الرئيسية، وأسرع.
+              ثبّت "وسيط برو" كتطبيق مستقل — يفتح بدون شريط المتصفح، أيقونة على الشاشة الرئيسية،
+              وأسرع.
             </p>
-            <button onClick={handleInstall}
+            <button
+              onClick={handleInstall}
               style={{
-                display: "flex", alignItems: "center", gap: 8, padding: "11px 18px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "11px 18px",
                 background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
-                color: "var(--bg-page)", border: "none", borderRadius: 9,
-                fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
-              }}>
+                color: "var(--bg-page)",
+                border: "none",
+                borderRadius: 9,
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "'Tajawal', sans-serif",
+              }}
+            >
               <Download size={15} /> تثبيت التطبيق الآن
             </button>
           </div>
@@ -196,10 +253,26 @@ export default function NotificationsSettings() {
             <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>
               لتثبيت التطبيق على جوّالك:
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 10 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+                gap: 10,
+              }}
+            >
               <Step icon={Apple} title="على iPhone (Safari)">
-                اضغط زر المشاركة <span style={{ display: "inline-block", padding: "1px 6px", background: "#27272A", borderRadius: 4 }}>↑</span> ثم
-                "إضافة إلى الشاشة الرئيسية"
+                اضغط زر المشاركة{" "}
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "1px 6px",
+                    background: "#27272A",
+                    borderRadius: 4,
+                  }}
+                >
+                  ↑
+                </span>{" "}
+                ثم "إضافة إلى الشاشة الرئيسية"
               </Step>
               <Step icon={Globe} title="على Android (Chrome)">
                 اضغط القائمة (⋮) ثم "تثبيت التطبيق" أو "إضافة للشاشة الرئيسية"
@@ -212,22 +285,45 @@ export default function NotificationsSettings() {
       {/* القسم 2: الإشعارات */}
       <Card title="إشعارات Push" icon={Bell}>
         {!vapidConfigured ? (
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 9, padding: 14, background: "rgba(232,184,109,0.06)", border: "1px solid rgba(232,184,109,0.2)", borderRadius: 9 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 9,
+              padding: 14,
+              background: "rgba(232,184,109,0.06)",
+              border: "1px solid rgba(232,184,109,0.2)",
+              borderRadius: 9,
+            }}
+          >
             <AlertCircle size={16} style={{ color: "var(--gold-1)", marginTop: 2 }} />
             <div>
-              <div style={{ fontSize: 13, color: "var(--gold-1)", fontWeight: 600, marginBottom: 4 }}>الإشعارات قيد التجهيز</div>
+              <div
+                style={{ fontSize: 13, color: "var(--gold-1)", fontWeight: 600, marginBottom: 4 }}
+              >
+                الإشعارات قيد التجهيز
+              </div>
               <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.7 }}>
-                البنية التحتية جاهزة (Service Worker مُسجَّل + جدول الاشتراكات).
-                تفعيل الإرسال يحتاج إعداد VAPID keys في إعدادات Vercel.
-                لما يكتمل، راح تظهر هنا أزرار التفعيل تلقائياً.
+                البنية التحتية جاهزة (Service Worker مُسجَّل + جدول الاشتراكات). تفعيل الإرسال يحتاج
+                إعداد VAPID keys في إعدادات Vercel. لما يكتمل، راح تظهر هنا أزرار التفعيل تلقائياً.
               </div>
             </div>
           </div>
         ) : permission === "denied" ? (
-          <div style={{ padding: 14, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 9 }}>
-            <div style={{ fontSize: 13, color: "var(--danger)", marginBottom: 6, fontWeight: 600 }}>الإشعارات محظورة</div>
+          <div
+            style={{
+              padding: 14,
+              background: "rgba(239,68,68,0.06)",
+              border: "1px solid rgba(239,68,68,0.2)",
+              borderRadius: 9,
+            }}
+          >
+            <div style={{ fontSize: 13, color: "var(--danger)", marginBottom: 6, fontWeight: 600 }}>
+              الإشعارات محظورة
+            </div>
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-              فعّل الإشعارات يدوياً من إعدادات المتصفح (أيقونة القفل بجانب رابط الموقع → الإشعارات → اسمح).
+              فعّل الإشعارات يدوياً من إعدادات المتصفح (أيقونة القفل بجانب رابط الموقع → الإشعارات →
+              اسمح).
             </div>
           </div>
         ) : (
@@ -235,15 +331,30 @@ export default function NotificationsSettings() {
             <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>
               فعّل الإشعارات لتصلك تنبيهات فورية: عميل جديد، طلب عقار، توقيع عقد، تذكير فاتورة.
             </p>
-            <button onClick={handleEnableNotifications} disabled={busy}
+            <button
+              onClick={handleEnableNotifications}
+              disabled={busy}
               style={{
-                display: "flex", alignItems: "center", gap: 8, padding: "11px 18px",
-                background: "rgba(96,165,250,0.1)", color: "var(--info)",
-                border: "1px solid rgba(96,165,250,0.3)", borderRadius: 9,
-                fontSize: 13, fontWeight: 600, cursor: "pointer",
-                fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
-              }}>
-              {busy ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Bell size={14} />}
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "11px 18px",
+                background: "rgba(96,165,250,0.1)",
+                color: "var(--info)",
+                border: "1px solid rgba(96,165,250,0.3)",
+                borderRadius: 9,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                fontFamily: "'Tajawal', sans-serif",
+                opacity: busy ? 0.6 : 1,
+              }}
+            >
+              {busy ? (
+                <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
+              ) : (
+                <Bell size={14} />
+              )}
               {permission === "granted" ? "تفعيل على هذا الجهاز" : "السماح بالإشعارات"}
             </button>
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -279,12 +390,20 @@ export default function NotificationsSettings() {
               }
             }}
             style={{
-              display: "flex", alignItems: "center", gap: 8, padding: "10px 16px",
-              background: "rgba(96,165,250,0.1)", color: "var(--info)",
-              border: "1px solid rgba(96,165,250,0.3)", borderRadius: 9,
-              fontSize: 13, fontWeight: 600, cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 16px",
+              background: "rgba(96,165,250,0.1)",
+              color: "var(--info)",
+              border: "1px solid rgba(96,165,250,0.3)",
+              borderRadius: 9,
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: "pointer",
               fontFamily: "'Tajawal', sans-serif",
-            }}>
+            }}
+          >
             <Send size={14} /> أرسل إشعار اختباري
           </button>
         </Card>
@@ -294,17 +413,42 @@ export default function NotificationsSettings() {
       {subs.length > 0 && (
         <Card title="الأجهزة المسجَّلة" icon={Smartphone}>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {subs.map(s => (
-              <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--bg-surface-2)", borderRadius: 9 }}>
+            {subs.map((s) => (
+              <div
+                key={s.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "10px 12px",
+                  background: "var(--bg-surface-2)",
+                  borderRadius: 9,
+                }}
+              >
                 <Smartphone size={14} style={{ color: "var(--purple-ai)" }} />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 500 }}>{s.device_label || "جهاز غير معروف"}</div>
+                  <div style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 500 }}>
+                    {s.device_label || "جهاز غير معروف"}
+                  </div>
                   <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 2 }}>
                     أُضيف في {new Date(s.created_at).toLocaleDateString("ar-SA")}
                   </div>
                 </div>
-                <button onClick={() => handleRemoveSub(s.id)}
-                  style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", color: "var(--danger)", padding: "6px 10px", borderRadius: 7, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                <button
+                  onClick={() => handleRemoveSub(s.id)}
+                  style={{
+                    background: "rgba(239,68,68,0.06)",
+                    border: "1px solid rgba(239,68,68,0.15)",
+                    color: "var(--danger)",
+                    padding: "6px 10px",
+                    borderRadius: 7,
+                    fontSize: 11,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 4,
+                  }}
+                >
                   <Trash2 size={12} /> إيقاف
                 </button>
               </div>
@@ -316,10 +460,36 @@ export default function NotificationsSettings() {
   );
 }
 
-function Card({ title, icon: Icon, children }: { title: string; icon: typeof Bell; children: React.ReactNode }) {
+function Card({
+  title,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  icon: typeof Bell;
+  children: React.ReactNode;
+}) {
   return (
-    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 13, padding: 18, marginBottom: 14 }}>
-      <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+    <div
+      style={{
+        background: "var(--bg-deep)",
+        border: "1px solid var(--overlay-mid)",
+        borderRadius: 13,
+        padding: 18,
+        marginBottom: 14,
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 14,
+          fontWeight: 700,
+          color: "var(--text-on-dark)",
+          marginBottom: 14,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
         <Icon size={15} style={{ color: "var(--gold-2)" }} /> {title}
       </h2>
       {children}
@@ -327,9 +497,24 @@ function Card({ title, icon: Icon, children }: { title: string; icon: typeof Bel
   );
 }
 
-function Step({ icon: Icon, title, children }: { icon: typeof Apple; title: string; children: React.ReactNode }) {
+function Step({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Apple;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div style={{ padding: 12, background: "var(--bg-surface-2)", borderRadius: 9, border: "1px solid rgba(255,255,255,0.04)" }}>
+    <div
+      style={{
+        padding: 12,
+        background: "var(--bg-surface-2)",
+        borderRadius: 9,
+        border: "1px solid rgba(255,255,255,0.04)",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
         <Icon size={14} style={{ color: "var(--gold-2)" }} />
         <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>{title}</span>

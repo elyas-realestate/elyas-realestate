@@ -23,7 +23,9 @@ export async function GET() {
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرّح" }, { status: 401 });
 
     const admin = createClient(
@@ -34,7 +36,9 @@ export async function GET() {
     // 1) tenant + status
     const { data: tenant } = await admin
       .from("tenants")
-      .select("id, slug, system_master_active, daily_call_limit, daily_call_count, last_count_reset, master_paused_reason, master_paused_at")
+      .select(
+        "id, slug, system_master_active, daily_call_limit, daily_call_count, last_count_reset, master_paused_reason, master_paused_at"
+      )
       .eq("owner_id", user.id)
       .limit(1)
       .single();
@@ -50,13 +54,20 @@ export async function GET() {
 
     // 2) المدراء + الموظفون
     const [managersRes, employeesRes, configRes] = await Promise.all([
-      admin.from("ai_managers")
-        .select("id, code, name, department, default_ai_provider, default_ai_model, is_active, display_order")
+      admin
+        .from("ai_managers")
+        .select(
+          "id, code, name, department, default_ai_provider, default_ai_model, is_active, display_order"
+        )
         .order("display_order", { ascending: true }),
-      admin.from("ai_employees")
-        .select("id, code, name, manager_id, default_ai_provider, default_ai_model, is_active, display_order")
+      admin
+        .from("ai_employees")
+        .select(
+          "id, code, name, manager_id, default_ai_provider, default_ai_model, is_active, display_order"
+        )
         .order("display_order", { ascending: true }),
-      admin.from("tenant_ai_config")
+      admin
+        .from("tenant_ai_config")
         .select("target_kind, target_id, is_enabled")
         .eq("tenant_id", tenant.id),
     ]);
@@ -95,10 +106,16 @@ export async function GET() {
 
     // 5) عدّاد المخرجات (منشورات + متابعات pending)
     const [marketingPending, followupPending] = await Promise.all([
-      admin.from("marketing_queue").select("id", { count: "exact", head: true })
-        .eq("tenant_id", tenant.id).eq("status", "pending"),
-      admin.from("followup_queue").select("id", { count: "exact", head: true })
-        .eq("tenant_id", tenant.id).eq("status", "pending"),
+      admin
+        .from("marketing_queue")
+        .select("id", { count: "exact", head: true })
+        .eq("tenant_id", tenant.id)
+        .eq("status", "pending"),
+      admin
+        .from("followup_queue")
+        .select("id", { count: "exact", head: true })
+        .eq("tenant_id", tenant.id)
+        .eq("status", "pending"),
     ]);
     const outputs_count = (marketingPending.count || 0) + (followupPending.count || 0);
 
@@ -119,11 +136,31 @@ export async function GET() {
       reviews: reviews || [],
       outputs_count,
       schedule: [
-        { time: "كل ساعة",        cron: "0 * * * *",  task: "التذكيرات",       endpoint: "/api/cron/reminders" },
-        { time: "٧:٠٠ ص (الرياض)", cron: "0 4 * * *",  task: "موظف التسويق",   endpoint: "/api/cron/ai-marketing" },
-        { time: "٨:٠٠ ص (الرياض)", cron: "0 5 * * *",  task: "موظف المتابعة",   endpoint: "/api/cron/ai-followup" },
-        { time: "٩:٠٠ ص (الرياض)", cron: "0 6 * * *",  task: "المحلل المالي",   endpoint: "/api/cron/ai-analyst" },
-        { time: "١٠:٠٠ ص (الرياض)", cron: "0 7 * * *", task: "حلقة المدراء",   endpoint: "/api/cron/manager-loop" },
+        { time: "كل ساعة", cron: "0 * * * *", task: "التذكيرات", endpoint: "/api/cron/reminders" },
+        {
+          time: "٧:٠٠ ص (الرياض)",
+          cron: "0 4 * * *",
+          task: "موظف التسويق",
+          endpoint: "/api/cron/ai-marketing",
+        },
+        {
+          time: "٨:٠٠ ص (الرياض)",
+          cron: "0 5 * * *",
+          task: "موظف المتابعة",
+          endpoint: "/api/cron/ai-followup",
+        },
+        {
+          time: "٩:٠٠ ص (الرياض)",
+          cron: "0 6 * * *",
+          task: "المحلل المالي",
+          endpoint: "/api/cron/ai-analyst",
+        },
+        {
+          time: "١٠:٠٠ ص (الرياض)",
+          cron: "0 7 * * *",
+          task: "حلقة المدراء",
+          endpoint: "/api/cron/manager-loop",
+        },
       ],
     });
   } catch (e: any) {

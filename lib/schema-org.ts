@@ -90,9 +90,9 @@ interface PropertyData {
   rooms?: number | null;
   bathrooms?: number | null;
   area?: number | null;
-  mainCategory?: string | null;       // سكني / تجاري / أرض
-  subCategory?: string | null;        // فيلا / شقة / أرض
-  offerType?: string | null;          // بيع / إيجار
+  mainCategory?: string | null; // سكني / تجاري / أرض
+  subCategory?: string | null; // فيلا / شقة / أرض
+  offerType?: string | null; // بيع / إيجار
   images?: string[] | null;
   brokerSlug: string;
   brokerName: string;
@@ -105,10 +105,10 @@ export function buildRealEstateListingSchema(prop: PropertyData): Record<string,
     prop.subCategory === "فيلا" || prop.subCategory === "شقة" || prop.subCategory === "بيت"
       ? "Residence"
       : prop.mainCategory === "تجاري"
-      ? "CommercialBuilding"
-      : prop.mainCategory === "أرض"
-      ? "Place"
-      : "Residence";
+        ? "CommercialBuilding"
+        : prop.mainCategory === "أرض"
+          ? "Place"
+          : "Residence";
 
   return {
     "@context": "https://schema.org",
@@ -118,7 +118,7 @@ export function buildRealEstateListingSchema(prop: PropertyData): Record<string,
     url,
     description: prop.description || prop.title,
     image: prop.images && prop.images.length > 0 ? prop.images : undefined,
-    datePosted: undefined,                          // يضاف عند الحاجة
+    datePosted: undefined, // يضاف عند الحاجة
     offers: prop.price
       ? {
           "@type": "Offer",
@@ -142,7 +142,7 @@ export function buildRealEstateListingSchema(prop: PropertyData): Record<string,
       ? {
           "@type": "QuantitativeValue",
           value: prop.area,
-          unitCode: "MTK",                           // متر مربع
+          unitCode: "MTK", // متر مربع
         }
       : undefined,
     additionalType: propertyType,
@@ -154,7 +154,9 @@ export function buildRealEstateListingSchema(prop: PropertyData): Record<string,
   };
 }
 
-export function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>): Record<string, unknown> {
+export function buildBreadcrumbSchema(
+  items: Array<{ name: string; url: string }>
+): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -180,8 +182,6 @@ export function buildOrganizationSchema(): Record<string, unknown> {
       "@type": "PostalAddress",
       addressCountry: "SA",
     },
-    sameAs: [
-      "https://x.com/wasitpro",
-    ],
+    sameAs: ["https://x.com/wasitpro"],
   };
 }

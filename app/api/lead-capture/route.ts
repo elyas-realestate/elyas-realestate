@@ -47,16 +47,22 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Validation ──
-  const tenant_slug = String(body.tenant_slug || "").trim().slice(0, 80);
-  const full_name = String(body.full_name || "").trim().slice(0, 120);
+  const tenant_slug = String(body.tenant_slug || "")
+    .trim()
+    .slice(0, 80);
+  const full_name = String(body.full_name || "")
+    .trim()
+    .slice(0, 120);
   const phone_raw = String(body.phone || "").trim();
   const phone = normalizePhone(phone_raw);
   const email = body.email ? String(body.email).trim().toLowerCase().slice(0, 200) : null;
   const intent = body.intent ? String(body.intent).trim().slice(0, 80) : null;
 
   if (!tenant_slug) return NextResponse.json({ error: "معرّف الوسيط مطلوب" }, { status: 400 });
-  if (!full_name || full_name.length < 2) return NextResponse.json({ error: "الاسم مطلوب" }, { status: 400 });
-  if (!phone || phone.length < 9) return NextResponse.json({ error: "رقم الجوّال غير صحيح" }, { status: 400 });
+  if (!full_name || full_name.length < 2)
+    return NextResponse.json({ error: "الاسم مطلوب" }, { status: 400 });
+  if (!phone || phone.length < 9)
+    return NextResponse.json({ error: "رقم الجوّال غير صحيح" }, { status: 400 });
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "صيغة البريد غير صحيحة" }, { status: 400 });
   }

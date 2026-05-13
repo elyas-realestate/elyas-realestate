@@ -47,9 +47,18 @@ export async function POST(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   let body: { transcript?: string; audio_url?: string };
@@ -69,7 +78,10 @@ export async function POST(req: NextRequest) {
 
   // ── جلب tenant_id ──
   const { data: t } = await authClient
-    .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   const tenantId = t?.id as string | undefined;
   if (!tenantId) return NextResponse.json({ error: "لا يوجد tenant" }, { status: 404 });
 

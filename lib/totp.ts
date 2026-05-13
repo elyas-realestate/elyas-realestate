@@ -103,8 +103,8 @@ function constantTimeEqual(a: string, b: string): boolean {
 // ── بناء otpauth:// URI لقارئ Google Authenticator / Authy ──
 export function buildOtpAuthUri(opts: {
   secret: string;
-  accountName: string;  // email أو اسم المستخدم
-  issuer: string;       // "Waseet Pro"
+  accountName: string; // email أو اسم المستخدم
+  issuer: string; // "Waseet Pro"
 }): string {
   const label = encodeURIComponent(`${opts.issuer}:${opts.accountName}`);
   const params = new URLSearchParams({

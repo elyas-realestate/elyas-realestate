@@ -21,10 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (body.confirm !== "DELETE_MY_ACCOUNT") {
-    return NextResponse.json(
-      { ok: false, error: "كلمة التأكيد غير صحيحة" },
-      { status: 400 }
-    );
+    return NextResponse.json({ ok: false, error: "كلمة التأكيد غير صحيحة" }, { status: 400 });
   }
 
   const supabaseAuth = createClient(

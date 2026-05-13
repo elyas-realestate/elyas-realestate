@@ -4,35 +4,73 @@
 // ══════════════════════════════════════════════════════════════
 
 export type PortalId =
-  | "aqar"       // عقار.كوم
-  | "bayut"      // بيوت
-  | "srett"      // سريتا
-  | "twitter"    // تويتر / X
-  | "whatsapp"   // واتساب
-  | "instagram"  // انستغرام
-  | "facebook"   // فيسبوك
+  | "aqar" // عقار.كوم
+  | "bayut" // بيوت
+  | "srett" // سريتا
+  | "twitter" // تويتر / X
+  | "whatsapp" // واتساب
+  | "instagram" // انستغرام
+  | "facebook" // فيسبوك
   | "other";
 
 export interface PortalMeta {
   id: PortalId;
   name: string;
   nameEn: string;
-  icon: string;           // emoji representation
-  maxLength?: number;     // حد الأحرف (لو وُجد)
+  icon: string; // emoji representation
+  maxLength?: number; // حد الأحرف (لو وُجد)
   supportsImages: boolean;
-  directUrl?: string;     // رابط إضافة إعلان جديد
-  hint?: string;          // تلميح للوسيط
+  directUrl?: string; // رابط إضافة إعلان جديد
+  hint?: string; // تلميح للوسيط
 }
 
 export const PORTALS: PortalMeta[] = [
-  { id: "aqar",      name: "عقار.كوم",  nameEn: "Aqar",     icon: "🏢", supportsImages: true,  directUrl: "https://sa.aqar.fm/إضافة-عقار", hint: "بوّابة رسمية — إدخال يدوي حالياً" },
-  { id: "bayut",     name: "بيوت",       nameEn: "Bayut",    icon: "🏘️", supportsImages: true,  directUrl: "https://www.bayut.sa/",         hint: "إدخال يدوي — واجه ExaStaff للشركاء" },
-  { id: "srett",     name: "سريتا",      nameEn: "SRETT",    icon: "🏙️", supportsImages: true,  directUrl: "https://srett.com/",            hint: "منصة سعودية" },
-  { id: "twitter",   name: "تويتر / X", nameEn: "Twitter",  icon: "𝕏",  supportsImages: true,  maxLength: 280 },
-  { id: "whatsapp",  name: "واتساب",     nameEn: "WhatsApp", icon: "💬", supportsImages: true  },
-  { id: "instagram", name: "انستغرام",  nameEn: "Instagram", icon: "📸", supportsImages: true,  maxLength: 2200 },
-  { id: "facebook",  name: "فيسبوك",     nameEn: "Facebook", icon: "📘", supportsImages: true  },
-  { id: "other",     name: "أخرى",        nameEn: "Other",    icon: "🔗", supportsImages: true  },
+  {
+    id: "aqar",
+    name: "عقار.كوم",
+    nameEn: "Aqar",
+    icon: "🏢",
+    supportsImages: true,
+    directUrl: "https://sa.aqar.fm/إضافة-عقار",
+    hint: "بوّابة رسمية — إدخال يدوي حالياً",
+  },
+  {
+    id: "bayut",
+    name: "بيوت",
+    nameEn: "Bayut",
+    icon: "🏘️",
+    supportsImages: true,
+    directUrl: "https://www.bayut.sa/",
+    hint: "إدخال يدوي — واجه ExaStaff للشركاء",
+  },
+  {
+    id: "srett",
+    name: "سريتا",
+    nameEn: "SRETT",
+    icon: "🏙️",
+    supportsImages: true,
+    directUrl: "https://srett.com/",
+    hint: "منصة سعودية",
+  },
+  {
+    id: "twitter",
+    name: "تويتر / X",
+    nameEn: "Twitter",
+    icon: "𝕏",
+    supportsImages: true,
+    maxLength: 280,
+  },
+  { id: "whatsapp", name: "واتساب", nameEn: "WhatsApp", icon: "💬", supportsImages: true },
+  {
+    id: "instagram",
+    name: "انستغرام",
+    nameEn: "Instagram",
+    icon: "📸",
+    supportsImages: true,
+    maxLength: 2200,
+  },
+  { id: "facebook", name: "فيسبوك", nameEn: "Facebook", icon: "📘", supportsImages: true },
+  { id: "other", name: "أخرى", nameEn: "Other", icon: "🔗", supportsImages: true },
 ];
 
 // ── بيانات العقار المطلوبة من adapter ──
@@ -40,9 +78,9 @@ export interface PropertyForDistribution {
   id: string;
   title: string;
   code?: string | null;
-  main_category?: string | null;  // سكني | تجاري | أرض
-  sub_category?: string | null;   // فيلا | شقة | عمارة ...
-  offer_type?: string | null;     // بيع | إيجار | استثمار
+  main_category?: string | null; // سكني | تجاري | أرض
+  sub_category?: string | null; // فيلا | شقة | عمارة ...
+  offer_type?: string | null; // بيع | إيجار | استثمار
   city?: string | null;
   district?: string | null;
   price?: number | null;
@@ -54,7 +92,7 @@ export interface PropertyForDistribution {
   broker_phone?: string;
   broker_name?: string;
   fal_license?: string;
-  public_url?: string;            // https://yoursite.com/property/{code}
+  public_url?: string; // https://yoursite.com/property/{code}
 }
 
 function money(n: number | null | undefined): string {
@@ -77,9 +115,11 @@ function aqarAdapter(p: PropertyForDistribution): string {
   lines.push(`🏷️ ${p.title}`);
   lines.push("");
   if (p.code) lines.push(`كود العقار: ${p.code}`);
-  if (p.sub_category) lines.push(`النوع: ${p.sub_category}${p.main_category ? ` (${p.main_category})` : ""}`);
+  if (p.sub_category)
+    lines.push(`النوع: ${p.sub_category}${p.main_category ? ` (${p.main_category})` : ""}`);
   if (p.offer_type) lines.push(`للـ ${p.offer_type}`);
-  if (p.city || p.district) lines.push(`الموقع: ${[p.district, p.city].filter(Boolean).join("، ")}`);
+  if (p.city || p.district)
+    lines.push(`الموقع: ${[p.district, p.city].filter(Boolean).join("، ")}`);
   if (p.land_area) lines.push(`المساحة: ${money(p.land_area)} م²`);
   if (p.rooms) lines.push(`عدد الغرف: ${p.rooms}`);
   if (p.price) lines.push(`السعر: ${money(p.price)} ريال`);
@@ -102,13 +142,14 @@ function bayutAdapter(p: PropertyForDistribution): string {
   const lines: string[] = [];
   lines.push(p.title);
   lines.push("");
-  if (p.code)         lines.push(`Code: ${p.code}`);
+  if (p.code) lines.push(`Code: ${p.code}`);
   if (p.sub_category) lines.push(`Type: ${p.sub_category}`);
-  if (p.offer_type)   lines.push(`Listing: ${p.offer_type}`);
-  if (p.city || p.district) lines.push(`Location: ${[p.district, p.city].filter(Boolean).join(", ")}`);
-  if (p.land_area)    lines.push(`Area: ${money(p.land_area)} sqm`);
-  if (p.rooms)        lines.push(`Bedrooms: ${p.rooms}`);
-  if (p.price)        lines.push(`Price: SAR ${money(p.price)}`);
+  if (p.offer_type) lines.push(`Listing: ${p.offer_type}`);
+  if (p.city || p.district)
+    lines.push(`Location: ${[p.district, p.city].filter(Boolean).join(", ")}`);
+  if (p.land_area) lines.push(`Area: ${money(p.land_area)} sqm`);
+  if (p.rooms) lines.push(`Bedrooms: ${p.rooms}`);
+  if (p.price) lines.push(`Price: SAR ${money(p.price)}`);
   lines.push("");
   if (p.description) {
     lines.push("Description:");
@@ -116,7 +157,7 @@ function bayutAdapter(p: PropertyForDistribution): string {
     lines.push("");
   }
   if (p.broker_phone) lines.push(`Contact: ${p.broker_phone}`);
-  if (p.fal_license)  lines.push(`FAL License: ${p.fal_license}`);
+  if (p.fal_license) lines.push(`FAL License: ${p.fal_license}`);
   return lines.join("\n");
 }
 
@@ -137,7 +178,9 @@ function twitterAdapter(p: PropertyForDistribution): string {
     p.rooms ? `${p.rooms} غرف` : null,
     p.land_area ? `${money(p.land_area)} م²` : null,
     price ? `السعر: ${price}` : null,
-  ].filter(Boolean).join(" • ");
+  ]
+    .filter(Boolean)
+    .join(" • ");
   const line3 = p.public_url || (p.broker_phone ? `للتواصل: ${p.broker_phone}` : "");
 
   const parts = [line1];
@@ -159,19 +202,19 @@ function whatsappAdapter(p: PropertyForDistribution): string {
   const lines: string[] = [];
   lines.push(`*${p.title}*`);
   lines.push("");
-  if (p.code)         lines.push(`🏷️ كود: ${p.code}`);
+  if (p.code) lines.push(`🏷️ كود: ${p.code}`);
   if (p.sub_category) lines.push(`🏡 ${p.sub_category}${p.offer_type ? " - " + p.offer_type : ""}`);
   if (p.city || p.district) lines.push(`📍 ${[p.district, p.city].filter(Boolean).join("، ")}`);
-  if (p.land_area)    lines.push(`📐 المساحة: ${money(p.land_area)} م²`);
-  if (p.rooms)        lines.push(`🛏️ ${p.rooms} غرف`);
-  if (p.price)        lines.push(`💰 *${money(p.price)} ريال*`);
+  if (p.land_area) lines.push(`📐 المساحة: ${money(p.land_area)} م²`);
+  if (p.rooms) lines.push(`🛏️ ${p.rooms} غرف`);
+  if (p.price) lines.push(`💰 *${money(p.price)} ريال*`);
   lines.push("");
   if (p.description) {
     lines.push(p.description);
     lines.push("");
   }
   if (p.broker_phone) lines.push(`📞 للتواصل: ${p.broker_phone}`);
-  if (p.public_url)   lines.push(`🔗 ${p.public_url}`);
+  if (p.public_url) lines.push(`🔗 ${p.public_url}`);
   return lines.join("\n");
 }
 
@@ -182,9 +225,9 @@ function instagramAdapter(p: PropertyForDistribution): string {
   lines.push("");
   if (p.sub_category && p.offer_type) lines.push(`${p.sub_category} ${p.offer_type}`);
   if (p.city || p.district) lines.push(`📍 ${[p.district, p.city].filter(Boolean).join("، ")}`);
-  if (p.rooms)        lines.push(`🛏️ ${p.rooms} غرف`);
-  if (p.land_area)    lines.push(`📐 ${money(p.land_area)} م²`);
-  if (p.price)        lines.push(`💰 ${money(p.price)} ريال`);
+  if (p.rooms) lines.push(`🛏️ ${p.rooms} غرف`);
+  if (p.land_area) lines.push(`📐 ${money(p.land_area)} م²`);
+  if (p.price) lines.push(`💰 ${money(p.price)} ريال`);
   lines.push("");
   if (p.description) lines.push(p.description);
   lines.push("");
@@ -192,7 +235,7 @@ function instagramAdapter(p: PropertyForDistribution): string {
   lines.push("");
   lines.push("•••");
   lines.push("#عقارات #الرياض #جدة #الدمام #عقار_سعودي");
-  if (p.city)         lines.push(`#${p.city.replace(/\s/g, "_")}`);
+  if (p.city) lines.push(`#${p.city.replace(/\s/g, "_")}`);
   if (p.offer_type === "إيجار") lines.push("#إيجار #للإيجار");
   else lines.push("#للبيع #استثمار_عقاري");
   if (p.sub_category) lines.push(`#${p.sub_category.replace(/\s/g, "_")}`);
@@ -216,14 +259,14 @@ function genericAdapter(p: PropertyForDistribution): string {
 // ══════════════════════════════════════════════════════════════
 
 const ADAPTERS: Record<PortalId, (p: PropertyForDistribution) => string> = {
-  aqar:      aqarAdapter,
-  bayut:     bayutAdapter,
-  srett:     aqarAdapter,
-  twitter:   twitterAdapter,
-  whatsapp:  whatsappAdapter,
+  aqar: aqarAdapter,
+  bayut: bayutAdapter,
+  srett: aqarAdapter,
+  twitter: twitterAdapter,
+  whatsapp: whatsappAdapter,
   instagram: instagramAdapter,
-  facebook:  facebookAdapter,
-  other:     genericAdapter,
+  facebook: facebookAdapter,
+  other: genericAdapter,
 };
 
 export function formatForPortal(portal: PortalId, p: PropertyForDistribution): string {

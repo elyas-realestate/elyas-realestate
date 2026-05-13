@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -31,12 +30,26 @@ export default function Login() {
         window.location.href = "/login/2fa";
         return;
       }
-    } catch { /* تجاهل — نكمل للوحة التحكم */ }
+    } catch {
+      /* تجاهل — نكمل للوحة التحكم */
+    }
     window.location.href = "/dashboard";
   }
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "var(--bg-page)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'Tajawal', sans-serif", padding: "24px" }}>
+    <div
+      dir="rtl"
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg-page)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Tajawal', sans-serif",
+        padding: "24px",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
         .font-kufi { font-family: 'Noto Kufi Arabic', serif; }
@@ -49,34 +62,114 @@ export default function Login() {
       `}</style>
 
       {/* Background pattern */}
-      <div className="dot-pattern" style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }} />
+      <div
+        className="dot-pattern"
+        style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}
+      />
       {/* Gold glow */}
-      <div style={{ position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 300, background: "radial-gradient(ellipse, rgba(198,145,76,0.05) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div
+        style={{
+          position: "fixed",
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 600,
+          height: 300,
+          background: "radial-gradient(ellipse, rgba(198,145,76,0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
 
       {/* Card */}
-      <div className="fade-up" style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 420 }}>
-
+      <div
+        className="fade-up"
+        style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 420 }}
+      >
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-block" }}>
-            <div style={{ width: 60, height: 60, borderRadius: 18, background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", fontSize: 26, fontWeight: 900, color: "var(--bg-page)", fontFamily: "'Noto Kufi Arabic', serif" }}>إ</div>
+            <div
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: 18,
+                background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 14px",
+                fontSize: 26,
+                fontWeight: 900,
+                color: "var(--bg-page)",
+                fontFamily: "'Noto Kufi Arabic', serif",
+              }}
+            >
+              إ
+            </div>
           </Link>
-          <h1 className="font-kufi" style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 6 }}>إلياس الدخيل</h1>
+          <h1
+            className="font-kufi"
+            style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 6 }}
+          >
+            إلياس الدخيل
+          </h1>
           <p style={{ fontSize: 13, color: "var(--text-faint)" }}>وسيط عقاري مرخّص — الرياض</p>
         </div>
 
         {/* Form Card */}
-        <div style={{ background: "var(--bg-surface-1)", border: "1px solid rgba(198,145,76,0.14)", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px var(--shadow-overlay)" }}>
-          <h2 className="font-kufi" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-strong)", marginBottom: 4, textAlign: "center" }}>دخول الفريق</h2>
-          <p style={{ fontSize: 13, color: "var(--text-faint)", textAlign: "center", marginBottom: 28 }}>مخصص لأعضاء الفريق فقط</p>
+        <div
+          style={{
+            background: "var(--bg-surface-1)",
+            border: "1px solid rgba(198,145,76,0.14)",
+            borderRadius: 24,
+            padding: "36px 32px",
+            boxShadow: "0 24px 60px var(--shadow-overlay)",
+          }}
+        >
+          <h2
+            className="font-kufi"
+            style={{
+              fontSize: 18,
+              fontWeight: 700,
+              color: "var(--text-strong)",
+              marginBottom: 4,
+              textAlign: "center",
+            }}
+          >
+            دخول الفريق
+          </h2>
+          <p
+            style={{
+              fontSize: 13,
+              color: "var(--text-faint)",
+              textAlign: "center",
+              marginBottom: 28,
+            }}
+          >
+            مخصص لأعضاء الفريق فقط
+          </p>
 
-          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <form
+            onSubmit={handleLogin}
+            style={{ display: "flex", flexDirection: "column", gap: 16 }}
+          >
             <div>
-              <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 8, fontWeight: 500 }}>البريد الإلكتروني</label>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: 13,
+                  color: "var(--text-soft)",
+                  marginBottom: 8,
+                  fontWeight: 500,
+                }}
+              >
+                البريد الإلكتروني
+              </label>
               <input
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="login-input"
                 placeholder="example@email.com"
@@ -85,12 +178,22 @@ export default function Login() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 13, color: "var(--text-soft)", marginBottom: 8, fontWeight: 500 }}>كلمة المرور</label>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: 13,
+                  color: "var(--text-soft)",
+                  marginBottom: 8,
+                  fontWeight: 500,
+                }}
+              >
+                كلمة المرور
+              </label>
               <div style={{ position: "relative" }}>
                 <input
                   type={showPass ? "text" : "password"}
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="login-input"
                   placeholder="••••••••"
@@ -99,21 +202,75 @@ export default function Login() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPass(v => !v)}
-                  style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", display: "flex", alignItems: "center", padding: 0 }}
+                  onClick={() => setShowPass((v) => !v)}
+                  style={{
+                    position: "absolute",
+                    left: 14,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "var(--text-faint)",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 0,
+                  }}
                 >
                   {showPass ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+                      <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
                   ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
                   )}
                 </button>
               </div>
             </div>
 
             {error && (
-              <div style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8 }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div
+                style={{
+                  background: "rgba(239,68,68,0.08)",
+                  border: "1px solid rgba(239,68,68,0.2)",
+                  borderRadius: 10,
+                  padding: "10px 14px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#EF4444"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
                 <p style={{ fontSize: 13, color: "#EF4444", margin: 0 }}>{error}</p>
               </div>
             )}
@@ -121,35 +278,101 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              style={{ width: "100%", padding: "15px", borderRadius: 14, background: loading ? "rgba(198,145,76,0.4)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))", border: "none", color: "var(--bg-page)", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", transition: "all 0.3s", fontFamily: "'Tajawal', sans-serif", marginTop: 4, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+              style={{
+                width: "100%",
+                padding: "15px",
+                borderRadius: 14,
+                background: loading
+                  ? "rgba(198,145,76,0.4)"
+                  : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                border: "none",
+                color: "var(--bg-page)",
+                fontSize: 15,
+                fontWeight: 800,
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "all 0.3s",
+                fontFamily: "'Tajawal', sans-serif",
+                marginTop: 4,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+              }}
             >
               {loading ? (
                 <>
-                  <div style={{ width: 16, height: 16, border: "2px solid var(--shadow-overlay)", borderTopColor: "var(--bg-page)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }}></div>
+                  <div
+                    style={{
+                      width: 16,
+                      height: 16,
+                      border: "2px solid var(--shadow-overlay)",
+                      borderTopColor: "var(--bg-page)",
+                      borderRadius: "50%",
+                      animation: "spin 0.8s linear infinite",
+                    }}
+                  ></div>
                   جاري الدخول...
                 </>
-              ) : "دخول"}
+              ) : (
+                "دخول"
+              )}
             </button>
           </form>
         </div>
 
         {/* Bottom links */}
-        <div style={{ textAlign: "center", marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: 20,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
           <div>
-            <Link href="/register" style={{ fontSize: 13, color: "var(--text-soft)", textDecoration: "none" }}>
+            <Link
+              href="/register"
+              style={{ fontSize: 13, color: "var(--text-soft)", textDecoration: "none" }}
+            >
               ليس لديك حساب؟{" "}
               <span style={{ color: "var(--gold-2)", fontWeight: 700 }}>سجّل الآن مجاناً</span>
             </Link>
           </div>
 
           {/* اتفاقية الاستخدام */}
-          <div style={{ fontSize: 11, color: "var(--text-faint)", lineHeight: 1.6, padding: "8px 12px" }}>
+          <div
+            style={{
+              fontSize: 11,
+              color: "var(--text-faint)",
+              lineHeight: 1.6,
+              padding: "8px 12px",
+            }}
+          >
             بدخولك، أنت توافق على{" "}
-            <Link href="/terms" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>الشروط والأحكام</Link>
+            <Link
+              href="/terms"
+              target="_blank"
+              style={{ color: "var(--gold-2)", textDecoration: "underline" }}
+            >
+              الشروط والأحكام
+            </Link>
             {" و "}
-            <Link href="/privacy" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>سياسة الخصوصية</Link>
+            <Link
+              href="/privacy"
+              target="_blank"
+              style={{ color: "var(--gold-2)", textDecoration: "underline" }}
+            >
+              سياسة الخصوصية
+            </Link>
             {" و "}
-            <Link href="/data-processing" target="_blank" style={{ color: "var(--gold-2)", textDecoration: "underline" }}>اتفاقية معالجة البيانات</Link>
+            <Link
+              href="/data-processing"
+              target="_blank"
+              style={{ color: "var(--gold-2)", textDecoration: "underline" }}
+            >
+              اتفاقية معالجة البيانات
+            </Link>
             {" — متوافقة مع نظام حماية البيانات الشخصية السعودي (PDPL)."}
           </div>
 

@@ -22,7 +22,12 @@ interface Props {
   currentBg?: string | null;
   currentText?: string | null;
   currentAccent?: string | null;
-  onApply: (theme: { bg_color: string; text_color: string; accent_color: string; theme_id: string }) => void;
+  onApply: (theme: {
+    bg_color: string;
+    text_color: string;
+    accent_color: string;
+    theme_id: string;
+  }) => void;
   onClose: () => void;
 }
 
@@ -156,9 +161,7 @@ export default function CardThemePicker({
             const label = c === "all" ? "الكل" : CATEGORY_LABELS[c].label;
             const emoji = c === "all" ? "🎨" : CATEGORY_LABELS[c].emoji;
             const count =
-              c === "all"
-                ? CARD_THEMES.length
-                : CARD_THEMES.filter((t) => t.category === c).length;
+              c === "all" ? CARD_THEMES.length : CARD_THEMES.filter((t) => t.category === c).length;
             return (
               <button
                 key={c}

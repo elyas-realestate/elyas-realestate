@@ -3,9 +3,20 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  ArrowRight, RefreshCw, AlertCircle, CheckCircle2, XCircle,
-  Building2, Users as UsersIcon, FileText, UserCircle2, Mail, Calendar,
-  ShieldAlert, Power, CreditCard,
+  ArrowRight,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  Building2,
+  Users as UsersIcon,
+  FileText,
+  UserCircle2,
+  Mail,
+  Calendar,
+  ShieldAlert,
+  Power,
+  CreditCard,
 } from "lucide-react";
 
 type TenantDetail = {
@@ -45,22 +56,25 @@ type TenantDetail = {
 };
 
 const PLAN_META: Record<string, { label: string; color: string; bg: string; price: number }> = {
-  free:  { label: "مجاني",   color: "var(--text-ghost)", bg: "rgba(113,113,122,0.08)", price: 0   },
-  basic: { label: "أساسي",   color: "var(--gold-2)", bg: "var(--gold-bg)",  price: 199 },
-  pro:   { label: "احترافي", color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", price: 499 },
+  free: { label: "مجاني", color: "var(--text-ghost)", bg: "rgba(113,113,122,0.08)", price: 0 },
+  basic: { label: "أساسي", color: "var(--gold-2)", bg: "var(--gold-bg)", price: 199 },
+  pro: { label: "احترافي", color: "var(--gold-1)", bg: "rgba(232,184,109,0.10)", price: 499 },
 };
 
 export default function TenantDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const [detail, setDetail] = useState<TenantDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState("");
+  const [error, setError] = useState("");
   const [mutating, setMutating] = useState(false);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    load();
+  }, [id]);
 
   async function load() {
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
     try {
       const res = await fetch(`/api/admin/tenants/${id}`);
       if (!res.ok) throw new Error(await res.text());
@@ -120,7 +134,16 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <div style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid var(--purple-2)", borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
+        <div
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            border: "2px solid var(--purple-2)",
+            borderTopColor: "transparent",
+            animation: "spin 0.8s linear infinite",
+          }}
+        />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -128,9 +151,21 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
 
   if (error || !detail) {
     return (
-      <div style={{ padding: "16px 20px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)", display: "flex", gap: 10, alignItems: "center" }}>
+      <div
+        style={{
+          padding: "16px 20px",
+          borderRadius: 10,
+          background: "rgba(239,68,68,0.07)",
+          border: "1px solid rgba(239,68,68,0.15)",
+          display: "flex",
+          gap: 10,
+          alignItems: "center",
+        }}
+      >
         <AlertCircle size={16} style={{ color: "var(--danger)" }} />
-        <span style={{ fontSize: 14, color: "var(--danger)" }}>{error || "لم يُعثر على المستأجر"}</span>
+        <span style={{ fontSize: 14, color: "var(--danger)" }}>
+          {error || "لم يُعثر على المستأجر"}
+        </span>
       </div>
     );
   }
@@ -140,63 +175,183 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
   return (
     <div>
       {/* Back */}
-      <Link href="/admin/tenants"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 16 }}>
+      <Link
+        href="/admin/tenants"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontSize: 12,
+          color: "var(--text-ghost)",
+          marginBottom: 16,
+        }}
+      >
         <ArrowRight size={12} /> المستأجرون
       </Link>
 
       {/* Header */}
-      <div style={{ marginBottom: 24, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14 }}>
+      <div
+        style={{
+          marginBottom: 24,
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 14,
+        }}
+      >
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}>
-            {detail.broker_identity?.broker_name || (detail.site_settings?.site_name as string) || detail.tenant.slug}
+          <h1
+            style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)", marginBottom: 4 }}
+          >
+            {detail.broker_identity?.broker_name ||
+              (detail.site_settings?.site_name as string) ||
+              detail.tenant.slug}
           </h1>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--text-disabled)", fontSize: 12, flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              color: "var(--text-disabled)",
+              fontSize: 12,
+              flexWrap: "wrap",
+            }}
+          >
             <span style={{ direction: "ltr" }}>/{detail.tenant.slug}</span>
-            {detail.owner_email && <><span>•</span><span>{detail.owner_email}</span></>}
+            {detail.owner_email && (
+              <>
+                <span>•</span>
+                <span>{detail.owner_email}</span>
+              </>
+            )}
             <span>•</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: plan.color, background: plan.bg, padding: "2px 8px", borderRadius: 5 }}>{plan.label}</span>
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: plan.color,
+                background: plan.bg,
+                padding: "2px 8px",
+                borderRadius: 5,
+              }}
+            >
+              {plan.label}
+            </span>
           </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={load} disabled={loading}
-            style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9, background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.18)", color: "var(--purple-ai)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+          <button
+            onClick={load}
+            disabled={loading}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 14px",
+              borderRadius: 9,
+              background: "rgba(124,58,237,0.08)",
+              border: "1px solid rgba(124,58,237,0.18)",
+              color: "var(--purple-ai)",
+              fontSize: 13,
+              cursor: "pointer",
+              fontFamily: "'Tajawal', sans-serif",
+            }}
+          >
             <RefreshCw size={13} /> تحديث
           </button>
-          <button onClick={toggleSuspend} disabled={mutating}
+          <button
+            onClick={toggleSuspend}
+            disabled={mutating}
             style={{
-              display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 9,
-              background: detail.tenant.is_active ? "rgba(239,68,68,0.08)" : "rgba(74,222,128,0.08)",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 14px",
+              borderRadius: 9,
+              background: detail.tenant.is_active
+                ? "rgba(239,68,68,0.08)"
+                : "rgba(74,222,128,0.08)",
               border: `1px solid ${detail.tenant.is_active ? "rgba(239,68,68,0.2)" : "rgba(74,222,128,0.2)"}`,
               color: detail.tenant.is_active ? "var(--danger)" : "var(--success)",
-              fontSize: 13, cursor: mutating ? "not-allowed" : "pointer", opacity: mutating ? 0.5 : 1,
+              fontSize: 13,
+              cursor: mutating ? "not-allowed" : "pointer",
+              opacity: mutating ? 0.5 : 1,
               fontFamily: "'Tajawal', sans-serif",
-            }}>
+            }}
+          >
             <Power size={13} /> {detail.tenant.is_active ? "تعليق الحساب" : "تفعيل الحساب"}
           </button>
         </div>
       </div>
 
       {/* KPIs */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+          gap: 12,
+          marginBottom: 20,
+        }}
+      >
         {[
-          { label: "عقارات", value: detail.stats.properties, icon: Building2,  color: "var(--purple-ai)" },
-          { label: "عملاء",  value: detail.stats.clients,    icon: UsersIcon,  color: "var(--success)" },
-          { label: "صفقات",  value: detail.stats.deals,      icon: FileText,   color: "var(--gold-1)" },
-          { label: "فواتير", value: detail.stats.invoices,   icon: CreditCard, color: "var(--info)" },
-          { label: "مدفوعات", value: `${Number(detail.stats.paid_total || 0).toLocaleString("en-US")} ر.س`, icon: CreditCard, color: "var(--success-2)" },
+          {
+            label: "عقارات",
+            value: detail.stats.properties,
+            icon: Building2,
+            color: "var(--purple-ai)",
+          },
+          { label: "عملاء", value: detail.stats.clients, icon: UsersIcon, color: "var(--success)" },
+          { label: "صفقات", value: detail.stats.deals, icon: FileText, color: "var(--gold-1)" },
+          { label: "فواتير", value: detail.stats.invoices, icon: CreditCard, color: "var(--info)" },
+          {
+            label: "مدفوعات",
+            value: `${Number(detail.stats.paid_total || 0).toLocaleString("en-US")} ر.س`,
+            icon: CreditCard,
+            color: "var(--success-2)",
+          },
         ].map(({ label, value, icon: Icon, color }) => (
-          <div key={label} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, padding: "14px 14px" }}>
+          <div
+            key={label}
+            style={{
+              background: "var(--bg-deep)",
+              border: "1px solid var(--overlay-soft)",
+              borderRadius: 12,
+              padding: "14px 14px",
+            }}
+          >
             <Icon size={14} style={{ color, marginBottom: 8 }} />
-            <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}>{value}</div>
+            <div
+              style={{ fontSize: 20, fontWeight: 800, color: "var(--text-primary)", lineHeight: 1 }}
+            >
+              {value}
+            </div>
             <div style={{ fontSize: 11, color: "var(--text-disabled)", marginTop: 4 }}>{label}</div>
           </div>
         ))}
       </div>
 
       {/* Plan change */}
-      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, padding: 18, marginBottom: 18 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+      <div
+        style={{
+          background: "var(--bg-deep)",
+          border: "1px solid var(--overlay-soft)",
+          borderRadius: 14,
+          padding: 18,
+          marginBottom: 18,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 700,
+            color: "var(--text-muted)",
+            marginBottom: 12,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
           <CreditCard size={14} /> الخطة الحالية
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -208,12 +363,15 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
                 onClick={() => changePlan(id)}
                 disabled={mutating || active}
                 style={{
-                  padding: "10px 16px", borderRadius: 9, fontSize: 13,
+                  padding: "10px 16px",
+                  borderRadius: 9,
+                  fontSize: 13,
                   background: active ? meta.bg : "transparent",
                   border: `1px solid ${active ? meta.color + "55" : "var(--overlay-mid)"}`,
                   color: active ? meta.color : "var(--text-ghost)",
                   cursor: mutating || active ? "default" : "pointer",
-                  fontFamily: "'Tajawal', sans-serif", fontWeight: active ? 700 : 500,
+                  fontFamily: "'Tajawal', sans-serif",
+                  fontWeight: active ? 700 : 500,
                   opacity: mutating ? 0.6 : 1,
                 }}
               >
@@ -228,19 +386,50 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
       {/* Two columns: Members + Recent Invoices */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
         {/* Members */}
-        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, padding: 18 }}>
-          <h2 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+        <div
+          style={{
+            background: "var(--bg-deep)",
+            border: "1px solid var(--overlay-soft)",
+            borderRadius: 14,
+            padding: 18,
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: "var(--text-muted)",
+              marginBottom: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
             <UsersIcon size={14} /> أعضاء الفريق ({detail.members.length})
           </h2>
           {detail.members.length === 0 ? (
             <p style={{ fontSize: 13, color: "var(--text-disabled)" }}>لا أعضاء بعد</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {detail.members.map(m => (
-                <div key={m.user_id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, background: "var(--bg-surface-2)" }}>
+              {detail.members.map((m) => (
+                <div
+                  key={m.user_id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "8px 10px",
+                    borderRadius: 8,
+                    background: "var(--bg-surface-2)",
+                  }}
+                >
                   <div>
-                    <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>{m.email || m.user_id.slice(0, 8)}</div>
-                    <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>{m.role} • {m.status}</div>
+                    <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+                      {m.email || m.user_id.slice(0, 8)}
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>
+                      {m.role} • {m.status}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -249,23 +438,65 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
         </div>
 
         {/* Recent invoices */}
-        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, padding: 18 }}>
-          <h2 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+        <div
+          style={{
+            background: "var(--bg-deep)",
+            border: "1px solid var(--overlay-soft)",
+            borderRadius: 14,
+            padding: 18,
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: "var(--text-muted)",
+              marginBottom: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
             <FileText size={14} /> آخر الفواتير
           </h2>
           {detail.recent_invoices.length === 0 ? (
             <p style={{ fontSize: 13, color: "var(--text-disabled)" }}>لا توجد فواتير</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {detail.recent_invoices.slice(0, 6).map(inv => (
-                <div key={inv.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, background: "var(--bg-surface-2)" }}>
+              {detail.recent_invoices.slice(0, 6).map((inv) => (
+                <div
+                  key={inv.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "8px 10px",
+                    borderRadius: 8,
+                    background: "var(--bg-surface-2)",
+                  }}
+                >
                   <div>
-                    <div style={{ fontSize: 12, color: "var(--text-secondary)", direction: "ltr", textAlign: "right" }}>{inv.invoice_number || inv.id.slice(0, 8)}</div>
-                    <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>{new Date(inv.created_at).toLocaleDateString("ar-SA")}</div>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-secondary)",
+                        direction: "ltr",
+                        textAlign: "right",
+                      }}
+                    >
+                      {inv.invoice_number || inv.id.slice(0, 8)}
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>
+                      {new Date(inv.created_at).toLocaleDateString("ar-SA")}
+                    </div>
                   </div>
                   <div style={{ textAlign: "left" }}>
-                    <div style={{ fontSize: 12, color: "var(--text-on-dark)" }}>{Number(inv.total || 0).toLocaleString("en-US")} ر.س</div>
-                    <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>{inv.status}</div>
+                    <div style={{ fontSize: 12, color: "var(--text-on-dark)" }}>
+                      {Number(inv.total || 0).toLocaleString("en-US")} ر.س
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 2 }}>
+                      {inv.status}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -275,15 +506,55 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       {/* Meta */}
-      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 14, padding: 18 }}>
-        <h2 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 12 }}>المعلومات الأساسية</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12, fontSize: 13 }}>
-          <div><span style={{ color: "var(--text-disabled)" }}>الـ slug:</span> <span style={{ color: "var(--text-on-dark)", direction: "ltr" }}>/{detail.tenant.slug}</span></div>
-          <div><span style={{ color: "var(--text-disabled)" }}>المالك:</span> <span style={{ color: "var(--text-on-dark)" }}>{detail.owner_email || "—"}</span></div>
-          <div><span style={{ color: "var(--text-disabled)" }}>التسجيل:</span> <span style={{ color: "var(--text-on-dark)" }}>{new Date(detail.tenant.created_at).toLocaleDateString("ar-SA")}</span></div>
-          <div><span style={{ color: "var(--text-disabled)" }}>آخر تحديث:</span> <span style={{ color: "var(--text-on-dark)" }}>{new Date(detail.tenant.updated_at).toLocaleDateString("ar-SA")}</span></div>
-          <div><span style={{ color: "var(--text-disabled)" }}>الحالة:</span>
-            <span style={{ color: detail.tenant.is_active ? "var(--success)" : "var(--danger)", marginInlineStart: 6 }}>
+      <div
+        style={{
+          background: "var(--bg-deep)",
+          border: "1px solid var(--overlay-soft)",
+          borderRadius: 14,
+          padding: 18,
+        }}
+      >
+        <h2 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-muted)", marginBottom: 12 }}>
+          المعلومات الأساسية
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+            gap: 12,
+            fontSize: 13,
+          }}
+        >
+          <div>
+            <span style={{ color: "var(--text-disabled)" }}>الـ slug:</span>{" "}
+            <span style={{ color: "var(--text-on-dark)", direction: "ltr" }}>
+              /{detail.tenant.slug}
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "var(--text-disabled)" }}>المالك:</span>{" "}
+            <span style={{ color: "var(--text-on-dark)" }}>{detail.owner_email || "—"}</span>
+          </div>
+          <div>
+            <span style={{ color: "var(--text-disabled)" }}>التسجيل:</span>{" "}
+            <span style={{ color: "var(--text-on-dark)" }}>
+              {new Date(detail.tenant.created_at).toLocaleDateString("ar-SA")}
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "var(--text-disabled)" }}>آخر تحديث:</span>{" "}
+            <span style={{ color: "var(--text-on-dark)" }}>
+              {new Date(detail.tenant.updated_at).toLocaleDateString("ar-SA")}
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "var(--text-disabled)" }}>الحالة:</span>
+            <span
+              style={{
+                color: detail.tenant.is_active ? "var(--success)" : "var(--danger)",
+                marginInlineStart: 6,
+              }}
+            >
               {detail.tenant.is_active ? "نشط" : "معلّق"}
             </span>
           </div>

@@ -20,7 +20,10 @@ export async function POST(req: Request) {
     );
 
     const { data: tenant } = await admin
-      .from("tenants").select("id").eq("slug", slug).maybeSingle();
+      .from("tenants")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
     if (!tenant) return NextResponse.json({ error: "tenant غير موجود" }, { status: 404 });
 
     const { error } = await admin.from("profile_submissions").insert({

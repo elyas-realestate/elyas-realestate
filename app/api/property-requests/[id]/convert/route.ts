@@ -22,7 +22,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         auth: { persistSession: false },
-        global: { headers: { Cookie: allCookies.map(c => `${c.name}=${c.value}`).join("; ") } },
+        global: { headers: { Cookie: allCookies.map((c) => `${c.name}=${c.value}`).join("; ") } },
       }
     );
 
@@ -36,11 +36,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       return NextResponse.json({ error: "الطلب غير موجود" }, { status: 404 });
     }
     if (pr.converted_to_deal_id) {
-      return NextResponse.json({ error: "تم تحويله مسبقاً", deal_id: pr.converted_to_deal_id }, { status: 409 });
+      return NextResponse.json(
+        { error: "تم تحويله مسبقاً", deal_id: pr.converted_to_deal_id },
+        { status: 409 }
+      );
     }
 
     // أنشئ الصفقة
-    const dealTitle = `${pr.contact_name || "طلب"} — ${pr.request_type || ""} ${pr.main_category || ""}${pr.district ? " في " + pr.district : ""}`.trim();
+    const dealTitle =
+      `${pr.contact_name || "طلب"} — ${pr.request_type || ""} ${pr.main_category || ""}${pr.district ? " في " + pr.district : ""}`.trim();
     const dealPayload: any = {
       title: dealTitle,
       deal_type: pr.request_type || null,

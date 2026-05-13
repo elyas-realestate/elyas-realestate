@@ -126,7 +126,7 @@ export const PHASES: Phase[] = [
       { code: "CEO-1", name: "ceo_assistant employee + توجيه صارم", status: "done" },
       { code: "CEO-2", name: "K-9 Phase 2 — 7 أدوات (deals/clients/...)", status: "done" },
       { code: "CEO-3", name: "تبديل النموذج إلى DeepSeek", status: "done" },
-      { code: "CEO-4", name: "منع \"أحتاج توضيح\" نهائياً", status: "done" },
+      { code: "CEO-4", name: 'منع "أحتاج توضيح" نهائياً', status: "done" },
     ],
   },
   {
@@ -171,16 +171,21 @@ export const PHASES: Phase[] = [
   {
     id: "ux-restructure-ss",
     name: "إعادة هيكلة شاملة بناءً على CIB audit (SS)",
-    description: "تنظيف copy-paste + إصلاح الثيم + sidebar 7 + Office Mode + /today + Hero promotion + Help Center",
+    description:
+      "تنظيف copy-paste + إصلاح الثيم + sidebar 7 + Office Mode + /today + Hero promotion + Help Center",
     status: "done",
     completedAt: "2026-05-03",
     milestones: [
       { code: "SS-A1", name: "حذف فئات متاجر/توصيل من مكتبة البطاقة", status: "done" },
-      { code: "SS-A2", name: "إصلاح ٤ صفحات (work-orders, assets, team, contracts)", status: "done" },
+      {
+        code: "SS-A2",
+        name: "إصلاح ٤ صفحات (work-orders, assets, team, contracts)",
+        status: "done",
+      },
       { code: "SS-B1", name: "Sidebar 32→7 primary + Office Mode toggle", status: "done" },
       { code: "SS-C1", name: "/dashboard/today صفحة موحَّدة", status: "done" },
-      { code: "SS-D",  name: "Hero promotion للـ AI + Card في /dashboard (CIB #5)", status: "done" },
-      { code: "SS-E",  name: "/dashboard/help مركز مساعدة بـ ٧ أقسام + بحث + FAQ", status: "done" },
+      { code: "SS-D", name: "Hero promotion للـ AI + Card في /dashboard (CIB #5)", status: "done" },
+      { code: "SS-E", name: "/dashboard/help مركز مساعدة بـ ٧ أقسام + بحث + FAQ", status: "done" },
     ],
   },
   {
@@ -192,7 +197,11 @@ export const PHASES: Phase[] = [
     milestones: [
       { code: "UX-1", name: "تحليل CIB لنقاط الإرباك (39 رابط → 6)", status: "done" },
       { code: "UX-2", name: "/dashboard/ai layout + hero stats + 6 tabs", status: "done" },
-      { code: "UX-3", name: "تابات: التحكم، المساعدون، الاختبار، المخرجات، الموافقات، المزوّدون", status: "done" },
+      {
+        code: "UX-3",
+        name: "تابات: التحكم، المساعدون، الاختبار، المخرجات، الموافقات، المزوّدون",
+        status: "done",
+      },
       { code: "UX-4", name: "Redirects من المسارات القديمة", status: "done" },
       { code: "UX-5", name: "اختصار sidebar من 39 إلى 5 عناصر primary", status: "done" },
       { code: "UX-6", name: "Toaster + richColors (أخضر/أحمر)", status: "done" },
@@ -204,11 +213,16 @@ export const PHASES: Phase[] = [
   {
     id: "profile-card",
     name: "بطاقة الوسيط (Linktree-style) — MM + MM-V2",
-    description: "نظام Element Library كامل (Linktree/Bilenda-grade): 30+ عنصر، 8 فئات، فورمات ديناميكية، نماذج تفاعلية",
+    description:
+      "نظام Element Library كامل (Linktree/Bilenda-grade): 30+ عنصر، 8 فئات، فورمات ديناميكية، نماذج تفاعلية",
     status: "done",
     completedAt: "2026-05-03",
     milestones: [
-      { code: "MM-1", name: "Migration 035: profile_cards + profile_links + RLS + seed", status: "done" },
+      {
+        code: "MM-1",
+        name: "Migration 035: profile_cards + profile_links + RLS + seed",
+        status: "done",
+      },
       { code: "MM-2", name: "/c/[slug] الصفحة العامة (V1)", status: "done" },
       { code: "MM-3", name: "/dashboard/profile-card لوحة التحكم (V1)", status: "done" },
       { code: "MM-4", name: "API routes — GET/PUT card + CRUD links", status: "done" },
@@ -216,12 +230,32 @@ export const PHASES: Phase[] = [
       { code: "MM-FIX1", name: "دمج site_settings + broker_identity", status: "done" },
       { code: "MM-FIX2", name: "QR محلي بـ qrcode npm + initials avatar", status: "done" },
       { code: "MM-FIX3", name: "إزالة rewrite landing dark", status: "done" },
-      { code: "MM-V2.1", name: "lib/profile-elements.ts — 30+ عنصر، 8 فئات + Migration 036 metadata column", status: "done" },
+      {
+        code: "MM-V2.1",
+        name: "lib/profile-elements.ts — 30+ عنصر، 8 فئات + Migration 036 metadata column",
+        status: "done",
+      },
       { code: "MM-V2.2", name: "/c/[slug] يرسم العناصر ديناميكياً من الكتالوج", status: "done" },
-      { code: "MM-V2.3", name: "Element Library modal + فورمات ديناميكية + drag-drop يدوي", status: "done" },
-      { code: "MM-V2.4", name: "نموذج اتصل بنا تفاعلي + جدول submissions + endpoint", status: "done" },
-      { code: "MM-V3", name: "Auto-pull من site_settings — مصدر واحد للحقيقة، لا تكرار في الإدخال", status: "done" },
-      { code: "MM-V3-FIX", name: "قسم رخص مخصص + 7 حقول سعودية + telegram/gmaps auto-pull + CR validation", status: "done" },
+      {
+        code: "MM-V2.3",
+        name: "Element Library modal + فورمات ديناميكية + drag-drop يدوي",
+        status: "done",
+      },
+      {
+        code: "MM-V2.4",
+        name: "نموذج اتصل بنا تفاعلي + جدول submissions + endpoint",
+        status: "done",
+      },
+      {
+        code: "MM-V3",
+        name: "Auto-pull من site_settings — مصدر واحد للحقيقة، لا تكرار في الإدخال",
+        status: "done",
+      },
+      {
+        code: "MM-V3-FIX",
+        name: "قسم رخص مخصص + 7 حقول سعودية + telegram/gmaps auto-pull + CR validation",
+        status: "done",
+      },
     ],
   },
   {
@@ -244,8 +278,18 @@ export const PHASES: Phase[] = [
     blockedBy: "domain-purchase",
     milestones: [
       { code: "OO-1", name: "Middleware يقرأ host → يكشف subdomain", status: "pending" },
-      { code: "OO-2", name: "Wildcard DNS + Vercel custom domain", status: "pending", blockedBy: "domain-purchase" },
-      { code: "OO-3", name: "301 redirect من /[slug] للـ subdomain", status: "pending", blockedBy: "domain-purchase" },
+      {
+        code: "OO-2",
+        name: "Wildcard DNS + Vercel custom domain",
+        status: "pending",
+        blockedBy: "domain-purchase",
+      },
+      {
+        code: "OO-3",
+        name: "301 redirect من /[slug] للـ subdomain",
+        status: "pending",
+        blockedBy: "domain-purchase",
+      },
     ],
   },
   {
@@ -256,7 +300,11 @@ export const PHASES: Phase[] = [
     completedAt: "2026-05-03",
     milestones: [
       { code: "PP-1", name: ":root + cream في CSS — أصبح الافتراضي", status: "done" },
-      { code: "PP-2", name: "init script في layout.tsx يضع cream عند عدم وجود تفضيل", status: "done" },
+      {
+        code: "PP-2",
+        name: "init script في layout.tsx يضع cream عند عدم وجود تفضيل",
+        status: "done",
+      },
       { code: "PP-3", name: "ألوان /[slug] الافتراضية — كريمي بدل أسود", status: "done" },
       { code: "PP-4", name: "ThemeSwitcher يبدأ بـ cream + تمييز الافتراضي", status: "done" },
     ],
@@ -267,9 +315,7 @@ export const PHASES: Phase[] = [
     description: "زر بارز بجانب /slug للوصول السريع",
     status: "done",
     completedAt: "2026-05-03",
-    milestones: [
-      { code: "QQ-1", name: "إضافة الرابط بتدرج ذهبي بارز", status: "done" },
-    ],
+    milestones: [{ code: "QQ-1", name: "إضافة الرابط بتدرج ذهبي بارز", status: "done" }],
   },
   {
     id: "ux-simplification-2",
@@ -278,9 +324,21 @@ export const PHASES: Phase[] = [
     status: "pending",
     milestones: [
       { code: "RR-1", name: "Onboarding tour (Joyride) لأول مرة", status: "pending" },
-      { code: "RR-2", name: "زر '?' بجانب كل قسم رئيسي — HelpHint component مُطبَّق على /profile-card + /today + /properties", status: "in_progress" },
-      { code: "RR-3", name: "/dashboard/help — مركز المساعدة (منجَز عبر SS-E في 3 مايو)", status: "done" },
-      { code: "RR-4", name: "Simplified mode: يخفي ميزات المتقدمين عن المبتدئين", status: "pending" },
+      {
+        code: "RR-2",
+        name: "زر '?' بجانب كل قسم رئيسي — HelpHint component مُطبَّق على /profile-card + /today + /properties",
+        status: "in_progress",
+      },
+      {
+        code: "RR-3",
+        name: "/dashboard/help — مركز المساعدة (منجَز عبر SS-E في 3 مايو)",
+        status: "done",
+      },
+      {
+        code: "RR-4",
+        name: "Simplified mode: يخفي ميزات المتقدمين عن المبتدئين",
+        status: "pending",
+      },
       { code: "RR-5", name: "كتيّب PDF عربي للوسيط الجديد", status: "pending" },
     ],
   },
@@ -291,10 +349,26 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-07",
     milestones: [
-      { code: "D2-1", name: "Migration 050 — rent_contracts + rent_payments + RLS + status trigger", status: "done" },
-      { code: "D2-2", name: "تذكير تلقائي قبل الاستحقاق — زر WhatsApp مباشر من PaymentRow", status: "done" },
-      { code: "D2-3", name: "تتبع المتأخرات — auto-detect overdue + dashboard stats view", status: "done" },
-      { code: "D2-4", name: "/dashboard/property-management — 3 tabs (overview/contracts/payments) + new contract modal + auto-generate payments", status: "done" },
+      {
+        code: "D2-1",
+        name: "Migration 050 — rent_contracts + rent_payments + RLS + status trigger",
+        status: "done",
+      },
+      {
+        code: "D2-2",
+        name: "تذكير تلقائي قبل الاستحقاق — زر WhatsApp مباشر من PaymentRow",
+        status: "done",
+      },
+      {
+        code: "D2-3",
+        name: "تتبع المتأخرات — auto-detect overdue + dashboard stats view",
+        status: "done",
+      },
+      {
+        code: "D2-4",
+        name: "/dashboard/property-management — 3 tabs (overview/contracts/payments) + new contract modal + auto-generate payments",
+        status: "done",
+      },
     ],
   },
   {
@@ -307,44 +381,98 @@ export const PHASES: Phase[] = [
       { code: "D3-1", name: "lib/moyasar.ts + /api/payment route", status: "done" },
       { code: "D3-2", name: "Moyasar webhook + payment_events audit table", status: "done" },
       { code: "D3-3", name: "lib/vat.ts + getPlanBreakdown — احتساب VAT 15% آلي", status: "done" },
-      { code: "D3-4", name: "Webhook ينشئ فاتورة subscription_invoices تلقائياً عند نجاح الدفع", status: "done" },
-      { code: "D3-5", name: "Migration 043 — جدول subscription_invoices متوافق مع ZATCA", status: "done" },
+      {
+        code: "D3-4",
+        name: "Webhook ينشئ فاتورة subscription_invoices تلقائياً عند نجاح الدفع",
+        status: "done",
+      },
+      {
+        code: "D3-5",
+        name: "Migration 043 — جدول subscription_invoices متوافق مع ZATCA",
+        status: "done",
+      },
     ],
   },
   {
     id: "wa-real",
     name: "WhatsApp Business — رقم سعودي حقيقي (WA-REAL)",
-    description: "ربط رقم سعودي معتمد من Meta + بنية تحتية كاملة. أُنجزت في جلستين (4-5 مايو 2026) مع كلود في المتصفح.",
+    description:
+      "ربط رقم سعودي معتمد من Meta + بنية تحتية كاملة. أُنجزت في جلستين (4-5 مايو 2026) مع كلود في المتصفح.",
     status: "done",
     completedAt: "2026-05-05",
     milestones: [
-      { code: "WA-1", name: "Meta Business Manager — Verified ✓ (Elyas Aldakhil Real Estate)", status: "done" },
+      {
+        code: "WA-1",
+        name: "Meta Business Manager — Verified ✓ (Elyas Aldakhil Real Estate)",
+        status: "done",
+      },
       { code: "WA-2", name: "WABA #3 (وسيط برو) + رقم سعودي +966575828854", status: "done" },
-      { code: "WA-3", name: "Meta Developer App (Wasit Pro API) + System User + Permanent Token", status: "done" },
+      {
+        code: "WA-3",
+        name: "Meta Developer App (Wasit Pro API) + System User + Permanent Token",
+        status: "done",
+      },
       { code: "WA-4a", name: "META_WEBHOOK_VERIFY_TOKEN في Vercel", status: "done" },
-      { code: "WA-4b", name: "Webhook URL + Subscribe Fields (messages + template_status_update)", status: "done" },
+      {
+        code: "WA-4b",
+        name: "Webhook URL + Subscribe Fields (messages + template_status_update)",
+        status: "done",
+      },
       { code: "WA-4c", name: "حفظ بيانات WABA في /dashboard/whatsapp/settings", status: "done" },
       { code: "WA-4d", name: "Phone Registration with Two-step PIN", status: "done" },
       { code: "WA-4e", name: "Subscribed Apps (WABA-level)", status: "done" },
       { code: "WA-4f", name: "Privacy + Terms URLs في App Settings", status: "done" },
       { code: "WA-5", name: "إضافة بطاقة دفع SAR (Visa) — Step 2 مكتمل", status: "done" },
-      { code: "WA-FIX", name: "إصلاح Vercel async kill في webhook handler (await processWebhook)", status: "done" },
-      { code: "WA-TEST", name: "اختبار End-to-End ناجح: Inbound + Outbound + AI auto-reply", status: "done" },
-      { code: "WA-ROTATE", name: "Rotation كامل للتوكن + App Secret (إغلاق التسرب الأمني)", status: "done" },
-      { code: "WA-7", name: "Display Name 'Elyas Real Estate' — Pending Review (قُدّم 6 مايو بعد رفض 3 محاولات سابقة)", status: "in_progress" },
+      {
+        code: "WA-FIX",
+        name: "إصلاح Vercel async kill في webhook handler (await processWebhook)",
+        status: "done",
+      },
+      {
+        code: "WA-TEST",
+        name: "اختبار End-to-End ناجح: Inbound + Outbound + AI auto-reply",
+        status: "done",
+      },
+      {
+        code: "WA-ROTATE",
+        name: "Rotation كامل للتوكن + App Secret (إغلاق التسرب الأمني)",
+        status: "done",
+      },
+      {
+        code: "WA-7",
+        name: "Display Name 'Elyas Real Estate' — Pending Review (قُدّم 6 مايو بعد رفض 3 محاولات سابقة)",
+        status: "in_progress",
+      },
     ],
   },
   {
     id: "ceo-identity",
     name: "هوية الرئيس التنفيذي (CEO Identity)",
-    description: "نظام تعريف موحَّد للمالك يربط كل قنوات التماس (واتساب، إيميل، داشبورد) بهوية واحدة + ربط تلقائي بالسكرتير الذكي",
+    description:
+      "نظام تعريف موحَّد للمالك يربط كل قنوات التماس (واتساب، إيميل، داشبورد) بهوية واحدة + ربط تلقائي بالسكرتير الذكي",
     status: "done",
     completedAt: "2026-05-05",
     milestones: [
-      { code: "CEO-ID-1", name: "Migration 042 — جدول ceo_identity + RLS + دالة is_ceo_phone + ترحيل تلقائي من ceo_phones القديم", status: "done" },
-      { code: "CEO-ID-2", name: "API endpoint /api/ceo-identity (GET/PUT) + validation + phone normalization", status: "done" },
-      { code: "CEO-ID-3", name: "صفحة /dashboard/ceo/identity كاملة — اسم/مسمى/إيميل/أرقام متعددة/لقب/نبرة", status: "done" },
-      { code: "CEO-ID-4", name: "تحديث webhook ليقرأ من ceo_identity أولاً + fallback للقديم", status: "done" },
+      {
+        code: "CEO-ID-1",
+        name: "Migration 042 — جدول ceo_identity + RLS + دالة is_ceo_phone + ترحيل تلقائي من ceo_phones القديم",
+        status: "done",
+      },
+      {
+        code: "CEO-ID-2",
+        name: "API endpoint /api/ceo-identity (GET/PUT) + validation + phone normalization",
+        status: "done",
+      },
+      {
+        code: "CEO-ID-3",
+        name: "صفحة /dashboard/ceo/identity كاملة — اسم/مسمى/إيميل/أرقام متعددة/لقب/نبرة",
+        status: "done",
+      },
+      {
+        code: "CEO-ID-4",
+        name: "تحديث webhook ليقرأ من ceo_identity أولاً + fallback للقديم",
+        status: "done",
+      },
       { code: "CEO-ID-5", name: "ربط في /dashboard/ceo (زر هوية الرئيس التنفيذي)", status: "done" },
     ],
   },
@@ -355,12 +483,28 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "ONB-1", name: "Migration 044 — جدولين: support_requests + tenant_onboarding", status: "done" },
+      {
+        code: "ONB-1",
+        name: "Migration 044 — جدولين: support_requests + tenant_onboarding",
+        status: "done",
+      },
       { code: "ONB-2", name: "API /api/support-request (POST/GET) + validation", status: "done" },
       { code: "ONB-3", name: "API /api/onboarding (auto-detect 4 خطوات)", status: "done" },
-      { code: "ONB-4", name: "OnboardingChecklist component في /dashboard (يختفي عند الإنجاز)", status: "done" },
-      { code: "ONB-5", name: "SupportContact في /dashboard/help (واتساب + إيميل + form)", status: "done" },
-      { code: "ONB-6", name: "RLS + auto-detect للخطوات (profile/property/whatsapp/assistant)", status: "done" },
+      {
+        code: "ONB-4",
+        name: "OnboardingChecklist component في /dashboard (يختفي عند الإنجاز)",
+        status: "done",
+      },
+      {
+        code: "ONB-5",
+        name: "SupportContact في /dashboard/help (واتساب + إيميل + form)",
+        status: "done",
+      },
+      {
+        code: "ONB-6",
+        name: "RLS + auto-detect للخطوات (profile/property/whatsapp/assistant)",
+        status: "done",
+      },
     ],
   },
   {
@@ -370,14 +514,34 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "SEN-1", name: "Sentry config files (client/server/edge) + instrumentation.ts", status: "done" },
+      {
+        code: "SEN-1",
+        name: "Sentry config files (client/server/edge) + instrumentation.ts",
+        status: "done",
+      },
       { code: "SEN-2", name: "withSentryConfig wrapper في next.config.ts", status: "done" },
-      { code: "SEN-3", name: "Global error boundary (app/global-error.tsx) — UI لطيف للمستخدم", status: "done" },
-      { code: "SEN-4", name: "Endpoint اختبار /api/sentry-test (محمي بـ CRON_SECRET)", status: "done" },
+      {
+        code: "SEN-3",
+        name: "Global error boundary (app/global-error.tsx) — UI لطيف للمستخدم",
+        status: "done",
+      },
+      {
+        code: "SEN-4",
+        name: "Endpoint اختبار /api/sentry-test (محمي بـ CRON_SECRET)",
+        status: "done",
+      },
       { code: "SEN-5", name: "CSP محدَّث للسماح بـ Sentry ingest endpoints", status: "done" },
       { code: "SEN-6", name: "ربط بحساب Sentry فعلي + إضافة DSN في Vercel", status: "done" },
-      { code: "SEN-7", name: "اختبار End-to-End ناجح: خطأ ملتقَط في Sentry dashboard", status: "done" },
-      { code: "SEN-8", name: "تحسين endpoint الاختبار: مصادقة المالك بديل للـ secret", status: "done" },
+      {
+        code: "SEN-7",
+        name: "اختبار End-to-End ناجح: خطأ ملتقَط في Sentry dashboard",
+        status: "done",
+      },
+      {
+        code: "SEN-8",
+        name: "تحسين endpoint الاختبار: مصادقة المالك بديل للـ secret",
+        status: "done",
+      },
     ],
   },
   {
@@ -388,14 +552,30 @@ export const PHASES: Phase[] = [
     completedAt: "2026-05-06",
     milestones: [
       { code: "P1-SAR", name: "SARIcon — استخدام PNG الرسمي مع CSS Mask للتلوين", status: "done" },
-      { code: "P1-1", name: "Migration 047 — lead_captures + visit_bookings + views_log + cols", status: "done" },
+      {
+        code: "P1-1",
+        name: "Migration 047 — lead_captures + visit_bookings + views_log + cols",
+        status: "done",
+      },
       { code: "P1-2", name: "API /api/lead-capture (POST مع validation + cookie)", status: "done" },
       { code: "P1-3", name: "API /api/vcard/[slug] (تحميل vCard .vcf مع PDPL)", status: "done" },
       { code: "P1-4", name: "LeadCaptureGate component (الميزة القاتلة)", status: "done" },
-      { code: "P1-5", name: "BrandIcons component — 13 أيقونة SVG رسمية (Simple Icons)", status: "done" },
+      {
+        code: "P1-5",
+        name: "BrandIcons component — 13 أيقونة SVG رسمية (Simple Icons)",
+        status: "done",
+      },
       { code: "P1-6", name: "API /api/qr (PNG + SVG، colors + size مخصصة)", status: "done" },
-      { code: "P1-7", name: "BrokerQRModal component (4 types: card/vcard/whatsapp/maps)", status: "done" },
-      { code: "P1-8", name: "lib/schema-org.ts — JSON-LD generators (RealEstateAgent + Listing + Breadcrumb)", status: "done" },
+      {
+        code: "P1-7",
+        name: "BrokerQRModal component (4 types: card/vcard/whatsapp/maps)",
+        status: "done",
+      },
+      {
+        code: "P1-8",
+        name: "lib/schema-org.ts — JSON-LD generators (RealEstateAgent + Listing + Breadcrumb)",
+        status: "done",
+      },
     ],
   },
   {
@@ -405,9 +585,21 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "P2-1", name: "Migration 048 — testimonials + property_comparisons + 8 رخص/تخصصات", status: "done" },
-      { code: "P2-2", name: "lib/card-themes.ts — 20 ثيم احترافي (luxury/modern/classic/minimal/bold/specialty)", status: "done" },
-      { code: "P2-3", name: "broker_identity أعمدة جديدة: maroof_id + muthawiq_id + هيئة العقار + سنوات الخبرة + التخصصات + المناطق", status: "done" },
+      {
+        code: "P2-1",
+        name: "Migration 048 — testimonials + property_comparisons + 8 رخص/تخصصات",
+        status: "done",
+      },
+      {
+        code: "P2-2",
+        name: "lib/card-themes.ts — 20 ثيم احترافي (luxury/modern/classic/minimal/bold/specialty)",
+        status: "done",
+      },
+      {
+        code: "P2-3",
+        name: "broker_identity أعمدة جديدة: maroof_id + muthawiq_id + هيئة العقار + سنوات الخبرة + التخصصات + المناطق",
+        status: "done",
+      },
     ],
   },
   {
@@ -417,50 +609,152 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "P4-1", name: "Migration 049 — voice_intakes + virtual_staging + alerts + catalog_sync + neighborhood_intel", status: "done" },
-      { code: "P4-2", name: "API /api/ai/voice-to-property — transcript → GPT extraction → JSON", status: "done" },
-      { code: "P4-3", name: "API /api/ai/smart-matching — alerts vs properties scoring (60%+ matches)", status: "done" },
-      { code: "P4-4", name: "API /api/ai/neighborhood-intel — AI generation + 30-day cache", status: "done" },
-      { code: "P4-5", name: "Virtual Staging table — جاهز لـ Stable Diffusion integration", status: "in_progress" },
-      { code: "P4-6", name: "WhatsApp Catalog Sync table — جاهز لـ Meta Catalog API", status: "in_progress" },
+      {
+        code: "P4-1",
+        name: "Migration 049 — voice_intakes + virtual_staging + alerts + catalog_sync + neighborhood_intel",
+        status: "done",
+      },
+      {
+        code: "P4-2",
+        name: "API /api/ai/voice-to-property — transcript → GPT extraction → JSON",
+        status: "done",
+      },
+      {
+        code: "P4-3",
+        name: "API /api/ai/smart-matching — alerts vs properties scoring (60%+ matches)",
+        status: "done",
+      },
+      {
+        code: "P4-4",
+        name: "API /api/ai/neighborhood-intel — AI generation + 30-day cache",
+        status: "done",
+      },
+      {
+        code: "P4-5",
+        name: "Virtual Staging table — جاهز لـ Stable Diffusion integration",
+        status: "in_progress",
+      },
+      {
+        code: "P4-6",
+        name: "WhatsApp Catalog Sync table — جاهز لـ Meta Catalog API",
+        status: "in_progress",
+      },
     ],
   },
   {
     id: "feature-completion-phase7",
     name: "Feature Completion — Phase 7 (٧ مايو، الموجة الكبرى)",
-    description: "إكمال Phase 3 المتبقّي + D2 إدارة الأملاك + B-4 feedback + PDPL + Loading states + Rate limiting",
+    description:
+      "إكمال Phase 3 المتبقّي + D2 إدارة الأملاك + B-4 feedback + PDPL + Loading states + Rate limiting",
     status: "done",
     completedAt: "2026-05-07",
     milestones: [
-      { code: "P7-1", name: "P3-11 Themes Picker preview محسّن (avatar + bio + links + hover)", status: "done" },
-      { code: "P7-2", name: "P3-10 Smart Matching UI — صفحة كاملة لإدارة تنبيهات العميل + المطابقات", status: "done" },
-      { code: "P7-3", name: "P3-9 Voice-to-Property UI — VoiceRecorder + Web Speech API + ربط /properties/add", status: "done" },
-      { code: "P7-4", name: "D2 — Migration 050 + /dashboard/property-management كامل (3 tabs + auto-payments)", status: "done" },
-      { code: "P7-5", name: "B-4 — Migration 051 + /api/beta-feedback + FeedbackWidget عائم", status: "done" },
-      { code: "P7-6", name: "PDPL rights — /api/pdpl/export + /api/pdpl/delete + /dashboard/settings/privacy", status: "done" },
-      { code: "P7-7", name: "Loading states موحَّدة — Spinner + SkeletonRow + SkeletonCard + EmptyState + ErrorState", status: "done" },
-      { code: "P7-8", name: "Rate limiting على /api/lead-capture (10/h) + /api/waitlist (3/h) + /api/beta-feedback (5/h)", status: "done" },
+      {
+        code: "P7-1",
+        name: "P3-11 Themes Picker preview محسّن (avatar + bio + links + hover)",
+        status: "done",
+      },
+      {
+        code: "P7-2",
+        name: "P3-10 Smart Matching UI — صفحة كاملة لإدارة تنبيهات العميل + المطابقات",
+        status: "done",
+      },
+      {
+        code: "P7-3",
+        name: "P3-9 Voice-to-Property UI — VoiceRecorder + Web Speech API + ربط /properties/add",
+        status: "done",
+      },
+      {
+        code: "P7-4",
+        name: "D2 — Migration 050 + /dashboard/property-management كامل (3 tabs + auto-payments)",
+        status: "done",
+      },
+      {
+        code: "P7-5",
+        name: "B-4 — Migration 051 + /api/beta-feedback + FeedbackWidget عائم",
+        status: "done",
+      },
+      {
+        code: "P7-6",
+        name: "PDPL rights — /api/pdpl/export + /api/pdpl/delete + /dashboard/settings/privacy",
+        status: "done",
+      },
+      {
+        code: "P7-7",
+        name: "Loading states موحَّدة — Spinner + SkeletonRow + SkeletonCard + EmptyState + ErrorState",
+        status: "done",
+      },
+      {
+        code: "P7-8",
+        name: "Rate limiting على /api/lead-capture (10/h) + /api/waitlist (3/h) + /api/beta-feedback (5/h)",
+        status: "done",
+      },
     ],
   },
   {
     id: "stability-and-polish-phase6",
     name: "Stability + Polish — Phase 6 (٧ مايو)",
-    description: "تصحيح تناقضات الحالة + Reserved slugs + Error pages + /compare + HelpHint + توحيد رسالة الكود",
+    description:
+      "تصحيح تناقضات الحالة + Reserved slugs + Error pages + /compare + HelpHint + توحيد رسالة الكود",
     status: "done",
     completedAt: "2026-05-07",
     milestones: [
-      { code: "P6-1", name: "تصحيح ٧ تناقضات في LAUNCH_READINESS (moyasar/sitemap/meta-tags/beta-invite/BUG-1/RR-3/B-2)", status: "done" },
-      { code: "P6-2", name: "توحيد رسالة 'كود الدعوة غير صالح أو منتهي الصلاحية' في /api/invite-code/validate", status: "done" },
-      { code: "P6-3", name: "Reserved slugs guard في /[slug] — يمنع /pricing /about /privacy إلخ من اختطاف صفحة الوسيط", status: "done" },
+      {
+        code: "P6-1",
+        name: "تصحيح ٧ تناقضات في LAUNCH_READINESS (moyasar/sitemap/meta-tags/beta-invite/BUG-1/RR-3/B-2)",
+        status: "done",
+      },
+      {
+        code: "P6-2",
+        name: "توحيد رسالة 'كود الدعوة غير صالح أو منتهي الصلاحية' في /api/invite-code/validate",
+        status: "done",
+      },
+      {
+        code: "P6-3",
+        name: "Reserved slugs guard في /[slug] — يمنع /pricing /about /privacy إلخ من اختطاف صفحة الوسيط",
+        status: "done",
+      },
       { code: "P6-4", name: "RESERVED_REDIRECTS — /pricing → /#pricing تلقائياً", status: "done" },
-      { code: "P6-5", name: "app/error.tsx — root-level error boundary بصفحة 500 مهنية مع زر إعادة المحاولة", status: "done" },
-      { code: "P6-6", name: "صفحة /compare?ids=... — مقارنة 2-4 عقارات + جدول مواصفات + best value highlights + sharing link", status: "done" },
-      { code: "P6-7", name: "HelpHint component — tooltip خفيف بدون مكتبات + إغلاق عند Esc/click outside", status: "done" },
-      { code: "P6-8", name: "تطبيق HelpHint على /profile-card + /today + /properties (٣ نماذج)", status: "done" },
-      { code: "P6-9", name: "Suspense wrapper لـ /compare (server + client split) + إصلاح build error في Vercel", status: "done" },
-      { code: "P6-10", name: "Instagram + TikTok official gradients (linear-gradient في BRAND_BG_MAP)", status: "done" },
-      { code: "P6-11", name: "إصلاح closing tags ناقصة في ComparePageClient.tsx (drift من Linux mount)", status: "done" },
-      { code: "P6-VERIFY", name: "CIB أكّد ٥/٥ بنود ناجحة (slugs / compare / 500 / invite-msg / brand-icons)", status: "done" },
+      {
+        code: "P6-5",
+        name: "app/error.tsx — root-level error boundary بصفحة 500 مهنية مع زر إعادة المحاولة",
+        status: "done",
+      },
+      {
+        code: "P6-6",
+        name: "صفحة /compare?ids=... — مقارنة 2-4 عقارات + جدول مواصفات + best value highlights + sharing link",
+        status: "done",
+      },
+      {
+        code: "P6-7",
+        name: "HelpHint component — tooltip خفيف بدون مكتبات + إغلاق عند Esc/click outside",
+        status: "done",
+      },
+      {
+        code: "P6-8",
+        name: "تطبيق HelpHint على /profile-card + /today + /properties (٣ نماذج)",
+        status: "done",
+      },
+      {
+        code: "P6-9",
+        name: "Suspense wrapper لـ /compare (server + client split) + إصلاح build error في Vercel",
+        status: "done",
+      },
+      {
+        code: "P6-10",
+        name: "Instagram + TikTok official gradients (linear-gradient في BRAND_BG_MAP)",
+        status: "done",
+      },
+      {
+        code: "P6-11",
+        name: "إصلاح closing tags ناقصة في ComparePageClient.tsx (drift من Linux mount)",
+        status: "done",
+      },
+      {
+        code: "P6-VERIFY",
+        name: "CIB أكّد ٥/٥ بنود ناجحة (slugs / compare / 500 / invite-msg / brand-icons)",
+        status: "done",
+      },
     ],
   },
   {
@@ -470,34 +764,107 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-07",
     milestones: [
-      { code: "P5-1", name: "BrandIcons.tsx — توسعة BRAND_ICON_MAP بـ contact_* + aliases (17+ key)", status: "done" },
-      { code: "P5-2", name: "BRAND_BG_MAP + BRAND_FG_MAP + getBrandBg/getBrandFg helpers", status: "done" },
-      { code: "P5-3", name: "ProfileCardClient.tsx — استخدام Brand Icons في topSocials + ElementCardInner", status: "done" },
-      { code: "P5-4", name: "/dashboard/profile-card editor — Brand Icons في autoElements + ElementRow + Library + EditModal", status: "done" },
-      { code: "P5-5", name: "Drag & Drop reorder — HTML5 native (handleDragStart/Over/Drop/End) + visual feedback", status: "done" },
-      { code: "P5-6", name: "ElementDesignSection — تسمية مخصّصة + 8 ألوان جاهزة + color picker مخصّص لكل عنصر", status: "done" },
-      { code: "P5-7", name: "elementCardStyle يقرأ meta.bg_color/text_color (أولوية على brand colors)", status: "done" },
+      {
+        code: "P5-1",
+        name: "BrandIcons.tsx — توسعة BRAND_ICON_MAP بـ contact_* + aliases (17+ key)",
+        status: "done",
+      },
+      {
+        code: "P5-2",
+        name: "BRAND_BG_MAP + BRAND_FG_MAP + getBrandBg/getBrandFg helpers",
+        status: "done",
+      },
+      {
+        code: "P5-3",
+        name: "ProfileCardClient.tsx — استخدام Brand Icons في topSocials + ElementCardInner",
+        status: "done",
+      },
+      {
+        code: "P5-4",
+        name: "/dashboard/profile-card editor — Brand Icons في autoElements + ElementRow + Library + EditModal",
+        status: "done",
+      },
+      {
+        code: "P5-5",
+        name: "Drag & Drop reorder — HTML5 native (handleDragStart/Over/Drop/End) + visual feedback",
+        status: "done",
+      },
+      {
+        code: "P5-6",
+        name: "ElementDesignSection — تسمية مخصّصة + 8 ألوان جاهزة + color picker مخصّص لكل عنصر",
+        status: "done",
+      },
+      {
+        code: "P5-7",
+        name: "elementCardStyle يقرأ meta.bg_color/text_color (أولوية على brand colors)",
+        status: "done",
+      },
       { code: "P5-8", name: "GripVertical handle + ↑↓ buttons معاً (مرونة)", status: "done" },
     ],
   },
   {
     id: "card-rebuild-phase3",
     name: "إعادة بناء البطاقة — Phase 3 (UI Integration)",
-    description: "ربط البنية التحتية بـ UI: Save Contact، LeadCapture، Themes Picker، Testimonials، Neighborhood، QR",
+    description:
+      "ربط البنية التحتية بـ UI: Save Contact، LeadCapture، Themes Picker، Testimonials، Neighborhood، QR",
     status: "in_progress",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "P3-1", name: "SaveContactButton — زر Hero مميّز 'اضغط لحفظ في جهات اتصالك' لـ iPhone/Android/Huawei", status: "done" },
-      { code: "P3-2", name: "ربط SaveContactButton في /c/[slug] (هيرو) و /[slug] (نافبار + قسم تواصل)", status: "done" },
-      { code: "P3-3", name: "LeadCaptureGate في /properties/[id] — يلفّ أزرار الاتصال إذا require_lead_capture=true", status: "done" },
-      { code: "P3-4", name: "NeighborhoodIntel widget في /properties/[id] — استدعاء AI + عرض إحصائيات الحي", status: "done" },
-      { code: "P3-5", name: "TestimonialsSection في /c/[slug] — عرض آراء العملاء بنجوم + featured badge", status: "done" },
-      { code: "P3-6", name: "CardThemePicker — مودال 20 ثيم بفلاتر فئات (luxury/modern/...)، مربوط بـ profile_cards", status: "done" },
-      { code: "P3-7", name: "BrokerQRModal trigger — زر 'رمز QR' في profile-card editor", status: "done" },
-      { code: "P3-8", name: "Compare page /compare?ids=... — صفحة مقارنة العقارات (2-4 side-by-side + جدول مواصفات + best value highlights)", status: "done" },
-      { code: "P3-9", name: "Voice-to-Property UI — VoiceRecorder component + Web Speech API + ربطه بـ /properties/add", status: "done" },
-      { code: "P3-10", name: "Smart Matching UI — /dashboard/clients/[id]/alerts (إضافة + تشغيل + عرض المطابقات بـ score)", status: "done" },
-      { code: "P3-11", name: "Themes Picker preview محسّن — preview حقيقي بـ avatar + bio + 3 links + hover", status: "done" },
+      {
+        code: "P3-1",
+        name: "SaveContactButton — زر Hero مميّز 'اضغط لحفظ في جهات اتصالك' لـ iPhone/Android/Huawei",
+        status: "done",
+      },
+      {
+        code: "P3-2",
+        name: "ربط SaveContactButton في /c/[slug] (هيرو) و /[slug] (نافبار + قسم تواصل)",
+        status: "done",
+      },
+      {
+        code: "P3-3",
+        name: "LeadCaptureGate في /properties/[id] — يلفّ أزرار الاتصال إذا require_lead_capture=true",
+        status: "done",
+      },
+      {
+        code: "P3-4",
+        name: "NeighborhoodIntel widget في /properties/[id] — استدعاء AI + عرض إحصائيات الحي",
+        status: "done",
+      },
+      {
+        code: "P3-5",
+        name: "TestimonialsSection في /c/[slug] — عرض آراء العملاء بنجوم + featured badge",
+        status: "done",
+      },
+      {
+        code: "P3-6",
+        name: "CardThemePicker — مودال 20 ثيم بفلاتر فئات (luxury/modern/...)، مربوط بـ profile_cards",
+        status: "done",
+      },
+      {
+        code: "P3-7",
+        name: "BrokerQRModal trigger — زر 'رمز QR' في profile-card editor",
+        status: "done",
+      },
+      {
+        code: "P3-8",
+        name: "Compare page /compare?ids=... — صفحة مقارنة العقارات (2-4 side-by-side + جدول مواصفات + best value highlights)",
+        status: "done",
+      },
+      {
+        code: "P3-9",
+        name: "Voice-to-Property UI — VoiceRecorder component + Web Speech API + ربطه بـ /properties/add",
+        status: "done",
+      },
+      {
+        code: "P3-10",
+        name: "Smart Matching UI — /dashboard/clients/[id]/alerts (إضافة + تشغيل + عرض المطابقات بـ score)",
+        status: "done",
+      },
+      {
+        code: "P3-11",
+        name: "Themes Picker preview محسّن — preview حقيقي بـ avatar + bio + 3 links + hover",
+        status: "done",
+      },
     ],
   },
   {
@@ -509,8 +876,16 @@ export const PHASES: Phase[] = [
     milestones: [
       { code: "UX-FIX-1", name: "زر تسجيل دخول في navbar صفحة /[slug]", status: "done" },
       { code: "UX-FIX-2", name: "زر /elyas → 'زيارة موقعي' (أوضح وأجمل)", status: "done" },
-      { code: "UX-FIX-3", name: "تشخيص login: حسابك سليم، session شغّالة، كلمة المرور فقط هي المشكلة", status: "done" },
-      { code: "UX-FIX-4", name: "قسم 'روابط تلقائية في بطاقتك' في /profile-card مع preview cards", status: "done" },
+      {
+        code: "UX-FIX-3",
+        name: "تشخيص login: حسابك سليم، session شغّالة، كلمة المرور فقط هي المشكلة",
+        status: "done",
+      },
+      {
+        code: "UX-FIX-4",
+        name: "قسم 'روابط تلقائية في بطاقتك' في /profile-card مع preview cards",
+        status: "done",
+      },
     ],
   },
   {
@@ -521,10 +896,18 @@ export const PHASES: Phase[] = [
     completedAt: "2026-05-06",
     milestones: [
       { code: "SEO-1", name: "sitemap.xml ديناميكي (ثابت + الوسطاء + العقارات)", status: "done" },
-      { code: "SEO-2", name: "robots.txt مع AI crawlers (GPTBot, ChatGPT, Claude, Perplexity)", status: "done" },
+      {
+        code: "SEO-2",
+        name: "robots.txt مع AI crawlers (GPTBot, ChatGPT, Claude, Perplexity)",
+        status: "done",
+      },
       { code: "SEO-3", name: "Open Graph + Twitter cards في root layout", status: "done" },
       { code: "SEO-4", name: "metadataBase + keywords + canonical structure", status: "done" },
-      { code: "SEO-5", name: "Custom analytics tracker موجود في app/components/AnalyticsTracker.tsx", status: "done" },
+      {
+        code: "SEO-5",
+        name: "Custom analytics tracker موجود في app/components/AnalyticsTracker.tsx",
+        status: "done",
+      },
     ],
   },
   {
@@ -534,35 +917,100 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "BETA-1", name: "Migration 046 — invite_codes + beta_waitlist + RLS + RPCs", status: "done" },
-      { code: "BETA-2", name: "RPC validate_invite_code + consume_invite_code (atomic)", status: "done" },
+      {
+        code: "BETA-1",
+        name: "Migration 046 — invite_codes + beta_waitlist + RLS + RPCs",
+        status: "done",
+      },
+      {
+        code: "BETA-2",
+        name: "RPC validate_invite_code + consume_invite_code (atomic)",
+        status: "done",
+      },
       { code: "BETA-3", name: "API /api/invite-code/validate + /api/waitlist", status: "done" },
       { code: "BETA-4", name: "WaitlistForm component (للـ landing أو /beta)", status: "done" },
       { code: "BETA-5", name: "بذور: 3 أكواد Beta أولية (WASIT-BETA-1/2/3)", status: "done" },
-      { code: "BETA-6", name: "ربط في register page (validate قبل + consume بعد signup) + حقل invite code", status: "done" },
-      { code: "BETA-7", name: "WaitlistForm مرتبط في landing page (قسم Beta قبل footer)", status: "done" },
+      {
+        code: "BETA-6",
+        name: "ربط في register page (validate قبل + consume بعد signup) + حقل invite code",
+        status: "done",
+      },
+      {
+        code: "BETA-7",
+        name: "WaitlistForm مرتبط في landing page (قسم Beta قبل footer)",
+        status: "done",
+      },
       { code: "BETA-8", name: "20 كود Wave-1 جاهزة في DB (WP-W1-XXXXXX)", status: "done" },
-      { code: "BETA-9", name: "خطة إطلاق مكتوبة في docs/beta-launch-plan.md (timeline + KPIs + رسائل قوالب)", status: "done" },
-      { code: "BUG-1", name: "إصلاح hover dark cards — كان hardcoded #141418 في organization page", status: "done" },
+      {
+        code: "BETA-9",
+        name: "خطة إطلاق مكتوبة في docs/beta-launch-plan.md (timeline + KPIs + رسائل قوالب)",
+        status: "done",
+      },
+      {
+        code: "BUG-1",
+        name: "إصلاح hover dark cards — كان hardcoded #141418 في organization page",
+        status: "done",
+      },
     ],
   },
   {
     id: "duplication-deep-cleanup",
     name: "تنظيف التكرارات الوظيفية — المرحلة العميقة (CIB Audit)",
-    description: "اكتشاف وتصحيح ٣ تكرارات إضافية كشفها CIB: هوية في 3 جداول، زر ثيم في profile-card، بريد إشعارات مكرّر",
+    description:
+      "اكتشاف وتصحيح ٣ تكرارات إضافية كشفها CIB: هوية في 3 جداول، زر ثيم في profile-card، بريد إشعارات مكرّر",
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "DEEP-1", name: "حذف زر 'الثيم' من /profile-card → link لـ /settings?tab=design", status: "done" },
-      { code: "DEEP-2", name: "تبويب 'هوية الوسيط' في /content → banner يحوّل لـ /settings", status: "done" },
-      { code: "DEEP-3", name: "إزالة حقل 'بريد الإشعارات' المكرّر من /settings/profile → لينك لـ /notifications", status: "done" },
-      { code: "DEEP-4", name: "لينك لـ /whatsapp/settings من /settings/contact (للتكامل المتقدّم)", status: "done" },
-      { code: "DEEP-5", name: "GrowthNav component مشترك بين /content + /marketing + /distribute", status: "done" },
-      { code: "DEEP-6", name: "AIAssistant component مشترك (موجود سلفاً في app/dashboard/layout.tsx)", status: "done" },
-      { code: "DEEP-7", name: "docs/ux-canonical-pages.md — توثيق Source of Truth pattern + خريطة الـ redirects", status: "done" },
-      { code: "DEEP-8", name: "تنبيهات Inheritance في profile-card + ceo/identity — leave empty to use defaults", status: "done" },
-      { code: "DEEP-9", name: "useBrokerProfile() hook موحَّد — مؤجَّل (يحتاج refactor متعدد الملفات)", status: "pending" },
-      { code: "DEEP-10", name: "Search filter داخل /settings — مؤجَّل (٦ تبويبات قابلة للتذكر، أولوية منخفضة)", status: "pending" },
+      {
+        code: "DEEP-1",
+        name: "حذف زر 'الثيم' من /profile-card → link لـ /settings?tab=design",
+        status: "done",
+      },
+      {
+        code: "DEEP-2",
+        name: "تبويب 'هوية الوسيط' في /content → banner يحوّل لـ /settings",
+        status: "done",
+      },
+      {
+        code: "DEEP-3",
+        name: "إزالة حقل 'بريد الإشعارات' المكرّر من /settings/profile → لينك لـ /notifications",
+        status: "done",
+      },
+      {
+        code: "DEEP-4",
+        name: "لينك لـ /whatsapp/settings من /settings/contact (للتكامل المتقدّم)",
+        status: "done",
+      },
+      {
+        code: "DEEP-5",
+        name: "GrowthNav component مشترك بين /content + /marketing + /distribute",
+        status: "done",
+      },
+      {
+        code: "DEEP-6",
+        name: "AIAssistant component مشترك (موجود سلفاً في app/dashboard/layout.tsx)",
+        status: "done",
+      },
+      {
+        code: "DEEP-7",
+        name: "docs/ux-canonical-pages.md — توثيق Source of Truth pattern + خريطة الـ redirects",
+        status: "done",
+      },
+      {
+        code: "DEEP-8",
+        name: "تنبيهات Inheritance في profile-card + ceo/identity — leave empty to use defaults",
+        status: "done",
+      },
+      {
+        code: "DEEP-9",
+        name: "useBrokerProfile() hook موحَّد — مؤجَّل (يحتاج refactor متعدد الملفات)",
+        status: "pending",
+      },
+      {
+        code: "DEEP-10",
+        name: "Search filter داخل /settings — مؤجَّل (٦ تبويبات قابلة للتذكر، أولوية منخفضة)",
+        status: "pending",
+      },
     ],
   },
   {
@@ -572,16 +1020,52 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "DUP-1", name: "حذف /dashboard/theme (يكتب لحقول ميتة) → redirect لـ /settings", status: "done" },
-      { code: "DUP-2", name: "حذف /dashboard/visual-editor (مكرر مع settings tab=design) → redirect", status: "done" },
-      { code: "DUP-3", name: "توحيد الهوية: UI hints في profile-card و ceo/identity توضح التوريث من broker_identity", status: "done" },
-      { code: "DUP-4", name: "FAL license — مؤجَّل (موجود في 14 ملف، ترحيله مخاطرة عالية)", status: "pending" },
-      { code: "DUP-5", name: "/dashboard/whatsapp Hub — layout بتبويبات (محادثات/قوالب/إعدادات)", status: "done" },
-      { code: "DUP-6", name: "/dashboard/ceo Hub — layout بتبويبات (نظرة عامة/الهوية/الموافقات)", status: "done" },
-      { code: "DUP-7", name: "settings menu نُظّفت من 10 → 7 (حذف theme/notifications/CEO identity المكرّرة)", status: "done" },
-      { code: "DUP-8", name: "Property add/smart-add — toggle UI في رأس كل صفحة للتنقل بينهما", status: "done" },
+      {
+        code: "DUP-1",
+        name: "حذف /dashboard/theme (يكتب لحقول ميتة) → redirect لـ /settings",
+        status: "done",
+      },
+      {
+        code: "DUP-2",
+        name: "حذف /dashboard/visual-editor (مكرر مع settings tab=design) → redirect",
+        status: "done",
+      },
+      {
+        code: "DUP-3",
+        name: "توحيد الهوية: UI hints في profile-card و ceo/identity توضح التوريث من broker_identity",
+        status: "done",
+      },
+      {
+        code: "DUP-4",
+        name: "FAL license — مؤجَّل (موجود في 14 ملف، ترحيله مخاطرة عالية)",
+        status: "pending",
+      },
+      {
+        code: "DUP-5",
+        name: "/dashboard/whatsapp Hub — layout بتبويبات (محادثات/قوالب/إعدادات)",
+        status: "done",
+      },
+      {
+        code: "DUP-6",
+        name: "/dashboard/ceo Hub — layout بتبويبات (نظرة عامة/الهوية/الموافقات)",
+        status: "done",
+      },
+      {
+        code: "DUP-7",
+        name: "settings menu نُظّفت من 10 → 7 (حذف theme/notifications/CEO identity المكرّرة)",
+        status: "done",
+      },
+      {
+        code: "DUP-8",
+        name: "Property add/smart-add — toggle UI في رأس كل صفحة للتنقل بينهما",
+        status: "done",
+      },
       { code: "DUP-9", name: "/dashboard/content مرتبط من sidebar Tools group", status: "done" },
-      { code: "DUP-10", name: "حذف الـ 9 redirects القديمة — مؤجَّل لـ شهرين (لتفادي bookmarks مكسورة)", status: "pending" },
+      {
+        code: "DUP-10",
+        name: "حذف الـ 9 redirects القديمة — مؤجَّل لـ شهرين (لتفادي bookmarks مكسورة)",
+        status: "pending",
+      },
     ],
   },
   {
@@ -592,14 +1076,34 @@ export const PHASES: Phase[] = [
     completedAt: "2026-05-06",
     milestones: [
       { code: "NAV-1", name: "إصلاح رابط مكسور /clients/add في /today", status: "done" },
-      { code: "NAV-2", name: "حلّ تكرار property-requests ↔ requests (٣ صفحات → redirects)", status: "done" },
-      { code: "NAV-3", name: "إضافة /deals + /tasks + /requests إلى مجموعة 'العمل اليومي' الجديدة", status: "done" },
+      {
+        code: "NAV-2",
+        name: "حلّ تكرار property-requests ↔ requests (٣ صفحات → redirects)",
+        status: "done",
+      },
+      {
+        code: "NAV-3",
+        name: "إضافة /deals + /tasks + /requests إلى مجموعة 'العمل اليومي' الجديدة",
+        status: "done",
+      },
       { code: "NAV-4", name: "إضافة /documents لـ Tools group", status: "done" },
       { code: "NAV-5", name: "إضافة /theme لـ Settings menu", status: "done" },
-      { code: "NAV-6", name: "تحويل /site-settings إلى redirect لـ /settings (إزالة تكرار)", status: "done" },
-      { code: "NAV-7", name: "ربط /invoices + /quotations + /commissions + /goals + /reports من /financial", status: "done" },
+      {
+        code: "NAV-6",
+        name: "تحويل /site-settings إلى redirect لـ /settings (إزالة تكرار)",
+        status: "done",
+      },
+      {
+        code: "NAV-7",
+        name: "ربط /invoices + /quotations + /commissions + /goals + /reports من /financial",
+        status: "done",
+      },
       { code: "NAV-8", name: "ربط /content من /dashboard/ai (محتوى AI)", status: "done" },
-      { code: "NAV-9", name: "تأكيد ai-foundation + ai-employees redirects (موجودة سلفاً)", status: "done" },
+      {
+        code: "NAV-9",
+        name: "تأكيد ai-foundation + ai-employees redirects (موجودة سلفاً)",
+        status: "done",
+      },
     ],
   },
   {
@@ -609,7 +1113,11 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "BUG-1", name: "بطاقات المدراء تتحوّل لخلفية سوداء عند hover — أُصلح في /dashboard/organization (CIB ٧ مايو أكّد الحل)", status: "done" },
+      {
+        code: "BUG-1",
+        name: "بطاقات المدراء تتحوّل لخلفية سوداء عند hover — أُصلح في /dashboard/organization (CIB ٧ مايو أكّد الحل)",
+        status: "done",
+      },
     ],
   },
   {
@@ -619,8 +1127,16 @@ export const PHASES: Phase[] = [
     status: "done",
     completedAt: "2026-05-06",
     milestones: [
-      { code: "SET-1", name: "Migration 045 — buckets (avatars + assets) مع RLS صحيح", status: "done" },
-      { code: "SET-2", name: "إصلاح handlePhotoChange: tenant-scoped update + رسائل خطأ واضحة + path آمن", status: "done" },
+      {
+        code: "SET-1",
+        name: "Migration 045 — buckets (avatars + assets) مع RLS صحيح",
+        status: "done",
+      },
+      {
+        code: "SET-2",
+        name: "إصلاح handlePhotoChange: tenant-scoped update + رسائل خطأ واضحة + path آمن",
+        status: "done",
+      },
     ],
   },
   {
@@ -630,10 +1146,22 @@ export const PHASES: Phase[] = [
     status: "pending",
     milestones: [
       { code: "B-1", name: "تثبيت التسعير (99/149/249) — قرار تجاري", status: "pending" },
-      { code: "B-2", name: "صفحة هبوط Beta — منجَز (waitlist + invite UI + 23 code نشط)", status: "done" },
+      {
+        code: "B-2",
+        name: "صفحة هبوط Beta — منجَز (waitlist + invite UI + 23 code نشط)",
+        status: "done",
+      },
       { code: "B-3", name: "دعوة 10-30 وسيط من شبكتك — قرار + تنفيذ يدوي", status: "pending" },
-      { code: "B-4", name: "نظام تتبّع feedback — Migration 051 + /api/beta-feedback + FeedbackWidget عائم في كل dashboard pages", status: "done" },
-      { code: "B-5", name: "Onboarding يدوي للأوائل — قرار إجرائي (Zoom/مكالمة)", status: "pending" },
+      {
+        code: "B-4",
+        name: "نظام تتبّع feedback — Migration 051 + /api/beta-feedback + FeedbackWidget عائم في كل dashboard pages",
+        status: "done",
+      },
+      {
+        code: "B-5",
+        name: "Onboarding يدوي للأوائل — قرار إجرائي (Zoom/مكالمة)",
+        status: "pending",
+      },
     ],
   },
 ];
@@ -645,11 +1173,7 @@ export const COMPETITORS: Competitor[] = [
   {
     name: "تداولكم",
     positioning: "تطبيق إعلانات وتسويق عقاري مبسّط للوسطاء",
-    strengths: [
-      "حضور سوقي مبكر",
-      "تطبيق جوّال متطور",
-      "قاعدة وسطاء كبيرة",
-    ],
+    strengths: ["حضور سوقي مبكر", "تطبيق جوّال متطور", "قاعدة وسطاء كبيرة"],
     weaknesses: [
       "لا يقدّم إدارة شاملة للوسيط (CRM, متابعات، أتمتة)",
       "بدون موظفين أذكياء",
@@ -660,30 +1184,15 @@ export const COMPETITORS: Competitor[] = [
   {
     name: "نزل",
     positioning: "إدارة العقارات للملّاك والمستأجرين",
-    strengths: [
-      "تخصص واضح في إدارة الأملاك",
-      "دعم مدفوعات",
-      "حضور قوي",
-    ],
-    weaknesses: [
-      "لا يخدم الوسيط الفردي بشكل مباشر",
-      "بدون AI",
-      "تجربة مالك/مستأجر فقط",
-    ],
+    strengths: ["تخصص واضح في إدارة الأملاك", "دعم مدفوعات", "حضور قوي"],
+    weaknesses: ["لا يخدم الوسيط الفردي بشكل مباشر", "بدون AI", "تجربة مالك/مستأجر فقط"],
     ourEdge: "وسيط برو موجَّه للوسيط أولاً + يضمّ إدارة الأملاك كميزة فرعية.",
   },
   {
     name: "تعاريف",
     positioning: "أداة مساعدة للوسطاء (عقود، نماذج)",
-    strengths: [
-      "نماذج وعقود جاهزة",
-      "تركيز على عمل الوسيط اليومي",
-    ],
-    weaknesses: [
-      "محدود الوظائف",
-      "لا أتمتة ولا AI",
-      "لا قاعدة عملاء مدمجة",
-    ],
+    strengths: ["نماذج وعقود جاهزة", "تركيز على عمل الوسيط اليومي"],
+    weaknesses: ["محدود الوظائف", "لا أتمتة ولا AI", "لا قاعدة عملاء مدمجة"],
     ourEdge: "نقدّم عقود + AI + تسويق + متابعات في نظام واحد.",
   },
 ];
@@ -695,59 +1204,264 @@ export const LAUNCH_READINESS: ReadinessItem[] = [
   // أمان
   { id: "auth", category: "أمان", label: "تسجيل دخول + sessions", done: true, blocking: true },
   { id: "rls", category: "أمان", label: "RLS على كل الجداول", done: true, blocking: true },
-  { id: "secrets", category: "أمان", label: "إخفاء secrets من frontend", done: true, blocking: true },
-  { id: "2fa", category: "أمان", label: "2FA للحساب", done: false, blocking: false, note: "اختياري للـ Beta" },
+  {
+    id: "secrets",
+    category: "أمان",
+    label: "إخفاء secrets من frontend",
+    done: true,
+    blocking: true,
+  },
+  {
+    id: "2fa",
+    category: "أمان",
+    label: "2FA للحساب",
+    done: false,
+    blocking: false,
+    note: "اختياري للـ Beta",
+  },
 
   // ذكاء
   { id: "mas", category: "ذكاء", label: "16 موظف ذكي + 5 مدراء", done: true, blocking: true },
   { id: "operations", category: "ذكاء", label: "مركز تحكم تشغيلي", done: true, blocking: true },
-  { id: "approvals", category: "ذكاء", label: "بوابات الموافقة على الإجراءات الحرجة", done: true, blocking: true },
-  { id: "ceo-assistant", category: "ذكاء", label: "السكرتير الذكي عبر واتساب", done: true, blocking: false },
+  {
+    id: "approvals",
+    category: "ذكاء",
+    label: "بوابات الموافقة على الإجراءات الحرجة",
+    done: true,
+    blocking: true,
+  },
+  {
+    id: "ceo-assistant",
+    category: "ذكاء",
+    label: "السكرتير الذكي عبر واتساب",
+    done: true,
+    blocking: false,
+  },
 
   // تجربة
   { id: "theme", category: "تجربة", label: "Dark + Cream themes", done: true, blocking: true },
   { id: "rtl", category: "تجربة", label: "RTL + عربي fully supported", done: true, blocking: true },
   { id: "pwa", category: "تجربة", label: "PWA — يثبت على الجوّال", done: true, blocking: false },
-  { id: "ux-consolidation", category: "تجربة", label: "تجربة AI موحَّدة في /dashboard/ai", done: true, blocking: false },
+  {
+    id: "ux-consolidation",
+    category: "تجربة",
+    label: "تجربة AI موحَّدة في /dashboard/ai",
+    done: true,
+    blocking: false,
+  },
 
   // تشغيل
-  { id: "whatsapp-test", category: "تشغيل", label: "اختبار رسالة على رقم Meta التجريبي", done: true, blocking: false, note: "تم استبداله بالرقم الحقيقي" },
-  { id: "whatsapp-real", category: "تشغيل", label: "رقم سعودي حقيقي معتمد من Meta", done: true, blocking: true, note: "+966575828854 — End-to-End يعمل" },
-  { id: "deploy", category: "تشغيل", label: "Deploy على Vercel + crons شغّالة", done: true, blocking: true },
-  { id: "monitoring", category: "تشغيل", label: "تتبّع الأخطاء (Sentry)", done: true, blocking: false, note: "Sentry SDK + 4 config files + global-error boundary + test endpoint" },
-  { id: "rate-limit", category: "تشغيل", label: "Rate limiting على APIs", done: true, blocking: false, note: "lib/rate-limit + applied على lead-capture/waitlist/beta-feedback/AI" },
-  { id: "backups", category: "تشغيل", label: "تأكيد Supabase auto-backups", done: false, blocking: false },
-  { id: "error-boundaries", category: "تشغيل", label: "Error boundaries في React + صفحات 500/404", done: true, blocking: false, note: "app/not-found.tsx + app/error.tsx + global-error.tsx" },
+  {
+    id: "whatsapp-test",
+    category: "تشغيل",
+    label: "اختبار رسالة على رقم Meta التجريبي",
+    done: true,
+    blocking: false,
+    note: "تم استبداله بالرقم الحقيقي",
+  },
+  {
+    id: "whatsapp-real",
+    category: "تشغيل",
+    label: "رقم سعودي حقيقي معتمد من Meta",
+    done: true,
+    blocking: true,
+    note: "+966575828854 — End-to-End يعمل",
+  },
+  {
+    id: "deploy",
+    category: "تشغيل",
+    label: "Deploy على Vercel + crons شغّالة",
+    done: true,
+    blocking: true,
+  },
+  {
+    id: "monitoring",
+    category: "تشغيل",
+    label: "تتبّع الأخطاء (Sentry)",
+    done: true,
+    blocking: false,
+    note: "Sentry SDK + 4 config files + global-error boundary + test endpoint",
+  },
+  {
+    id: "rate-limit",
+    category: "تشغيل",
+    label: "Rate limiting على APIs",
+    done: true,
+    blocking: false,
+    note: "lib/rate-limit + applied على lead-capture/waitlist/beta-feedback/AI",
+  },
+  {
+    id: "backups",
+    category: "تشغيل",
+    label: "تأكيد Supabase auto-backups",
+    done: false,
+    blocking: false,
+  },
+  {
+    id: "error-boundaries",
+    category: "تشغيل",
+    label: "Error boundaries في React + صفحات 500/404",
+    done: true,
+    blocking: false,
+    note: "app/not-found.tsx + app/error.tsx + global-error.tsx",
+  },
 
   // مالي
-  { id: "subscription-plans", category: "مالي", label: "خطط اشتراك في DB", done: true, blocking: true },
-  { id: "pricing-decision", category: "مالي", label: "تثبيت الأسعار النهائية (99/149/249)", done: false, blocking: true },
-  { id: "moyasar", category: "مالي", label: "تكامل Moyasar للدفع الفعلي", done: true, blocking: true, note: "Phase D3 مكتمل — lib/moyasar + webhook + payment_events + subscription_invoices" },
-  { id: "vat", category: "مالي", label: "احتساب VAT 15%", done: true, blocking: true, note: "lib/vat.ts + integration كاملة" },
+  {
+    id: "subscription-plans",
+    category: "مالي",
+    label: "خطط اشتراك في DB",
+    done: true,
+    blocking: true,
+  },
+  {
+    id: "pricing-decision",
+    category: "مالي",
+    label: "تثبيت الأسعار النهائية (99/149/249)",
+    done: false,
+    blocking: true,
+  },
+  {
+    id: "moyasar",
+    category: "مالي",
+    label: "تكامل Moyasar للدفع الفعلي",
+    done: true,
+    blocking: true,
+    note: "Phase D3 مكتمل — lib/moyasar + webhook + payment_events + subscription_invoices",
+  },
+  {
+    id: "vat",
+    category: "مالي",
+    label: "احتساب VAT 15%",
+    done: true,
+    blocking: true,
+    note: "lib/vat.ts + integration كاملة",
+  },
   { id: "zatca", category: "مالي", label: "فاتورة ZATCA متوافقة", done: true, blocking: false },
 
   // قانون
-  { id: "tos", category: "قانون", label: "شروط الاستخدام", done: true, blocking: true, note: "/terms موجودة" },
-  { id: "privacy", category: "قانون", label: "سياسة الخصوصية + PDPL", done: true, blocking: true, note: "/privacy موجودة" },
-  { id: "broker-license", category: "قانون", label: "حقل ترخيص فال للوسيط", done: true, blocking: false },
-  { id: "pdpl-rights", category: "قانون", label: "حقوق المستخدم (تصدير/حذف بيانات)", done: true, blocking: false, note: "/dashboard/settings/privacy + /api/pdpl/export + /api/pdpl/delete" },
-  { id: "subscription-contract", category: "قانون", label: "عقد اشتراك واضح + قبول صريح", done: false, blocking: false },
+  {
+    id: "tos",
+    category: "قانون",
+    label: "شروط الاستخدام",
+    done: true,
+    blocking: true,
+    note: "/terms موجودة",
+  },
+  {
+    id: "privacy",
+    category: "قانون",
+    label: "سياسة الخصوصية + PDPL",
+    done: true,
+    blocking: true,
+    note: "/privacy موجودة",
+  },
+  {
+    id: "broker-license",
+    category: "قانون",
+    label: "حقل ترخيص فال للوسيط",
+    done: true,
+    blocking: false,
+  },
+  {
+    id: "pdpl-rights",
+    category: "قانون",
+    label: "حقوق المستخدم (تصدير/حذف بيانات)",
+    done: true,
+    blocking: false,
+    note: "/dashboard/settings/privacy + /api/pdpl/export + /api/pdpl/delete",
+  },
+  {
+    id: "subscription-contract",
+    category: "قانون",
+    label: "عقد اشتراك واضح + قبول صريح",
+    done: false,
+    blocking: false,
+  },
 
   // تجربة (إضافات)
-  { id: "onboarding-flow", category: "تجربة", label: "Onboarding flow للوسيط الجديد (أول 5 دقائق)", done: true, blocking: false, note: "OnboardingChecklist في /dashboard مع 4 خطوات auto-detect" },
-  { id: "transactional-emails", category: "تجربة", label: "إيميلات معاملاتية (welcome, reset, receipt)", done: false, blocking: false },
-  { id: "mobile-audit", category: "تجربة", label: "فحص responsiveness على الجوّال لكل الصفحات", done: false, blocking: false },
-  { id: "loading-states", category: "تجربة", label: "Loading + Error states موحَّدة", done: true, blocking: false, note: "app/components/LoadingStates.tsx — Spinner/Skeleton/Empty/Error" },
+  {
+    id: "onboarding-flow",
+    category: "تجربة",
+    label: "Onboarding flow للوسيط الجديد (أول 5 دقائق)",
+    done: true,
+    blocking: false,
+    note: "OnboardingChecklist في /dashboard مع 4 خطوات auto-detect",
+  },
+  {
+    id: "transactional-emails",
+    category: "تجربة",
+    label: "إيميلات معاملاتية (welcome, reset, receipt)",
+    done: false,
+    blocking: false,
+  },
+  {
+    id: "mobile-audit",
+    category: "تجربة",
+    label: "فحص responsiveness على الجوّال لكل الصفحات",
+    done: false,
+    blocking: false,
+  },
+  {
+    id: "loading-states",
+    category: "تجربة",
+    label: "Loading + Error states موحَّدة",
+    done: true,
+    blocking: false,
+    note: "app/components/LoadingStates.tsx — Spinner/Skeleton/Empty/Error",
+  },
 
   // تسويق & SEO
-  { id: "sitemap", category: "تشغيل", label: "Sitemap.xml + robots.txt", done: true, blocking: false, note: "12 URLs ديناميكي + AI crawlers rules" },
-  { id: "meta-tags", category: "تشغيل", label: "Open Graph + Twitter cards على landing", done: true, blocking: false, note: "OG + Twitter cards + canonical + JSON-LD" },
-  { id: "analytics", category: "تشغيل", label: "Analytics (PostHog/Plausible/GA4)", done: false, blocking: false, note: "site_analytics جدول داخلي يعمل، لكن لا dashboard خارجي" },
+  {
+    id: "sitemap",
+    category: "تشغيل",
+    label: "Sitemap.xml + robots.txt",
+    done: true,
+    blocking: false,
+    note: "12 URLs ديناميكي + AI crawlers rules",
+  },
+  {
+    id: "meta-tags",
+    category: "تشغيل",
+    label: "Open Graph + Twitter cards على landing",
+    done: true,
+    blocking: false,
+    note: "OG + Twitter cards + canonical + JSON-LD",
+  },
+  {
+    id: "analytics",
+    category: "تشغيل",
+    label: "Analytics (PostHog/Plausible/GA4)",
+    done: false,
+    blocking: false,
+    note: "site_analytics جدول داخلي يعمل، لكن لا dashboard خارجي",
+  },
 
   // تشغيل Beta
-  { id: "beta-invite", category: "تشغيل", label: "آلية دعوة Beta (invite codes / waitlist)", done: true, blocking: false, note: "Migration 046 + 23 كود نشط + WaitlistForm + /api/invite-code/validate" },
-  { id: "feedback-loop", category: "تشغيل", label: "نظام جمع feedback للوسطاء التجريبيين", done: true, blocking: false, note: "FeedbackWidget عائم + /api/beta-feedback + Migration 051" },
-  { id: "support-channel", category: "تشغيل", label: "قناة دعم العملاء (واتساب / form)", done: true, blocking: false, note: "SupportContact widget + form في /dashboard/help + جدول support_requests" },
+  {
+    id: "beta-invite",
+    category: "تشغيل",
+    label: "آلية دعوة Beta (invite codes / waitlist)",
+    done: true,
+    blocking: false,
+    note: "Migration 046 + 23 كود نشط + WaitlistForm + /api/invite-code/validate",
+  },
+  {
+    id: "feedback-loop",
+    category: "تشغيل",
+    label: "نظام جمع feedback للوسطاء التجريبيين",
+    done: true,
+    blocking: false,
+    note: "FeedbackWidget عائم + /api/beta-feedback + Migration 051",
+  },
+  {
+    id: "support-channel",
+    category: "تشغيل",
+    label: "قناة دعم العملاء (واتساب / form)",
+    done: true,
+    blocking: false,
+    note: "SupportContact widget + form في /dashboard/help + جدول support_requests",
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -917,26 +1631,26 @@ export const TOP_PRIORITIES: Priority_Item[] = [
 
 export function phaseCompletionPct(phase: Phase): number {
   if (phase.milestones.length === 0) return 0;
-  const done = phase.milestones.filter(m => m.status === "done").length;
+  const done = phase.milestones.filter((m) => m.status === "done").length;
   return Math.round((done / phase.milestones.length) * 100);
 }
 
 export function overallCompletionPct(): number {
-  const all = PHASES.flatMap(p => p.milestones);
+  const all = PHASES.flatMap((p) => p.milestones);
   if (all.length === 0) return 0;
-  const done = all.filter(m => m.status === "done").length;
+  const done = all.filter((m) => m.status === "done").length;
   return Math.round((done / all.length) * 100);
 }
 
 export function readinessPct(blockingOnly = true): number {
-  const items = blockingOnly ? LAUNCH_READINESS.filter(r => r.blocking) : LAUNCH_READINESS;
+  const items = blockingOnly ? LAUNCH_READINESS.filter((r) => r.blocking) : LAUNCH_READINESS;
   if (items.length === 0) return 0;
-  const done = items.filter(r => r.done).length;
+  const done = items.filter((r) => r.done).length;
   return Math.round((done / items.length) * 100);
 }
 
 export function blockingGaps(): ReadinessItem[] {
-  return LAUNCH_READINESS.filter(r => r.blocking && !r.done);
+  return LAUNCH_READINESS.filter((r) => r.blocking && !r.done);
 }
 
 export function daysSinceStart(): number {
@@ -961,7 +1675,8 @@ export function currentPositionSummary(): string {
   const dToBeta = daysToBeta();
 
   if (gaps === 0) return `جاهز للإطلاق ✓ — اضغط الزناد متى ما حبّيت`;
-  if (ready >= 80) return `قريب من الجاهزية (${ready}٪). ينقصك ${gaps} عناصر بلوكر قبل Beta. تبقى ${dToBeta} يوم على الموعد.`;
+  if (ready >= 80)
+    return `قريب من الجاهزية (${ready}٪). ينقصك ${gaps} عناصر بلوكر قبل Beta. تبقى ${dToBeta} يوم على الموعد.`;
   if (ready >= 50) return `في منتصف الطريق (${ready}٪ جاهزية). ركّز على الأولويات الـ 3 الأولى.`;
   return `مرحلة بناء فعّالة (${overall}٪ تنفيذ تقني). الجاهزية للإطلاق ${ready}٪.`;
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center"
+      className="flex min-h-screen flex-col items-center justify-center"
       dir="rtl"
       style={{
         background: "var(--bg-page)",
@@ -40,7 +40,10 @@ export default function NotFound() {
       </div>
 
       {/* Message */}
-      <div className="fade-up-delay text-center" style={{ marginTop: 24, maxWidth: 360, padding: "0 24px" }}>
+      <div
+        className="fade-up-delay text-center"
+        style={{ marginTop: 24, maxWidth: 360, padding: "0 24px" }}
+      >
         <h1
           className="font-kufi"
           style={{ fontSize: 22, fontWeight: 700, color: "var(--text-strong)", marginBottom: 12 }}
@@ -51,7 +54,7 @@ export default function NotFound() {
           يبدو أن الرابط الذي تبحث عنه لم يعد موجوداً أو تم نقله.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/"
             style={{
@@ -95,7 +98,13 @@ export default function NotFound() {
       {/* Subtle brand */}
       <div
         className="fade-up-delay font-kufi"
-        style={{ marginTop: 64, fontSize: 12, color: "var(--border-1)", fontWeight: 700, letterSpacing: 1 }}
+        style={{
+          marginTop: 64,
+          fontSize: 12,
+          color: "var(--border-1)",
+          fontWeight: 700,
+          letterSpacing: 1,
+        }}
       >
         وسيط برو
       </div>

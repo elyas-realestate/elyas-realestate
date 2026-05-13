@@ -37,7 +37,10 @@ export async function POST(req: NextRequest) {
   }
 
   // ── تنظيف وتحقق ──
-  const email = String(body.email || "").trim().toLowerCase().slice(0, 200);
+  const email = String(body.email || "")
+    .trim()
+    .toLowerCase()
+    .slice(0, 200);
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "صيغة البريد غير صحيحة" }, { status: 400 });
   }
@@ -54,19 +57,17 @@ export async function POST(req: NextRequest) {
   );
 
   // upsert: لو ضغط مرتين بنفس البريد، ما نطلع خطأ
-  const { error } = await admin
-    .from("beta_waitlist")
-    .upsert(
-      {
-        email,
-        full_name,
-        phone,
-        city,
-        notes,
-        source,
-      },
-      { onConflict: "email" }
-    );
+  const { error } = await admin.from("beta_waitlist").upsert(
+    {
+      email,
+      full_name,
+      phone,
+      city,
+      notes,
+      source,
+    },
+    { onConflict: "email" }
+  );
 
   if (error) {
     console.error("[waitlist] insert error:", error);

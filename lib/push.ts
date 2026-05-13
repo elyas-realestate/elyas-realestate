@@ -33,7 +33,10 @@ export interface PushPayload {
  * أرسل Push لمستخدم واحد (لكل أجهزته المسجَّلة).
  * يحذف تلقائياً الاشتراكات المنتهية (410 Gone).
  */
-export async function sendPushToUser(userId: string, payload: PushPayload): Promise<{ sent: number; failed: number }> {
+export async function sendPushToUser(
+  userId: string,
+  payload: PushPayload
+): Promise<{ sent: number; failed: number }> {
   if (!ensureVapid()) return { sent: 0, failed: 0 };
 
   const admin = createClient(
@@ -54,34 +57,33 @@ export async function sendPushToUser(userId: string, payload: PushPayload): Prom
   const expiredIds: string[] = [];
 
   await Promise.all(
-    (subs as Array<{ id: string; endpoint: string; p256dh: string; auth_secret: string }>).map(async (s) => {
-      try {
-        await webpush.sendNotification(
-          {
-            endpoint: s.endpoint,
-            keys: { p256dh: s.p256dh, auth: s.auth_secret },
-          },
-          JSON.stringify(payload)
-        );
-        sent++;
-      } catch (e) {
-        const err = e as { statusCode?: number; body?: string };
-        if (err.statusCode === 410 || err.statusCode === 404) {
-          expiredIds.push(s.id);
-        } else {
-          console.warn(`[push] failed for ${s.id}:`, err.statusCode, err.body);
+    (subs as Array<{ id: string; endpoint: string; p256dh: string; auth_secret: string }>).map(
+      async (s) => {
+        try {
+          await webpush.sendNotification(
+            {
+              endpoint: s.endpoint,
+              keys: { p256dh: s.p256dh, auth: s.auth_secret },
+            },
+            JSON.stringify(payload)
+          );
+          sent++;
+        } catch (e) {
+          const err = e as { statusCode?: number; body?: string };
+          if (err.statusCode === 410 || err.statusCode === 404) {
+            expiredIds.push(s.id);
+          } else {
+            console.warn(`[push] failed for ${s.id}:`, err.statusCode, err.body);
+          }
+          failed++;
         }
-        failed++;
       }
-    })
+    )
   );
 
   // ضع المنتهية كـ inactive (بدلاً من حذفها فوراً)
   if (expiredIds.length > 0) {
-    await admin
-      .from("push_subscriptions")
-      .update({ is_active: false })
-      .in("id", expiredIds);
+    await admin.from("push_subscriptions").update({ is_active: false }).in("id", expiredIds);
   }
 
   // حدّث last_used_at للمُرسَلة بنجاح
@@ -97,7 +99,10 @@ export async function sendPushToUser(userId: string, payload: PushPayload): Prom
 }
 
 /** أرسل Push لكل المستخدمين النشطين في tenant معيَّن (مثلاً المالك + أعضاء الفريق) */
-export async function sendPushToTenant(tenantId: string, payload: PushPayload): Promise<{ sent: number; failed: number; users: number }> {
+export async function sendPushToTenant(
+  tenantId: string,
+  payload: PushPayload
+): Promise<{ sent: number; failed: number; users: number }> {
   if (!ensureVapid()) return { sent: 0, failed: 0, users: 0 };
 
   const admin = createClient(

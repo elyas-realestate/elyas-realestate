@@ -3,30 +3,69 @@ import { useState, useEffect, use, useCallback } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
-import { DEPARTMENT_META, PROVIDER_LABELS, KB_CATEGORIES, TRIGGER_LABELS, DIRECTIVE_SOURCE_META } from "@/lib/org-constants";
 import {
-  ArrowRight, Sparkles, BookOpen, Activity, Plus, Edit3, Trash2,
-  Save, X, Loader2, AlertCircle, Bot, Cpu, Clock, Check, ChevronUp, ChevronDown, Wand2,
+  DEPARTMENT_META,
+  PROVIDER_LABELS,
+  KB_CATEGORIES,
+  TRIGGER_LABELS,
+  DIRECTIVE_SOURCE_META,
+} from "@/lib/org-constants";
+import {
+  ArrowRight,
+  Sparkles,
+  BookOpen,
+  Activity,
+  Plus,
+  Edit3,
+  Trash2,
+  Save,
+  X,
+  Loader2,
+  AlertCircle,
+  Bot,
+  Cpu,
+  Clock,
+  Check,
+  ChevronUp,
+  ChevronDown,
+  Wand2,
 } from "lucide-react";
 
 type Employee = {
-  id: string; code: string; name: string; description: string;
-  department: string; manager_id: string;
-  default_ai_provider: string; default_ai_model: string;
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  department: string;
+  manager_id: string;
+  default_ai_provider: string;
+  default_ai_model: string;
   trigger_type?: string;
 };
 
 type Manager = {
-  id: string; code: string; name: string;
+  id: string;
+  code: string;
+  name: string;
 };
 
 type Directive = {
-  id: string; title: string; content: string; status: string; source: string;
-  display_order: number; created_at: string; parent_directive_id?: string;
+  id: string;
+  title: string;
+  content: string;
+  status: string;
+  source: string;
+  display_order: number;
+  created_at: string;
+  parent_directive_id?: string;
 };
 
 type KBItem = {
-  id: string; title: string; content: string; category: string; created_at: string;
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  created_at: string;
 };
 
 type Tab = "directives" | "knowledge" | "activity";
@@ -48,14 +87,26 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
   const [editingKB, setEditingKB] = useState<KBItem | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
-      const { data: t } = await supabase.from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+      const { data: t } = await supabase
+        .from("tenants")
+        .select("id")
+        .eq("owner_id", user.id)
+        .maybeSingle();
       let tid = t?.id;
       if (!tid) {
-        const { data: mb } = await supabase.from("tenant_members").select("tenant_id").eq("user_id", user.id).eq("status", "active").maybeSingle();
+        const { data: mb } = await supabase
+          .from("tenant_members")
+          .select("tenant_id")
+          .eq("user_id", user.id)
+          .eq("status", "active")
+          .maybeSingle();
         tid = mb?.tenant_id;
       }
       if (!tid) throw new Error("لم يُعثر على المستأجر");
@@ -69,27 +120,35 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
       const [mgrRes, mgrDirRes, empDirRes, kbRes] = await Promise.all([
         supabase.from("ai_managers").select("id, code, name").eq("id", emp.manager_id).single(),
         // directives الموروثة من المدير — نفلتر بـ tenant_id صراحةً ضماناً
-        supabase.from("directives").select("*")
+        supabase
+          .from("directives")
+          .select("*")
           .eq("tenant_id", tid)
           .eq("target_kind", "manager")
           .eq("target_id", emp.manager_id)
           .eq("status", "active")
           .order("display_order"),
         // directives الموظف نفسه (custom + suggested)
-        supabase.from("directives").select("*")
+        supabase
+          .from("directives")
+          .select("*")
           .eq("tenant_id", tid)
           .eq("target_kind", "employee")
           .eq("target_id", id)
           .order("display_order"),
-        supabase.from("knowledge_base").select("*")
+        supabase
+          .from("knowledge_base")
+          .select("*")
           .eq("tenant_id", tid)
           .eq("target_kind", "employee")
           .eq("target_id", id)
           .order("created_at", { ascending: false }),
       ]);
       if (mgrRes.error) console.warn("[employee-page] manager fetch error:", mgrRes.error);
-      if (mgrDirRes.error) console.warn("[employee-page] manager directives fetch error:", mgrDirRes.error);
-      if (empDirRes.error) console.warn("[employee-page] employee directives fetch error:", empDirRes.error);
+      if (mgrDirRes.error)
+        console.warn("[employee-page] manager directives fetch error:", mgrDirRes.error);
+      if (empDirRes.error)
+        console.warn("[employee-page] employee directives fetch error:", empDirRes.error);
       if (kbRes.error) console.warn("[employee-page] kb fetch error:", kbRes.error);
       if (mgrRes.data) setManager(mgrRes.data as Manager);
       setManagerDirectives((mgrDirRes.data || []) as Directive[]);
@@ -101,43 +160,123 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
     setLoading(false);
   }, [id]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (loading && !employee) {
-    return <div style={{ display: "flex", justifyContent: "center", padding: 80 }}><Loader2 size={28} style={{ color: "var(--purple-ai)", animation: "spin 1s linear infinite" }} /><style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style></div>;
+    return (
+      <div style={{ display: "flex", justifyContent: "center", padding: 80 }}>
+        <Loader2
+          size={28}
+          style={{ color: "var(--purple-ai)", animation: "spin 1s linear infinite" }}
+        />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
   }
 
   if (error || !employee) {
-    return <div style={{ padding: 16, background: "rgba(239,68,68,0.07)", borderRadius: 10, color: "var(--danger)" }}><AlertCircle size={14} style={{ display: "inline", marginInlineEnd: 8 }} />{error || "الموظف غير موجود"}</div>;
+    return (
+      <div
+        style={{
+          padding: 16,
+          background: "rgba(239,68,68,0.07)",
+          borderRadius: 10,
+          color: "var(--danger)",
+        }}
+      >
+        <AlertCircle size={14} style={{ display: "inline", marginInlineEnd: 8 }} />
+        {error || "الموظف غير موجود"}
+      </div>
+    );
   }
 
   const dept = DEPARTMENT_META[employee.department];
-  const customDirectives = empDirectives.filter(d => d.source === "custom" && d.status === "active");
-  const suggestedDirectives = empDirectives.filter(d => d.source === "suggested" && d.status === "pending");
-  const acceptedSuggestions = empDirectives.filter(d => d.source === "suggested" && d.status === "active");
+  const customDirectives = empDirectives.filter(
+    (d) => d.source === "custom" && d.status === "active"
+  );
+  const suggestedDirectives = empDirectives.filter(
+    (d) => d.source === "suggested" && d.status === "pending"
+  );
+  const acceptedSuggestions = empDirectives.filter(
+    (d) => d.source === "suggested" && d.status === "active"
+  );
 
   return (
     <div>
-      <Link href={manager ? `/dashboard/organization/manager/${manager.id}` : "/dashboard/organization"}
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 12 }}>
+      <Link
+        href={manager ? `/dashboard/organization/manager/${manager.id}` : "/dashboard/organization"}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontSize: 12,
+          color: "var(--text-ghost)",
+          marginBottom: 12,
+        }}
+      >
         <ArrowRight size={12} /> {manager?.name || "الهيكل التنظيمي"}
       </Link>
 
       {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${dept?.color}15, transparent)`, border: `1px solid ${dept?.color}33`, borderRadius: 14, padding: 18, marginBottom: 18, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-        <div style={{ width: 44, height: 44, borderRadius: 11, background: dept?.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${dept?.color}15, transparent)`,
+          border: `1px solid ${dept?.color}33`,
+          borderRadius: 14,
+          padding: 18,
+          marginBottom: 18,
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 11,
+            background: dept?.bg,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Bot size={20} style={{ color: dept?.color }} />
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
-          <h1 style={{ fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>{employee.name}</h1>
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>{employee.description}</div>
+          <h1 style={{ fontSize: 18, fontWeight: 800, color: "var(--text-primary)" }}>
+            {employee.name}
+          </h1>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
+            {employee.description}
+          </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
-          <div style={{ fontSize: 11, color: "var(--text-ghost)", display: "flex", alignItems: "center", gap: 4 }}>
-            <Cpu size={11} /> {PROVIDER_LABELS[employee.default_ai_provider] || employee.default_ai_provider}
+          <div
+            style={{
+              fontSize: 11,
+              color: "var(--text-ghost)",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <Cpu size={11} />{" "}
+            {PROVIDER_LABELS[employee.default_ai_provider] || employee.default_ai_provider}
           </div>
           {employee.trigger_type && (
-            <div style={{ fontSize: 10, color: "var(--text-disabled)", display: "flex", alignItems: "center", gap: 3 }}>
+            <div
+              style={{
+                fontSize: 10,
+                color: "var(--text-disabled)",
+                display: "flex",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
               <Clock size={9} /> {TRIGGER_LABELS[employee.trigger_type] || employee.trigger_type}
             </div>
           )}
@@ -145,12 +284,36 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 18, borderBottom: "1px solid var(--overlay-mid)", flexWrap: "wrap" }}>
-        <Tab2 active={tab === "directives"} onClick={() => setTab("directives")} icon={Sparkles} label="التوجيهات"
+      <div
+        style={{
+          display: "flex",
+          gap: 4,
+          marginBottom: 18,
+          borderBottom: "1px solid var(--overlay-mid)",
+          flexWrap: "wrap",
+        }}
+      >
+        <Tab2
+          active={tab === "directives"}
+          onClick={() => setTab("directives")}
+          icon={Sparkles}
+          label="التوجيهات"
           badge={managerDirectives.length + acceptedSuggestions.length + customDirectives.length}
-          highlight={suggestedDirectives.length > 0 ? suggestedDirectives.length : undefined} />
-        <Tab2 active={tab === "knowledge"} onClick={() => setTab("knowledge")} icon={BookOpen} label="قاعدة المعرفة" badge={kb.length} />
-        <Tab2 active={tab === "activity"} onClick={() => setTab("activity")} icon={Activity} label="النشاط" />
+          highlight={suggestedDirectives.length > 0 ? suggestedDirectives.length : undefined}
+        />
+        <Tab2
+          active={tab === "knowledge"}
+          onClick={() => setTab("knowledge")}
+          icon={BookOpen}
+          label="قاعدة المعرفة"
+          badge={kb.length}
+        />
+        <Tab2
+          active={tab === "activity"}
+          onClick={() => setTab("activity")}
+          icon={Activity}
+          label="النشاط"
+        />
       </div>
 
       {/* Directives Tab — 3 sections */}
@@ -169,9 +332,14 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
 
           {/* Pending Suggestions — أعلى أولوية */}
           {suggestedDirectives.length > 0 && (
-            <Section title={`${suggestedDirectives.length} اقتراح بانتظار مراجعتك`} sub="AI ولّد هذه التوجيهات تلقائياً بناءً على توجيهات المدير" color="var(--gold-1)" highlight>
+            <Section
+              title={`${suggestedDirectives.length} اقتراح بانتظار مراجعتك`}
+              sub="AI ولّد هذه التوجيهات تلقائياً بناءً على توجيهات المدير"
+              color="var(--gold-1)"
+              highlight
+            >
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {suggestedDirectives.map(d => (
+                {suggestedDirectives.map((d) => (
                   <SuggestedDirectiveCard key={d.id} directive={d} onChange={load} />
                 ))}
               </div>
@@ -188,7 +356,7 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
               <EmptyState2 text="المدير لم يضع توجيهات بعد" />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {managerDirectives.map(d => (
+                {managerDirectives.map((d) => (
                   <ReadOnlyDirectiveCard key={d.id} directive={d} sourceLabel="من المدير" />
                 ))}
               </div>
@@ -201,23 +369,55 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
             sub="مخصّصة لهذا الموظف تحديداً"
             color={DIRECTIVE_SOURCE_META.custom.color}
             action={
-              <button onClick={() => { setEditingDirective(null); setShowDirectiveModal(true); }}
-                style={{ display: "flex", alignItems: "center", gap: 5, padding: "7px 12px", borderRadius: 7, background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))", color: "var(--bg-page)", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+              <button
+                onClick={() => {
+                  setEditingDirective(null);
+                  setShowDirectiveModal(true);
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  padding: "7px 12px",
+                  borderRadius: 7,
+                  background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
+                  color: "var(--bg-page)",
+                  border: "none",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "'Tajawal', sans-serif",
+                }}
+              >
                 <Plus size={12} /> توجيه مخصّص
               </button>
-            }>
+            }
+          >
             {customDirectives.length === 0 && acceptedSuggestions.length === 0 ? (
               <EmptyState2 text="لا توجيهات مخصّصة بعد" />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {[...customDirectives, ...acceptedSuggestions].map(d => (
-                  <EditableDirectiveCard key={d.id} directive={d}
-                    onEdit={() => { setEditingDirective(d); setShowDirectiveModal(true); }}
+                {[...customDirectives, ...acceptedSuggestions].map((d) => (
+                  <EditableDirectiveCard
+                    key={d.id}
+                    directive={d}
+                    onEdit={() => {
+                      setEditingDirective(d);
+                      setShowDirectiveModal(true);
+                    }}
                     onDelete={async () => {
                       if (!confirm("حذف هذا التوجيه؟")) return;
-                      const { error: e } = await supabase.from("directives").delete().eq("id", d.id);
-                      if (e) toast.error(e.message); else { toast.success("حُذف"); load(); }
-                    }} />
+                      const { error: e } = await supabase
+                        .from("directives")
+                        .delete()
+                        .eq("id", d.id);
+                      if (e) toast.error(e.message);
+                      else {
+                        toast.success("حُذف");
+                        load();
+                      }
+                    }}
+                  />
                 ))}
               </div>
             )}
@@ -227,34 +427,118 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
 
       {tab === "knowledge" && tenantId && (
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <p style={{ fontSize: 12, color: "var(--text-ghost)" }}>قاعدة معرفة خاصة بهذا الموظف (تُضاف لما يقرأه من قاعدة المدير).</p>
-            <button onClick={() => { setEditingKB(null); setShowKBModal(true); }}
-              style={{ display: "flex", alignItems: "center", gap: 5, padding: "8px 14px", borderRadius: 8, background: "linear-gradient(135deg, var(--info), var(--info-3))", color: "#fff", border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 14,
+            }}
+          >
+            <p style={{ fontSize: 12, color: "var(--text-ghost)" }}>
+              قاعدة معرفة خاصة بهذا الموظف (تُضاف لما يقرأه من قاعدة المدير).
+            </p>
+            <button
+              onClick={() => {
+                setEditingKB(null);
+                setShowKBModal(true);
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "8px 14px",
+                borderRadius: 8,
+                background: "linear-gradient(135deg, var(--info), var(--info-3))",
+                color: "#fff",
+                border: "none",
+                fontSize: 12,
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "'Tajawal', sans-serif",
+              }}
+            >
               <Plus size={12} /> عنصر معرفة
             </button>
           </div>
           {kb.length === 0 ? (
             <EmptyState2 text="لا عناصر معرفة بعد" />
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 10 }}>
-              {kb.map(k => (
-                <div key={k.id} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: 14 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 10, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "2px 7px", borderRadius: 4 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                gap: 10,
+              }}
+            >
+              {kb.map((k) => (
+                <div
+                  key={k.id}
+                  style={{
+                    background: "var(--bg-deep)",
+                    border: "1px solid var(--overlay-soft)",
+                    borderRadius: 11,
+                    padding: 14,
+                  }}
+                >
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 10,
+                        color: "var(--info)",
+                        background: "rgba(96,165,250,0.1)",
+                        padding: "2px 7px",
+                        borderRadius: 4,
+                      }}
+                    >
                       {KB_CATEGORIES[k.category] || k.category}
                     </span>
                     <div style={{ display: "flex", gap: 6 }}>
-                      <button onClick={() => { setEditingKB(k); setShowKBModal(true); }} style={iconBtn("var(--purple-ai)")}><Edit3 size={11} /></button>
-                      <button onClick={async () => {
-                        if (!confirm("حذف؟")) return;
-                        await supabase.from("knowledge_base").delete().eq("id", k.id);
-                        toast.success("حُذف"); load();
-                      }} style={iconBtn("var(--danger)")}><Trash2 size={11} /></button>
+                      <button
+                        onClick={() => {
+                          setEditingKB(k);
+                          setShowKBModal(true);
+                        }}
+                        style={iconBtn("var(--purple-ai)")}
+                      >
+                        <Edit3 size={11} />
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (!confirm("حذف؟")) return;
+                          await supabase.from("knowledge_base").delete().eq("id", k.id);
+                          toast.success("حُذف");
+                          load();
+                        }}
+                        style={iconBtn("var(--danger)")}
+                      >
+                        <Trash2 size={11} />
+                      </button>
                     </div>
                   </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 6 }}>{k.title}</div>
-                  <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.6, maxHeight: 80, overflow: "hidden" }}>{k.content}</div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--text-on-dark)",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {k.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "var(--text-muted)",
+                      lineHeight: 1.6,
+                      maxHeight: 80,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {k.content}
+                  </div>
                 </div>
               ))}
             </div>
@@ -274,7 +558,10 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           targetKind="employee"
           targetId={id}
           onClose={() => setShowDirectiveModal(false)}
-          onSave={async () => { await load(); setShowDirectiveModal(false); }}
+          onSave={async () => {
+            await load();
+            setShowDirectiveModal(false);
+          }}
         />
       )}
       {showKBModal && tenantId && (
@@ -284,7 +571,10 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           targetKind="employee"
           targetId={id}
           onClose={() => setShowKBModal(false)}
-          onSave={async () => { await load(); setShowKBModal(false); }}
+          onSave={async () => {
+            await load();
+            setShowKBModal(false);
+          }}
         />
       )}
     </div>
@@ -294,26 +584,50 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
 // ─────────────────────────────────────────────────────────────
 // Generate Suggestions button
 // ─────────────────────────────────────────────────────────────
-function GenerateSuggestionsButton({ employeeId, managerId, employeeName, hasPending, onDone }: {
-  employeeId: string; managerId: string; employeeName: string; hasPending: boolean; onDone: () => void;
+function GenerateSuggestionsButton({
+  employeeId,
+  managerId,
+  employeeName,
+  hasPending,
+  onDone,
+}: {
+  employeeId: string;
+  managerId: string;
+  employeeName: string;
+  hasPending: boolean;
+  onDone: () => void;
 }) {
   const [busy, setBusy] = useState(false);
   async function generate() {
-    if (hasPending && !confirm("يوجد اقتراحات سابقة بانتظار مراجعتك. توليد جديدة سيستبدلها. متابعة؟")) return;
+    if (
+      hasPending &&
+      !confirm("يوجد اقتراحات سابقة بانتظار مراجعتك. توليد جديدة سيستبدلها. متابعة؟")
+    )
+      return;
     setBusy(true);
     try {
       const res = await fetch("/api/org/suggest-directives", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ manager_id: managerId, employee_ids: [employeeId], replace_existing: hasPending }),
+        body: JSON.stringify({
+          manager_id: managerId,
+          employee_ids: [employeeId],
+          replace_existing: hasPending,
+        }),
       });
       const text = await res.text();
       let json: { error?: string; results?: Array<{ inserted?: number }> } = {};
-      try { json = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
+      try {
+        json = text ? JSON.parse(text) : {};
+      } catch {
+        /* ignore */
+      }
       if (!res.ok) {
-        const msg = json.error || (res.status === 503
-          ? "إعدادات الخادم ناقصة — تحقق من Vercel env vars"
-          : `الخادم رجع ${res.status}`);
+        const msg =
+          json.error ||
+          (res.status === 503
+            ? "إعدادات الخادم ناقصة — تحقق من Vercel env vars"
+            : `الخادم رجع ${res.status}`);
         throw new Error(msg);
       }
       const inserted = json.results?.[0]?.inserted ?? 0;
@@ -325,23 +639,55 @@ function GenerateSuggestionsButton({ employeeId, managerId, employeeName, hasPen
     setBusy(false);
   }
   return (
-    <div style={{
-      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap",
-      padding: 12, background: "rgba(232,184,109,0.05)", border: "1px solid rgba(232,184,109,0.18)",
-      borderRadius: 10,
-    }}>
-      <div style={{ fontSize: 12, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 10,
+        flexWrap: "wrap",
+        padding: 12,
+        background: "rgba(232,184,109,0.05)",
+        border: "1px solid rgba(232,184,109,0.18)",
+        borderRadius: 10,
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          color: "var(--text-muted)",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
         <Wand2 size={13} style={{ color: "var(--gold-1)" }} />
         ولّد اقتراحات توجيهات تشغيلية بناءً على توجيهات المدير
       </div>
-      <button onClick={generate} disabled={busy}
+      <button
+        onClick={generate}
+        disabled={busy}
         style={{
-          display: "flex", alignItems: "center", gap: 5, padding: "7px 14px", borderRadius: 7,
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+          padding: "7px 14px",
+          borderRadius: 7,
           background: "linear-gradient(135deg, var(--gold-1), var(--gold-2))",
-          color: "var(--bg-page)", border: "none", fontSize: 12, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer",
-          fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
-        }}>
-        {busy ? <Loader2 size={11} style={{ animation: "spin 1s linear infinite" }} /> : <Wand2 size={11} />}
+          color: "var(--bg-page)",
+          border: "none",
+          fontSize: 12,
+          fontWeight: 700,
+          cursor: busy ? "not-allowed" : "pointer",
+          fontFamily: "'Tajawal', sans-serif",
+          opacity: busy ? 0.6 : 1,
+        }}
+      >
+        {busy ? (
+          <Loader2 size={11} style={{ animation: "spin 1s linear infinite" }} />
+        ) : (
+          <Wand2 size={11} />
+        )}
         {busy ? "..." : hasPending ? "ولّد جديدة" : "ولّد اقتراحات"}
       </button>
     </div>
@@ -351,46 +697,130 @@ function GenerateSuggestionsButton({ employeeId, managerId, employeeName, hasPen
 // ─────────────────────────────────────────────────────────────
 // Suggested Directive Card (with accept/reject)
 // ─────────────────────────────────────────────────────────────
-function SuggestedDirectiveCard({ directive, onChange }: { directive: Directive; onChange: () => void }) {
+function SuggestedDirectiveCard({
+  directive,
+  onChange,
+}: {
+  directive: Directive;
+  onChange: () => void;
+}) {
   const [busy, setBusy] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   async function accept() {
     setBusy(true);
-    const { error } = await supabase.from("directives").update({ status: "active" }).eq("id", directive.id);
-    if (error) toast.error(error.message); else { toast.success("اعتُمد"); onChange(); }
+    const { error } = await supabase
+      .from("directives")
+      .update({ status: "active" })
+      .eq("id", directive.id);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("اعتُمد");
+      onChange();
+    }
     setBusy(false);
   }
   async function reject() {
     setBusy(true);
-    const { error } = await supabase.from("directives").update({ status: "rejected" }).eq("id", directive.id);
-    if (error) toast.error(error.message); else { toast.success("رُفض"); onChange(); }
+    const { error } = await supabase
+      .from("directives")
+      .update({ status: "rejected" })
+      .eq("id", directive.id);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("رُفض");
+      onChange();
+    }
     setBusy(false);
   }
 
   return (
-    <div style={{ background: "var(--bg-deep)", border: "1px solid rgba(232,184,109,0.3)", borderRadius: 11, padding: 14 }}>
+    <div
+      style={{
+        background: "var(--bg-deep)",
+        border: "1px solid rgba(232,184,109,0.3)",
+        borderRadius: 11,
+        padding: 14,
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, gap: 8 }}>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 4 }}>{directive.title}</div>
-          <div style={{ fontSize: 11, color: "var(--gold-1)", display: "flex", alignItems: "center", gap: 4 }}>
+          <div
+            style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 4 }}
+          >
+            {directive.title}
+          </div>
+          <div
+            style={{
+              fontSize: 11,
+              color: "var(--gold-1)",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
             <Sparkles size={10} /> اقتراح من AI
           </div>
         </div>
-        <button onClick={() => setExpanded(s => !s)} style={iconBtn("var(--text-muted)")}>
+        <button onClick={() => setExpanded((s) => !s)} style={iconBtn("var(--text-muted)")}>
           {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
         </button>
       </div>
-      <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, whiteSpace: "pre-wrap", maxHeight: expanded ? "none" : 60, overflow: "hidden" }}>
+      <div
+        style={{
+          fontSize: 13,
+          color: "var(--text-secondary)",
+          lineHeight: 1.7,
+          whiteSpace: "pre-wrap",
+          maxHeight: expanded ? "none" : 60,
+          overflow: "hidden",
+        }}
+      >
         {directive.content}
       </div>
       <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
-        <button onClick={accept} disabled={busy}
-          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "8px 12px", borderRadius: 7, background: "rgba(74,222,128,0.1)", color: "var(--success)", border: "1px solid rgba(74,222,128,0.3)", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+        <button
+          onClick={accept}
+          disabled={busy}
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 5,
+            padding: "8px 12px",
+            borderRadius: 7,
+            background: "rgba(74,222,128,0.1)",
+            color: "var(--success)",
+            border: "1px solid rgba(74,222,128,0.3)",
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: "pointer",
+            fontFamily: "'Tajawal', sans-serif",
+          }}
+        >
           <Check size={12} /> اعتمد
         </button>
-        <button onClick={reject} disabled={busy}
-          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, padding: "8px 12px", borderRadius: 7, background: "rgba(239,68,68,0.06)", color: "var(--danger)", border: "1px solid rgba(239,68,68,0.2)", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+        <button
+          onClick={reject}
+          disabled={busy}
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 5,
+            padding: "8px 12px",
+            borderRadius: 7,
+            background: "rgba(239,68,68,0.06)",
+            color: "var(--danger)",
+            border: "1px solid rgba(239,68,68,0.2)",
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: "pointer",
+            fontFamily: "'Tajawal', sans-serif",
+          }}
+        >
           <X size={12} /> ارفض
         </button>
       </div>
@@ -398,56 +828,161 @@ function SuggestedDirectiveCard({ directive, onChange }: { directive: Directive;
   );
 }
 
-function ReadOnlyDirectiveCard({ directive, sourceLabel }: { directive: Directive; sourceLabel: string }) {
-  return (
-    <div style={{ background: "var(--bg-deep)", border: "1px solid rgba(167,139,250,0.2)", borderRadius: 10, padding: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>{directive.title}</div>
-        <span style={{ fontSize: 9, color: "var(--purple-ai)", background: "rgba(167,139,250,0.1)", padding: "2px 6px", borderRadius: 4 }}>{sourceLabel}</span>
-      </div>
-      <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.6 }}>{directive.content}</div>
-    </div>
-  );
-}
-
-function EditableDirectiveCard({ directive, onEdit, onDelete }: { directive: Directive; onEdit: () => void; onDelete: () => void }) {
-  return (
-    <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 11, padding: 14 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{directive.title}</div>
-        <div style={{ display: "flex", gap: 6 }}>
-          {directive.source === "suggested" && (
-            <span style={{ fontSize: 9, color: "var(--info)", background: "rgba(96,165,250,0.1)", padding: "2px 6px", borderRadius: 4 }}>معتمَد من اقتراح</span>
-          )}
-          <button onClick={onEdit} style={iconBtn("var(--purple-ai)")}><Edit3 size={12} /></button>
-          <button onClick={onDelete} style={iconBtn("var(--danger)")}><Trash2 size={12} /></button>
-        </div>
-      </div>
-      <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{directive.content}</div>
-    </div>
-  );
-}
-
-function Tab2({ active, onClick, icon: Icon, label, badge, highlight }: {
-  active: boolean; onClick: () => void; icon: typeof Sparkles; label: string; badge?: number; highlight?: number;
+function ReadOnlyDirectiveCard({
+  directive,
+  sourceLabel,
+}: {
+  directive: Directive;
+  sourceLabel: string;
 }) {
   return (
-    <button onClick={onClick}
+    <div
       style={{
-        display: "flex", alignItems: "center", gap: 6, padding: "10px 16px",
+        background: "var(--bg-deep)",
+        border: "1px solid rgba(167,139,250,0.2)",
+        borderRadius: 10,
+        padding: 12,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>
+          {directive.title}
+        </div>
+        <span
+          style={{
+            fontSize: 9,
+            color: "var(--purple-ai)",
+            background: "rgba(167,139,250,0.1)",
+            padding: "2px 6px",
+            borderRadius: 4,
+          }}
+        >
+          {sourceLabel}
+        </span>
+      </div>
+      <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.6 }}>
+        {directive.content}
+      </div>
+    </div>
+  );
+}
+
+function EditableDirectiveCard({
+  directive,
+  onEdit,
+  onDelete,
+}: {
+  directive: Directive;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div
+      style={{
+        background: "var(--bg-deep)",
+        border: "1px solid var(--overlay-soft)",
+        borderRadius: 11,
+        padding: 14,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>
+          {directive.title}
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          {directive.source === "suggested" && (
+            <span
+              style={{
+                fontSize: 9,
+                color: "var(--info)",
+                background: "rgba(96,165,250,0.1)",
+                padding: "2px 6px",
+                borderRadius: 4,
+              }}
+            >
+              معتمَد من اقتراح
+            </span>
+          )}
+          <button onClick={onEdit} style={iconBtn("var(--purple-ai)")}>
+            <Edit3 size={12} />
+          </button>
+          <button onClick={onDelete} style={iconBtn("var(--danger)")}>
+            <Trash2 size={12} />
+          </button>
+        </div>
+      </div>
+      <div
+        style={{
+          fontSize: 13,
+          color: "var(--text-secondary)",
+          lineHeight: 1.7,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {directive.content}
+      </div>
+    </div>
+  );
+}
+
+function Tab2({
+  active,
+  onClick,
+  icon: Icon,
+  label,
+  badge,
+  highlight,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: typeof Sparkles;
+  label: string;
+  badge?: number;
+  highlight?: number;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "10px 16px",
         background: active ? "rgba(167,139,250,0.08)" : "transparent",
-        border: "none", borderBottom: `2px solid ${active ? "var(--purple-ai)" : "transparent"}`,
-        color: active ? "var(--purple-ai)" : "var(--text-muted)", fontSize: 13, fontWeight: active ? 700 : 500,
-        cursor: "pointer", fontFamily: "'Tajawal', sans-serif", marginBottom: -1,
-      }}>
+        border: "none",
+        borderBottom: `2px solid ${active ? "var(--purple-ai)" : "transparent"}`,
+        color: active ? "var(--purple-ai)" : "var(--text-muted)",
+        fontSize: 13,
+        fontWeight: active ? 700 : 500,
+        cursor: "pointer",
+        fontFamily: "'Tajawal', sans-serif",
+        marginBottom: -1,
+      }}
+    >
       <Icon size={13} /> {label}
       {typeof badge === "number" && (
-        <span style={{ fontSize: 10, background: active ? "var(--purple-ai)" : "#27272A", color: active ? "var(--bg-page)" : "var(--text-muted)", padding: "1px 6px", borderRadius: 8 }}>
+        <span
+          style={{
+            fontSize: 10,
+            background: active ? "var(--purple-ai)" : "#27272A",
+            color: active ? "var(--bg-page)" : "var(--text-muted)",
+            padding: "1px 6px",
+            borderRadius: 8,
+          }}
+        >
           {badge}
         </span>
       )}
       {typeof highlight === "number" && highlight > 0 && (
-        <span style={{ fontSize: 10, background: "var(--gold-1)", color: "var(--bg-page)", padding: "1px 6px", borderRadius: 8 }}>
+        <span
+          style={{
+            fontSize: 10,
+            background: "var(--gold-1)",
+            color: "var(--bg-page)",
+            padding: "1px 6px",
+            borderRadius: 8,
+          }}
+        >
           {highlight} جديد
         </span>
       )}
@@ -455,12 +990,40 @@ function Tab2({ active, onClick, icon: Icon, label, badge, highlight }: {
   );
 }
 
-function Section({ title, sub, color, action, highlight, children }: {
-  title: string; sub?: string; color: string; action?: React.ReactNode; highlight?: boolean; children: React.ReactNode;
+function Section({
+  title,
+  sub,
+  color,
+  action,
+  highlight,
+  children,
+}: {
+  title: string;
+  sub?: string;
+  color: string;
+  action?: React.ReactNode;
+  highlight?: boolean;
+  children: React.ReactNode;
 }) {
   return (
-    <div style={{ background: highlight ? `${color}06` : "transparent", border: highlight ? `1px solid ${color}33` : "none", borderRadius: 12, padding: highlight ? 14 : 0 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
+    <div
+      style={{
+        background: highlight ? `${color}06` : "transparent",
+        border: highlight ? `1px solid ${color}33` : "none",
+        borderRadius: 12,
+        padding: highlight ? 14 : 0,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          marginBottom: 10,
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
         <div>
           <h3 style={{ fontSize: 13, fontWeight: 700, color, marginBottom: 2 }}>{title}</h3>
           {sub && <div style={{ fontSize: 11, color: "var(--text-ghost)" }}>{sub}</div>}
@@ -474,7 +1037,17 @@ function Section({ title, sub, color, action, highlight, children }: {
 
 function EmptyState2({ text }: { text: string }) {
   return (
-    <div style={{ background: "var(--bg-deep)", border: "1px dashed var(--overlay-mid)", borderRadius: 10, padding: 20, textAlign: "center", color: "var(--text-disabled)", fontSize: 12 }}>
+    <div
+      style={{
+        background: "var(--bg-deep)",
+        border: "1px dashed var(--overlay-mid)",
+        borderRadius: 10,
+        padding: 20,
+        textAlign: "center",
+        color: "var(--text-disabled)",
+        fontSize: 12,
+      }}
+    >
       {text}
     </div>
   );
@@ -483,85 +1056,210 @@ function EmptyState2({ text }: { text: string }) {
 // ─────────────────────────────────────────────────────────────
 // Modals (reused from manager page logic)
 // ─────────────────────────────────────────────────────────────
-function DirectiveModal({ directive, tenantId, targetKind, targetId, onClose, onSave }: {
-  directive: Directive | null; tenantId: string; targetKind: string; targetId: string;
-  onClose: () => void; onSave: () => void;
+function DirectiveModal({
+  directive,
+  tenantId,
+  targetKind,
+  targetId,
+  onClose,
+  onSave,
+}: {
+  directive: Directive | null;
+  tenantId: string;
+  targetKind: string;
+  targetId: string;
+  onClose: () => void;
+  onSave: () => void;
 }) {
   const [title, setTitle] = useState(directive?.title || "");
   const [content, setContent] = useState(directive?.content || "");
   const [busy, setBusy] = useState(false);
   async function save() {
-    if (!title.trim() || !content.trim()) { toast.error("العنوان والمحتوى مطلوبان"); return; }
+    if (!title.trim() || !content.trim()) {
+      toast.error("العنوان والمحتوى مطلوبان");
+      return;
+    }
     setBusy(true);
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (directive) {
-        const { error } = await supabase.from("directives").update({ title, content }).eq("id", directive.id);
+        const { error } = await supabase
+          .from("directives")
+          .update({ title, content })
+          .eq("id", directive.id);
         if (error) throw new Error(error.message);
       } else {
         const { error } = await supabase.from("directives").insert({
-          tenant_id: tenantId, target_kind: targetKind, target_id: targetId,
-          title, content, source: "custom", status: "active", created_by: userData.user?.id,
+          tenant_id: tenantId,
+          target_kind: targetKind,
+          target_id: targetId,
+          title,
+          content,
+          source: "custom",
+          status: "active",
+          created_by: userData.user?.id,
         });
         if (error) throw new Error(error.message);
       }
-      toast.success("حُفظ"); onSave();
-    } catch (e) { toast.error(e instanceof Error ? e.message : "خطأ"); }
+      toast.success("حُفظ");
+      onSave();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
+    }
     setBusy(false);
   }
   return (
     <Modal title={directive ? "تعديل توجيه" : "توجيه مخصّص جديد"} onClose={onClose}>
-      <Field label="العنوان"><input value={title} onChange={e => setTitle(e.target.value)} style={inputStyle} /></Field>
-      <Field label="المحتوى"><textarea value={content} onChange={e => setContent(e.target.value)} rows={8} style={inputStyle} /></Field>
+      <Field label="العنوان">
+        <input value={title} onChange={(e) => setTitle(e.target.value)} style={inputStyle} />
+      </Field>
+      <Field label="المحتوى">
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={8}
+          style={inputStyle}
+        />
+      </Field>
       <ModalActions onClose={onClose} onSave={save} busy={busy} />
     </Modal>
   );
 }
 
-function KBModal({ kbItem, tenantId, targetKind, targetId, onClose, onSave }: {
-  kbItem: KBItem | null; tenantId: string; targetKind: string; targetId: string;
-  onClose: () => void; onSave: () => void;
+function KBModal({
+  kbItem,
+  tenantId,
+  targetKind,
+  targetId,
+  onClose,
+  onSave,
+}: {
+  kbItem: KBItem | null;
+  tenantId: string;
+  targetKind: string;
+  targetId: string;
+  onClose: () => void;
+  onSave: () => void;
 }) {
   const [title, setTitle] = useState(kbItem?.title || "");
   const [content, setContent] = useState(kbItem?.content || "");
   const [category, setCategory] = useState(kbItem?.category || "general");
   const [busy, setBusy] = useState(false);
   async function save() {
-    if (!title.trim() || !content.trim()) { toast.error("العنوان والمحتوى مطلوبان"); return; }
+    if (!title.trim() || !content.trim()) {
+      toast.error("العنوان والمحتوى مطلوبان");
+      return;
+    }
     setBusy(true);
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (kbItem) {
-        const { error } = await supabase.from("knowledge_base").update({ title, content, category }).eq("id", kbItem.id);
+        const { error } = await supabase
+          .from("knowledge_base")
+          .update({ title, content, category })
+          .eq("id", kbItem.id);
         if (error) throw new Error(error.message);
       } else {
         const { error } = await supabase.from("knowledge_base").insert({
-          tenant_id: tenantId, target_kind: targetKind, target_id: targetId,
-          title, content, category, is_active: true, created_by: userData.user?.id,
+          tenant_id: tenantId,
+          target_kind: targetKind,
+          target_id: targetId,
+          title,
+          content,
+          category,
+          is_active: true,
+          created_by: userData.user?.id,
         });
         if (error) throw new Error(error.message);
       }
-      toast.success("حُفظ"); onSave();
-    } catch (e) { toast.error(e instanceof Error ? e.message : "خطأ"); }
+      toast.success("حُفظ");
+      onSave();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
+    }
     setBusy(false);
   }
   return (
     <Modal title={kbItem ? "تعديل عنصر معرفة" : "عنصر معرفة"} onClose={onClose}>
-      <Field label="العنوان"><input value={title} onChange={e => setTitle(e.target.value)} style={inputStyle} /></Field>
-      <Field label="الفئة"><select value={category} onChange={e => setCategory(e.target.value)} style={inputStyle}>{Object.entries(KB_CATEGORIES).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></Field>
-      <Field label="المحتوى"><textarea value={content} onChange={e => setContent(e.target.value)} rows={10} style={inputStyle} /></Field>
+      <Field label="العنوان">
+        <input value={title} onChange={(e) => setTitle(e.target.value)} style={inputStyle} />
+      </Field>
+      <Field label="الفئة">
+        <select value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle}>
+          {Object.entries(KB_CATEGORIES).map(([k, l]) => (
+            <option key={k} value={k}>
+              {l}
+            </option>
+          ))}
+        </select>
+      </Field>
+      <Field label="المحتوى">
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={10}
+          style={inputStyle}
+        />
+      </Field>
       <ModalActions onClose={onClose} onSave={save} busy={busy} />
     </Modal>
   );
 }
 
-function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
+function Modal({
+  title,
+  children,
+  onClose,
+}: {
+  title: string;
+  children: React.ReactNode;
+  onClose: () => void;
+}) {
   return (
-    <div style={{ position: "fixed", inset: 0, background: "var(--modal-overlay)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
-      <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 14, padding: 22, maxWidth: 600, width: "100%", maxHeight: "90vh", overflowY: "auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "var(--modal-overlay)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 100,
+        padding: 16,
+      }}
+    >
+      <div
+        style={{
+          background: "var(--bg-deep)",
+          border: "1px solid var(--overlay-mid)",
+          borderRadius: 14,
+          padding: 22,
+          maxWidth: 600,
+          width: "100%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 16,
+          }}
+        >
           <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-on-dark)" }}>{title}</h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--text-ghost)", cursor: "pointer" }}><X size={18} /></button>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              color: "var(--text-ghost)",
+              cursor: "pointer",
+            }}
+          >
+            <X size={18} />
+          </button>
         </div>
         {children}
       </div>
@@ -569,27 +1267,97 @@ function Modal({ title, children, onClose }: { title: string; children: React.Re
   );
 }
 
-function ModalActions({ onClose, onSave, busy }: { onClose: () => void; onSave: () => void; busy: boolean }) {
+function ModalActions({
+  onClose,
+  onSave,
+  busy,
+}: {
+  onClose: () => void;
+  onSave: () => void;
+  busy: boolean;
+}) {
   return (
     <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "flex-end" }}>
-      <button onClick={onClose} style={{ padding: "10px 18px", borderRadius: 8, background: "rgba(255,255,255,0.04)", color: "var(--text-muted)", border: "1px solid var(--overlay-mid)", fontSize: 13, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>إلغاء</button>
-      <button onClick={onSave} disabled={busy} style={{ padding: "10px 22px", borderRadius: 8, background: "linear-gradient(135deg, var(--purple-ai), var(--purple-2))", color: "var(--bg-page)", border: "none", fontSize: 13, fontWeight: 700, cursor: busy ? "not-allowed" : "pointer", fontFamily: "'Tajawal', sans-serif", display: "flex", alignItems: "center", gap: 6, opacity: busy ? 0.6 : 1 }}>
-        {busy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Save size={13} />}حفظ
+      <button
+        onClick={onClose}
+        style={{
+          padding: "10px 18px",
+          borderRadius: 8,
+          background: "rgba(255,255,255,0.04)",
+          color: "var(--text-muted)",
+          border: "1px solid var(--overlay-mid)",
+          fontSize: 13,
+          cursor: "pointer",
+          fontFamily: "'Tajawal', sans-serif",
+        }}
+      >
+        إلغاء
+      </button>
+      <button
+        onClick={onSave}
+        disabled={busy}
+        style={{
+          padding: "10px 22px",
+          borderRadius: 8,
+          background: "linear-gradient(135deg, var(--purple-ai), var(--purple-2))",
+          color: "var(--bg-page)",
+          border: "none",
+          fontSize: 13,
+          fontWeight: 700,
+          cursor: busy ? "not-allowed" : "pointer",
+          fontFamily: "'Tajawal', sans-serif",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          opacity: busy ? 0.6 : 1,
+        }}
+      >
+        {busy ? (
+          <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} />
+        ) : (
+          <Save size={13} />
+        )}
+        حفظ
       </button>
     </div>
   );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (<div style={{ marginBottom: 14 }}><label style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 5 }}>{label}</label>{children}</div>);
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label
+        style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 5 }}
+      >
+        {label}
+      </label>
+      {children}
+    </div>
+  );
 }
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "10px 12px", background: "var(--bg-surface-2)",
-  border: "1px solid var(--overlay-mid)", borderRadius: 8,
-  color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif", outline: "none",
+  width: "100%",
+  padding: "10px 12px",
+  background: "var(--bg-surface-2)",
+  border: "1px solid var(--overlay-mid)",
+  borderRadius: 8,
+  color: "var(--text-on-dark)",
+  fontSize: 13,
+  fontFamily: "'Tajawal', sans-serif",
+  outline: "none",
 };
 
 function iconBtn(color: string): React.CSSProperties {
-  return { background: `${color}10`, border: `1px solid ${color}30`, color, padding: 6, borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" };
+  return {
+    background: `${color}10`,
+    border: `1px solid ${color}30`,
+    color,
+    padding: 6,
+    borderRadius: 6,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 }

@@ -39,17 +39,13 @@ export async function applyWatermark(
         ctx.shadowOffsetY = 2;
 
         const xPos = canvas.width / 2;
-        const yPosList = [
-          canvas.height * 0.25,
-          canvas.height * 0.5,
-          canvas.height * 0.75,
-        ];
+        const yPosList = [canvas.height * 0.25, canvas.height * 0.5, canvas.height * 0.75];
 
         // طباعة النص في 3 أماكن عشوائية أفقياً وموزعة عمودياً
         yPosList.forEach((y, i) => {
           // حركة أفقية طفيفة لكسر النمط
-          const offset = i === 1 ? 0 : (i === 0 ? -canvas.width * 0.1 : canvas.width * 0.1);
-          
+          const offset = i === 1 ? 0 : i === 0 ? -canvas.width * 0.1 : canvas.width * 0.1;
+
           ctx.save();
           ctx.translate(xPos + offset, y);
           ctx.rotate(-Math.PI / 6); // دوران بسيط (30 درجة مائلة)

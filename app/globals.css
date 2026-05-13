@@ -9,103 +9,103 @@
 
 [data-theme="dark"] {
   /* ── الخلفيات ── */
-  --bg-page:       #0A0A0C;   /* الصفحة الرئيسية */
-  --bg-deep:       #0F0F12;   /* أعمق */
-  --bg-surface-1:  #16161A;   /* البطاقات */
-  --bg-surface-2:  #1C1C22;   /* البطاقات البديلة */
-  --bg-surface-3:  #2A2A32;   /* الحقول الداخلية */
-  --bg-elevated:   #3A3A42;   /* العلوي */
+  --bg-page: #0a0a0c; /* الصفحة الرئيسية */
+  --bg-deep: #0f0f12; /* أعمق */
+  --bg-surface-1: #16161a; /* البطاقات */
+  --bg-surface-2: #1c1c22; /* البطاقات البديلة */
+  --bg-surface-3: #2a2a32; /* الحقول الداخلية */
+  --bg-elevated: #3a3a42; /* العلوي */
 
   /* ── الحدود ── */
-  --border-1:      #3A3A42;
-  --border-2:      #2A2A32;
-  --border-soft:   rgba(255,255,255,0.06);
-  --border-hover:  rgba(255,255,255,0.12);
+  --border-1: #3a3a42;
+  --border-2: #2a2a32;
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
 
   /* ── النصوص ── */
-  --text-strong:    #F5F5F5;
-  --text-primary:   #F4F4F5;
-  --text-on-dark:   #E4E4E7;
-  --text-secondary: #D4D4D8;
-  --text-muted:     #A1A1AA;
-  --text-soft:      #9A9AA0;
-  --text-ghost:     #71717A;
-  --text-faint:     #5A5A62;
-  --text-disabled:  #52525B;
+  --text-strong: #f5f5f5;
+  --text-primary: #f4f4f5;
+  --text-on-dark: #e4e4e7;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --text-soft: #9a9aa0;
+  --text-ghost: #71717a;
+  --text-faint: #5a5a62;
+  --text-disabled: #52525b;
 
   /* ── الذهبي (هوية وسيط برو — لا يتغيّر) ── */
-  --gold-1:        #E8B86D;   /* primary */
-  --gold-2:        #C6914C;   /* secondary */
-  --gold-3:        #A6743A;   /* deep */
-  --gold-4:        #8A5F2E;
-  --gold-bg:       rgba(198,145,76,0.12);
-  --gold-bg-soft:  rgba(198,145,76,0.08);
-  --gold-bg-hover: rgba(198,145,76,0.20);
-  --gold-bg-strong:rgba(198,145,76,0.30);
+  --gold-1: #e8b86d; /* primary */
+  --gold-2: #c6914c; /* secondary */
+  --gold-3: #a6743a; /* deep */
+  --gold-4: #8a5f2e;
+  --gold-bg: rgba(198, 145, 76, 0.12);
+  --gold-bg-soft: rgba(198, 145, 76, 0.08);
+  --gold-bg-hover: rgba(198, 145, 76, 0.2);
+  --gold-bg-strong: rgba(198, 145, 76, 0.3);
 
   /* ── الحالات ── */
-  --success:       #4ADE80;
-  --success-bg:    rgba(74,222,128,0.10);
-  --success-2:     #34D399;
-  --success-3:     #10B981;
-  --success-4:     #16A34A;
+  --success: #4ade80;
+  --success-bg: rgba(74, 222, 128, 0.1);
+  --success-2: #34d399;
+  --success-3: #10b981;
+  --success-4: #16a34a;
 
-  --warning:       #FACC15;
-  --warning-bg:    rgba(250,204,21,0.10);
-  --warning-2:     #FBBF24;
+  --warning: #facc15;
+  --warning-bg: rgba(250, 204, 21, 0.1);
+  --warning-2: #fbbf24;
 
-  --danger:        #F87171;
-  --danger-bg:     rgba(248,113,113,0.10);
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.1);
 
-  --info:          #60A5FA;
-  --info-bg:       rgba(96,165,250,0.10);
-  --info-2:        #38BDF8;
-  --info-3:        #2563EB;
+  --info: #60a5fa;
+  --info-bg: rgba(96, 165, 250, 0.1);
+  --info-2: #38bdf8;
+  --info-3: #2563eb;
 
-  --purple-ai:     #A78BFA;
-  --purple-bg:     rgba(167,139,250,0.10);
-  --purple-2:      #7C3AED;
+  --purple-ai: #a78bfa;
+  --purple-bg: rgba(167, 139, 250, 0.1);
+  --purple-2: #7c3aed;
 
-  --whatsapp:      #25D366;
+  --whatsapp: #25d366;
 
   /* ── overlays عامة ── */
-  --overlay-soft:  rgba(255,255,255,0.05);
-  --overlay-mid:   rgba(255,255,255,0.08);
-  --overlay-strong:rgba(255,255,255,0.12);
+  --overlay-soft: rgba(255, 255, 255, 0.05);
+  --overlay-mid: rgba(255, 255, 255, 0.08);
+  --overlay-strong: rgba(255, 255, 255, 0.12);
 
   /* ── خلفيات خاصة (sidebar / header / modal) ── */
-  --sidebar-bg:    #0D0D10;
-  --sidebar-bg-2:  #1A1A1F;
-  --header-bg:     rgba(10,10,12,0.92);
-  --header-bg-2:   rgba(10,10,12,0.85);
-  --header-bg-3:   rgba(10,10,12,0.80);
-  --header-bg-4:   rgba(10,10,12,0.75);
-  --modal-overlay: rgba(0,0,0,0.70);
-  --modal-overlay-2: rgba(0,0,0,0.65);
-  --shadow-overlay: rgba(10,10,12,0.40);
-  --shadow-overlay-2: rgba(10,10,12,0.25);
-  --shadow-overlay-3: rgba(10,10,12,0.18);
+  --sidebar-bg: #0d0d10;
+  --sidebar-bg-2: #1a1a1f;
+  --header-bg: rgba(10, 10, 12, 0.92);
+  --header-bg-2: rgba(10, 10, 12, 0.85);
+  --header-bg-3: rgba(10, 10, 12, 0.8);
+  --header-bg-4: rgba(10, 10, 12, 0.75);
+  --modal-overlay: rgba(0, 0, 0, 0.7);
+  --modal-overlay-2: rgba(0, 0, 0, 0.65);
+  --shadow-overlay: rgba(10, 10, 12, 0.4);
+  --shadow-overlay-2: rgba(10, 10, 12, 0.25);
+  --shadow-overlay-3: rgba(10, 10, 12, 0.18);
   --pure-black: #000000;
 
   /* ── ظلال ── */
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.5);
-  --shadow-md:   0 4px 6px -1px rgba(0,0,0,0.5);
-  --shadow-lg:   0 10px 15px -3px rgba(0,0,0,0.5);
-  --shadow-gold: 0 4px 20px rgba(198,145,76,0.20);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-gold: 0 4px 20px rgba(198, 145, 76, 0.2);
 
   /* ── تحوّلات ── */
-  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ── legacy aliases (للتوافق مع الكود القديم) ── */
-  --gold:          var(--gold-1);
-  --gold-dark:     var(--gold-2);
-  --gold-light:    #34D399;
-  --bg-main:       var(--bg-page);
-  --bg-card:       var(--bg-surface-1);
+  --gold: var(--gold-1);
+  --gold-dark: var(--gold-2);
+  --gold-light: #34d399;
+  --bg-main: var(--bg-page);
+  --bg-card: var(--bg-surface-1);
   --bg-elevated-l: var(--bg-elevated);
-  --bg-header:     rgba(10,10,12,0.80);
-  --border:        rgba(198,145,76,0.12);
-  --error:         var(--danger);
+  --bg-header: rgba(10, 10, 12, 0.8);
+  --border: rgba(198, 145, 76, 0.12);
+  --error: var(--danger);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -116,99 +116,99 @@
 :root:not([data-theme="dark"]),
 [data-theme="cream"] {
   /* ── الخلفيات ── */
-  --bg-page:       #FAF7F2;
-  --bg-deep:       #F0EBE0;
-  --bg-surface-1:  #FFFFFF;
-  --bg-surface-2:  #FAF7F2;
-  --bg-surface-3:  #F5F0E8;
-  --bg-elevated:   #E5DFD0;
+  --bg-page: #faf7f2;
+  --bg-deep: #f0ebe0;
+  --bg-surface-1: #ffffff;
+  --bg-surface-2: #faf7f2;
+  --bg-surface-3: #f5f0e8;
+  --bg-elevated: #e5dfd0;
 
   /* ── الحدود ── */
-  --border-1:      #E5DFD0;
-  --border-2:      #EFE9DD;
-  --border-soft:   rgba(0,0,0,0.06);
-  --border-hover:  rgba(0,0,0,0.12);
+  --border-1: #e5dfd0;
+  --border-2: #efe9dd;
+  --border-soft: rgba(0, 0, 0, 0.06);
+  --border-hover: rgba(0, 0, 0, 0.12);
 
   /* ── النصوص ── */
-  --text-strong:    #1A1206;
-  --text-primary:   #1A1206;
-  --text-on-dark:   #2A2218;
-  --text-secondary: #3A3022;
-  --text-muted:     #5A5044;
-  --text-soft:      #6A6055;
-  --text-ghost:     #9A9080;
-  --text-faint:     #A89E92;
-  --text-disabled:  #BDB4A6;
+  --text-strong: #1a1206;
+  --text-primary: #1a1206;
+  --text-on-dark: #2a2218;
+  --text-secondary: #3a3022;
+  --text-muted: #5a5044;
+  --text-soft: #6a6055;
+  --text-ghost: #9a9080;
+  --text-faint: #a89e92;
+  --text-disabled: #bdb4a6;
 
   /* ── الذهبي (نفس قيم الداكن — هوية ثابتة) ── */
-  --gold-1:        #E8B86D;
-  --gold-2:        #C6914C;
-  --gold-3:        #A6743A;
-  --gold-4:        #8A5F2E;
-  --gold-bg:       rgba(198,145,76,0.10);
-  --gold-bg-soft:  rgba(198,145,76,0.06);
-  --gold-bg-hover: rgba(198,145,76,0.18);
-  --gold-bg-strong:rgba(198,145,76,0.28);
+  --gold-1: #e8b86d;
+  --gold-2: #c6914c;
+  --gold-3: #a6743a;
+  --gold-4: #8a5f2e;
+  --gold-bg: rgba(198, 145, 76, 0.1);
+  --gold-bg-soft: rgba(198, 145, 76, 0.06);
+  --gold-bg-hover: rgba(198, 145, 76, 0.18);
+  --gold-bg-strong: rgba(198, 145, 76, 0.28);
 
   /* ── الحالات (أعمق للقراءة على خلفية فاتحة) ── */
-  --success:       #16A34A;
-  --success-bg:    rgba(22,163,74,0.08);
-  --success-2:     #15803D;
-  --success-3:     #16A34A;
-  --success-4:     #15803D;
+  --success: #16a34a;
+  --success-bg: rgba(22, 163, 74, 0.08);
+  --success-2: #15803d;
+  --success-3: #16a34a;
+  --success-4: #15803d;
 
-  --warning:       #D97706;
-  --warning-bg:    rgba(217,119,6,0.08);
-  --warning-2:     #B45309;
+  --warning: #d97706;
+  --warning-bg: rgba(217, 119, 6, 0.08);
+  --warning-2: #b45309;
 
-  --danger:        #DC2626;
-  --danger-bg:     rgba(220,38,38,0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.08);
 
-  --info:          #2563EB;
-  --info-bg:       rgba(37,99,235,0.08);
-  --info-2:        #1D4ED8;
-  --info-3:        #1E40AF;
+  --info: #2563eb;
+  --info-bg: rgba(37, 99, 235, 0.08);
+  --info-2: #1d4ed8;
+  --info-3: #1e40af;
 
-  --purple-ai:     #7C3AED;
-  --purple-bg:     rgba(124,58,237,0.08);
-  --purple-2:      #6D28D9;
+  --purple-ai: #7c3aed;
+  --purple-bg: rgba(124, 58, 237, 0.08);
+  --purple-2: #6d28d9;
 
-  --whatsapp:      #128C7E;
+  --whatsapp: #128c7e;
 
   /* ── overlays ── */
-  --overlay-soft:  rgba(0,0,0,0.04);
-  --overlay-mid:   rgba(0,0,0,0.06);
-  --overlay-strong:rgba(0,0,0,0.10);
+  --overlay-soft: rgba(0, 0, 0, 0.04);
+  --overlay-mid: rgba(0, 0, 0, 0.06);
+  --overlay-strong: rgba(0, 0, 0, 0.1);
 
   /* ── خلفيات خاصة في الكريمي ── */
-  --sidebar-bg:    #FFFFFF;
-  --sidebar-bg-2:  #FAF7F2;
-  --header-bg:     rgba(250,247,242,0.92);
-  --header-bg-2:   rgba(250,247,242,0.85);
-  --header-bg-3:   rgba(250,247,242,0.80);
-  --header-bg-4:   rgba(250,247,242,0.75);
-  --modal-overlay: rgba(26,18,6,0.50);
-  --modal-overlay-2: rgba(26,18,6,0.40);
-  --shadow-overlay: rgba(26,18,6,0.10);
-  --shadow-overlay-2: rgba(26,18,6,0.06);
-  --shadow-overlay-3: rgba(26,18,6,0.04);
-  --pure-black: #1A1206;
+  --sidebar-bg: #ffffff;
+  --sidebar-bg-2: #faf7f2;
+  --header-bg: rgba(250, 247, 242, 0.92);
+  --header-bg-2: rgba(250, 247, 242, 0.85);
+  --header-bg-3: rgba(250, 247, 242, 0.8);
+  --header-bg-4: rgba(250, 247, 242, 0.75);
+  --modal-overlay: rgba(26, 18, 6, 0.5);
+  --modal-overlay-2: rgba(26, 18, 6, 0.4);
+  --shadow-overlay: rgba(26, 18, 6, 0.1);
+  --shadow-overlay-2: rgba(26, 18, 6, 0.06);
+  --shadow-overlay-3: rgba(26, 18, 6, 0.04);
+  --pure-black: #1a1206;
 
   /* ── ظلال (ناعمة) ── */
-  --shadow-sm:   0 1px 3px rgba(26,18,6,0.06);
-  --shadow-md:   0 4px 6px -1px rgba(26,18,6,0.10);
-  --shadow-lg:   0 10px 25px -5px rgba(26,18,6,0.12);
-  --shadow-gold: 0 4px 20px rgba(198,145,76,0.25);
+  --shadow-sm: 0 1px 3px rgba(26, 18, 6, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(26, 18, 6, 0.1);
+  --shadow-lg: 0 10px 25px -5px rgba(26, 18, 6, 0.12);
+  --shadow-gold: 0 4px 20px rgba(198, 145, 76, 0.25);
 
   /* ── legacy aliases ── */
-  --gold:          var(--gold-1);
-  --gold-dark:     var(--gold-2);
-  --gold-light:    #D9A85F;
-  --bg-main:       var(--bg-page);
-  --bg-card:       var(--bg-surface-1);
-  --bg-header:     rgba(250,247,242,0.85);
-  --border:        rgba(198,145,76,0.18);
-  --error:         var(--danger);
+  --gold: var(--gold-1);
+  --gold-dark: var(--gold-2);
+  --gold-light: #d9a85f;
+  --bg-main: var(--bg-page);
+  --bg-card: var(--bg-surface-1);
+  --bg-header: rgba(250, 247, 242, 0.85);
+  --border: rgba(198, 145, 76, 0.18);
+  --error: var(--danger);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -219,32 +219,49 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* ═══════════════════════════════════════════════════════════════
    الخطوط
 ═══════════════════════════════════════════════════════════════ */
 .font-kufi {
-  font-family: 'Noto Kufi Arabic', serif;
+  font-family: "Noto Kufi Arabic", serif;
 }
 
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 .font-cairo {
-  font-family: var(--font-cairo), 'Cairo', 'Noto Kufi Arabic', sans-serif;
+  font-family: var(--font-cairo), "Cairo", "Noto Kufi Arabic", sans-serif;
 }
 
 body {
-  font-family: var(--font-tajawal), 'Tajawal', 'Arial', sans-serif;
+  font-family: var(--font-tajawal), "Tajawal", "Arial", sans-serif;
 }
 
 /* ═══════════════════════════════════════════════════════════════
    Scrollbar مخصصة
 ═══════════════════════════════════════════════════════════════ */
-::-webkit-scrollbar          { width: 5px; height: 5px; }
-::-webkit-scrollbar-track    { background: var(--bg-page); }
-::-webkit-scrollbar-thumb    { background: rgba(198,145,74,0.25); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(198,145,74,0.45); }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(198, 145, 74, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(198, 145, 74, 0.45);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    تأثيرات الكروت — بطاقات لوحة التحكم
@@ -266,16 +283,16 @@ body {
 ═══════════════════════════════════════════════════════════════ */
 .btn-gold {
   background: linear-gradient(135deg, var(--gold-1), var(--gold-2));
-  color: #0A0A0C;
+  color: #0a0a0c;
   font-weight: 700;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   transition: var(--transition);
-  font-family: 'Tajawal', sans-serif;
+  font-family: "Tajawal", sans-serif;
 }
 .btn-gold:hover {
-  background: linear-gradient(135deg, #F0C480, var(--gold-1));
+  background: linear-gradient(135deg, #f0c480, var(--gold-1));
   box-shadow: var(--shadow-gold);
   transform: translateY(-1px);
 }

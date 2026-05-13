@@ -4,8 +4,17 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase-browser";
 import { toast, Toaster } from "sonner";
 import {
-  CheckCircle2, ArrowLeft, ArrowRight, Loader2, Sparkles,
-  Building, MapPin, Bot, Zap, Crown, Gift,
+  CheckCircle2,
+  ArrowLeft,
+  ArrowRight,
+  Loader2,
+  Sparkles,
+  Building,
+  MapPin,
+  Bot,
+  Zap,
+  Crown,
+  Gift,
 } from "lucide-react";
 
 type Step = 1 | 2 | 3;
@@ -35,7 +44,9 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         router.replace("/login?redirectTo=/onboarding");
         return;
@@ -43,7 +54,10 @@ export default function OnboardingPage() {
 
       // اعثر على tenant
       const { data: t } = await supabase
-        .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+        .from("tenants")
+        .select("id")
+        .eq("owner_id", user.id)
+        .maybeSingle();
       if (t?.id) {
         setTenantId(t.id);
 
@@ -85,15 +99,21 @@ export default function OnboardingPage() {
     setSubmitting(true);
     try {
       // Step 1: حفظ هوية الوسيط
-      const areas = coverageAreas.split(",").map(s => s.trim()).filter(Boolean);
-      const { error: idErr } = await supabase.from("broker_identity").upsert({
-        tenant_id: tenantId,
-        broker_name: brokerName.trim(),
-        specialization: specialization.trim() || null,
-        coverage_areas: areas.length > 0 ? areas : null,
-        bio_short: bioShort.trim() || null,
-        writing_tone: writingTone || null,
-      } as never, { onConflict: "tenant_id" });
+      const areas = coverageAreas
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const { error: idErr } = await supabase.from("broker_identity").upsert(
+        {
+          tenant_id: tenantId,
+          broker_name: brokerName.trim(),
+          specialization: specialization.trim() || null,
+          coverage_areas: areas.length > 0 ? areas : null,
+          bio_short: bioShort.trim() || null,
+          writing_tone: writingTone || null,
+        } as never,
+        { onConflict: "tenant_id" }
+      );
       if (idErr) throw new Error(idErr.message);
 
       // Step 2: حفظ الخطة
@@ -104,13 +124,16 @@ export default function OnboardingPage() {
       if (planErr) throw new Error(planErr.message);
 
       // Step 3: إعدادات موظفي AI
-      const { error: aiErr } = await supabase.from("ai_employee_settings").upsert({
-        tenant_id: tenantId,
-        marketer_enabled: enableMarketer,
-        followup_enabled: enableFollowup,
-        analyst_enabled: enableAnalyst,
-        receiver_enabled: false, // يحتاج Meta setup
-      } as never, { onConflict: "tenant_id" });
+      const { error: aiErr } = await supabase.from("ai_employee_settings").upsert(
+        {
+          tenant_id: tenantId,
+          marketer_enabled: enableMarketer,
+          followup_enabled: enableFollowup,
+          analyst_enabled: enableAnalyst,
+          receiver_enabled: false, // يحتاج Meta setup
+        } as never,
+        { onConflict: "tenant_id" }
+      );
       if (aiErr) throw new Error(aiErr.message);
 
       toast.success("اكتمل الإعداد! أهلاً بك في وسيط برو 🎉");
@@ -124,7 +147,10 @@ export default function OnboardingPage() {
   if (!authChecked) {
     return (
       <div style={wrapperStyle}>
-        <Loader2 size={32} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
+        <Loader2
+          size={32}
+          style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }}
+        />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -139,17 +165,49 @@ export default function OnboardingPage() {
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
 
-      <Toaster position="top-center" dir="rtl" toastOptions={{
-        style: { background: "var(--bg-surface-2)", border: "1px solid rgba(198,145,76,0.25)", color: "var(--text-primary)", fontFamily: "'Tajawal', sans-serif" },
-      }} />
+      <Toaster
+        position="top-center"
+        dir="rtl"
+        toastOptions={{
+          style: {
+            background: "var(--bg-surface-2)",
+            border: "1px solid rgba(198,145,76,0.25)",
+            color: "var(--text-primary)",
+            fontFamily: "'Tajawal', sans-serif",
+          },
+        }}
+      />
 
       <div style={{ maxWidth: 720, width: "100%" }}>
         {/* Logo + welcome */}
         <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14, fontFamily: "'Noto Kufi Arabic', serif", fontSize: 26, fontWeight: 800, color: "var(--bg-page)" }}>
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 14,
+              background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 14,
+              fontFamily: "'Noto Kufi Arabic', serif",
+              fontSize: 26,
+              fontWeight: 800,
+              color: "var(--bg-page)",
+            }}
+          >
             و
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: "var(--text-primary)", marginBottom: 6, fontFamily: "'Noto Kufi Arabic', serif" }}>
+          <h1
+            style={{
+              fontSize: 24,
+              fontWeight: 800,
+              color: "var(--text-primary)",
+              marginBottom: 6,
+              fontFamily: "'Noto Kufi Arabic', serif",
+            }}
+          >
             أهلاً بك في وسيط برو
           </h1>
           <p style={{ fontSize: 14, color: "var(--text-muted)" }}>
@@ -158,59 +216,131 @@ export default function OnboardingPage() {
         </div>
 
         {/* Progress */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 28 }}>
-          {[1, 2, 3].map(n => (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 14,
+            marginBottom: 28,
+          }}
+        >
+          {[1, 2, 3].map((n) => (
             <div key={n} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: "50%",
-                background: step >= (n as Step) ? "linear-gradient(135deg, var(--gold-2), var(--gold-4))" : "#1C1C1E",
-                color: step >= (n as Step) ? "var(--bg-page)" : "var(--text-disabled)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 13, fontWeight: 800, fontFamily: "'Noto Kufi Arabic', serif",
-                transition: "all 0.3s",
-              }}>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  background:
+                    step >= (n as Step)
+                      ? "linear-gradient(135deg, var(--gold-2), var(--gold-4))"
+                      : "#1C1C1E",
+                  color: step >= (n as Step) ? "var(--bg-page)" : "var(--text-disabled)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  fontFamily: "'Noto Kufi Arabic', serif",
+                  transition: "all 0.3s",
+                }}
+              >
                 {step > n ? <CheckCircle2 size={16} /> : n}
               </div>
               {n < 3 && (
-                <div style={{ width: 60, height: 2, background: step > n ? "var(--gold-2)" : "#1C1C1E", transition: "background 0.3s" }} />
+                <div
+                  style={{
+                    width: 60,
+                    height: 2,
+                    background: step > n ? "var(--gold-2)" : "#1C1C1E",
+                    transition: "background 0.3s",
+                  }}
+                />
               )}
             </div>
           ))}
         </div>
 
         {/* Step content */}
-        <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 16, padding: 28, animation: "fadeIn 0.4s ease-out" }}>
-
+        <div
+          style={{
+            background: "var(--bg-deep)",
+            border: "1px solid var(--overlay-mid)",
+            borderRadius: 16,
+            padding: 28,
+            animation: "fadeIn 0.4s ease-out",
+          }}
+        >
           {step === 1 && (
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: "var(--gold-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 9,
+                    background: "var(--gold-bg)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Building size={17} style={{ color: "var(--gold-2)" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>هويتك المهنية</h2>
-                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>كيف تظهر للعملاء وللذكاء الاصطناعي</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>
+                    هويتك المهنية
+                  </h2>
+                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>
+                    كيف تظهر للعملاء وللذكاء الاصطناعي
+                  </p>
                 </div>
               </div>
 
               <Field label="اسم الوسيط (للعرض) *" hint="مثلاً: إلياس الدخيل أو مكتب فيستا رايز">
-                <input value={brokerName} onChange={e => setBrokerName(e.target.value)} style={inputStyle} placeholder="إلياس الدخيل" />
+                <input
+                  value={brokerName}
+                  onChange={(e) => setBrokerName(e.target.value)}
+                  style={inputStyle}
+                  placeholder="إلياس الدخيل"
+                />
               </Field>
 
               <Field label="التخصص" hint="نوع العقارات اللي تركّز عليها">
-                <input value={specialization} onChange={e => setSpecialization(e.target.value)} style={inputStyle} placeholder="فلل وأراضي شمال الرياض" />
+                <input
+                  value={specialization}
+                  onChange={(e) => setSpecialization(e.target.value)}
+                  style={inputStyle}
+                  placeholder="فلل وأراضي شمال الرياض"
+                />
               </Field>
 
               <Field label="نطاق التغطية" hint="افصل بين الأحياء أو المدن بفاصلة (,)">
-                <input value={coverageAreas} onChange={e => setCoverageAreas(e.target.value)} style={inputStyle} placeholder="الياسمين، الملقا، النرجس" />
+                <input
+                  value={coverageAreas}
+                  onChange={(e) => setCoverageAreas(e.target.value)}
+                  style={inputStyle}
+                  placeholder="الياسمين، الملقا، النرجس"
+                />
               </Field>
 
               <Field label="نبذة قصيرة" hint="جملة أو جملتين عن خبرتك — سيُستخدمها AI في الردود">
-                <textarea value={bioShort} onChange={e => setBioShort(e.target.value)} rows={3} style={inputStyle} placeholder="١٠ سنوات في وساطة العقارات السكنية، متخصص في..." />
+                <textarea
+                  value={bioShort}
+                  onChange={(e) => setBioShort(e.target.value)}
+                  rows={3}
+                  style={inputStyle}
+                  placeholder="١٠ سنوات في وساطة العقارات السكنية، متخصص في..."
+                />
               </Field>
 
               <Field label="نبرة الكتابة" hint="نبرة الردود التلقائية على عملائك">
-                <select value={writingTone} onChange={e => setWritingTone(e.target.value)} style={inputStyle}>
+                <select
+                  value={writingTone}
+                  onChange={(e) => setWritingTone(e.target.value)}
+                  style={inputStyle}
+                >
                   <option value="احترافي ودود">احترافي ودود</option>
                   <option value="رسمي">رسمي</option>
                   <option value="ودي قريب">ودّي قريب</option>
@@ -222,12 +352,26 @@ export default function OnboardingPage() {
           {step === 2 && (
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: "rgba(232,184,109,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 9,
+                    background: "rgba(232,184,109,0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Crown size={17} style={{ color: "var(--gold-1)" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>اختر خطتك</h2>
-                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>تقدر تغيرها أي وقت من الإعدادات</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>
+                    اختر خطتك
+                  </h2>
+                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>
+                    تقدر تغيرها أي وقت من الإعدادات
+                  </p>
                 </div>
               </div>
 
@@ -248,7 +392,11 @@ export default function OnboardingPage() {
                   icon={Zap}
                   name="أساسي"
                   price="199 ر.س / شهر"
-                  features={["٥٠ عقار + عملاء غير محدودين", "٣ موظفين AI (تسويق + متابعة + محلل)", "العقود الإلكترونية + ZATCA"]}
+                  features={[
+                    "٥٠ عقار + عملاء غير محدودين",
+                    "٣ موظفين AI (تسويق + متابعة + محلل)",
+                    "العقود الإلكترونية + ZATCA",
+                  ]}
                   recommended
                   color="var(--gold-2)"
                 />
@@ -258,14 +406,29 @@ export default function OnboardingPage() {
                   icon={Crown}
                   name="احترافي"
                   price="499 ر.س / شهر"
-                  features={["كل شي بدون حدود", "٤ موظفين AI (مع موظف الاستقبال)", "WhatsApp Business API + فريق ١٠"]}
+                  features={[
+                    "كل شي بدون حدود",
+                    "٤ موظفين AI (مع موظف الاستقبال)",
+                    "WhatsApp Business API + فريق ١٠",
+                  ]}
                   recommended={false}
                   color="var(--gold-1)"
                 />
               </div>
 
-              <div style={{ marginTop: 14, padding: 12, background: "rgba(96,165,250,0.05)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 8, fontSize: 12, color: "var(--text-muted)" }}>
-                💡 ابدأ بالمجاني وجرّب المنصة. تقدر ترقّي خطتك من <strong>الإعدادات → الاشتراك</strong> في أي وقت.
+              <div
+                style={{
+                  marginTop: 14,
+                  padding: 12,
+                  background: "rgba(96,165,250,0.05)",
+                  border: "1px solid rgba(96,165,250,0.15)",
+                  borderRadius: 8,
+                  fontSize: 12,
+                  color: "var(--text-muted)",
+                }}
+              >
+                💡 ابدأ بالمجاني وجرّب المنصة. تقدر ترقّي خطتك من{" "}
+                <strong>الإعدادات → الاشتراك</strong> في أي وقت.
               </div>
             </div>
           )}
@@ -273,39 +436,66 @@ export default function OnboardingPage() {
           {step === 3 && (
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: "rgba(167,139,250,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 9,
+                    background: "rgba(167,139,250,0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Bot size={17} style={{ color: "var(--purple-ai)" }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>تفعيل الموظفين الذكيين</h2>
-                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>يبدأون العمل تلقائياً عنك</p>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)" }}>
+                    تفعيل الموظفين الذكيين
+                  </h2>
+                  <p style={{ fontSize: 12, color: "var(--text-ghost)", marginTop: 2 }}>
+                    يبدأون العمل تلقائياً عنك
+                  </p>
                 </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <ToggleCard
-                  enabled={enableMarketer} onChange={setEnableMarketer}
+                  enabled={enableMarketer}
+                  onChange={setEnableMarketer}
                   title="موظف التسويق"
                   desc="يولّد ٣ منشورات يومياً لأحدث عقاراتك (تويتر/إنستجرام/واتساب) — تراجعها وتنشرها"
                   schedule="يومياً 10ص"
                   color="var(--gold-2)"
                 />
                 <ToggleCard
-                  enabled={enableFollowup} onChange={setEnableFollowup}
+                  enabled={enableFollowup}
+                  onChange={setEnableFollowup}
                   title="موظف المتابعة"
                   desc="يكتب رسائل واتساب مخصّصة للعملاء الباردين الذين لم تتواصل معهم منذ 14+ يوم"
                   schedule="يومياً 6م"
                   color="var(--success-2)"
                 />
                 <ToggleCard
-                  enabled={enableAnalyst} onChange={setEnableAnalyst}
+                  enabled={enableAnalyst}
+                  onChange={setEnableAnalyst}
                   title="محلل البيانات"
                   desc="تقرير أسبوعي بالأرقام والتوصيات لتحسين أدائك في الأسبوع القادم"
                   schedule="أسبوعياً — الأحد 9ص"
                   color="var(--purple-ai)"
                 />
-                <div style={{ padding: 12, background: "rgba(96,165,250,0.05)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 9, fontSize: 12, color: "var(--text-muted)" }}>
-                  📱 <strong>موظف الاستقبال</strong> (يرد على واتساب تلقائياً) متاح بعد ربط Meta Business — تقدر تفعّله لاحقاً.
+                <div
+                  style={{
+                    padding: 12,
+                    background: "rgba(96,165,250,0.05)",
+                    border: "1px solid rgba(96,165,250,0.15)",
+                    borderRadius: 9,
+                    fontSize: 12,
+                    color: "var(--text-muted)",
+                  }}
+                >
+                  📱 <strong>موظف الاستقبال</strong> (يرد على واتساب تلقائياً) متاح بعد ربط Meta
+                  Business — تقدر تفعّله لاحقاً.
                 </div>
               </div>
             </div>
@@ -317,14 +507,24 @@ export default function OnboardingPage() {
               <button onClick={prev} style={btnSecondary}>
                 <ArrowRight size={14} /> السابق
               </button>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
             {step < 3 ? (
               <button onClick={next} style={btnPrimary}>
                 التالي <ArrowLeft size={14} />
               </button>
             ) : (
-              <button onClick={complete} disabled={submitting} style={{ ...btnPrimary, opacity: submitting ? 0.6 : 1 }}>
-                {submitting ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Sparkles size={14} />}
+              <button
+                onClick={complete}
+                disabled={submitting}
+                style={{ ...btnPrimary, opacity: submitting ? 0.6 : 1 }}
+              >
+                {submitting ? (
+                  <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
+                ) : (
+                  <Sparkles size={14} />
+                )}
                 إكمال + الدخول للداشبورد
               </button>
             )}
@@ -333,7 +533,17 @@ export default function OnboardingPage() {
 
         {/* Skip link */}
         <div style={{ textAlign: "center", marginTop: 18 }}>
-          <button onClick={() => router.replace("/dashboard")} style={{ background: "none", border: "none", color: "var(--text-disabled)", fontSize: 12, cursor: "pointer", fontFamily: "'Tajawal', sans-serif" }}>
+          <button
+            onClick={() => router.replace("/dashboard")}
+            style={{
+              background: "none",
+              border: "none",
+              color: "var(--text-disabled)",
+              fontSize: 12,
+              cursor: "pointer",
+              fontFamily: "'Tajawal', sans-serif",
+            }}
+          >
             تخطٍّ الإعداد والذهاب للداشبورد
           </button>
         </div>
@@ -342,36 +552,107 @@ export default function OnboardingPage() {
   );
 }
 
-function PlanCard({ selected, onClick, icon: Icon, name, price, features, recommended, color }: {
-  selected: boolean; onClick: () => void; icon: typeof Gift; name: string; price: string;
-  features: string[]; recommended: boolean; color: string;
+function PlanCard({
+  selected,
+  onClick,
+  icon: Icon,
+  name,
+  price,
+  features,
+  recommended,
+  color,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  icon: typeof Gift;
+  name: string;
+  price: string;
+  features: string[];
+  recommended: boolean;
+  color: string;
 }) {
   return (
-    <button onClick={onClick}
+    <button
+      onClick={onClick}
       style={{
-        textAlign: "right", padding: 16, borderRadius: 11,
+        textAlign: "right",
+        padding: 16,
+        borderRadius: 11,
         background: selected ? `${color}10` : "var(--bg-surface-2)",
         border: `2px solid ${selected ? color : "var(--overlay-mid)"}`,
-        cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
-        position: "relative", transition: "all 0.2s",
-      }}>
+        cursor: "pointer",
+        fontFamily: "'Tajawal', sans-serif",
+        position: "relative",
+        transition: "all 0.2s",
+      }}
+    >
       {recommended && (
-        <span style={{ position: "absolute", top: -10, insetInlineStart: 14, fontSize: 10, padding: "2px 9px", borderRadius: 100, background: color, color: "var(--bg-page)", fontWeight: 700 }}>
+        <span
+          style={{
+            position: "absolute",
+            top: -10,
+            insetInlineStart: 14,
+            fontSize: 10,
+            padding: "2px 9px",
+            borderRadius: 100,
+            background: color,
+            color: "var(--bg-page)",
+            fontWeight: 700,
+          }}
+        >
           الأكثر طلباً
         </span>
       )}
       <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-        <div style={{ width: 36, height: 36, borderRadius: 9, background: `${color}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 9,
+            background: `${color}20`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
           <Icon size={16} style={{ color }} />
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)" }}>{name}</span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 4,
+            }}
+          >
+            <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)" }}>
+              {name}
+            </span>
             <span style={{ fontSize: 14, fontWeight: 700, color }}>{price}</span>
           </div>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 3 }}>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+            }}
+          >
             {features.map((f, i) => (
-              <li key={i} style={{ fontSize: 11.5, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 5 }}>
+              <li
+                key={i}
+                style={{
+                  fontSize: 11.5,
+                  color: "var(--text-muted)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
                 <CheckCircle2 size={11} style={{ color: "var(--success)", flexShrink: 0 }} /> {f}
               </li>
             ))}
@@ -383,44 +664,104 @@ function PlanCard({ selected, onClick, icon: Icon, name, price, features, recomm
   );
 }
 
-function ToggleCard({ enabled, onChange, title, desc, schedule, color }: {
-  enabled: boolean; onChange: (v: boolean) => void; title: string; desc: string; schedule: string; color: string;
+function ToggleCard({
+  enabled,
+  onChange,
+  title,
+  desc,
+  schedule,
+  color,
+}: {
+  enabled: boolean;
+  onChange: (v: boolean) => void;
+  title: string;
+  desc: string;
+  schedule: string;
+  color: string;
 }) {
   return (
-    <button onClick={() => onChange(!enabled)}
+    <button
+      onClick={() => onChange(!enabled)}
       style={{
-        textAlign: "right", padding: 14, borderRadius: 10,
+        textAlign: "right",
+        padding: 14,
+        borderRadius: 10,
         background: enabled ? `${color}08` : "var(--bg-surface-2)",
         border: `1px solid ${enabled ? `${color}33` : "var(--overlay-soft)"}`,
-        cursor: "pointer", fontFamily: "'Tajawal', sans-serif",
-        display: "flex", alignItems: "flex-start", gap: 12,
-      }}>
+        cursor: "pointer",
+        fontFamily: "'Tajawal', sans-serif",
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 12,
+      }}
+    >
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>{title}</span>
-          <span style={{ fontSize: 10, color: color, background: `${color}15`, padding: "2px 7px", borderRadius: 4 }}>{schedule}</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text-on-dark)" }}>
+            {title}
+          </span>
+          <span
+            style={{
+              fontSize: 10,
+              color: color,
+              background: `${color}15`,
+              padding: "2px 7px",
+              borderRadius: 4,
+            }}
+          >
+            {schedule}
+          </span>
         </div>
         <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.7 }}>{desc}</p>
       </div>
-      <div style={{
-        width: 38, height: 22, borderRadius: 11, position: "relative",
-        background: enabled ? color : "#27272A", flexShrink: 0, transition: "all 0.2s",
-      }}>
-        <div style={{
-          position: "absolute", top: 2, insetInlineStart: enabled ? 18 : 2,
-          width: 18, height: 18, borderRadius: "50%", background: "#fff", transition: "all 0.2s",
-        }} />
+      <div
+        style={{
+          width: 38,
+          height: 22,
+          borderRadius: 11,
+          position: "relative",
+          background: enabled ? color : "#27272A",
+          flexShrink: 0,
+          transition: "all 0.2s",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: 2,
+            insetInlineStart: enabled ? 18 : 2,
+            width: 18,
+            height: 18,
+            borderRadius: "50%",
+            background: "#fff",
+            transition: "all 0.2s",
+          }}
+        />
       </div>
     </button>
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 5 }}>{label}</label>
+      <label
+        style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginBottom: 5 }}
+      >
+        {label}
+      </label>
       {children}
-      {hint && <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 4 }}>{hint}</div>}
+      {hint && (
+        <div style={{ fontSize: 10, color: "var(--text-disabled)", marginTop: 4 }}>{hint}</div>
+      )}
     </div>
   );
 }
@@ -437,22 +778,42 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "10px 12px", background: "var(--bg-surface-2)",
-  border: "1px solid var(--overlay-mid)", borderRadius: 9,
-  color: "var(--text-on-dark)", fontSize: 14, fontFamily: "'Tajawal', sans-serif",
+  width: "100%",
+  padding: "10px 12px",
+  background: "var(--bg-surface-2)",
+  border: "1px solid var(--overlay-mid)",
+  borderRadius: 9,
+  color: "var(--text-on-dark)",
+  fontSize: 14,
+  fontFamily: "'Tajawal', sans-serif",
   outline: "none",
 };
 
 const btnPrimary: React.CSSProperties = {
-  display: "flex", alignItems: "center", gap: 7, padding: "11px 22px", borderRadius: 10,
+  display: "flex",
+  alignItems: "center",
+  gap: 7,
+  padding: "11px 22px",
+  borderRadius: 10,
   background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
-  color: "var(--bg-page)", border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer",
+  color: "var(--bg-page)",
+  border: "none",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
   fontFamily: "'Tajawal', sans-serif",
 };
 
 const btnSecondary: React.CSSProperties = {
-  display: "flex", alignItems: "center", gap: 7, padding: "11px 18px", borderRadius: 10,
-  background: "rgba(255,255,255,0.04)", color: "var(--text-muted)",
-  border: "1px solid var(--overlay-mid)", fontSize: 13, cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: 7,
+  padding: "11px 18px",
+  borderRadius: 10,
+  background: "rgba(255,255,255,0.04)",
+  color: "var(--text-muted)",
+  border: "1px solid var(--overlay-mid)",
+  fontSize: 13,
+  cursor: "pointer",
   fontFamily: "'Tajawal', sans-serif",
 };

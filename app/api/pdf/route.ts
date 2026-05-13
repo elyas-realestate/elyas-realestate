@@ -10,7 +10,11 @@ function money(n: number | null | undefined) {
 
 function formatDate(d: string | null | undefined) {
   if (!d) return "—";
-  return new Date(d).toLocaleDateString("ar-SA", { year: "numeric", month: "long", day: "numeric" });
+  return new Date(d).toLocaleDateString("ar-SA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 // ── HTML escape — يمنع XSS في template literals ──
@@ -28,21 +32,31 @@ export async function GET(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type"); // "invoice" | "quotation"
-  const id   = searchParams.get("id");
+  const id = searchParams.get("id");
 
   if (!type || !id) return NextResponse.json({ error: "missing params" }, { status: 400 });
-  if (type !== "invoice" && type !== "quotation") return NextResponse.json({ error: "invalid type" }, { status: 400 });
+  if (type !== "invoice" && type !== "quotation")
+    return NextResponse.json({ error: "invalid type" }, { status: 400 });
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
   // ── استخراج tenant_id الفعلي للمستخدم الحالي (tenants.id ≠ auth.uid()) ──
@@ -78,15 +92,16 @@ export async function GET(req: NextRequest) {
 
   const brokerName = identity?.broker_name || settings?.site_name || "وسيط برو";
   const falLicense = identity?.fal_license || "";
-  const phone      = identity?.phone || settings?.phone || "";
-  const email      = settings?.email || "";
-  const logo       = settings?.site_logo || "";
+  const phone = identity?.phone || settings?.phone || "";
+  const email = settings?.email || "";
+  const logo = settings?.site_logo || "";
 
   const isInvoice = type === "invoice";
-  const docTitle  = isInvoice ? "فاتورة" : "عرض سعر";
-  const docNumber = doc.invoice_number || doc.quotation_number || `#${id.slice(0, 8).toUpperCase()}`;
-  const total     = Number(doc.amount || 0);
-  const vat       = Number(doc.vat_amount || 0);
+  const docTitle = isInvoice ? "فاتورة" : "عرض سعر";
+  const docNumber =
+    doc.invoice_number || doc.quotation_number || `#${id.slice(0, 8).toUpperCase()}`;
+  const total = Number(doc.amount || 0);
+  const vat = Number(doc.vat_amount || 0);
   const grandTotal = total + vat;
 
   // ── ZATCA Phase 1 QR Code (يظهر في الفواتير فقط إذا الرقم الضريبي موجود) ──
@@ -95,11 +110,11 @@ export async function GET(req: NextRequest) {
   let qrImgUrl = "";
   if (showZatcaQr) {
     const qrBase64 = buildZatcaQr({
-      sellerName:   brokerName,
+      sellerName: brokerName,
       vatNumber,
-      timestamp:    doc.created_at || new Date(),
+      timestamp: doc.created_at || new Date(),
       totalWithVat: grandTotal,
-      vatAmount:    vat,
+      vatAmount: vat,
     });
     // نستخدم QR Server API — مجاني بدون authentication
     qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrBase64)}`;
@@ -210,12 +225,16 @@ export async function GET(req: NextRequest) {
 
   ${doc.notes ? `<div class="notes-box"><div class="notes-label">ملاحظات</div><div class="notes-text">${h(doc.notes)}</div></div>` : ""}
 
-  ${showZatcaQr ? `
+  ${
+    showZatcaQr
+      ? `
   <div style="display:flex;flex-direction:column;align-items:center;padding:20px;background:#fafafa;border-radius:12px;margin-bottom:24px;">
     <img src="${qrImgUrl}" alt="ZATCA QR" style="width:180px;height:180px;" crossorigin="anonymous">
     <div style="font-size:11px;color:#888;margin-top:8px;font-weight:600;">امسح الرمز للتحقق من الفاتورة — متوافق مع ZATCA</div>
   </div>
-  ` : ""}
+  `
+      : ""
+  }
 
   <div class="footer">
     <span>مُولَّد بواسطة وسيط برو</span>

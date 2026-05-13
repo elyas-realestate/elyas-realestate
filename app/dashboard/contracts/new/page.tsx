@@ -5,8 +5,15 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import {
-  ArrowRight, FileText, Building, Home, Briefcase, Tag,
-  Loader2, AlertCircle, Save,
+  ArrowRight,
+  FileText,
+  Building,
+  Home,
+  Briefcase,
+  Tag,
+  Loader2,
+  AlertCircle,
+  Save,
 } from "lucide-react";
 
 type Template = {
@@ -20,7 +27,9 @@ type Template = {
 };
 
 const CATEGORY_ICON: Record<string, typeof Home> = {
-  rent: Home, sale: Tag, listing: Building,
+  rent: Home,
+  sale: Tag,
+  listing: Building,
 };
 
 export default function NewContractPage() {
@@ -32,10 +41,13 @@ export default function NewContractPage() {
   const [values, setValues] = useState<Record<string, string>>({});
   const [creating, setCreating] = useState(false);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   async function load() {
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
     try {
       const { data, error: e } = await supabase
         .from("e_contract_templates")
@@ -55,19 +67,23 @@ export default function NewContractPage() {
     // initialize values with empty strings + today for date fields
     const initial: Record<string, string> = {};
     const today = new Date().toISOString().slice(0, 10);
-    t.variables.forEach(v => {
+    t.variables.forEach((v) => {
       initial[v.name] = v.type === "date" && v.name === "contract_date" ? today : "";
     });
     setValues(initial);
   }
 
-  function fillTemplate(html: string, vars: Record<string, string>, useFriendlyPlaceholder = false): string {
+  function fillTemplate(
+    html: string,
+    vars: Record<string, string>,
+    useFriendlyPlaceholder = false
+  ): string {
     return html.replace(/\{\{(\w+)\}\}/g, (_, key) => {
       const val = vars[key];
       if (val) return val;
       // عند المعاينة: نعرض label بشري بلون رمادي بدل {{key}}
       if (useFriendlyPlaceholder && selected) {
-        const v = selected.variables.find(x => x.name === key);
+        const v = selected.variables.find((x) => x.name === key);
         const label = v?.label || key;
         return `<span class="contract-placeholder">[${label}]</span>`;
       }
@@ -80,10 +96,12 @@ export default function NewContractPage() {
     if (!selected) return;
     // التحقق من المتغيرات المطلوبة
     const missing = selected.variables
-      .filter(v => v.required && !values[v.name]?.trim())
-      .map(v => v.label);
+      .filter((v) => v.required && !values[v.name]?.trim())
+      .map((v) => v.label);
     if (missing.length > 0) {
-      toast.error(`حقول ناقصة: ${missing.slice(0, 3).join("، ")}${missing.length > 3 ? "..." : ""}`);
+      toast.error(
+        `حقول ناقصة: ${missing.slice(0, 3).join("، ")}${missing.length > 3 ? "..." : ""}`
+      );
       return;
     }
 
@@ -117,7 +135,7 @@ export default function NewContractPage() {
 
       const filled = fillTemplate(selected.body_html, values);
       const amountKeys = ["rent_amount", "sale_amount", "listing_price"];
-      const amountKey = amountKeys.find(k => values[k]);
+      const amountKey = amountKeys.find((k) => values[k]);
       const amount = amountKey ? Number(values[amountKey]) || null : null;
 
       const { data: created, error: insErr } = await supabase
@@ -171,7 +189,10 @@ export default function NewContractPage() {
   if (loading) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 80 }}>
-        <Loader2 size={28} style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }} />
+        <Loader2
+          size={28}
+          style={{ color: "var(--gold-2)", animation: "spin 1s linear infinite" }}
+        />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -179,8 +200,17 @@ export default function NewContractPage() {
 
   return (
     <div>
-      <Link href="/dashboard/contracts"
-        style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-ghost)", marginBottom: 14 }}>
+      <Link
+        href="/dashboard/contracts"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5,
+          fontSize: 12,
+          color: "var(--text-ghost)",
+          marginBottom: 14,
+        }}
+      >
         <ArrowRight size={12} /> العقود
       </Link>
 
@@ -189,58 +219,156 @@ export default function NewContractPage() {
       </h1>
 
       {error && (
-        <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.15)" }}>
-          <AlertCircle size={14} style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }} />
+        <div
+          style={{
+            marginBottom: 14,
+            padding: "12px 16px",
+            borderRadius: 10,
+            background: "rgba(239,68,68,0.07)",
+            border: "1px solid rgba(239,68,68,0.15)",
+          }}
+        >
+          <AlertCircle
+            size={14}
+            style={{ color: "var(--danger)", display: "inline", marginInlineEnd: 8 }}
+          />
           <span style={{ fontSize: 13, color: "var(--danger)" }}>{error}</span>
         </div>
       )}
 
       {!selected ? (
         // ─────── خطوة 1: اختيار قالب ───────
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-          {templates.map(t => {
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+            gap: 14,
+          }}
+        >
+          {templates.map((t) => {
             const Icon = CATEGORY_ICON[t.category] || FileText;
             return (
-              <button key={t.id} onClick={() => pickTemplate(t)}
+              <button
+                key={t.id}
+                onClick={() => pickTemplate(t)}
                 style={{
-                  background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)",
-                  borderRadius: 13, padding: 18, textAlign: "right", cursor: "pointer",
-                  fontFamily: "'Tajawal', sans-serif", transition: "all 0.2s",
+                  background: "var(--bg-deep)",
+                  border: "1px solid var(--overlay-mid)",
+                  borderRadius: 13,
+                  padding: 18,
+                  textAlign: "right",
+                  cursor: "pointer",
+                  fontFamily: "'Tajawal', sans-serif",
+                  transition: "all 0.2s",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(198,145,76,0.4)"; e.currentTarget.style.background = "#141418"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--overlay-mid)"; e.currentTarget.style.background = "var(--bg-deep)"; }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--gold-bg)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(198,145,76,0.4)";
+                  e.currentTarget.style.background = "#141418";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--overlay-mid)";
+                  e.currentTarget.style.background = "var(--bg-deep)";
+                }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background: "var(--gold-bg)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 12,
+                  }}
+                >
                   <Icon size={18} style={{ color: "var(--gold-2)" }} />
                 </div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 4 }}>{t.title}</div>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: "var(--text-on-dark)",
+                    marginBottom: 4,
+                  }}
+                >
+                  {t.title}
+                </div>
                 <div style={{ fontSize: 12, color: "var(--text-ghost)" }}>
                   {t.variables.length} حقل قابل للتخصيص
-                  {t.is_system && <span style={{ marginInlineStart: 8, fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "rgba(74,222,128,0.1)", color: "var(--success)" }}>قالب نظام</span>}
+                  {t.is_system && (
+                    <span
+                      style={{
+                        marginInlineStart: 8,
+                        fontSize: 10,
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        background: "rgba(74,222,128,0.1)",
+                        color: "var(--success)",
+                      }}
+                    >
+                      قالب نظام
+                    </span>
+                  )}
                 </div>
               </button>
             );
           })}
           {templates.length === 0 && (
-            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40, color: "var(--text-disabled)" }}>
+            <div
+              style={{
+                gridColumn: "1 / -1",
+                textAlign: "center",
+                padding: 40,
+                color: "var(--text-disabled)",
+              }}
+            >
               لا قوالب متاحة
             </div>
           )}
         </div>
       ) : (
         // ─────── خطوة 2: ملء الحقول ───────
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 16 }}>
+        <div
+          style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 16 }}
+        >
           {/* العمود الأيمن: النموذج */}
-          <div style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 18 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+          <div
+            style={{
+              background: "var(--bg-deep)",
+              border: "1px solid var(--overlay-mid)",
+              borderRadius: 12,
+              padding: 18,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 14,
+              }}
+            >
               <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)" }}>الحقول</h2>
-              <button onClick={() => { setSelected(null); setValues({}); }}
-                style={{ fontSize: 12, color: "var(--text-ghost)", background: "none", border: "none", cursor: "pointer" }}>
+              <button
+                onClick={() => {
+                  setSelected(null);
+                  setValues({});
+                }}
+                style={{
+                  fontSize: 12,
+                  color: "var(--text-ghost)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
                 تغيير القالب
               </button>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {selected.variables.map(v => (
+              {selected.variables.map((v) => (
                 <label key={v.name} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                   <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
                     {v.label} {v.required && <span style={{ color: "var(--danger)" }}>*</span>}
@@ -248,7 +376,7 @@ export default function NewContractPage() {
                   {v.type === "textarea" ? (
                     <textarea
                       value={values[v.name] || ""}
-                      onChange={e => setValues(s => ({ ...s, [v.name]: e.target.value }))}
+                      onChange={(e) => setValues((s) => ({ ...s, [v.name]: e.target.value }))}
                       rows={3}
                       style={inputStyle}
                     />
@@ -256,7 +384,7 @@ export default function NewContractPage() {
                     <input
                       type={v.type === "number" ? "number" : v.type === "date" ? "date" : "text"}
                       value={values[v.name] || ""}
-                      onChange={e => setValues(s => ({ ...s, [v.name]: e.target.value }))}
+                      onChange={(e) => setValues((s) => ({ ...s, [v.name]: e.target.value }))}
                       style={inputStyle}
                     />
                   )}
@@ -264,26 +392,55 @@ export default function NewContractPage() {
               ))}
             </div>
 
-            <button onClick={handleCreate} disabled={creating}
+            <button
+              onClick={handleCreate}
+              disabled={creating}
               style={{
-                marginTop: 18, width: "100%", padding: "12px",
+                marginTop: 18,
+                width: "100%",
+                padding: "12px",
                 background: "linear-gradient(135deg, var(--gold-2), var(--gold-4))",
-                color: "var(--bg-page)", border: "none", borderRadius: 9,
-                fontSize: 14, fontWeight: 700, cursor: creating ? "not-allowed" : "pointer",
+                color: "var(--bg-page)",
+                border: "none",
+                borderRadius: 9,
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: creating ? "not-allowed" : "pointer",
                 fontFamily: "'Tajawal', sans-serif",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
                 opacity: creating ? 0.6 : 1,
-              }}>
-              {creating ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Save size={14} />}
+              }}
+            >
+              {creating ? (
+                <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
+              ) : (
+                <Save size={14} />
+              )}
               إنشاء العقد كمسودة
             </button>
           </div>
 
           {/* العمود الأيسر: المعاينة */}
-          <div style={{ background: "#FAFAFA", color: "var(--pure-black)", border: "1px solid var(--overlay-mid)", borderRadius: 12, padding: 24, maxHeight: "85vh", overflowY: "auto", direction: "rtl" }}>
-            <div className="contract-preview"
+          <div
+            style={{
+              background: "#FAFAFA",
+              color: "var(--pure-black)",
+              border: "1px solid var(--overlay-mid)",
+              borderRadius: 12,
+              padding: 24,
+              maxHeight: "85vh",
+              overflowY: "auto",
+              direction: "rtl",
+            }}
+          >
+            <div
+              className="contract-preview"
               dangerouslySetInnerHTML={{ __html: fillTemplate(selected.body_html, values, true) }}
-              style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.8 }} />
+              style={{ fontFamily: "'Tajawal', serif", fontSize: 14, lineHeight: 1.8 }}
+            />
           </div>
         </div>
       )}
@@ -309,7 +466,13 @@ export default function NewContractPage() {
 }
 
 const inputStyle: React.CSSProperties = {
-  padding: "9px 12px", background: "var(--bg-surface-2)", border: "1px solid var(--overlay-mid)",
-  borderRadius: 8, color: "var(--text-on-dark)", fontSize: 13, fontFamily: "'Tajawal', sans-serif",
-  outline: "none", width: "100%",
+  padding: "9px 12px",
+  background: "var(--bg-surface-2)",
+  border: "1px solid var(--overlay-mid)",
+  borderRadius: 8,
+  color: "var(--text-on-dark)",
+  fontSize: 13,
+  fontFamily: "'Tajawal', sans-serif",
+  outline: "none",
+  width: "100%",
 };

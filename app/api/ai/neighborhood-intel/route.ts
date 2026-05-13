@@ -57,11 +57,14 @@ export async function GET(req: NextRequest) {
   // ── توليد بالـ AI ──
   const openaiKey = process.env.OPENAI_API_KEY;
   if (!openaiKey) {
-    return NextResponse.json({
-      ok: false,
-      error: "AI service غير متاح",
-      data: cached || null,
-    }, { status: 503 });
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "AI service غير متاح",
+        data: cached || null,
+      },
+      { status: 503 }
+    );
   }
 
   let aiData: Record<string, unknown> = {};
@@ -85,28 +88,34 @@ export async function GET(req: NextRequest) {
     aiData = JSON.parse(content);
   } catch (e) {
     console.error("[neighborhood-intel] AI error:", e);
-    return NextResponse.json({
-      ok: false,
-      error: "فشل توليد المعلومات",
-      data: cached || null,
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "فشل توليد المعلومات",
+        data: cached || null,
+      },
+      { status: 500 }
+    );
   }
 
   // ── حفظ في الكاش ──
   const { data: saved } = await admin
     .from("neighborhood_intel")
-    .upsert({
-      city,
-      district,
-      description_ar: aiData.description_ar || null,
-      highlights: aiData.highlights || [],
-      schools_count: aiData.schools_count || null,
-      mosques_count: aiData.mosques_count || null,
-      hospitals_count: aiData.hospitals_count || null,
-      restaurants_count: aiData.restaurants_count || null,
-      ai_generated: true,
-      last_updated_at: new Date().toISOString(),
-    }, { onConflict: "city,district" })
+    .upsert(
+      {
+        city,
+        district,
+        description_ar: aiData.description_ar || null,
+        highlights: aiData.highlights || [],
+        schools_count: aiData.schools_count || null,
+        mosques_count: aiData.mosques_count || null,
+        hospitals_count: aiData.hospitals_count || null,
+        restaurants_count: aiData.restaurants_count || null,
+        ai_generated: true,
+        last_updated_at: new Date().toISOString(),
+      },
+      { onConflict: "city,district" }
+    )
     .select()
     .single();
 

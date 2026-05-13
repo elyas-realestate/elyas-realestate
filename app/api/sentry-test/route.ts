@@ -26,26 +26,30 @@ export async function GET(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return req.cookies.getAll(); },
+        getAll() {
+          return req.cookies.getAll();
+        },
         setAll() {},
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // تأكد إنه مالك tenant (مو فقط مستخدم عشوائي)
   const { data: t } = await supabase
-    .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
 
   if (!t?.id) {
-    return NextResponse.json(
-      { error: "هذا الـ endpoint للمالكين فقط" },
-      { status: 403 }
-    );
+    return NextResponse.json({ error: "هذا الـ endpoint للمالكين فقط" }, { status: 403 });
   }
 
   // ── الخطأ المتعمَّد لاختبار Sentry ──

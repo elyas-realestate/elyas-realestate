@@ -9,7 +9,12 @@ interface SignaturePadProps {
   hint?: string;
 }
 
-export default function SignaturePad({ onConfirm, onCancel, busy = false, hint }: SignaturePadProps) {
+export default function SignaturePad({
+  onConfirm,
+  onCancel,
+  busy = false,
+  hint,
+}: SignaturePadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hasDrawing, setHasDrawing] = useState(false);
   const drawing = useRef(false);
@@ -98,10 +103,16 @@ export default function SignaturePad({ onConfirm, onCancel, busy = false, hint }
       </div>
       <canvas
         ref={canvasRef}
-        onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
-        onTouchStart={start} onTouchMove={move} onTouchEnd={end}
+        onMouseDown={start}
+        onMouseMove={move}
+        onMouseUp={end}
+        onMouseLeave={end}
+        onTouchStart={start}
+        onTouchMove={move}
+        onTouchEnd={end}
         style={{
-          width: "100%", height: 200,
+          width: "100%",
+          height: 200,
           background: "#FFFFFF",
           borderRadius: 9,
           border: "1px dashed #C6914C",
@@ -110,36 +121,80 @@ export default function SignaturePad({ onConfirm, onCancel, busy = false, hint }
           display: "block",
         }}
       />
-      <div style={{ display: "flex", gap: 8, marginTop: 12, justifyContent: "flex-end", flexWrap: "wrap" }}>
-        <button onClick={clear} disabled={busy || !hasDrawing}
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          marginTop: 12,
+          justifyContent: "flex-end",
+          flexWrap: "wrap",
+        }}
+      >
+        <button
+          onClick={clear}
+          disabled={busy || !hasDrawing}
           style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "9px 14px", borderRadius: 8,
-            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-            color: "#A1A1AA", fontSize: 12, cursor: hasDrawing ? "pointer" : "not-allowed",
-            fontFamily: "'Tajawal', sans-serif", opacity: hasDrawing ? 1 : 0.5,
-          }}>
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "9px 14px",
+            borderRadius: 8,
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "#A1A1AA",
+            fontSize: 12,
+            cursor: hasDrawing ? "pointer" : "not-allowed",
+            fontFamily: "'Tajawal', sans-serif",
+            opacity: hasDrawing ? 1 : 0.5,
+          }}
+        >
           <Eraser size={13} /> مسح
         </button>
         {onCancel && (
-          <button onClick={onCancel} disabled={busy}
+          <button
+            onClick={onCancel}
+            disabled={busy}
             style={{
-              display: "flex", alignItems: "center", gap: 6, padding: "9px 14px", borderRadius: 8,
-              background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)",
-              color: "#F87171", fontSize: 12, cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "9px 14px",
+              borderRadius: 8,
+              background: "rgba(239,68,68,0.06)",
+              border: "1px solid rgba(239,68,68,0.2)",
+              color: "#F87171",
+              fontSize: 12,
+              cursor: "pointer",
               fontFamily: "'Tajawal', sans-serif",
-            }}>
+            }}
+          >
             <X size={13} /> إلغاء
           </button>
         )}
-        <button onClick={confirm} disabled={busy || !hasDrawing}
+        <button
+          onClick={confirm}
+          disabled={busy || !hasDrawing}
           style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 8,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "9px 16px",
+            borderRadius: 8,
             background: hasDrawing ? "linear-gradient(135deg, #C6914C, #8A5F2E)" : "#3F3F46",
-            border: "none", color: hasDrawing ? "#0A0A0C" : "#71717A",
-            fontSize: 12, fontWeight: 700, cursor: hasDrawing && !busy ? "pointer" : "not-allowed",
-            fontFamily: "'Tajawal', sans-serif", opacity: busy ? 0.6 : 1,
-          }}>
-          {busy ? <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> : <Check size={13} />}
+            border: "none",
+            color: hasDrawing ? "#0A0A0C" : "#71717A",
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: hasDrawing && !busy ? "pointer" : "not-allowed",
+            fontFamily: "'Tajawal', sans-serif",
+            opacity: busy ? 0.6 : 1,
+          }}
+        >
+          {busy ? (
+            <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} />
+          ) : (
+            <Check size={13} />
+          )}
           تأكيد التوقيع
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </button>

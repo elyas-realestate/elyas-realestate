@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
-import {
-  verifyTotp,
-  generateRecoveryCodes,
-  hashRecoveryCode,
-} from "@/lib/totp";
+import { verifyTotp, generateRecoveryCodes, hashRecoveryCode } from "@/lib/totp";
 
 // POST /api/2fa/verify
 // body: { code: "123456" }
@@ -14,9 +10,18 @@ export async function POST(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   let body: { code?: string };
@@ -32,7 +37,7 @@ export async function POST(req: NextRequest) {
 
   const svc = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
   // اجلب السرّ
@@ -61,7 +66,10 @@ export async function POST(req: NextRequest) {
   });
 
   if (!ok) {
-    return NextResponse.json({ error: "رمز غير صحيح. تأكّد من تزامن الساعة وحاول مرة أخرى." }, { status: 400 });
+    return NextResponse.json(
+      { error: "رمز غير صحيح. تأكّد من تزامن الساعة وحاول مرة أخرى." },
+      { status: 400 }
+    );
   }
 
   // فعّل 2FA إن لم يكن مفعّلاً

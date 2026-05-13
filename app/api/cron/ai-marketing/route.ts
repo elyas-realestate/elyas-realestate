@@ -63,7 +63,8 @@ function propertyBrief(p: Property): string {
   if (p.title) parts.push(p.title);
   if (p.main_category) parts.push(p.main_category);
   if (p.offer_type) parts.push(p.offer_type);
-  if (p.city || p.district) parts.push(`الموقع: ${[p.district, p.city].filter(Boolean).join(", ")}`);
+  if (p.city || p.district)
+    parts.push(`الموقع: ${[p.district, p.city].filter(Boolean).join(", ")}`);
   if (p.price) parts.push(`السعر: ${Number(p.price).toLocaleString("en-US")} ر.س`);
   if (p.rooms) parts.push(`الغرف: ${p.rooms}`);
   if (p.land_area) parts.push(`المساحة: ${p.land_area} م²`);
@@ -96,16 +97,26 @@ export async function GET(req: NextRequest) {
     try {
       // 2) تحقق أن المستأجر نشط
       const { data: tenantRow } = await admin
-        .from("tenants").select("is_active").eq("id", t.tenant_id).single();
+        .from("tenants")
+        .select("is_active")
+        .eq("id", t.tenant_id)
+        .single();
       if (!tenantRow?.is_active) continue;
 
       // 2.1) ✨ بوّاب التشغيل: master switch + daily limit
       const gate = await assertSystemActive(t.tenant_id);
       if (!gate.ok) {
-        results.push({ tenant_id: t.tenant_id, ok: true, inserted: 0, error: `gated:${gate.reason}` });
+        results.push({
+          tenant_id: t.tenant_id,
+          ok: true,
+          inserted: 0,
+          error: `gated:${gate.reason}`,
+        });
         await admin.from("org_activity_log").insert({
-          tenant_id: t.tenant_id, actor_kind: "system", action: "ai_marketing_skipped",
-          details: { reason: gate.reason, gated: true }
+          tenant_id: t.tenant_id,
+          actor_kind: "system",
+          action: "ai_marketing_skipped",
+          details: { reason: gate.reason, gated: true },
         });
         continue;
       }
@@ -121,7 +132,9 @@ export async function GET(req: NextRequest) {
       const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
       const { data: properties } = await admin
         .from("properties")
-        .select("id, tenant_id, title, city, district, main_category, offer_type, price, rooms, land_area, description")
+        .select(
+          "id, tenant_id, title, city, district, main_category, offer_type, price, rooms, land_area, description"
+        )
         .eq("tenant_id", t.tenant_id)
         .eq("is_published", true)
         .gte("created_at", sevenDaysAgo)
@@ -157,7 +170,10 @@ ${propertyBrief(p)}
               maxTokens: 600,
             });
           } catch (e) {
-            console.warn(`[ai-marketing] generateText failed for tenant ${t.tenant_id} property ${p.id} channel ${channel}:`, e);
+            console.warn(
+              `[ai-marketing] generateText failed for tenant ${t.tenant_id} property ${p.id} channel ${channel}:`,
+              e
+            );
             continue;
           }
 
@@ -167,21 +183,21 @@ ${propertyBrief(p)}
           await incrementCallCount(t.tenant_id);
 
           // استخراج هاشتاقات من النص (للتخزين المنفصل)
-          const hashtags = Array.from(new Set(
-            (content.match(/#\S+/g) || []).map(h => h.replace(/[#]/g, "")).filter(Boolean)
-          )).slice(0, 10);
+          const hashtags = Array.from(
+            new Set(
+              (content.match(/#\S+/g) || []).map((h) => h.replace(/[#]/g, "")).filter(Boolean)
+            )
+          ).slice(0, 10);
 
-          const { error: insErr } = await admin
-            .from("marketing_queue")
-            .insert({
-              tenant_id: t.tenant_id,
-              property_id: p.id,
-              channel,
-              content,
-              hashtags,
-              status: "pending",
-              generated_by_model: `${ctx.employee.ai_provider}:${ctx.employee.ai_model}`,
-            });
+          const { error: insErr } = await admin.from("marketing_queue").insert({
+            tenant_id: t.tenant_id,
+            property_id: p.id,
+            channel,
+            content,
+            hashtags,
+            status: "pending",
+            generated_by_model: `${ctx.employee.ai_provider}:${ctx.employee.ai_model}`,
+          });
 
           if (!insErr) insertedForTenant++;
         }

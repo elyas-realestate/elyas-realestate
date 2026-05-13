@@ -13,25 +13,27 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const name         = sanitize(body.name, 100);
-    const phone        = sanitize(body.phone, 20).replace(/[^\d+]/g, "");
+    const name = sanitize(body.name, 100);
+    const phone = sanitize(body.phone, 20).replace(/[^\d+]/g, "");
     const request_type = sanitize(body.request_type, 30);
     const main_category = sanitize(body.main_category, 30);
-    const budget_min   = Number(body.budget_min) || null;
-    const budget_max   = Number(body.budget_max) || null;
-    const notes        = sanitize(body.notes, 500);
-    const tenant_id    = sanitize(body.tenant_id, 40);
+    const budget_min = Number(body.budget_min) || null;
+    const budget_max = Number(body.budget_max) || null;
+    const notes = sanitize(body.notes, 500);
+    const tenant_id = sanitize(body.tenant_id, 40);
 
-    if (!name || name.length < 2)      return NextResponse.json({ error: "الاسم مطلوب" }, { status: 400 });
-    if (!phone || phone.length < 9)    return NextResponse.json({ error: "رقم الجوال غير صحيح" }, { status: 400 });
-    if (!ALLOWED_TYPES.includes(request_type as typeof ALLOWED_TYPES[number])) {
+    if (!name || name.length < 2)
+      return NextResponse.json({ error: "الاسم مطلوب" }, { status: 400 });
+    if (!phone || phone.length < 9)
+      return NextResponse.json({ error: "رقم الجوال غير صحيح" }, { status: 400 });
+    if (!ALLOWED_TYPES.includes(request_type as (typeof ALLOWED_TYPES)[number])) {
       return NextResponse.json({ error: "نوع الطلب غير صحيح" }, { status: 400 });
     }
     if (!tenant_id) return NextResponse.json({ error: "معرّف المكتب مفقود" }, { status: 400 });
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
     // ── التحقق أن tenant_id حقيقي وموجود في قاعدة البيانات ──
@@ -91,12 +93,15 @@ export async function POST(req: NextRequest) {
         tenantId: tenant_id,
         type: "request",
         data: {
-          "الاسم":       name,
-          "الجوال":      phone,
-          "نوع الطلب":   request_type,
-          "التصنيف":     main_category || "—",
-          "الميزانية":   budget_min || budget_max ? `${budget_min?.toLocaleString() || "—"} - ${budget_max?.toLocaleString() || "—"} ر.س` : "—",
-          "ملاحظات":     notes || "",
+          الاسم: name,
+          الجوال: phone,
+          "نوع الطلب": request_type,
+          التصنيف: main_category || "—",
+          الميزانية:
+            budget_min || budget_max
+              ? `${budget_min?.toLocaleString() || "—"} - ${budget_max?.toLocaleString() || "—"} ر.س`
+              : "—",
+          ملاحظات: notes || "",
         },
       }),
     }).catch(() => {}); // لا نوقف الرد على فشل الإيميل

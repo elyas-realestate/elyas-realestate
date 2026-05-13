@@ -4,13 +4,25 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowRight, Upload, FileText, Image as ImageIcon, X, Sparkles,
-  Loader2, Check, Edit3, Save, Brain, Zap, Eye,
+  ArrowRight,
+  Upload,
+  FileText,
+  Image as ImageIcon,
+  X,
+  Sparkles,
+  Loader2,
+  Check,
+  Edit3,
+  Save,
+  Brain,
+  Zap,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import { applyWatermark } from "@/lib/watermark";
 
-const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
+const inp =
+  "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-4 py-3 text-sm text-[var(--text-strong)] placeholder:text-[var(--border-1)] focus:outline-none focus:border-[var(--gold-2)] transition";
 const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-wide";
 
 type ExtractedData = {
@@ -45,20 +57,22 @@ export default function SmartAddProperty() {
   // ── Image handling ──
   function handleFiles(files: FileList | null) {
     if (!files) return;
-    const newFiles = Array.from(files).filter(f => f.type.startsWith("image/")).slice(0, 5);
-    newFiles.forEach(file => {
+    const newFiles = Array.from(files)
+      .filter((f) => f.type.startsWith("image/"))
+      .slice(0, 5);
+    newFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
-        setImages(prev => [...prev, reader.result as string]);
-        setImageFiles(prev => [...prev, file]);
+        setImages((prev) => [...prev, reader.result as string]);
+        setImageFiles((prev) => [...prev, file]);
       };
       reader.readAsDataURL(file);
     });
   }
 
   function removeImage(idx: number) {
-    setImages(prev => prev.filter((_, i) => i !== idx));
-    setImageFiles(prev => prev.filter((_, i) => i !== idx));
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+    setImageFiles((prev) => prev.filter((_, i) => i !== idx));
   }
 
   // ── AI Analysis ──
@@ -108,7 +122,11 @@ export default function SmartAddProperty() {
         let processedFile = file;
         try {
           // جلب اسم الوسيط أو المنصة من الهوية (إن أمكن) أو استخدام ثابت مؤقت للحماية
-          const { data: idData } = await supabase.from("broker_identity").select("broker_name").limit(1).single();
+          const { data: idData } = await supabase
+            .from("broker_identity")
+            .select("broker_name")
+            .limit(1)
+            .single();
           const watermarkText = idData?.broker_name || "وسيط برو";
           processedFile = await applyWatermark(file, watermarkText);
         } catch (we) {
@@ -117,7 +135,9 @@ export default function SmartAddProperty() {
 
         const ext = processedFile.name.split(".").pop() || "jpg";
         const path = `properties/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("assets").upload(path, processedFile, { upsert: true });
+        const { error: upErr } = await supabase.storage
+          .from("assets")
+          .upload(path, processedFile, { upsert: true });
         if (!upErr) {
           const { data } = supabase.storage.from("assets").getPublicUrl(path);
           uploadedUrls.push(data.publicUrl);
@@ -162,57 +182,121 @@ export default function SmartAddProperty() {
   }
 
   const confidencePct = extracted ? Math.round(extracted.confidence * 100) : 0;
-  const confidenceColor = confidencePct >= 80 ? "var(--success)" : confidencePct >= 50 ? "var(--warning)" : "var(--danger)";
+  const confidenceColor =
+    confidencePct >= 80
+      ? "var(--success)"
+      : confidencePct >= 50
+        ? "var(--warning)"
+        : "var(--danger)";
 
   return (
     <div dir="rtl">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 mb-6" style={{ color: "var(--text-faint)", fontSize: 13 }}>
-        <Link href="/dashboard/properties" className="hover:text-[var(--gold-2)] transition no-underline" style={{ color: "var(--text-faint)" }}>العقارات</Link>
+      <div
+        className="mb-6 flex items-center gap-2"
+        style={{ color: "var(--text-faint)", fontSize: 13 }}
+      >
+        <Link
+          href="/dashboard/properties"
+          className="no-underline transition hover:text-[var(--gold-2)]"
+          style={{ color: "var(--text-faint)" }}
+        >
+          العقارات
+        </Link>
         <ArrowRight size={14} />
         <span style={{ color: "var(--text-strong)" }}>إضافة ذكية بالـ AI</span>
       </div>
 
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex items-center justify-center rounded-xl"
-          style={{ width: 44, height: 44, background: "linear-gradient(135deg, var(--gold-bg-hover), rgba(168,93,255,0.1))", border: "1px solid var(--gold-bg-hover)" }}>
+      <div className="mb-6 flex items-center gap-3">
+        <div
+          className="flex items-center justify-center rounded-xl"
+          style={{
+            width: 44,
+            height: 44,
+            background: "linear-gradient(135deg, var(--gold-bg-hover), rgba(168,93,255,0.1))",
+            border: "1px solid var(--gold-bg-hover)",
+          }}
+        >
           <Brain size={22} style={{ color: "var(--gold-2)" }} />
         </div>
         <div>
           <h2 className="text-xl font-bold">إضافة عقار ذكية</h2>
-          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>ارفع صور أو أرسل نص وسيقوم الذكاء الاصطناعي بملء البيانات تلقائياً</p>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>
+            ارفع صور أو أرسل نص وسيقوم الذكاء الاصطناعي بملء البيانات تلقائياً
+          </p>
         </div>
       </div>
 
       {/* تبديل بين الإدخال اليدوي والذكي */}
-      <div className="flex gap-2 mb-6 p-1 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", maxWidth: "fit-content" }}>
-        <Link href="/dashboard/properties/add" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm no-underline" style={{ color: "var(--text-soft)" }}>
+      <div
+        className="mb-6 flex gap-2 rounded-xl p-1"
+        style={{
+          background: "var(--bg-surface-1)",
+          border: "1px solid var(--gold-bg)",
+          maxWidth: "fit-content",
+        }}
+      >
+        <Link
+          href="/dashboard/properties/add"
+          className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm no-underline"
+          style={{ color: "var(--text-soft)" }}
+        >
           إدخال يدوي
         </Link>
-        <span className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold" style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-2)" }}>
+        <span
+          className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold"
+          style={{
+            background: "var(--gold-bg)",
+            color: "var(--gold-2)",
+            border: "1px solid var(--gold-2)",
+          }}
+        >
           ✨ إدخال ذكي بالـ AI
         </span>
       </div>
 
       {/* ══ Step indicators ══ */}
-      <div className="flex items-center gap-2 mb-8">
+      <div className="mb-8 flex items-center gap-2">
         {[
           { num: 1, label: "الرفع", active: step === "upload" },
           { num: 2, label: "المراجعة", active: step === "review" },
           { num: 3, label: "الحفظ", active: step === "saving" },
         ].map((s, i) => (
           <div key={s.num} className="flex items-center gap-2">
-            {i > 0 && <div style={{ width: 40, height: 1, background: s.active || step === "saving" ? "var(--gold-2)" : "var(--bg-surface-3)" }} />}
+            {i > 0 && (
+              <div
+                style={{
+                  width: 40,
+                  height: 1,
+                  background:
+                    s.active || step === "saving" ? "var(--gold-2)" : "var(--bg-surface-3)",
+                }}
+              />
+            )}
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center rounded-full" style={{
-                width: 28, height: 28, fontSize: 12, fontWeight: 700,
-                background: s.active ? "var(--gold-2)" : "var(--gold-bg-soft)",
-                color: s.active ? "var(--bg-page)" : "var(--text-faint)",
-                border: `1px solid ${s.active ? "var(--gold-2)" : "var(--gold-bg-hover)"}`,
-              }}>
+              <div
+                className="flex items-center justify-center rounded-full"
+                style={{
+                  width: 28,
+                  height: 28,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  background: s.active ? "var(--gold-2)" : "var(--gold-bg-soft)",
+                  color: s.active ? "var(--bg-page)" : "var(--text-faint)",
+                  border: `1px solid ${s.active ? "var(--gold-2)" : "var(--gold-bg-hover)"}`,
+                }}
+              >
                 {step === "saving" && s.num <= 2 ? <Check size={12} /> : s.num}
               </div>
-              <span style={{ fontSize: 12, color: s.active ? "var(--gold-2)" : "var(--text-faint)", fontWeight: 600 }}>{s.label}</span>
+              <span
+                style={{
+                  fontSize: 12,
+                  color: s.active ? "var(--gold-2)" : "var(--text-faint)",
+                  fontWeight: 600,
+                }}
+              >
+                {s.label}
+              </span>
             </div>
           </div>
         ))}
@@ -220,44 +304,89 @@ export default function SmartAddProperty() {
 
       {/* ══════ STEP 1: Upload ══════ */}
       {step === "upload" && (
-        <div className="space-y-5 max-w-3xl">
-
+        <div className="max-w-3xl space-y-5">
           {/* Image Upload */}
-          <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-            <h3 style={{ fontSize: 12, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1.5, marginBottom: 16, textTransform: "uppercase" }}>
-              <ImageIcon size={14} style={{ display: "inline", marginLeft: 6, verticalAlign: "middle" }} />
+          <div
+            className="rounded-2xl p-6"
+            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+          >
+            <h3
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: "var(--gold-2)",
+                letterSpacing: 1.5,
+                marginBottom: 16,
+                textTransform: "uppercase",
+              }}
+            >
+              <ImageIcon
+                size={14}
+                style={{ display: "inline", marginLeft: 6, verticalAlign: "middle" }}
+              />
               صور العقار
             </h3>
 
-            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
-              onChange={e => { handleFiles(e.target.files); e.target.value = ""; }} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                handleFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
 
             <div
               onClick={() => fileInputRef.current?.click()}
-              onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
-              onDragEnter={e => { e.preventDefault(); setIsDragging(true); }}
-              onDragLeave={e => { e.preventDefault(); setIsDragging(false); }}
-              onDrop={e => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragEnter={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                handleFiles(e.dataTransfer.files);
+              }}
               className="flex flex-col items-center justify-center gap-3 rounded-xl transition-all"
               style={{
                 border: "2px dashed " + (isDragging ? "var(--gold-2)" : "rgba(198,145,76,0.25)"),
                 padding: "36px 20px",
                 background: isDragging ? "var(--gold-bg-soft)" : "rgba(198,145,76,0.03)",
                 cursor: "pointer",
-              }}>
+              }}
+            >
               <Upload size={24} style={{ color: "var(--gold-2)" }} />
-              <p style={{ color: "var(--text-strong)", fontSize: 14, fontWeight: 600 }}>اسحب الصور هنا أو اضغط للاختيار</p>
+              <p style={{ color: "var(--text-strong)", fontSize: 14, fontWeight: 600 }}>
+                اسحب الصور هنا أو اضغط للاختيار
+              </p>
               <p style={{ color: "var(--text-faint)", fontSize: 12 }}>JPG, PNG — حتى 5 صور</p>
             </div>
 
             {images.length > 0 && (
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4">
+              <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
                 {images.map((img, i) => (
-                  <div key={i} className="relative rounded-xl overflow-hidden group" style={{ height: 80, background: "var(--bg-surface-2)" }}>
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                    <button onClick={() => removeImage(i)}
-                      className="absolute top-1 left-1 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-                      style={{ background: "rgba(248,113,113,0.9)" }}>
+                  <div
+                    key={i}
+                    className="group relative overflow-hidden rounded-xl"
+                    style={{ height: 80, background: "var(--bg-surface-2)" }}
+                  >
+                    <img src={img} alt="" className="h-full w-full object-cover" />
+                    <button
+                      onClick={() => removeImage(i)}
+                      className="absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full opacity-0 transition group-hover:opacity-100"
+                      style={{ background: "rgba(248,113,113,0.9)" }}
+                    >
                       <X size={10} style={{ color: "white" }} />
                     </button>
                   </div>
@@ -267,14 +396,29 @@ export default function SmartAddProperty() {
           </div>
 
           {/* Text Input */}
-          <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-            <h3 style={{ fontSize: 12, fontWeight: 700, color: "var(--gold-2)", letterSpacing: 1.5, marginBottom: 16, textTransform: "uppercase" }}>
-              <FileText size={14} style={{ display: "inline", marginLeft: 6, verticalAlign: "middle" }} />
+          <div
+            className="rounded-2xl p-6"
+            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+          >
+            <h3
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: "var(--gold-2)",
+                letterSpacing: 1.5,
+                marginBottom: 16,
+                textTransform: "uppercase",
+              }}
+            >
+              <FileText
+                size={14}
+                style={{ display: "inline", marginLeft: 6, verticalAlign: "middle" }}
+              />
               النص أو التفاصيل
             </h3>
             <textarea
               value={textInput}
-              onChange={e => setTextInput(e.target.value)}
+              onChange={(e) => setTextInput(e.target.value)}
               rows={6}
               className={inp}
               placeholder="أدخل أي معلومات عن العقار هنا... مثال:&#10;فيلا 5 غرف في حي النرجس بالرياض&#10;مساحة 400 متر، السعر 2 مليون ريال&#10;أو الصق رسالة واتساب أو إعلان عقاري..."
@@ -289,18 +433,24 @@ export default function SmartAddProperty() {
           <button
             onClick={handleAnalyze}
             disabled={analyzing || (!textInput.trim() && images.length === 0)}
-            className="flex items-center justify-center gap-3 w-full py-4 rounded-xl font-bold text-base transition disabled:opacity-40"
+            className="flex w-full items-center justify-center gap-3 rounded-xl py-4 text-base font-bold transition disabled:opacity-40"
             style={{
-              background: analyzing ? "var(--gold-bg-hover)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              background: analyzing
+                ? "var(--gold-bg-hover)"
+                : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
               color: analyzing ? "var(--gold-2)" : "var(--bg-page)",
               border: "none",
               cursor: analyzing ? "not-allowed" : "pointer",
             }}
           >
             {analyzing ? (
-              <><Loader2 size={18} className="animate-spin" /> جاري التحليل بالذكاء الاصطناعي...</>
+              <>
+                <Loader2 size={18} className="animate-spin" /> جاري التحليل بالذكاء الاصطناعي...
+              </>
             ) : (
-              <><Sparkles size={18} /> تحليل بالذكاء الاصطناعي</>
+              <>
+                <Sparkles size={18} /> تحليل بالذكاء الاصطناعي
+              </>
             )}
           </button>
         </div>
@@ -308,14 +458,17 @@ export default function SmartAddProperty() {
 
       {/* ══════ STEP 2: Review ══════ */}
       {step === "review" && extracted && (
-        <div className="space-y-5 max-w-3xl">
-
+        <div className="max-w-3xl space-y-5">
           {/* Confidence Badge */}
-          <div className="flex items-center justify-between rounded-xl px-5 py-3"
-            style={{ background: `${confidenceColor}08`, border: `1px solid ${confidenceColor}25` }}>
+          <div
+            className="flex items-center justify-between rounded-xl px-5 py-3"
+            style={{ background: `${confidenceColor}08`, border: `1px solid ${confidenceColor}25` }}
+          >
             <div className="flex items-center gap-3">
               <Zap size={16} style={{ color: confidenceColor }} />
-              <span style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 600 }}>دقة الاستخراج</span>
+              <span style={{ fontSize: 13, color: "var(--text-on-dark)", fontWeight: 600 }}>
+                دقة الاستخراج
+              </span>
             </div>
             <span className="font-cairo font-bold" style={{ fontSize: 18, color: confidenceColor }}>
               {confidencePct}%
@@ -323,22 +476,35 @@ export default function SmartAddProperty() {
           </div>
 
           {/* Editable Fields */}
-          <div className="rounded-2xl p-6" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-            <div className="flex items-center gap-2 mb-5">
+          <div
+            className="rounded-2xl p-6"
+            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+          >
+            <div className="mb-5 flex items-center gap-2">
               <Edit3 size={14} style={{ color: "var(--gold-2)" }} />
-              <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--gold-2)" }}>راجع وعدّل البيانات المستخرجة</h3>
+              <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--gold-2)" }}>
+                راجع وعدّل البيانات المستخرجة
+              </h3>
             </div>
 
             <div className="space-y-4">
               <div>
                 <label className={lbl}>العنوان</label>
-                <input value={extracted.title || ""} onChange={e => updateField("title", e.target.value)} className={inp} />
+                <input
+                  value={extracted.title || ""}
+                  onChange={(e) => updateField("title", e.target.value)}
+                  className={inp}
+                />
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                 <div>
                   <label className={lbl}>نوع العرض</label>
-                  <select value={extracted.offer_type || ""} onChange={e => updateField("offer_type", e.target.value)} className={inp}>
+                  <select
+                    value={extracted.offer_type || ""}
+                    onChange={(e) => updateField("offer_type", e.target.value)}
+                    className={inp}
+                  >
                     <option value="بيع">بيع</option>
                     <option value="إيجار">إيجار</option>
                     <option value="استثمار">استثمار</option>
@@ -346,41 +512,67 @@ export default function SmartAddProperty() {
                 </div>
                 <div>
                   <label className={lbl}>التصنيف</label>
-                  <select value={extracted.main_category || ""} onChange={e => updateField("main_category", e.target.value)} className={inp}>
-                    {["سكني","تجاري","أرض","زراعي","صناعي"].map(c => <option key={c} value={c}>{c}</option>)}
+                  <select
+                    value={extracted.main_category || ""}
+                    onChange={(e) => updateField("main_category", e.target.value)}
+                    className={inp}
+                  >
+                    {["سكني", "تجاري", "أرض", "زراعي", "صناعي"].map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
                   <label className={lbl}>النوع الفرعي</label>
-                  <input value={extracted.sub_category || ""} onChange={e => updateField("sub_category", e.target.value)} className={inp} />
+                  <input
+                    value={extracted.sub_category || ""}
+                    onChange={(e) => updateField("sub_category", e.target.value)}
+                    className={inp}
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className={lbl}>المدينة</label>
-                  <input value={extracted.city || ""} onChange={e => updateField("city", e.target.value)} className={inp} />
+                  <input
+                    value={extracted.city || ""}
+                    onChange={(e) => updateField("city", e.target.value)}
+                    className={inp}
+                  />
                 </div>
                 <div>
                   <label className={lbl}>الحي</label>
-                  <input value={extracted.district || ""} onChange={e => updateField("district", e.target.value)} className={inp} />
+                  <input
+                    value={extracted.district || ""}
+                    onChange={(e) => updateField("district", e.target.value)}
+                    className={inp}
+                  />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
+              <div className="grid grid-cols-3 gap-4 sm:grid-cols-5">
                 {[
                   { key: "land_area", label: "مساحة الأرض م²" },
                   { key: "built_area", label: "مسطح البناء م²" },
                   { key: "rooms", label: "الغرف" },
                   { key: "bathrooms", label: "دورات المياه" },
                   { key: "price", label: "السعر (ر.س)" },
-                ].map(f => (
+                ].map((f) => (
                   <div key={f.key}>
                     <label className={lbl}>{f.label}</label>
                     <input
-                      type="number" dir="ltr"
+                      type="number"
+                      dir="ltr"
                       value={extracted[f.key as keyof ExtractedData] ?? ""}
-                      onChange={e => updateField(f.key as keyof ExtractedData, e.target.value ? Number(e.target.value) : null)}
+                      onChange={(e) =>
+                        updateField(
+                          f.key as keyof ExtractedData,
+                          e.target.value ? Number(e.target.value) : null
+                        )
+                      }
                       className={inp}
                     />
                   </div>
@@ -391,8 +583,10 @@ export default function SmartAddProperty() {
                 <label className={lbl}>الوصف</label>
                 <textarea
                   value={extracted.description || ""}
-                  onChange={e => updateField("description", e.target.value)}
-                  rows={4} className={inp} style={{ resize: "vertical" }}
+                  onChange={(e) => updateField("description", e.target.value)}
+                  rows={4}
+                  className={inp}
+                  style={{ resize: "vertical" }}
                 />
               </div>
             </div>
@@ -400,15 +594,28 @@ export default function SmartAddProperty() {
 
           {/* Image preview */}
           {images.length > 0 && (
-            <div className="rounded-2xl p-5" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}>
-              <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-soft)", marginBottom: 12 }}>
-                <Eye size={13} style={{ display: "inline", marginLeft: 4, verticalAlign: "middle" }} />
+            <div
+              className="rounded-2xl p-5"
+              style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)" }}
+            >
+              <p
+                style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--text-soft)",
+                  marginBottom: 12,
+                }}
+              >
+                <Eye
+                  size={13}
+                  style={{ display: "inline", marginLeft: 4, verticalAlign: "middle" }}
+                />
                 {images.length} صور سيتم رفعها
               </p>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
                 {images.map((img, i) => (
-                  <div key={i} className="rounded-xl overflow-hidden" style={{ height: 70 }}>
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  <div key={i} className="overflow-hidden rounded-xl" style={{ height: 70 }}>
+                    <img src={img} alt="" className="h-full w-full object-cover" />
                   </div>
                 ))}
               </div>
@@ -420,16 +627,27 @@ export default function SmartAddProperty() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold transition disabled:opacity-50"
-              style={{ background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))", color: "var(--bg-page)", fontSize: 15, border: "none", cursor: "pointer" }}
+              className="flex items-center gap-2 rounded-xl px-8 py-3.5 font-bold transition disabled:opacity-50"
+              style={{
+                background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+                color: "var(--bg-page)",
+                fontSize: 15,
+                border: "none",
+                cursor: "pointer",
+              }}
             >
               <Save size={18} />
               {saving ? "جاري الحفظ..." : "حفظ العقار"}
             </button>
             <button
               onClick={() => setStep("upload")}
-              className="px-6 py-3.5 rounded-xl text-sm font-medium transition"
-              style={{ background: "var(--bg-surface-2)", color: "var(--text-soft)", border: "1px solid var(--gold-bg)", cursor: "pointer" }}
+              className="rounded-xl px-6 py-3.5 text-sm font-medium transition"
+              style={{
+                background: "var(--bg-surface-2)",
+                color: "var(--text-soft)",
+                border: "1px solid var(--gold-bg)",
+                cursor: "pointer",
+              }}
             >
               العودة للتعديل
             </button>
@@ -439,12 +657,14 @@ export default function SmartAddProperty() {
 
       {/* ══════ STEP 3: Saving ══════ */}
       {step === "saving" && (
-        <div className="max-w-md mx-auto text-center py-20">
-          <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center"
-            style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)" }}>
+        <div className="mx-auto max-w-md py-20 text-center">
+          <div
+            className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
+            style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg-hover)" }}
+          >
             <Loader2 size={28} className="animate-spin" style={{ color: "var(--gold-2)" }} />
           </div>
-          <h3 className="text-lg font-bold mb-2">جاري حفظ العقار...</h3>
+          <h3 className="mb-2 text-lg font-bold">جاري حفظ العقار...</h3>
           <p style={{ color: "var(--text-faint)", fontSize: 13 }}>يتم رفع الصور وحفظ البيانات</p>
         </div>
       )}

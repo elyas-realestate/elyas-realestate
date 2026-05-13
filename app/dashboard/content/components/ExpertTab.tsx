@@ -7,11 +7,7 @@ import type { BrokerIdentity, ChatMessage } from "@/types/database";
 import { MessageSquare, Send, RefreshCw } from "lucide-react";
 import { SkeletonList } from "@/components/ui/Skeleton";
 
-export default function ExpertTab({
-  onDraftsCreated,
-}: {
-  onDraftsCreated: () => void;
-}) {
+export default function ExpertTab({ onDraftsCreated }: { onDraftsCreated: () => void }) {
   const [identity, setIdentity] = useState<BrokerIdentity | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -26,11 +22,7 @@ export default function ExpertTab({
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from("broker_identity")
-        .select("*")
-        .limit(1)
-        .single();
+      const { data } = await supabase.from("broker_identity").select("*").limit(1).single();
       if (data) setIdentity(data as BrokerIdentity);
       setInitLoading(false);
     })();
@@ -43,8 +35,7 @@ export default function ExpertTab({
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height =
-        Math.min(textareaRef.current.scrollHeight, 120) + "px";
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + "px";
     }
   }, [input]);
 
@@ -60,10 +51,7 @@ export default function ExpertTab({
     const text = input.trim();
     if (!text || loading) return;
 
-    const newMsgs: ChatMessage[] = [
-      ...messages,
-      { role: "user", content: text },
-    ];
+    const newMsgs: ChatMessage[] = [...messages, { role: "user", content: text }];
     setMessages(newMsgs);
     setInput("");
     setLoading(true);
@@ -86,9 +74,7 @@ export default function ExpertTab({
       const aText = data.result || "حدث خطأ، حاول مرة أخرى.";
       const aMsg: ChatMessage = { role: "assistant", content: aText };
 
-      const blocks = aText
-        .split("===")
-        .filter((_: string, i: number) => i % 2 === 1);
+      const blocks = aText.split("===").filter((_: string, i: number) => i % 2 === 1);
       if (blocks.length > 0) {
         await supabase.from("content").insert(
           blocks.map((b: string) => ({
@@ -106,10 +92,7 @@ export default function ExpertTab({
       setMessages((prev) => [...prev, aMsg]);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "خطأ غير معروف";
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "خطأ: " + msg },
-      ]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "خطأ: " + msg }]);
     }
     setLoading(false);
   }
@@ -149,10 +132,10 @@ export default function ExpertTab({
   return (
     <div>
       {/* Header row */}
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <div className="flex-1 min-w-0">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="min-w-0 flex-1">
           <h3 className="text-lg font-bold">خبير المحتوى</h3>
-          <p className="text-[var(--text-soft)] text-xs hidden sm:block">
+          <p className="hidden text-xs text-[var(--text-soft)] sm:block">
             أعطه فكرة — يكتب محتوى جاهز للنشر
           </p>
         </div>
@@ -163,7 +146,7 @@ export default function ExpertTab({
             const prov = providers.find((p) => p.id === e.target.value);
             if (prov) setAiModel(prov.models[0].id);
           }}
-          className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-[var(--gold-2)]"
+          className="rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-2 py-2 text-xs focus:border-[var(--gold-2)] focus:outline-none"
           style={{ minWidth: 90 }}
         >
           {providers.map((p) => (
@@ -175,7 +158,7 @@ export default function ExpertTab({
         <select
           value={aiModel}
           onChange={(e) => setAiModel(e.target.value)}
-          className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-[var(--gold-2)]"
+          className="rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-2 py-2 text-xs focus:border-[var(--gold-2)] focus:outline-none"
           style={{ minWidth: 110 }}
         >
           {providers
@@ -189,17 +172,16 @@ export default function ExpertTab({
         {messages.length > 0 && (
           <button
             onClick={() => setMessages([])}
-            className="flex items-center gap-1 text-xs text-[var(--text-soft)] hover:text-[var(--text-strong)] bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] px-3 py-2 rounded-lg transition flex-shrink-0"
+            className="flex flex-shrink-0 items-center gap-1 rounded-lg border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] px-3 py-2 text-xs text-[var(--text-soft)] transition hover:text-[var(--text-strong)]"
           >
-            <RefreshCw size={12} />{" "}
-            <span className="hidden sm:inline">جديدة</span>
+            <RefreshCw size={12} /> <span className="hidden sm:inline">جديدة</span>
           </button>
         )}
       </div>
 
       {/* Chat Container */}
       <div
-        className="bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] rounded-xl overflow-hidden"
+        className="overflow-hidden rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)]"
         style={{
           height: "calc(100svh - 280px)",
           minHeight: 320,
@@ -207,17 +189,17 @@ export default function ExpertTab({
           flexDirection: "column",
         }}
       >
-        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4">
+        <div className="flex-1 space-y-3 overflow-y-auto p-3 sm:space-y-4 sm:p-6">
           {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-center px-4">
-              <MessageSquare size={40} className="text-[var(--border-1)] mb-3" />
-              <p className="text-[var(--text-soft)] font-bold mb-1 text-sm">
+            <div className="flex h-full flex-col items-center justify-center px-4 text-center">
+              <MessageSquare size={40} className="mb-3 text-[var(--border-1)]" />
+              <p className="mb-1 text-sm font-bold text-[var(--text-soft)]">
                 مرحباً، أنا خبير المحتوى العقاري
               </p>
-              <p className="text-[var(--text-faint)] text-xs max-w-xs mb-5">
+              <p className="mb-5 max-w-xs text-xs text-[var(--text-faint)]">
                 أعطني فكرة أو موضوع وسأكتب لك محتوى جاهز للنشر
               </p>
-              <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:justify-center">
+              <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row sm:justify-center">
                 {[
                   "تغريدة عن نصائح للمشتري الجديد",
                   "محتوى عن أهمية الوسيط المرخص",
@@ -226,7 +208,7 @@ export default function ExpertTab({
                   <button
                     key={i}
                     onClick={() => setInput(s)}
-                    className="text-xs bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] text-[var(--text-soft)] hover:text-[var(--text-strong)] px-3 py-2 rounded-lg transition text-right"
+                    className="rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2 text-right text-xs text-[var(--text-soft)] transition hover:text-[var(--text-strong)]"
                   >
                     {s}
                   </button>
@@ -238,28 +220,22 @@ export default function ExpertTab({
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={
-                "flex " +
-                (msg.role === "user" ? "justify-start" : "justify-end")
-              }
+              className={"flex " + (msg.role === "user" ? "justify-start" : "justify-end")}
             >
               <div className="max-w-[90%] sm:max-w-[85%]">
                 <div
                   className={
-                    "rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm leading-relaxed whitespace-pre-wrap " +
+                    "rounded-2xl px-3 py-2.5 text-sm leading-relaxed whitespace-pre-wrap sm:px-4 sm:py-3 " +
                     (msg.role === "user"
-                      ? "bg-[var(--bg-surface-2)] text-gray-200 rounded-tr-sm"
-                      : "bg-[var(--gold-bg-soft)] border border-[var(--gold-bg-hover)] text-gray-200 rounded-tl-sm")
+                      ? "rounded-tr-sm bg-[var(--bg-surface-2)] text-gray-200"
+                      : "rounded-tl-sm border border-[var(--gold-bg-hover)] bg-[var(--gold-bg-soft)] text-gray-200")
                   }
                 >
                   {msg.content}
                 </div>
                 {msg.role === "assistant" && (
-                  <div className="flex items-center gap-3 mt-1.5 mr-1">
-                    <button
-                      onClick={() => copyMsg(idx, msg.content)}
-                      className="text-xs"
-                    >
+                  <div className="mt-1.5 mr-1 flex items-center gap-3">
+                    <button onClick={() => copyMsg(idx, msg.content)} className="text-xs">
                       {copiedIdx === idx ? (
                         <span className="text-green-400">نُسخ ✓</span>
                       ) : (
@@ -268,10 +244,7 @@ export default function ExpertTab({
                         </span>
                       )}
                     </button>
-                    <button
-                      onClick={() => saveDraft(idx, msg.content)}
-                      className="text-xs"
-                    >
+                    <button onClick={() => saveDraft(idx, msg.content)} className="text-xs">
                       {savedIdx === idx ? (
                         <span className="text-green-400">حُفظ ✓</span>
                       ) : (
@@ -280,9 +253,7 @@ export default function ExpertTab({
                         </span>
                       )}
                     </button>
-                    {msg.savedAsDraft && (
-                      <span className="text-xs text-green-600">✓ تلقائي</span>
-                    )}
+                    {msg.savedAsDraft && <span className="text-xs text-green-600">✓ تلقائي</span>}
                   </div>
                 )}
               </div>
@@ -291,15 +262,15 @@ export default function ExpertTab({
 
           {loading && (
             <div className="flex justify-end">
-              <div className="bg-[var(--gold-bg-soft)] border border-[var(--gold-bg-hover)] rounded-2xl rounded-tl-sm px-4 py-3">
+              <div className="rounded-2xl rounded-tl-sm border border-[var(--gold-bg-hover)] bg-[var(--gold-bg-soft)] px-4 py-3">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-[var(--gold-2)] rounded-full animate-bounce" />
+                  <div className="h-2 w-2 animate-bounce rounded-full bg-[var(--gold-2)]" />
                   <div
-                    className="w-2 h-2 bg-[var(--gold-2)] rounded-full animate-bounce"
+                    className="h-2 w-2 animate-bounce rounded-full bg-[var(--gold-2)]"
                     style={{ animationDelay: "0.15s" }}
                   />
                   <div
-                    className="w-2 h-2 bg-[var(--gold-2)] rounded-full animate-bounce"
+                    className="h-2 w-2 animate-bounce rounded-full bg-[var(--gold-2)]"
                     style={{ animationDelay: "0.3s" }}
                   />
                 </div>
@@ -319,7 +290,7 @@ export default function ExpertTab({
               onKeyDown={handleKeyDown}
               placeholder="اكتب فكرتك..."
               rows={1}
-              className="flex-1 bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[var(--gold-2)] resize-none"
+              className="flex-1 resize-none rounded-xl border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2.5 text-sm text-gray-200 focus:border-[var(--gold-2)] focus:outline-none"
               style={{ maxHeight: 120 }}
               dir="rtl"
             />
@@ -327,9 +298,9 @@ export default function ExpertTab({
               onClick={sendMessage}
               disabled={!input.trim() || loading}
               className={
-                "w-10 h-10 rounded-xl flex items-center justify-center transition flex-shrink-0 " +
+                "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl transition " +
                 (input.trim() && !loading
-                  ? "bg-[var(--gold-2)] hover:bg-[var(--gold-3)] text-white"
+                  ? "bg-[var(--gold-2)] text-white hover:bg-[var(--gold-3)]"
                   : "bg-[var(--bg-surface-2)] text-[var(--text-faint)]")
               }
             >

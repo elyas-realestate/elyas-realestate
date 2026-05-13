@@ -9,13 +9,17 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          getAll() { return req.cookies.getAll(); },
+          getAll() {
+            return req.cookies.getAll();
+          },
           setAll() {},
         },
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
     // ── جلب tenant_id للمستخدم الحالي ──
@@ -25,7 +29,8 @@ export async function POST(req: NextRequest) {
       .eq("owner_id", user.id)
       .limit(1)
       .single();
-    if (!tenantData) return NextResponse.json({ error: "لم يتم العثور على الحساب" }, { status: 403 });
+    if (!tenantData)
+      return NextResponse.json({ error: "لم يتم العثور على الحساب" }, { status: 403 });
 
     const body = await req.json();
     const { request_id, filters } = body;
@@ -47,23 +52,22 @@ export async function POST(req: NextRequest) {
 
     // 3. (توسيع) يمكن جلب تفاصيل أكثر عن أعلى 10 عقارات مطابقة وعرضها
     if (matches.length > 0) {
-      const ids = matches.map(m => m.property_id);
+      const ids = matches.map((m) => m.property_id);
       const { data: matchedProperties } = await supabase
         .from("properties")
         .select("id, title, price, images, district, city")
         .in("id", ids);
 
       // دمج النقاط مع بيانات العقار
-      const finalResult = matches.map(m => ({
+      const finalResult = matches.map((m) => ({
         ...m,
-        property: matchedProperties?.find(p => p.id === m.property_id) || null
+        property: matchedProperties?.find((p) => p.id === m.property_id) || null,
       }));
 
       return NextResponse.json({ matches: finalResult });
     }
 
     return NextResponse.json({ matches: [] });
-
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "حدث خطأ غير متوقع" }, { status: 500 });
   }

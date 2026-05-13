@@ -14,9 +14,7 @@ export async function proxy(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
@@ -28,8 +26,7 @@ export async function proxy(request: NextRequest) {
 
   // ── التحقق من الجلسة على مستوى الخادم (getUser أكثر أماناً) ──
   const pathname = request.nextUrl.pathname;
-  const isProtectedRoute =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
+  const isProtectedRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
 
   if (isProtectedRoute) {
     try {
@@ -45,10 +42,7 @@ export async function proxy(request: NextRequest) {
       }
 
       // ── فرض 2FA على /dashboard (إن كان مفعّلاً على الحساب) ──
-      if (
-        pathname.startsWith("/dashboard") &&
-        request.cookies.get("2fa_passed")?.value !== "1"
-      ) {
+      if (pathname.startsWith("/dashboard") && request.cookies.get("2fa_passed")?.value !== "1") {
         try {
           const { data: twofa } = await supabase
             .from("user_2fa_secrets")
@@ -86,16 +80,10 @@ export async function proxy(request: NextRequest) {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-XSS-Protection", "1; mode=block");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=()"
-  );
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
   // ── CSRF: التحقق من Origin في طلبات POST/PUT/DELETE على /api ──
-  if (
-    pathname.startsWith("/api") &&
-    ["POST", "PUT", "DELETE", "PATCH"].includes(request.method)
-  ) {
+  if (pathname.startsWith("/api") && ["POST", "PUT", "DELETE", "PATCH"].includes(request.method)) {
     const origin = request.headers.get("origin");
     const host = request.headers.get("host");
 
@@ -104,16 +92,10 @@ export async function proxy(request: NextRequest) {
       try {
         const originUrl = new URL(origin);
         if (originUrl.host !== host) {
-          return NextResponse.json(
-            { error: "طلب غير مصرح — CSRF" },
-            { status: 403 }
-          );
+          return NextResponse.json({ error: "طلب غير مصرح — CSRF" }, { status: 403 });
         }
       } catch {
-        return NextResponse.json(
-          { error: "Origin غير صالح" },
-          { status: 403 }
-        );
+        return NextResponse.json({ error: "Origin غير صالح" }, { status: 403 });
       }
     }
   }
@@ -131,8 +113,7 @@ export const config = {
      * - ملفات عامة (svg, png, jpg, etc.)
      */
     {
-      source:
-        "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+      source: "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },

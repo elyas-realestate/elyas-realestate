@@ -6,39 +6,60 @@ import { toast } from "sonner";
 import { formatSAR } from "@/lib/format";
 import Breadcrumb from "../../components/Breadcrumb";
 
-const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const MONTHS_AR = [
+  "يناير",
+  "فبراير",
+  "مارس",
+  "أبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
+];
 
 function currentMonthKey() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 function monthLabel(key: string) {
   const [y, m] = key.split("-");
-  return `${MONTHS_AR[parseInt(m)-1]} ${y}`;
+  return `${MONTHS_AR[parseInt(m) - 1]} ${y}`;
 }
 function last6Months() {
   const keys: string[] = [];
   const now = new Date();
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    keys.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);
+    keys.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   }
   return keys;
 }
 
-type Goal = { id?: string; month: string; target_deals: number; target_revenue: number; target_clients: number };
+type Goal = {
+  id?: string;
+  month: string;
+  target_deals: number;
+  target_revenue: number;
+  target_clients: number;
+};
 
 export default function GoalsPage() {
-  const [goals, setGoals]       = useState<Record<string, Goal>>({});
-  const [deals, setDeals]       = useState<any[]>([]);
-  const [clients, setClients]   = useState<any[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [editing, setEditing]   = useState<string | null>(null);
-  const [form, setForm]         = useState({ target_deals: "", target_revenue: "", target_clients: "" });
+  const [goals, setGoals] = useState<Record<string, Goal>>({});
+  const [deals, setDeals] = useState<any[]>([]);
+  const [clients, setClients] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [form, setForm] = useState({ target_deals: "", target_revenue: "", target_clients: "" });
   const months = last6Months();
   const thisMonth = currentMonthKey();
 
-  useEffect(() => { loadAll(); }, []);
+  useEffect(() => {
+    loadAll();
+  }, []);
 
   async function loadAll() {
     const [{ data: goalsData }, { data: dealsData }, { data: clientsData }] = await Promise.all([
@@ -47,7 +68,9 @@ export default function GoalsPage() {
       supabase.from("clients").select("created_at"),
     ]);
     const map: Record<string, Goal> = {};
-    (goalsData || []).forEach((g: any) => { map[g.month] = g; });
+    (goalsData || []).forEach((g: any) => {
+      map[g.month] = g;
+    });
     setGoals(map);
     setDeals(dealsData || []);
     setClients(clientsData || []);
@@ -56,19 +79,19 @@ export default function GoalsPage() {
 
   function getActuals(monthKey: string) {
     const [y, m] = monthKey.split("-").map(Number);
-    const start  = new Date(y, m-1, 1);
-    const end    = new Date(y, m, 1);
-    const closedDeals = deals.filter(d => {
+    const start = new Date(y, m - 1, 1);
+    const end = new Date(y, m, 1);
+    const closedDeals = deals.filter((d) => {
       if (d.current_stage !== "مكتملة") return false;
       const date = d.expected_close_date ? new Date(d.expected_close_date) : new Date(d.created_at);
       return date >= start && date < end;
     });
-    const newClients = clients.filter(c => {
+    const newClients = clients.filter((c) => {
       const date = new Date(c.created_at);
       return date >= start && date < end;
     });
     return {
-      deals:   closedDeals.length,
+      deals: closedDeals.length,
       revenue: closedDeals.reduce((s, d) => s + (d.target_value || 0), 0),
       clients: newClients.length,
     };
@@ -77,7 +100,7 @@ export default function GoalsPage() {
   function startEdit(monthKey: string) {
     const g = goals[monthKey];
     setForm({
-      target_deals:   String(g?.target_deals   || ""),
+      target_deals: String(g?.target_deals || ""),
       target_revenue: String(g?.target_revenue || ""),
       target_clients: String(g?.target_clients || ""),
     });
@@ -86,8 +109,8 @@ export default function GoalsPage() {
 
   async function saveGoal(monthKey: string) {
     const payload = {
-      month:          monthKey,
-      target_deals:   Number(form.target_deals)   || 0,
+      month: monthKey,
+      target_deals: Number(form.target_deals) || 0,
       target_revenue: Number(form.target_revenue) || 0,
       target_clients: Number(form.target_clients) || 0,
     };
@@ -117,60 +140,179 @@ export default function GoalsPage() {
     return (
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-          <span style={{ fontSize: 11, color: "var(--text-soft)" }}>{value.toLocaleString("en-US")} / {max.toLocaleString("en-US")}</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: pct >= 100 ? "var(--success)" : color }}>{pct}%</span>
+          <span style={{ fontSize: 11, color: "var(--text-soft)" }}>
+            {value.toLocaleString("en-US")} / {max.toLocaleString("en-US")}
+          </span>
+          <span
+            style={{ fontSize: 11, fontWeight: 700, color: pct >= 100 ? "var(--success)" : color }}
+          >
+            {pct}%
+          </span>
         </div>
-        <div style={{ height: 6, borderRadius: 3, background: "var(--bg-surface-2)", overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${pct}%`, background: pct >= 100 ? "var(--success)" : color, borderRadius: 3, transition: "width 0.6s ease" }} />
+        <div
+          style={{
+            height: 6,
+            borderRadius: 3,
+            background: "var(--bg-surface-2)",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: "100%",
+              width: `${pct}%`,
+              background: pct >= 100 ? "var(--success)" : color,
+              borderRadius: 3,
+              transition: "width 0.6s ease",
+            }}
+          />
         </div>
       </div>
     );
   }
 
-  const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)] text-[var(--text-strong)]";
+  const inp =
+    "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--gold-2)] text-[var(--text-strong)]";
 
   return (
     <div dir="rtl">
-      <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "أهداف المبيعات" }]} />
+      <Breadcrumb
+        crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "أهداف المبيعات" }]}
+      />
 
       <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4 }}>أهداف المبيعات</h2>
-        <p style={{ fontSize: 13, color: "var(--text-faint)" }}>تتبع أهدافك الشهرية — صفقات، إيراد، عملاء جدد</p>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: "var(--text-strong)", marginBottom: 4 }}>
+          أهداف المبيعات
+        </h2>
+        <p style={{ fontSize: 13, color: "var(--text-faint)" }}>
+          تتبع أهدافك الشهرية — صفقات، إيراد، عملاء جدد
+        </p>
       </div>
 
       {/* ── بطاقات الشهر الحالي ── */}
       {(() => {
         const act = getActuals(thisMonth);
-        const g   = goals[thisMonth];
+        const g = goals[thisMonth];
         return (
-          <div style={{ background: "linear-gradient(135deg, var(--gold-bg-soft), rgba(198,145,76,0.03))", border: "1px solid var(--gold-bg-hover)", borderRadius: 16, padding: "20px 24px", marginBottom: 24 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, var(--gold-bg-soft), rgba(198,145,76,0.03))",
+              border: "1px solid var(--gold-bg-hover)",
+              borderRadius: 16,
+              padding: "20px 24px",
+              marginBottom: 24,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 18,
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Target size={18} style={{ color: "var(--gold-2)" }} />
-                <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-strong)" }}>الشهر الحالي — {monthLabel(thisMonth)}</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-strong)" }}>
+                  الشهر الحالي — {monthLabel(thisMonth)}
+                </span>
               </div>
-              <button onClick={() => startEdit(thisMonth)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, background: "var(--gold-bg)", border: "1px solid var(--gold-bg-hover)", color: "var(--gold-2)", fontSize: 12, cursor: "pointer" }}>
+              <button
+                onClick={() => startEdit(thisMonth)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 12px",
+                  borderRadius: 8,
+                  background: "var(--gold-bg)",
+                  border: "1px solid var(--gold-bg-hover)",
+                  color: "var(--gold-2)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                }}
+              >
                 <Pencil size={12} /> تعديل الأهداف
               </button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+                gap: 16,
+              }}
+            >
               {[
-                { label: "الصفقات المكتملة", actual: act.deals,   target: g?.target_deals   || 0, color: "var(--gold-2)", icon: CheckCircle, suffix: "" },
-                { label: "الإيراد المحقق",   actual: act.revenue, target: g?.target_revenue || 0, color: "var(--success)",  icon: Banknote,    suffix: " ر.س" },
-                { label: "عملاء جدد",        actual: act.clients, target: g?.target_clients || 0, color: "var(--purple-ai)",  icon: TrendingUp,  suffix: "" },
-              ].map(item => {
+                {
+                  label: "الصفقات المكتملة",
+                  actual: act.deals,
+                  target: g?.target_deals || 0,
+                  color: "var(--gold-2)",
+                  icon: CheckCircle,
+                  suffix: "",
+                },
+                {
+                  label: "الإيراد المحقق",
+                  actual: act.revenue,
+                  target: g?.target_revenue || 0,
+                  color: "var(--success)",
+                  icon: Banknote,
+                  suffix: " ر.س",
+                },
+                {
+                  label: "عملاء جدد",
+                  actual: act.clients,
+                  target: g?.target_clients || 0,
+                  color: "var(--purple-ai)",
+                  icon: TrendingUp,
+                  suffix: "",
+                },
+              ].map((item) => {
                 const Icon = item.icon;
-                const pct  = item.target > 0 ? Math.min(Math.round((item.actual / item.target) * 100), 100) : 0;
+                const pct =
+                  item.target > 0
+                    ? Math.min(Math.round((item.actual / item.target) * 100), 100)
+                    : 0;
                 return (
-                  <div key={item.label} style={{ background: "var(--bg-deep)", border: "1px solid var(--overlay-soft)", borderRadius: 12, padding: "16px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: `${item.color}14`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div
+                    key={item.label}
+                    style={{
+                      background: "var(--bg-deep)",
+                      border: "1px solid var(--overlay-soft)",
+                      borderRadius: 12,
+                      padding: "16px",
+                    }}
+                  >
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}
+                    >
+                      <div
+                        style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: 8,
+                          background: `${item.color}14`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
                         <Icon size={15} style={{ color: item.color }} />
                       </div>
                       <span style={{ fontSize: 12, color: "var(--text-soft)" }}>{item.label}</span>
                     </div>
-                    <div style={{ fontSize: 26, fontWeight: 800, color: pct >= 100 ? "var(--success)" : "var(--text-strong)", marginBottom: 10, lineHeight: 1 }}>
-                      {item.label === "الإيراد المحقق" ? formatSAR(item.actual, { short: true }) : item.actual.toLocaleString("en-US")}
+                    <div
+                      style={{
+                        fontSize: 26,
+                        fontWeight: 800,
+                        color: pct >= 100 ? "var(--success)" : "var(--text-strong)",
+                        marginBottom: 10,
+                        lineHeight: 1,
+                      }}
+                    >
+                      {item.label === "الإيراد المحقق"
+                        ? formatSAR(item.actual, { short: true })
+                        : item.actual.toLocaleString("en-US")}
                     </div>
                     {item.target > 0 ? (
                       <ProgressBar value={item.actual} max={item.target} color={item.color} />
@@ -186,68 +328,214 @@ export default function GoalsPage() {
       })()}
 
       {/* ── الأشهر الستة الماضية ── */}
-      <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-soft)", marginBottom: 12 }}>الأشهر الستة الماضية</h3>
+      <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-soft)", marginBottom: 12 }}>
+        الأشهر الستة الماضية
+      </h3>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {months.slice(0, -1).reverse().map(monthKey => {
-          const act  = getActuals(monthKey);
-          const g    = goals[monthKey];
-          const isEd = editing === monthKey;
-          return (
-            <div key={monthKey} style={{ background: "var(--bg-surface-1)", border: "1px solid var(--overlay-soft)", borderRadius: 12, padding: "14px 16px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isEd ? 14 : 10 }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-secondary)" }}>{monthLabel(monthKey)}</span>
-                {!isEd ? (
-                  <button onClick={() => startEdit(monthKey)} style={{ padding: "4px 10px", borderRadius: 7, background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-faint)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                    <Pencil size={10} /> {g ? "تعديل" : "ضبط هدف"}
-                  </button>
+        {months
+          .slice(0, -1)
+          .reverse()
+          .map((monthKey) => {
+            const act = getActuals(monthKey);
+            const g = goals[monthKey];
+            const isEd = editing === monthKey;
+            return (
+              <div
+                key={monthKey}
+                style={{
+                  background: "var(--bg-surface-1)",
+                  border: "1px solid var(--overlay-soft)",
+                  borderRadius: 12,
+                  padding: "14px 16px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: isEd ? 14 : 10,
+                  }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-secondary)" }}>
+                    {monthLabel(monthKey)}
+                  </span>
+                  {!isEd ? (
+                    <button
+                      onClick={() => startEdit(monthKey)}
+                      style={{
+                        padding: "4px 10px",
+                        borderRadius: 7,
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid var(--overlay-mid)",
+                        color: "var(--text-faint)",
+                        fontSize: 11,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      <Pencil size={10} /> {g ? "تعديل" : "ضبط هدف"}
+                    </button>
+                  ) : (
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button
+                        onClick={() => saveGoal(monthKey)}
+                        style={{
+                          padding: "4px 10px",
+                          borderRadius: 7,
+                          background: "var(--gold-bg)",
+                          border: "1px solid rgba(198,145,76,0.25)",
+                          color: "var(--gold-2)",
+                          fontSize: 11,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                        }}
+                      >
+                        <Save size={10} /> حفظ
+                      </button>
+                      <button
+                        onClick={() => setEditing(null)}
+                        style={{
+                          padding: "4px 8px",
+                          borderRadius: 7,
+                          background: "transparent",
+                          border: "1px solid var(--overlay-mid)",
+                          color: "var(--text-faint)",
+                          fontSize: 11,
+                          cursor: "pointer",
+                        }}
+                      >
+                        <X size={10} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {isEd ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          color: "var(--text-faint)",
+                          display: "block",
+                          marginBottom: 4,
+                        }}
+                      >
+                        هدف الصفقات
+                      </label>
+                      <input
+                        type="number"
+                        className={inp}
+                        value={form.target_deals}
+                        onChange={(e) => setForm((f) => ({ ...f, target_deals: e.target.value }))}
+                        placeholder="0"
+                        dir="ltr"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          color: "var(--text-faint)",
+                          display: "block",
+                          marginBottom: 4,
+                        }}
+                      >
+                        هدف الإيراد (ر.س)
+                      </label>
+                      <input
+                        type="number"
+                        className={inp}
+                        value={form.target_revenue}
+                        onChange={(e) => setForm((f) => ({ ...f, target_revenue: e.target.value }))}
+                        placeholder="0"
+                        dir="ltr"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 11,
+                          color: "var(--text-faint)",
+                          display: "block",
+                          marginBottom: 4,
+                        }}
+                      >
+                        هدف العملاء
+                      </label>
+                      <input
+                        type="number"
+                        className={inp}
+                        value={form.target_clients}
+                        onChange={(e) => setForm((f) => ({ ...f, target_clients: e.target.value }))}
+                        placeholder="0"
+                        dir="ltr"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <button onClick={() => saveGoal(monthKey)} style={{ padding: "4px 10px", borderRadius: 7, background: "var(--gold-bg)", border: "1px solid rgba(198,145,76,0.25)", color: "var(--gold-2)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                      <Save size={10} /> حفظ
-                    </button>
-                    <button onClick={() => setEditing(null)} style={{ padding: "4px 8px", borderRadius: 7, background: "transparent", border: "1px solid var(--overlay-mid)", color: "var(--text-faint)", fontSize: 11, cursor: "pointer" }}>
-                      <X size={10} />
-                    </button>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+                    {[
+                      {
+                        label: "صفقات",
+                        actual: act.deals,
+                        target: g?.target_deals || 0,
+                        color: "var(--gold-2)",
+                      },
+                      {
+                        label: "إيراد",
+                        actual: act.revenue,
+                        target: g?.target_revenue || 0,
+                        color: "var(--success)",
+                        isAmount: true,
+                      },
+                      {
+                        label: "عملاء",
+                        actual: act.clients,
+                        target: g?.target_clients || 0,
+                        color: "var(--purple-ai)",
+                      },
+                    ].map((item) => (
+                      <div key={item.label}>
+                        <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 4 }}>
+                          {item.label}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 15,
+                            fontWeight: 700,
+                            color: "var(--text-on-dark)",
+                            marginBottom: 6,
+                          }}
+                        >
+                          {item.isAmount ? formatSAR(item.actual, { short: true }) : item.actual}
+                          {item.target > 0 && (
+                            <span
+                              style={{ fontSize: 10, color: "var(--border-1)", fontWeight: 400 }}
+                            >
+                              {" "}
+                              /{" "}
+                              {item.isAmount
+                                ? formatSAR(item.target, { short: true })
+                                : item.target}
+                            </span>
+                          )}
+                        </div>
+                        {item.target > 0 && (
+                          <ProgressBar value={item.actual} max={item.target} color={item.color} />
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
-
-              {isEd ? (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                  <div>
-                    <label style={{ fontSize: 11, color: "var(--text-faint)", display: "block", marginBottom: 4 }}>هدف الصفقات</label>
-                    <input type="number" className={inp} value={form.target_deals} onChange={e => setForm(f => ({...f, target_deals: e.target.value}))} placeholder="0" dir="ltr" />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: 11, color: "var(--text-faint)", display: "block", marginBottom: 4 }}>هدف الإيراد (ر.س)</label>
-                    <input type="number" className={inp} value={form.target_revenue} onChange={e => setForm(f => ({...f, target_revenue: e.target.value}))} placeholder="0" dir="ltr" />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: 11, color: "var(--text-faint)", display: "block", marginBottom: 4 }}>هدف العملاء</label>
-                    <input type="number" className={inp} value={form.target_clients} onChange={e => setForm(f => ({...f, target_clients: e.target.value}))} placeholder="0" dir="ltr" />
-                  </div>
-                </div>
-              ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
-                  {[
-                    { label: "صفقات", actual: act.deals,   target: g?.target_deals   || 0, color: "var(--gold-2)" },
-                    { label: "إيراد",  actual: act.revenue, target: g?.target_revenue || 0, color: "var(--success)",  isAmount: true },
-                    { label: "عملاء",  actual: act.clients, target: g?.target_clients || 0, color: "var(--purple-ai)" },
-                  ].map(item => (
-                    <div key={item.label}>
-                      <div style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 4 }}>{item.label}</div>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text-on-dark)", marginBottom: 6 }}>
-                        {item.isAmount ? formatSAR(item.actual, { short: true }) : item.actual}
-                        {item.target > 0 && <span style={{ fontSize: 10, color: "var(--border-1)", fontWeight: 400 }}> / {item.isAmount ? formatSAR(item.target, { short: true }) : item.target}</span>}
-                      </div>
-                      {item.target > 0 && <ProgressBar value={item.actual} max={item.target} color={item.color} />}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );

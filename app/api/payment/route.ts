@@ -9,16 +9,27 @@ export async function POST(req: NextRequest) {
     const authClient = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+      {
+        cookies: {
+          getAll() {
+            return req.cookies.getAll();
+          },
+          setAll() {},
+        },
+      }
     );
-    const { data: { user } } = await authClient.auth.getUser();
+    const {
+      data: { user },
+    } = await authClient.auth.getUser();
     if (!user) return NextResponse.json({ error: "غير مصرح — يرجى تسجيل الدخول" }, { status: 401 });
 
     const body = await req.json();
     const { plan, billing, card_name, card_number, card_cvc, card_month, card_year } = body;
 
-    if (!plan || !PLAN_PRICES[plan]) return NextResponse.json({ error: "خطة غير صحيحة" }, { status: 400 });
-    if (!billing || (billing !== "monthly" && billing !== "yearly")) return NextResponse.json({ error: "دورة فوترة غير صحيحة" }, { status: 400 });
+    if (!plan || !PLAN_PRICES[plan])
+      return NextResponse.json({ error: "خطة غير صحيحة" }, { status: 400 });
+    if (!billing || (billing !== "monthly" && billing !== "yearly"))
+      return NextResponse.json({ error: "دورة فوترة غير صحيحة" }, { status: 400 });
     if (!card_name || !card_number || !card_cvc || !card_month || !card_year) {
       return NextResponse.json({ error: "بيانات البطاقة ناقصة" }, { status: 400 });
     }
@@ -70,7 +81,7 @@ export async function POST(req: NextRequest) {
 
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
       );
       const expiresAt = new Date();
       expiresAt.setMonth(expiresAt.getMonth() + (billing === "monthly" ? 1 : 12));
@@ -83,11 +94,14 @@ export async function POST(req: NextRequest) {
         .single();
 
       if (settings) {
-        await supabase.from("site_settings").update({
-          plan,
-          plan_expires_at: expiresAt.toISOString(),
-          payment_id: payment.id,
-        }).eq("id", settings.id);
+        await supabase
+          .from("site_settings")
+          .update({
+            plan,
+            plan_expires_at: expiresAt.toISOString(),
+            payment_id: payment.id,
+          })
+          .eq("id", settings.id);
       }
     }
 
@@ -103,9 +117,18 @@ export async function GET(req: NextRequest) {
   const authClient = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll() { return req.cookies.getAll(); }, setAll() {} } }
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll() {},
+      },
+    }
   );
-  const { data: { user } } = await authClient.auth.getUser();
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const id = new URL(req.url).searchParams.get("id");

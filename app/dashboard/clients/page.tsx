@@ -3,34 +3,55 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
-  Plus, Search, X, Phone, MapPin, StickyNote, Pencil, Trash2,
-  Users, TrendingUp, ChevronLeft, MessageCircle, Flame, Thermometer, Snowflake, Download,
+  Plus,
+  Search,
+  X,
+  Phone,
+  MapPin,
+  StickyNote,
+  Pencil,
+  Trash2,
+  Users,
+  TrendingUp,
+  ChevronLeft,
+  MessageCircle,
+  Flame,
+  Thermometer,
+  Snowflake,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import { exportToCSV, CLIENTS_EXPORT_HEADERS } from "@/lib/export";
 
-
-const emptyForm = { full_name: "", phone: "", category: "", city: "", district: "", notes: "", budget: "" };
+const emptyForm = {
+  full_name: "",
+  phone: "",
+  category: "",
+  city: "",
+  district: "",
+  notes: "",
+  budget: "",
+};
 
 // ── Category config ──────────────────────────────────────────────────────
 const CAT_CFG: Record<string, { color: string; bg: string; dot: string }> = {
-  "مشتري":      { color: "var(--success)", bg: "rgba(74,222,128,0.1)",  dot: "var(--success)"  },
-  "مستثمر":     { color: "var(--purple-ai)", bg: "rgba(167,139,250,0.1)", dot: "var(--purple-ai)"  },
-  "مالك":       { color: "var(--gold-2)", bg: "var(--gold-bg)",  dot: "var(--gold-2)"  },
-  "مستأجر":     { color: "var(--warning)", bg: "rgba(250,204,21,0.1)",  dot: "var(--warning)"  },
-  "وسيط عقاري": { color: "var(--info-2)", bg: "rgba(56,189,248,0.1)",  dot: "var(--info-2)"  },
+  مشتري: { color: "var(--success)", bg: "rgba(74,222,128,0.1)", dot: "var(--success)" },
+  مستثمر: { color: "var(--purple-ai)", bg: "rgba(167,139,250,0.1)", dot: "var(--purple-ai)" },
+  مالك: { color: "var(--gold-2)", bg: "var(--gold-bg)", dot: "var(--gold-2)" },
+  مستأجر: { color: "var(--warning)", bg: "rgba(250,204,21,0.1)", dot: "var(--warning)" },
+  "وسيط عقاري": { color: "var(--info-2)", bg: "rgba(56,189,248,0.1)", dot: "var(--info-2)" },
 };
 
 // ── Lead score (0–100) ───────────────────────────────────────────────────
 function leadScore(c: any): number {
   let s = 0;
-  if (c.full_name)  s += 10;
-  if (c.phone)      s += 25;
-  if (c.city)       s += 15;
-  if (c.district)   s += 10;
-  if (c.notes)      s += 15 + (c.notes.length > 60 ? 10 : 0);
-  if (c.budget)     s += 15;
+  if (c.full_name) s += 10;
+  if (c.phone) s += 25;
+  if (c.city) s += 15;
+  if (c.district) s += 10;
+  if (c.notes) s += 15 + (c.notes.length > 60 ? 10 : 0);
+  if (c.budget) s += 15;
   if (c.category === "مشتري" || c.category === "مستثمر") s += 10;
   return Math.min(s, 100);
 }
@@ -44,10 +65,18 @@ function scoreColor(s: number) {
 // ── Sentiment ───────────────────────────────────────────────────────────
 type SentimentKey = "hot" | "warm" | "cold";
 
-const SENTIMENT_CFG: Record<SentimentKey, { label: string; color: string; bg: string; icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }> = {
-  hot:  { label: "ساخن",  color: "var(--danger)", bg: "rgba(248,113,113,0.1)", icon: Flame       },
-  warm: { label: "دافئ",  color: "var(--warning)", bg: "rgba(250,204,21,0.1)",  icon: Thermometer },
-  cold: { label: "بارد",  color: "var(--info)", bg: "rgba(96,165,250,0.1)",  icon: Snowflake   },
+const SENTIMENT_CFG: Record<
+  SentimentKey,
+  {
+    label: string;
+    color: string;
+    bg: string;
+    icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
+  }
+> = {
+  hot: { label: "ساخن", color: "var(--danger)", bg: "rgba(248,113,113,0.1)", icon: Flame },
+  warm: { label: "دافئ", color: "var(--warning)", bg: "rgba(250,204,21,0.1)", icon: Thermometer },
+  cold: { label: "بارد", color: "var(--info)", bg: "rgba(96,165,250,0.1)", icon: Snowflake },
 };
 
 function sentimentAuto(score: number): SentimentKey {
@@ -65,33 +94,38 @@ function effectiveSentiment(c: any): SentimentKey {
 function WAIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
     </svg>
   );
 }
 
 // ────────────────────────────────────────────────────────────────────────
 export default function Clients() {
-  const [clients, setClients]   = useState<any[]>([]);
-  const [search, setSearch]     = useState("");
-  const [loading, setLoading]   = useState(true);
-  const [showAdd, setShowAdd]   = useState(false);
-  const [form, setForm]         = useState({ ...emptyForm });
+  const [clients, setClients] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ ...emptyForm });
   const [activeTab, setActiveTab] = useState("الكل");
 
   const [sentimentFilter, setSentimentFilter] = useState<SentimentKey | "الكل">("الكل");
 
   // drawer
-  const [selected, setSelected]   = useState<any>(null);
-  const [editMode, setEditMode]   = useState(false);
-  const [editForm, setEditForm]   = useState({ ...emptyForm });
-  const [saving, setSaving]       = useState(false);
+  const [selected, setSelected] = useState<any>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editForm, setEditForm] = useState({ ...emptyForm });
+  const [saving, setSaving] = useState(false);
   const [updatingSentiment, setUpdatingSentiment] = useState(false);
 
-  useEffect(() => { loadClients(); }, []);
+  useEffect(() => {
+    loadClients();
+  }, []);
 
   async function loadClients() {
-    const { data } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
+    const { data } = await supabase
+      .from("clients")
+      .select("*")
+      .order("created_at", { ascending: false });
     setClients(data || []);
     setLoading(false);
   }
@@ -99,7 +133,10 @@ export default function Clients() {
   async function handleSubmit(e: any) {
     e.preventDefault();
     const { error } = await supabase.from("clients").insert([{ ...form }]);
-    if (error) { toast.error("حدث خطأ أثناء الإضافة"); return; }
+    if (error) {
+      toast.error("حدث خطأ أثناء الإضافة");
+      return;
+    }
     toast.success("تمت إضافة العميل بنجاح");
     setForm({ ...emptyForm });
     setShowAdd(false);
@@ -112,88 +149,111 @@ export default function Clients() {
     await supabase.from("clients").update({ sentiment }).eq("id", selected.id);
     const updated = { ...selected, sentiment };
     setSelected(updated);
-    setClients(prev => prev.map(c => c.id === selected.id ? updated : c));
+    setClients((prev) => prev.map((c) => (c.id === selected.id ? updated : c)));
     setUpdatingSentiment(false);
   }
 
   async function handleSaveEdit() {
     setSaving(true);
     const { error } = await supabase.from("clients").update(editForm).eq("id", selected.id);
-    if (error) { toast.error("حدث خطأ"); setSaving(false); return; }
+    if (error) {
+      toast.error("حدث خطأ");
+      setSaving(false);
+      return;
+    }
     toast.success("تم تحديث بيانات العميل");
     setSaving(false);
     setEditMode(false);
     const updated = { ...selected, ...editForm };
     setSelected(updated);
-    setClients(prev => prev.map(c => c.id === selected.id ? updated : c));
+    setClients((prev) => prev.map((c) => (c.id === selected.id ? updated : c)));
   }
 
   async function handleDelete() {
     if (!confirm(`هل أنت متأكد من حذف "${selected.full_name}"؟`)) return;
     await supabase.from("clients").delete().eq("id", selected.id);
     toast.success("تم حذف العميل");
-    setClients(prev => prev.filter(c => c.id !== selected.id));
+    setClients((prev) => prev.filter((c) => c.id !== selected.id));
     setSelected(null);
   }
 
   function openDrawer(client: any) {
     setSelected(client);
     setEditForm({
-      full_name: client.full_name || "", phone: client.phone || "",
-      category:  client.category || "", city:  client.city  || "",
-      district:  client.district || "", notes: client.notes || "",
-      budget:    client.budget   || "",
+      full_name: client.full_name || "",
+      phone: client.phone || "",
+      category: client.category || "",
+      city: client.city || "",
+      district: client.district || "",
+      notes: client.notes || "",
+      budget: client.budget || "",
     });
     setEditMode(false);
   }
 
   // ── Category counts ─────────────────────────────────────────────────
   const catCounts = useMemo(() => {
-    const c: Record<string, number> = { "الكل": clients.length };
-    clients.forEach(cl => { if (cl.category) c[cl.category] = (c[cl.category] || 0) + 1; });
+    const c: Record<string, number> = { الكل: clients.length };
+    clients.forEach((cl) => {
+      if (cl.category) c[cl.category] = (c[cl.category] || 0) + 1;
+    });
     return c;
   }, [clients]);
 
-  const tabs = ["الكل", ...Object.keys(CAT_CFG).filter(k => catCounts[k])];
+  const tabs = ["الكل", ...Object.keys(CAT_CFG).filter((k) => catCounts[k])];
 
   // ── Sentiment counts ───────────────────────────────────────────────
-  const sentimentCounts = useMemo(() => ({
-    hot:  clients.filter(c => effectiveSentiment(c) === "hot").length,
-    warm: clients.filter(c => effectiveSentiment(c) === "warm").length,
-    cold: clients.filter(c => effectiveSentiment(c) === "cold").length,
-  }), [clients]);
+  const sentimentCounts = useMemo(
+    () => ({
+      hot: clients.filter((c) => effectiveSentiment(c) === "hot").length,
+      warm: clients.filter((c) => effectiveSentiment(c) === "warm").length,
+      cold: clients.filter((c) => effectiveSentiment(c) === "cold").length,
+    }),
+    [clients]
+  );
 
   // ── Filtered list ───────────────────────────────────────────────────
-  const filtered = useMemo(() =>
-    clients.filter(c => {
-      const matchSearch    = !search || c.full_name?.includes(search) || c.phone?.includes(search);
-      const matchTab       = activeTab === "الكل" || c.category === activeTab;
-      const matchSentiment = sentimentFilter === "الكل" || effectiveSentiment(c) === sentimentFilter;
-      return matchSearch && matchTab && matchSentiment;
-    }),
+  const filtered = useMemo(
+    () =>
+      clients.filter((c) => {
+        const matchSearch = !search || c.full_name?.includes(search) || c.phone?.includes(search);
+        const matchTab = activeTab === "الكل" || c.category === activeTab;
+        const matchSentiment =
+          sentimentFilter === "الكل" || effectiveSentiment(c) === sentimentFilter;
+        return matchSearch && matchTab && matchSentiment;
+      }),
     [clients, search, activeTab, sentimentFilter]
   );
 
   // ── Sort by score ───────────────────────────────────────────────────
-  const sorted = useMemo(() => [...filtered].sort((a, b) => leadScore(b) - leadScore(a)), [filtered]);
-
-  const inp = "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)] transition";
-
-  if (loading) return (
-    <div dir="rtl">
-      <div className="skeleton h-8 rounded w-40 mb-6" />
-      {Array.from({ length: 5 }).map((_, i) => <div key={i} className="skeleton h-16 rounded-xl mb-3" />)}
-    </div>
+  const sorted = useMemo(
+    () => [...filtered].sort((a, b) => leadScore(b) - leadScore(a)),
+    [filtered]
   );
+
+  const inp =
+    "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[var(--gold-2)] transition";
+
+  if (loading)
+    return (
+      <div dir="rtl">
+        <div className="skeleton mb-6 h-8 w-40 rounded" />
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="skeleton mb-3 h-16 rounded-xl" />
+        ))}
+      </div>
+    );
 
   return (
     <div dir="rtl">
       <Breadcrumb crumbs={[{ label: "لوحة التحكم", href: "/dashboard" }, { label: "العملاء" }]} />
 
       {/* ── Header ── */}
-      <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="font-cairo font-bold" style={{ fontSize: 22 }}>إدارة العملاء</h2>
+          <h2 className="font-cairo font-bold" style={{ fontSize: 22 }}>
+            إدارة العملاء
+          </h2>
           <p style={{ color: "var(--text-faint)", fontSize: 13, marginTop: 2 }}>
             {clients.length} عميل — مرتّبون حسب درجة الاهتمام
           </p>
@@ -202,40 +262,61 @@ export default function Clients() {
           <button
             onClick={() => exportToCSV(sorted, CLIENTS_EXPORT_HEADERS, "عملاء")}
             disabled={sorted.length === 0}
-            className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition text-sm"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--overlay-mid)", color: "var(--text-soft)" }}
+            className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm transition"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid var(--overlay-mid)",
+              color: "var(--text-soft)",
+            }}
             title="تصدير إلى Excel / CSV"
           >
             <Download size={14} />
             تصدير
           </button>
           <button
-            onClick={() => setShowAdd(v => !v)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition text-sm"
+            onClick={() => setShowAdd((v) => !v)}
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition"
             style={{
-              background: showAdd ? "var(--bg-surface-2)" : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
+              background: showAdd
+                ? "var(--bg-surface-2)"
+                : "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
               color: showAdd ? "var(--text-soft)" : "var(--bg-page)",
               border: showAdd ? "1px solid var(--gold-bg-hover)" : "none",
             }}
           >
-            {showAdd ? <><X size={16} /> إلغاء</> : <><Plus size={16} /> إضافة عميل</>}
+            {showAdd ? (
+              <>
+                <X size={16} /> إلغاء
+              </>
+            ) : (
+              <>
+                <Plus size={16} /> إضافة عميل
+              </>
+            )}
           </button>
         </div>
       </div>
 
       {/* ── Stats row ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          { label: "إجمالي العملاء",   value: clients.length,           color: "var(--gold-2)" },
-          { label: "ساخنون",        value: sentimentCounts.hot,      color: "var(--danger)",  iconKey: "hot" },
-          { label: "دافئون",        value: sentimentCounts.warm,     color: "var(--warning)", iconKey: "warm" },
-          { label: "باردون",        value: sentimentCounts.cold,     color: "var(--info)",    iconKey: "cold" },
-        ].map(s => {
-          const Icon = s.iconKey ? SENTIMENT_CFG[s.iconKey as "hot"|"warm"|"cold"]?.icon : null;
+          { label: "إجمالي العملاء", value: clients.length, color: "var(--gold-2)" },
+          { label: "ساخنون", value: sentimentCounts.hot, color: "var(--danger)", iconKey: "hot" },
+          {
+            label: "دافئون",
+            value: sentimentCounts.warm,
+            color: "var(--warning)",
+            iconKey: "warm",
+          },
+          { label: "باردون", value: sentimentCounts.cold, color: "var(--info)", iconKey: "cold" },
+        ].map((s) => {
+          const Icon = s.iconKey ? SENTIMENT_CFG[s.iconKey as "hot" | "warm" | "cold"]?.icon : null;
           return (
             <div key={s.label} className="card-luxury p-4">
-              <div className="flex items-center justify-between mb-1">
-                <div className="font-cairo font-bold" style={{ fontSize: 22, color: s.color }}>{s.value}</div>
+              <div className="mb-1 flex items-center justify-between">
+                <div className="font-cairo font-bold" style={{ fontSize: 22, color: s.color }}>
+                  {s.value}
+                </div>
                 {Icon && <Icon size={16} style={{ color: s.color }} />}
               </div>
               <div style={{ fontSize: 11, color: "var(--text-faint)" }}>{s.label}</div>
@@ -246,18 +327,31 @@ export default function Clients() {
 
       {/* ── Add form ── */}
       {showAdd && (
-        <form onSubmit={handleSubmit} className="card-luxury p-5 mb-6 fade-up">
-          <h3 className="font-cairo font-bold mb-4" style={{ color: "var(--gold-2)", fontSize: 13, letterSpacing: 1 }}>عميل جديد</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="card-luxury fade-up mb-6 p-5">
+          <h3
+            className="font-cairo mb-4 font-bold"
+            style={{ color: "var(--gold-2)", fontSize: 13, letterSpacing: 1 }}
+          >
+            عميل جديد
+          </h3>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">الاسم الكامل *</label>
-              <input value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required className={inp} style={{ color: "var(--text-strong)" }} />
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">الاسم الكامل *</label>
+              <input
+                value={form.full_name}
+                onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))}
+                required
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+              />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">رقم الجوال <span style={{ color:"var(--danger)" }}>*</span></label>
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">
+                رقم الجوال <span style={{ color: "var(--danger)" }}>*</span>
+              </label>
               <input
                 value={form.phone}
-                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                 required
                 pattern="^(\+?966|0)?5\d{8}$"
                 title="أدخل رقم سعودي صحيح، مثال: 0501234567"
@@ -268,56 +362,106 @@ export default function Clients() {
               />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">الفئة *</label>
-              <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required className={inp} style={{ color: "var(--text-strong)" }}>
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">الفئة *</label>
+              <select
+                value={form.category}
+                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+                required
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+              >
                 <option value="">اختر...</option>
-                {Object.keys(CAT_CFG).map(c => <option key={c}>{c}</option>)}
+                {Object.keys(CAT_CFG).map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">المدينة</label>
-              <input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} />
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">المدينة</label>
+              <input
+                value={form.city}
+                onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+              />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">الحي</label>
-              <input value={form.district} onChange={e => setForm(f => ({ ...f, district: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} />
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">الحي</label>
+              <input
+                value={form.district}
+                onChange={(e) => setForm((f) => ({ ...f, district: e.target.value }))}
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+              />
             </div>
             <div>
-              <label className="block text-sm text-[var(--text-soft)] mb-2">الميزانية التقريبية</label>
-              <input value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }} placeholder="مثال: 1,200,000 ر.س" />
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">
+                الميزانية التقريبية
+              </label>
+              <input
+                value={form.budget}
+                onChange={(e) => setForm((f) => ({ ...f, budget: e.target.value }))}
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+                placeholder="مثال: 1,200,000 ر.س"
+              />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm text-[var(--text-soft)] mb-2">ملاحظات</label>
-              <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2} className={inp} style={{ color: "var(--text-strong)" }} />
+              <label className="mb-2 block text-sm text-[var(--text-soft)]">ملاحظات</label>
+              <textarea
+                value={form.notes}
+                onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+                rows={2}
+                className={inp}
+                style={{ color: "var(--text-strong)" }}
+              />
             </div>
-            <div className="sm:col-span-2 flex gap-3">
-              <button type="submit" className="btn-gold px-6 py-2.5 text-sm">حفظ</button>
-              <button type="button" onClick={() => setShowAdd(false)} className="btn-ghost px-6 py-2.5 text-sm">إلغاء</button>
+            <div className="flex gap-3 sm:col-span-2">
+              <button type="submit" className="btn-gold px-6 py-2.5 text-sm">
+                حفظ
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAdd(false)}
+                className="btn-ghost px-6 py-2.5 text-sm"
+              >
+                إلغاء
+              </button>
             </div>
           </div>
         </form>
       )}
 
       {/* ── Search + Filter tabs ── */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-5">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search size={16} className="absolute right-3 top-3.5" style={{ color: "var(--text-faint)" }} />
+          <Search
+            size={16}
+            className="absolute top-3.5 right-3"
+            style={{ color: "var(--text-faint)" }}
+          />
           <input
-            type="text" placeholder="ابحث بالاسم أو الجوال..."
-            value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none transition"
-            style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg)", color: "var(--text-strong)" }}
+            type="text"
+            placeholder="ابحث بالاسم أو الجوال..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl py-3 pr-10 pl-4 text-sm transition focus:outline-none"
+            style={{
+              background: "var(--bg-surface-1)",
+              border: "1px solid var(--gold-bg)",
+              color: "var(--text-strong)",
+            }}
           />
         </div>
       </div>
 
       {/* Category filter tabs */}
-      <div className="flex gap-2 mb-5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-        {tabs.map(tab => (
+      <div className="mb-5 flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+        {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition flex-shrink-0"
+            className="flex flex-shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition"
             style={{
               background: activeTab === tab ? "var(--gold-bg)" : "rgba(198,145,76,0.04)",
               color: activeTab === tab ? "var(--gold-2)" : "#7A7A82",
@@ -325,7 +469,10 @@ export default function Clients() {
             }}
           >
             {tab !== "الكل" && (
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: CAT_CFG[tab]?.dot || "var(--gold-2)" }} />
+              <span
+                className="h-2 w-2 flex-shrink-0 rounded-full"
+                style={{ background: CAT_CFG[tab]?.dot || "var(--gold-2)" }}
+              />
             )}
             {tab}
             <span style={{ fontSize: 11, opacity: 0.7 }}>({catCounts[tab] || 0})</span>
@@ -334,30 +481,33 @@ export default function Clients() {
       </div>
 
       {/* ── Sentiment filter ── */}
-      <div className="flex gap-2 mb-5 flex-wrap">
-        {([
-          { key: "الكل", label: "الكل", color: "var(--text-soft)", bg: "rgba(90,90,98,0.1)" },
-          { key: "hot",  label: "ساخن", color: "var(--danger)",  bg: "rgba(248,113,113,0.08)" },
-          { key: "warm", label: "دافئ", color: "var(--warning)", bg: "rgba(250,204,21,0.08)"  },
-          { key: "cold", label: "بارد", color: "var(--info)",    bg: "rgba(96,165,250,0.08)"  },
-        ] as const).map(({ key, label, color, bg }) => {
+      <div className="mb-5 flex flex-wrap gap-2">
+        {(
+          [
+            { key: "الكل", label: "الكل", color: "var(--text-soft)", bg: "rgba(90,90,98,0.1)" },
+            { key: "hot", label: "ساخن", color: "var(--danger)", bg: "rgba(248,113,113,0.08)" },
+            { key: "warm", label: "دافئ", color: "var(--warning)", bg: "rgba(250,204,21,0.08)" },
+            { key: "cold", label: "بارد", color: "var(--info)", bg: "rgba(96,165,250,0.08)" },
+          ] as const
+        ).map(({ key, label, color, bg }) => {
           const isActive = sentimentFilter === key;
           const count = key === "الكل" ? clients.length : sentimentCounts[key as SentimentKey];
           return (
             <button
               key={key}
               onClick={() => setSentimentFilter(key)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition flex-shrink-0"
+              className="flex flex-shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition"
               style={{
                 background: isActive ? bg : "rgba(255,255,255,0.02)",
                 color: isActive ? color : "var(--text-faint)",
                 border: `1px solid ${isActive ? color + "44" : "var(--gold-bg-soft)"}`,
               }}
             >
-              {key !== "الكل" && (() => {
-                const Icon = SENTIMENT_CFG[key as "hot"|"warm"|"cold"]?.icon;
-                return Icon ? <Icon size={12} /> : null;
-              })()}
+              {key !== "الكل" &&
+                (() => {
+                  const Icon = SENTIMENT_CFG[key as "hot" | "warm" | "cold"]?.icon;
+                  return Icon ? <Icon size={12} /> : null;
+                })()}
               {label}
               <span style={{ fontSize: 10, opacity: 0.75 }}>({count})</span>
             </button>
@@ -367,67 +517,109 @@ export default function Clients() {
 
       {/* ── Grid ── */}
       {sorted.length === 0 ? (
-        <div className="text-center py-20">
+        <div className="py-20 text-center">
           <Users size={40} className="mx-auto mb-3" style={{ color: "var(--border-1)" }} />
-          <p className="mb-4" style={{ color: "var(--text-soft)" }}>لا يوجد عملاء</p>
-          <button onClick={() => setShowAdd(true)} className="btn-gold px-6 py-3 text-sm">أضف أول عميل</button>
+          <p className="mb-4" style={{ color: "var(--text-soft)" }}>
+            لا يوجد عملاء
+          </p>
+          <button onClick={() => setShowAdd(true)} className="btn-gold px-6 py-3 text-sm">
+            أضف أول عميل
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sorted.map(client => {
-            const score     = leadScore(client);
-            const cfg       = CAT_CFG[client.category];
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {sorted.map((client) => {
+            const score = leadScore(client);
+            const cfg = CAT_CFG[client.category];
             const sentiment = effectiveSentiment(client);
-            const sentCfg   = SENTIMENT_CFG[sentiment];
-            const SentIcon  = sentCfg.icon;
-            const isManual  = client.sentiment === "hot" || client.sentiment === "warm" || client.sentiment === "cold";
+            const sentCfg = SENTIMENT_CFG[sentiment];
+            const SentIcon = sentCfg.icon;
+            const isManual =
+              client.sentiment === "hot" ||
+              client.sentiment === "warm" ||
+              client.sentiment === "cold";
             return (
               <div
                 key={client.id}
-                className="card-luxury p-5 cursor-pointer group"
+                className="card-luxury group cursor-pointer p-5"
                 style={{ borderColor: sentCfg.color + "22" }}
                 onClick={() => openDrawer(client)}
               >
                 {/* Top row */}
-                <div className="flex items-start justify-between mb-3">
+                <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     {/* Avatar initial */}
                     <div
-                      className="flex items-center justify-center rounded-xl font-cairo font-bold flex-shrink-0"
-                      style={{ width: 38, height: 38, background: cfg?.bg || "var(--gold-bg)", color: cfg?.color || "var(--gold-2)", fontSize: 16 }}
+                      className="font-cairo flex flex-shrink-0 items-center justify-center rounded-xl font-bold"
+                      style={{
+                        width: 38,
+                        height: 38,
+                        background: cfg?.bg || "var(--gold-bg)",
+                        color: cfg?.color || "var(--gold-2)",
+                        fontSize: 16,
+                      }}
                     >
                       {client.full_name?.charAt(0) || "؟"}
                     </div>
                     <div>
-                      <p className="font-cairo font-bold" style={{ fontSize: 14, color: "var(--text-strong)", lineHeight: 1.2 }}>{client.full_name}</p>
-                      {client.code && <p style={{ fontSize: 10, color: "var(--text-faint)" }}>{client.code}</p>}
+                      <p
+                        className="font-cairo font-bold"
+                        style={{ fontSize: 14, color: "var(--text-strong)", lineHeight: 1.2 }}
+                      >
+                        {client.full_name}
+                      </p>
+                      {client.code && (
+                        <p style={{ fontSize: 10, color: "var(--text-faint)" }}>{client.code}</p>
+                      )}
                     </div>
                   </div>
                   {/* Sentiment badge */}
                   <div
-                    className="flex items-center gap-1.5 flex-shrink-0 px-2.5 py-1.5 rounded-lg"
+                    className="flex flex-shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5"
                     style={{ background: sentCfg.bg, border: `1px solid ${sentCfg.color}33` }}
                   >
                     <SentIcon size={13} style={{ color: sentCfg.color }} />
-                    <span style={{ fontSize: 12, color: sentCfg.color, fontWeight: 700 }}>{sentCfg.label}</span>
-                    {isManual && <span style={{ fontSize: 9, color: sentCfg.color, opacity: 0.6 }}>●</span>}
+                    <span style={{ fontSize: 12, color: sentCfg.color, fontWeight: 700 }}>
+                      {sentCfg.label}
+                    </span>
+                    {isManual && (
+                      <span style={{ fontSize: 9, color: sentCfg.color, opacity: 0.6 }}>●</span>
+                    )}
                   </div>
                 </div>
 
                 {/* Score bar */}
-                <div style={{ height: 3, borderRadius: 999, background: "var(--overlay-soft)", marginBottom: 12 }}>
-                  <div style={{
-                    height: "100%", borderRadius: 999,
-                    background: sentCfg.color,
-                    width: score + "%",
-                    opacity: 0.7,
-                  }} />
+                <div
+                  style={{
+                    height: 3,
+                    borderRadius: 999,
+                    background: "var(--overlay-soft)",
+                    marginBottom: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      height: "100%",
+                      borderRadius: 999,
+                      background: sentCfg.color,
+                      width: score + "%",
+                      opacity: 0.7,
+                    }}
+                  />
                 </div>
 
                 {/* Category + details */}
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
                   {client.category && (
-                    <span className="status-pill" style={{ fontSize: 10, padding: "2px 8px", background: cfg?.bg || "var(--gold-bg)", color: cfg?.color || "var(--gold-2)" }}>
+                    <span
+                      className="status-pill"
+                      style={{
+                        fontSize: 10,
+                        padding: "2px 8px",
+                        background: cfg?.bg || "var(--gold-bg)",
+                        color: cfg?.color || "var(--gold-2)",
+                      }}
+                    >
                       {client.category}
                     </span>
                   )}
@@ -437,7 +629,11 @@ export default function Clients() {
                 </div>
 
                 {client.phone && (
-                  <p style={{ fontSize: 12, color: "#7A7A82", direction: "ltr", textAlign: "right" }}>{client.phone}</p>
+                  <p
+                    style={{ fontSize: 12, color: "#7A7A82", direction: "ltr", textAlign: "right" }}
+                  >
+                    {client.phone}
+                  </p>
                 )}
                 {(client.city || client.district) && (
                   <p style={{ fontSize: 12, color: "var(--text-faint)" }}>
@@ -446,16 +642,24 @@ export default function Clients() {
                   </p>
                 )}
                 {client.notes && (
-                  <p className="mt-2 line-clamp-1" style={{ fontSize: 11, color: "var(--text-faint)" }}>{client.notes}</p>
+                  <p
+                    className="mt-2 line-clamp-1"
+                    style={{ fontSize: 11, color: "var(--text-faint)" }}
+                  >
+                    {client.notes}
+                  </p>
                 )}
 
                 {/* Footer */}
-                <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: "1px solid rgba(198,145,76,0.07)" }}>
+                <div
+                  className="mt-3 flex items-center justify-between pt-3"
+                  style={{ borderTop: "1px solid rgba(198,145,76,0.07)" }}
+                >
                   <Link
                     href={`/dashboard/clients/${client.id}`}
-                    className="flex items-center gap-1 no-underline text-xs font-medium transition"
+                    className="flex items-center gap-1 text-xs font-medium no-underline transition"
                     style={{ color: "var(--gold-2)" }}
-                    onClick={e => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     فتح الملف <ChevronLeft size={12} />
                   </Link>
@@ -464,9 +668,9 @@ export default function Clients() {
                       href={`https://wa.me/${client.phone.replace(/\D/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1 no-underline text-xs transition"
+                      className="flex items-center gap-1 text-xs no-underline transition"
                       style={{ color: "var(--text-faint)" }}
-                      onClick={e => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <WAIcon /> واتساب
                     </a>
@@ -481,29 +685,51 @@ export default function Clients() {
       {/* ═══ QUICK DRAWER ═══ */}
       {selected && (
         <>
-          <div className="fixed inset-0 z-40" style={{ background: "var(--modal-overlay-2)", backdropFilter: "blur(4px)" }} onClick={() => setSelected(null)} />
           <div
-            className="fixed top-0 left-0 bottom-0 z-50 overflow-y-auto fade-up"
-            style={{ width: "min(420px, 100vw)", background: "var(--sidebar-bg)", borderRight: "1px solid var(--gold-bg)" }}
+            className="fixed inset-0 z-40"
+            style={{ background: "var(--modal-overlay-2)", backdropFilter: "blur(4px)" }}
+            onClick={() => setSelected(null)}
+          />
+          <div
+            className="fade-up fixed top-0 bottom-0 left-0 z-50 overflow-y-auto"
+            style={{
+              width: "min(420px, 100vw)",
+              background: "var(--sidebar-bg)",
+              borderRight: "1px solid var(--gold-bg)",
+            }}
           >
             {/* Drawer header */}
             <div
-              className="flex items-center justify-between px-5 py-4 sticky top-0"
+              className="sticky top-0 flex items-center justify-between px-5 py-4"
               style={{ background: "var(--sidebar-bg)", borderBottom: "1px solid var(--gold-bg)" }}
             >
               <div className="flex items-center gap-2">
                 {!editMode && (
-                  <button onClick={() => setEditMode(true)} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition"
-                    style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)" }}>
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition"
+                    style={{ background: "var(--gold-bg-soft)", color: "var(--gold-2)" }}
+                  >
                     <Pencil size={13} /> تعديل
                   </button>
                 )}
-                <button onClick={handleDelete} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition"
-                  style={{ background: "rgba(248,113,113,0.08)", color: "var(--danger)" }}>
+                <button
+                  onClick={handleDelete}
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition"
+                  style={{ background: "rgba(248,113,113,0.08)", color: "var(--danger)" }}
+                >
                   <Trash2 size={13} /> حذف
                 </button>
               </div>
-              <button onClick={() => setSelected(null)} style={{ color: "var(--text-faint)", background: "none", border: "none", cursor: "pointer" }}>
+              <button
+                onClick={() => setSelected(null)}
+                style={{
+                  color: "var(--text-faint)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
                 <X size={20} />
               </button>
             </div>
@@ -512,26 +738,60 @@ export default function Clients() {
               {!editMode ? (
                 <div className="space-y-4">
                   {/* Profile header */}
-                  <div className="flex items-center gap-4 p-4 rounded-xl" style={{ background: "rgba(198,145,76,0.05)", border: "1px solid var(--gold-bg)" }}>
+                  <div
+                    className="flex items-center gap-4 rounded-xl p-4"
+                    style={{
+                      background: "rgba(198,145,76,0.05)",
+                      border: "1px solid var(--gold-bg)",
+                    }}
+                  >
                     <div
-                      className="flex items-center justify-center rounded-xl font-cairo font-black flex-shrink-0"
-                      style={{ width: 52, height: 52, background: CAT_CFG[selected.category]?.bg || "var(--gold-bg)", color: CAT_CFG[selected.category]?.color || "var(--gold-2)", fontSize: 22 }}
+                      className="font-cairo flex flex-shrink-0 items-center justify-center rounded-xl font-black"
+                      style={{
+                        width: 52,
+                        height: 52,
+                        background: CAT_CFG[selected.category]?.bg || "var(--gold-bg)",
+                        color: CAT_CFG[selected.category]?.color || "var(--gold-2)",
+                        fontSize: 22,
+                      }}
                     >
                       {selected.full_name?.charAt(0) || "؟"}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-cairo font-bold" style={{ fontSize: 18, color: "var(--text-strong)" }}>{selected.full_name}</h3>
-                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <h3
+                        className="font-cairo font-bold"
+                        style={{ fontSize: 18, color: "var(--text-strong)" }}
+                      >
+                        {selected.full_name}
+                      </h3>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
                         {selected.category && (
-                          <span className="status-pill" style={{ fontSize: 10, padding: "2px 8px", background: CAT_CFG[selected.category]?.bg, color: CAT_CFG[selected.category]?.color }}>
+                          <span
+                            className="status-pill"
+                            style={{
+                              fontSize: 10,
+                              padding: "2px 8px",
+                              background: CAT_CFG[selected.category]?.bg,
+                              color: CAT_CFG[selected.category]?.color,
+                            }}
+                          >
                             {selected.category}
                           </span>
                         )}
-                        {selected.code && <span style={{ fontSize: 11, color: "var(--text-faint)" }}>{selected.code}</span>}
+                        {selected.code && (
+                          <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
+                            {selected.code}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="font-cairo font-bold" style={{ fontSize: 20, color: scoreColor(leadScore(selected)) }}>{leadScore(selected)}</div>
+                      <div
+                        className="font-cairo font-bold"
+                        style={{ fontSize: 20, color: scoreColor(leadScore(selected)) }}
+                      >
+                        {leadScore(selected)}
+                      </div>
                       <div style={{ fontSize: 9, color: "var(--text-faint)" }}>Lead Score</div>
                     </div>
                   </div>
@@ -539,23 +799,43 @@ export default function Clients() {
                   {/* ── Sentiment selector ── */}
                   {(() => {
                     const cur = effectiveSentiment(selected);
-                    const isManual = selected.sentiment === "hot" || selected.sentiment === "warm" || selected.sentiment === "cold";
+                    const isManual =
+                      selected.sentiment === "hot" ||
+                      selected.sentiment === "warm" ||
+                      selected.sentiment === "cold";
                     return (
-                      <div className="p-4 rounded-xl" style={{ background: "var(--bg-surface-1)", border: "1px solid var(--gold-bg-soft)" }}>
-                        <div className="flex items-center justify-between mb-3">
-                          <span style={{ fontSize: 12, color: "var(--text-faint)", fontWeight: 600 }}>مستوى الاهتمام</span>
+                      <div
+                        className="rounded-xl p-4"
+                        style={{
+                          background: "var(--bg-surface-1)",
+                          border: "1px solid var(--gold-bg-soft)",
+                        }}
+                      >
+                        <div className="mb-3 flex items-center justify-between">
+                          <span
+                            style={{ fontSize: 12, color: "var(--text-faint)", fontWeight: 600 }}
+                          >
+                            مستوى الاهتمام
+                          </span>
                           {isManual && (
                             <button
                               onClick={() => updateSentiment(null)}
                               disabled={updatingSentiment}
-                              style={{ fontSize: 10, color: "var(--text-faint)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+                              style={{
+                                fontSize: 10,
+                                color: "var(--text-faint)",
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                textDecoration: "underline",
+                              }}
                             >
                               تلقائي
                             </button>
                           )}
                         </div>
                         <div className="flex gap-2">
-                          {(["hot", "warm", "cold"] as SentimentKey[]).map(key => {
+                          {(["hot", "warm", "cold"] as SentimentKey[]).map((key) => {
                             const sc = SENTIMENT_CFG[key];
                             const Icon = sc.icon;
                             const isActive = cur === key;
@@ -564,7 +844,7 @@ export default function Clients() {
                                 key={key}
                                 onClick={() => updateSentiment(key)}
                                 disabled={updatingSentiment}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl font-bold text-xs transition"
+                                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold transition"
                                 style={{
                                   background: isActive ? sc.bg : "rgba(255,255,255,0.02)",
                                   color: isActive ? sc.color : "var(--text-faint)",
@@ -580,7 +860,14 @@ export default function Clients() {
                           })}
                         </div>
                         {!isManual && (
-                          <p style={{ fontSize: 10, color: "var(--border-1)", marginTop: 8, textAlign: "center" }}>
+                          <p
+                            style={{
+                              fontSize: 10,
+                              color: "var(--border-1)",
+                              marginTop: 8,
+                              textAlign: "center",
+                            }}
+                          >
                             تلقائي من درجة الاهتمام ({leadScore(selected)} نقطة)
                           </p>
                         )}
@@ -590,30 +877,60 @@ export default function Clients() {
 
                   {/* Info */}
                   {selected.phone && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <div
+                      className="flex items-center gap-3 rounded-xl p-3"
+                      style={{ background: "var(--bg-surface-1)" }}
+                    >
                       <Phone size={15} style={{ color: "var(--gold-2)" }} />
-                      <a href={`tel:${selected.phone}`} className="text-sm no-underline flex-1" style={{ color: "var(--text-strong)", direction: "ltr" }}>{selected.phone}</a>
+                      <a
+                        href={`tel:${selected.phone}`}
+                        className="flex-1 text-sm no-underline"
+                        style={{ color: "var(--text-strong)", direction: "ltr" }}
+                      >
+                        {selected.phone}
+                      </a>
                     </div>
                   )}
                   {(selected.city || selected.district) && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <div
+                      className="flex items-center gap-3 rounded-xl p-3"
+                      style={{ background: "var(--bg-surface-1)" }}
+                    >
                       <MapPin size={15} style={{ color: "var(--gold-2)" }} />
-                      <p className="text-sm">{[selected.district, selected.city].filter(Boolean).join(" — ")}</p>
+                      <p className="text-sm">
+                        {[selected.district, selected.city].filter(Boolean).join(" — ")}
+                      </p>
                     </div>
                   )}
                   {selected.budget && (
-                    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
+                    <div
+                      className="flex items-center gap-3 rounded-xl p-3"
+                      style={{ background: "var(--bg-surface-1)" }}
+                    >
                       <TrendingUp size={15} style={{ color: "var(--purple-ai)" }} />
                       <div>
                         <p style={{ fontSize: 11, color: "var(--text-faint)" }}>الميزانية</p>
-                        <p className="font-cairo font-bold text-sm" style={{ color: "var(--purple-ai)" }}>{selected.budget}</p>
+                        <p
+                          className="font-cairo text-sm font-bold"
+                          style={{ color: "var(--purple-ai)" }}
+                        >
+                          {selected.budget}
+                        </p>
                       </div>
                     </div>
                   )}
                   {selected.notes && (
-                    <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--bg-surface-1)" }}>
-                      <StickyNote size={15} style={{ color: "var(--gold-2)", marginTop: 2, flexShrink: 0 }} />
-                      <p className="text-sm leading-relaxed" style={{ color: "var(--text-soft)" }}>{selected.notes}</p>
+                    <div
+                      className="flex items-start gap-3 rounded-xl p-3"
+                      style={{ background: "var(--bg-surface-1)" }}
+                    >
+                      <StickyNote
+                        size={15}
+                        style={{ color: "var(--gold-2)", marginTop: 2, flexShrink: 0 }}
+                      />
+                      <p className="text-sm leading-relaxed" style={{ color: "var(--text-soft)" }}>
+                        {selected.notes}
+                      </p>
                     </div>
                   )}
 
@@ -622,17 +939,24 @@ export default function Clients() {
                     {selected.phone && (
                       <a
                         href={`https://wa.me/${selected.phone.replace(/\D/g, "")}`}
-                        target="_blank" rel="noreferrer"
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl no-underline font-bold text-sm transition"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold no-underline transition"
                         style={{ background: "var(--success-4)", color: "#fff" }}
                       >
                         <WAIcon /> واتساب
                       </a>
                     )}
                     {selected.phone && (
-                      <a href={`tel:${selected.phone}`}
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl no-underline font-bold text-sm transition"
-                        style={{ background: "var(--gold-bg)", color: "var(--gold-2)", border: "1px solid var(--gold-bg-hover)" }}>
+                      <a
+                        href={`tel:${selected.phone}`}
+                        className="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold no-underline transition"
+                        style={{
+                          background: "var(--gold-bg)",
+                          color: "var(--gold-2)",
+                          border: "1px solid var(--gold-bg-hover)",
+                        }}
+                      >
                         <Phone size={14} /> اتصال
                       </a>
                     )}
@@ -641,8 +965,12 @@ export default function Clients() {
                   {/* Full profile link */}
                   <Link
                     href={`/dashboard/clients/${selected.id}`}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl no-underline text-sm font-bold transition"
-                    style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)", color: "var(--gold-2)" }}
+                    className="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold no-underline transition"
+                    style={{
+                      background: "var(--gold-bg-soft)",
+                      border: "1px solid var(--gold-bg)",
+                      color: "var(--gold-2)",
+                    }}
                   >
                     <MessageCircle size={14} />
                     فتح الملف الكامل مع السجل
@@ -654,37 +982,63 @@ export default function Clients() {
                 <div className="space-y-4">
                   {[
                     { label: "الاسم الكامل", key: "full_name", type: "text" },
-                    { label: "رقم الجوال",   key: "phone",     type: "tel", dir: "ltr" },
-                    { label: "المدينة",       key: "city",      type: "text" },
-                    { label: "الحي",          key: "district",  type: "text" },
-                    { label: "الميزانية",     key: "budget",    type: "text" },
-                  ].map(f => (
+                    { label: "رقم الجوال", key: "phone", type: "tel", dir: "ltr" },
+                    { label: "المدينة", key: "city", type: "text" },
+                    { label: "الحي", key: "district", type: "text" },
+                    { label: "الميزانية", key: "budget", type: "text" },
+                  ].map((f) => (
                     <div key={f.key}>
-                      <label className="block text-sm text-[var(--text-soft)] mb-2">{f.label}</label>
+                      <label className="mb-2 block text-sm text-[var(--text-soft)]">
+                        {f.label}
+                      </label>
                       <input
-                        type={f.type} dir={(f as any).dir}
+                        type={f.type}
+                        dir={(f as any).dir}
                         value={(editForm as any)[f.key]}
-                        onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))}
-                        className={inp} style={{ color: "var(--text-strong)" }}
+                        onChange={(e) => setEditForm((p) => ({ ...p, [f.key]: e.target.value }))}
+                        className={inp}
+                        style={{ color: "var(--text-strong)" }}
                       />
                     </div>
                   ))}
                   <div>
-                    <label className="block text-sm text-[var(--text-soft)] mb-2">الفئة</label>
-                    <select value={editForm.category} onChange={e => setEditForm(f => ({ ...f, category: e.target.value }))} className={inp} style={{ color: "var(--text-strong)" }}>
+                    <label className="mb-2 block text-sm text-[var(--text-soft)]">الفئة</label>
+                    <select
+                      value={editForm.category}
+                      onChange={(e) => setEditForm((f) => ({ ...f, category: e.target.value }))}
+                      className={inp}
+                      style={{ color: "var(--text-strong)" }}
+                    >
                       <option value="">اختر...</option>
-                      {Object.keys(CAT_CFG).map(c => <option key={c}>{c}</option>)}
+                      {Object.keys(CAT_CFG).map((c) => (
+                        <option key={c}>{c}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-[var(--text-soft)] mb-2">ملاحظات</label>
-                    <textarea value={editForm.notes} onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))} rows={3} className={inp} style={{ color: "var(--text-strong)" }} />
+                    <label className="mb-2 block text-sm text-[var(--text-soft)]">ملاحظات</label>
+                    <textarea
+                      value={editForm.notes}
+                      onChange={(e) => setEditForm((f) => ({ ...f, notes: e.target.value }))}
+                      rows={3}
+                      className={inp}
+                      style={{ color: "var(--text-strong)" }}
+                    />
                   </div>
                   <div className="flex gap-3 pt-2">
-                    <button onClick={handleSaveEdit} disabled={saving} className="btn-gold flex-1 py-3 text-sm disabled:opacity-50">
+                    <button
+                      onClick={handleSaveEdit}
+                      disabled={saving}
+                      className="btn-gold flex-1 py-3 text-sm disabled:opacity-50"
+                    >
                       {saving ? "جاري الحفظ..." : "حفظ التعديلات"}
                     </button>
-                    <button onClick={() => setEditMode(false)} className="btn-ghost px-4 py-3 text-sm">إلغاء</button>
+                    <button
+                      onClick={() => setEditMode(false)}
+                      className="btn-ghost px-4 py-3 text-sm"
+                    >
+                      إلغاء
+                    </button>
                   </div>
                 </div>
               )}

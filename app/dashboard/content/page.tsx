@@ -34,17 +34,14 @@ export default function ContentAI() {
 
       {/* Page Title */}
       <div className="mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold mb-1">
-          وكيل المحتوى العقاري
-        </h2>
-        <p className="text-[var(--text-soft)] text-xs sm:text-sm hidden sm:block">
-          منصة ذكاء اصطناعي متكاملة لصناعة المحتوى العقاري — من الفكرة إلى
-          النشر
+        <h2 className="mb-1 text-xl font-bold sm:text-2xl">وكيل المحتوى العقاري</h2>
+        <p className="hidden text-xs text-[var(--text-soft)] sm:block sm:text-sm">
+          منصة ذكاء اصطناعي متكاملة لصناعة المحتوى العقاري — من الفكرة إلى النشر
         </p>
       </div>
 
       {/* Mobile: dropdown */}
-      <div className="md:hidden mb-4">
+      <div className="mb-4 md:hidden">
         <select
           value={activeTab}
           onChange={(e) => switchTab(e.target.value)}
@@ -62,15 +59,13 @@ export default function ContentAI() {
           ))}
         </select>
         {activeTabData && (
-          <p className="text-xs text-[var(--text-faint)] mt-1.5 px-1">
-            {activeTabData.desc}
-          </p>
+          <p className="mt-1.5 px-1 text-xs text-[var(--text-faint)]">{activeTabData.desc}</p>
         )}
       </div>
 
       {/* Desktop: tab buttons */}
       <div
-        className="hidden md:flex gap-2 mb-6 overflow-x-auto pb-2"
+        className="mb-6 hidden gap-2 overflow-x-auto pb-2 md:flex"
         style={{ scrollbarWidth: "none" }}
       >
         {tabs.map((tab) => (
@@ -78,10 +73,10 @@ export default function ContentAI() {
             key={tab.id}
             onClick={() => switchTab(tab.id)}
             className={
-              "flex items-center gap-1.5 rounded-xl font-medium transition whitespace-nowrap text-sm px-4 py-3 " +
+              "flex items-center gap-1.5 rounded-xl px-4 py-3 text-sm font-medium whitespace-nowrap transition " +
               (activeTab === tab.id
                 ? "bg-[var(--gold-2)] text-white"
-                : "bg-[var(--bg-surface-1)] border border-[var(--gold-bg)] text-[var(--text-soft)] hover:text-[var(--text-strong)] hover:border-[var(--gold-bg-hover)]")
+                : "border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] text-[var(--text-soft)] hover:border-[var(--gold-bg-hover)] hover:text-[var(--text-strong)]")
             }
           >
             <tab.icon size={14} />
@@ -93,19 +88,13 @@ export default function ContentAI() {
       {/* Tab Content */}
       {activeTab === "identity" && <IdentityTab />}
       {activeTab === "factory" && (
-        <FactoryTab
-          onDraftsCreated={() => setDraftsRefresh((r) => r + 1)}
-        />
+        <FactoryTab onDraftsCreated={() => setDraftsRefresh((r) => r + 1)} />
       )}
       {activeTab === "expert" && (
-        <ExpertTab
-          onDraftsCreated={() => setDraftsRefresh((r) => r + 1)}
-        />
+        <ExpertTab onDraftsCreated={() => setDraftsRefresh((r) => r + 1)} />
       )}
       {activeTab === "room" && (
-        <ContentRoomTab
-          onDraftSaved={() => setDraftsRefresh((r) => r + 1)}
-        />
+        <ContentRoomTab onDraftSaved={() => setDraftsRefresh((r) => r + 1)} />
       )}
       {activeTab === "drafts" && <DraftsTab refreshKey={draftsRefresh} />}
       {activeTab === "calendar" && (

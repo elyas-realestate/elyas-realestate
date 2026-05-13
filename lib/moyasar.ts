@@ -4,18 +4,21 @@
 export const MOYASAR_BASE = "https://api.moyasar.com/v1";
 
 export interface MoyasarPaymentRequest {
-  amount: number;        // in halalas (1 SAR = 100)
+  amount: number; // in halalas (1 SAR = 100)
   currency: "SAR";
   description: string;
   callback_url: string;
-  source: {
-    type: "creditcard";
-    name: string;
-    number: string;
-    cvc: string;
-    month: string;
-    year: string;
-  } | { type: "applepay"; token: string } | { type: "stcpay"; mobile: string };
+  source:
+    | {
+        type: "creditcard";
+        name: string;
+        number: string;
+        cvc: string;
+        month: string;
+        year: string;
+      }
+    | { type: "applepay"; token: string }
+    | { type: "stcpay"; mobile: string };
   metadata?: Record<string, string>;
 }
 
@@ -68,8 +71,8 @@ export async function getPayment(id: string): Promise<MoyasarPayment> {
 // استخدم calculateVAT() من lib/vat.ts للحصول على breakdown.
 // ══════════════════════════════════════════════════════════════
 export const PLAN_PRICES: Record<string, { monthly: number; yearly: number; label: string }> = {
-  basic: { monthly: 99,  yearly: 899,  label: "الأساسي"   },
-  pro:   { monthly: 249, yearly: 2249, label: "الاحترافي" },
+  basic: { monthly: 99, yearly: 899, label: "الأساسي" },
+  pro: { monthly: 249, yearly: 2249, label: "الاحترافي" },
 };
 
 import { calculateVAT, type PriceBreakdown } from "./vat";

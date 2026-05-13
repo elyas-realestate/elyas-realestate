@@ -31,21 +31,32 @@ function makeClient(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return req.cookies.getAll(); },
+        getAll() {
+          return req.cookies.getAll();
+        },
         setAll() {},
       },
     }
   );
 }
 
-async function getTenantId(supabase: ReturnType<typeof makeClient>, userId: string): Promise<string | null> {
+async function getTenantId(
+  supabase: ReturnType<typeof makeClient>,
+  userId: string
+): Promise<string | null> {
   const { data: t } = await supabase
-    .from("tenants").select("id").eq("owner_id", userId).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", userId)
+    .maybeSingle();
   if (t?.id) return t.id as string;
 
   const { data: m } = await supabase
-    .from("tenant_members").select("tenant_id")
-    .eq("user_id", userId).eq("status", "active").maybeSingle();
+    .from("tenant_members")
+    .select("tenant_id")
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .maybeSingle();
   return (m?.tenant_id as string) || null;
 }
 
@@ -58,7 +69,9 @@ function normalizePhone(raw: string): string {
   return p;
 }
 
-function validatePhones(phones: unknown): { ok: true; data: PhoneEntry[] } | { ok: false; error: string } {
+function validatePhones(
+  phones: unknown
+): { ok: true; data: PhoneEntry[] } | { ok: false; error: string } {
   if (!Array.isArray(phones)) return { ok: false, error: "phones يجب أن تكون مصفوفة" };
 
   const cleaned: PhoneEntry[] = [];
@@ -67,7 +80,10 @@ function validatePhones(phones: unknown): { ok: true; data: PhoneEntry[] } | { o
   for (const p of phones) {
     if (!p || typeof p !== "object") return { ok: false, error: "كل رقم يجب أن يكون كائنًا" };
     const obj = p as Record<string, unknown>;
-    const label = String(obj.label || "").trim().slice(0, 40) || "بدون مسمى";
+    const label =
+      String(obj.label || "")
+        .trim()
+        .slice(0, 40) || "بدون مسمى";
     const numberRaw = String(obj.number || "").trim();
     if (!numberRaw) return { ok: false, error: "رقم فارغ غير مسموح" };
 
@@ -89,7 +105,7 @@ function validatePhones(phones: unknown): { ok: true; data: PhoneEntry[] } | { o
 
   // إزالة التكرارات (نفس الرقم)
   const seen = new Set<string>();
-  const deduped = cleaned.filter(p => {
+  const deduped = cleaned.filter((p) => {
     if (seen.has(p.number)) return false;
     seen.add(p.number);
     return true;
@@ -103,7 +119,9 @@ function validatePhones(phones: unknown): { ok: true; data: PhoneEntry[] } | { o
 // ─────────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
   const supabase = makeClient(req);
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   const tenantId = await getTenantId(supabase, user.id);
@@ -130,15 +148,23 @@ export async function GET(req: NextRequest) {
 // ─────────────────────────────────────────────────────────────
 export async function PUT(req: NextRequest) {
   const supabase = makeClient(req);
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
 
   // فقط مالك الـ tenant يقدر يحدّث (لا يكفي عضو فريق)
   const { data: t } = await supabase
-    .from("tenants").select("id").eq("owner_id", user.id).maybeSingle();
+    .from("tenants")
+    .select("id")
+    .eq("owner_id", user.id)
+    .maybeSingle();
   const tenantId = t?.id as string | undefined;
   if (!tenantId) {
-    return NextResponse.json({ error: "فقط مالك المنشأة يستطيع تعديل هوية الـ CEO" }, { status: 403 });
+    return NextResponse.json(
+      { error: "فقط مالك المنشأة يستطيع تعديل هوية الـ CEO" },
+      { status: 403 }
+    );
   }
 
   let body: CEOIdentityPayload;
@@ -149,17 +175,25 @@ export async function PUT(req: NextRequest) {
   }
 
   // تنظيف الحقول
-  const full_name = String(body.full_name || "").trim().slice(0, 120);
+  const full_name = String(body.full_name || "")
+    .trim()
+    .slice(0, 120);
   if (!full_name) return NextResponse.json({ error: "الاسم الكامل مطلوب" }, { status: 400 });
 
-  const title = String(body.title || "الرئيس التنفيذي").trim().slice(0, 80);
+  const title = String(body.title || "الرئيس التنفيذي")
+    .trim()
+    .slice(0, 80);
   const email = body.email ? String(body.email).trim().slice(0, 200) : null;
   const photo_url = body.photo_url ? String(body.photo_url).trim().slice(0, 500) : null;
-  const preferred_address = String(body.preferred_address || "الأستاذ").trim().slice(0, 40);
+  const preferred_address = String(body.preferred_address || "الأستاذ")
+    .trim()
+    .slice(0, 40);
   const tone_preference = ["professional", "friendly", "mixed"].includes(body.tone_preference || "")
     ? body.tone_preference!
     : "professional";
-  const assistant_employee_code = String(body.assistant_employee_code || "ceo_assistant").trim().slice(0, 60);
+  const assistant_employee_code = String(body.assistant_employee_code || "ceo_assistant")
+    .trim()
+    .slice(0, 60);
   const notes = body.notes ? String(body.notes).trim().slice(0, 2000) : null;
 
   // تحقق من البريد إن وُجد
@@ -204,11 +238,7 @@ export async function PUT(req: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ identity: data, action: "updated" });
   } else {
-    const { data, error } = await supabase
-      .from("ceo_identity")
-      .insert(payload)
-      .select()
-      .single();
+    const { data, error } = await supabase.from("ceo_identity").insert(payload).select().single();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ identity: data, action: "created" });
   }

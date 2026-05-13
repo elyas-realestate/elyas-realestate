@@ -34,11 +34,20 @@ export const metadata: Metadata = {
     default: "وسيط برو — المنصة العقارية الذكية",
     template: "%s | وسيط برو",
   },
-  description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين — CRM، عقود، أتمتة، ذكاء صناعي، واتساب، فواتير ZATCA — كل ما تحتاجه لإدارة عملك العقاري في مكان واحد.",
+  description:
+    "منصة إدارة عقارية متكاملة للوسطاء السعوديين — CRM، عقود، أتمتة، ذكاء صناعي، واتساب، فواتير ZATCA — كل ما تحتاجه لإدارة عملك العقاري في مكان واحد.",
   keywords: [
-    "وسيط عقاري", "عقارات السعودية", "منصة وسيط عقاري", "CRM عقاري",
-    "إدارة عقارات", "وسيط برو", "العقارات الرياض", "ذكاء صناعي عقاري",
-    "real estate Saudi", "broker platform", "real estate CRM",
+    "وسيط عقاري",
+    "عقارات السعودية",
+    "منصة وسيط عقاري",
+    "CRM عقاري",
+    "إدارة عقارات",
+    "وسيط برو",
+    "العقارات الرياض",
+    "ذكاء صناعي عقاري",
+    "real estate Saudi",
+    "broker platform",
+    "real estate CRM",
   ],
   authors: [{ name: "إلياس الدخيل" }],
   creator: "إلياس الدخيل",
@@ -68,7 +77,8 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: "وسيط برو",
     title: "وسيط برو — المنصة العقارية الذكية",
-    description: "منصة إدارة عقارية متكاملة للوسطاء السعوديين — CRM، عقود، أتمتة، ذكاء صناعي، واتساب.",
+    description:
+      "منصة إدارة عقارية متكاملة للوسطاء السعوديين — CRM، عقود، أتمتة، ذكاء صناعي، واتساب.",
     images: [
       {
         url: "/icons/icon-512.png",
@@ -138,7 +148,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         <AnalyticsTracker />
         <FeedbackWidget />
         <I18nProvider>{children}</I18nProvider>
