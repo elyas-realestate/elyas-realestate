@@ -83,8 +83,8 @@
 | 047         | Phase 1 — Card features (lead capture, vCard, etc.) |         ✅          |
 | 048         | Phase 2 — Themes + Testimonials + Licenses          |         ✅          |
 | 049         | Phase 4 — AI Innovations (voice, matching, intel)   |         ✅          |
-| 050         | Property management (rent contracts + payments)     | ⚠️ تحقّق من تشغيلها |
-| 051         | Beta feedback                                       | ⚠️ تحقّق من تشغيلها |
+| 050         | Property management (rent contracts + payments)     |         ✅          |
+| 051         | Beta feedback                                       |         ✅          |
 
 ---
 
