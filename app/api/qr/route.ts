@@ -44,7 +44,8 @@ export async function GET(req: NextRequest) {
       width: size,
     });
 
-    return new NextResponse(buffer, {
+    // تحويل Buffer (Node) إلى Uint8Array (Web Standard متوافق مع BodyInit)
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=86400",

@@ -155,7 +155,8 @@ export default withSentryConfig(nextConfig, {
 
   // ── خيارات بناء ──
   silent: !process.env.CI, // اسكت رسائل البناء محلياً
-  hideSourceMaps: true, // لا تكشف source maps للعموم
+  // ملاحظة: hideSourceMaps لم تعد موجودة في Sentry SDK الحديث —
+  // Next.js production builds تخفي source maps افتراضياً.
   disableLogger: true, // أزل console.log الخاص بـ Sentry من البناء
   widenClientFileUpload: true, // ارفع ملفات أكثر للحصول على stack traces أوضح
 });
