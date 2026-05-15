@@ -52,6 +52,11 @@ import {
   type QuickTheme,
 } from "./_constants";
 
+// ─── Tab Components (مُستخرَجة لـ _tabs/) ────────────────────────
+import { NotificationsTab } from "./_tabs/NotificationsTab";
+import { ContactTab } from "./_tabs/ContactTab";
+import { AccountTab } from "./_tabs/AccountTab";
+
 // ─── SITE_SECTIONS تبقى هنا لأنها تستخدم Icon components ────────
 const SITE_SECTIONS = [
   { id: "general", label: "معلومات عامة", icon: Globe },
@@ -2297,344 +2302,37 @@ export default function Settings() {
 
       {/* ════════════════════ TAB: التواصل ════════════════════ */}
       {tab === "contact" && settings && (
-        <div className="max-w-2xl space-y-5">
-          {/* تنبيه: تكامل WhatsApp Cloud API له صفحة منفصلة (Tokens, Phone IDs, Templates) */}
-          <div
-            className="flex items-start gap-2 rounded-xl p-3 text-xs"
-            style={{
-              background: "rgba(37,211,102,0.08)",
-              border: "1px solid rgba(37,211,102,0.30)",
-              color: "var(--text-soft)",
-            }}
-          >
-            <span style={{ color: "rgb(37,211,102)", fontWeight: 700, fontSize: 14 }}>💬</span>
-            <div>
-              للتكامل المتقدّم مع WhatsApp Business (إرسال OTP، Templates، تكامل API):{" "}
-              <Link
-                href="/dashboard/whatsapp/settings"
-                className="font-bold no-underline"
-                style={{ color: "rgb(37,211,102)" }}
-              >
-                إعدادات واتساب الكاملة →
-              </Link>
-            </div>
-          </div>
-
-          <div className="space-y-5 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-6">
-            <h3 className="text-lg font-bold text-[var(--gold-2)]">معلومات التواصل العامة</h3>
-            <div>
-              <label className="mb-2 block text-sm text-[var(--text-soft)]">
-                رقم الجوال <span className="text-[var(--text-faint)]">(مع مفتاح الدولة)</span>
-              </label>
-              <input
-                value={s.phone || ""}
-                onChange={(e) => sc("phone", e.target.value)}
-                className={inputClass}
-                placeholder="+966501234567"
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm text-[var(--text-soft)]">
-                رقم الواتساب{" "}
-                <span className="text-[var(--text-faint)]">(بدون + — مثال: 966501234567)</span>
-              </label>
-              <input
-                value={s.whatsapp || ""}
-                onChange={(e) => sc("whatsapp", e.target.value)}
-                className={inputClass}
-                placeholder="966501234567"
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm text-[var(--text-soft)]">
-                البريد الإلكتروني العام{" "}
-                <span className="text-[var(--text-faint)]">(يظهر في الموقع)</span>
-              </label>
-              <input
-                value={s.email || ""}
-                onChange={(e) => sc("email", e.target.value)}
-                className={inputClass}
-                placeholder="info@example.com"
-                dir="ltr"
-              />
-            </div>
-          </div>
-          <div className="space-y-4 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-6">
-            <h3 className="text-lg font-bold text-[var(--gold-2)]">حسابات السوشال ميديا</h3>
-            <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-              ✨ اكتب اسم المستخدم فقط (مثلاً{" "}
-              <code
-                style={{ background: "var(--bg-surface-2)", padding: "1px 6px", borderRadius: 4 }}
-              >
-                elyasad1
-              </code>
-              )، النظام يحوّله لرابط كامل تلقائياً عند الحفظ.
-            </p>
-            {SOCIAL_PLATFORMS.map((p) => (
-              <div key={p.key}>
-                <label className="mb-2 block text-sm text-[var(--text-soft)]">{p.label}</label>
-                <input
-                  value={s[p.key] || ""}
-                  onChange={(e) => sc(p.key, e.target.value)}
-                  onBlur={(e) => {
-                    const normalized = normalizeSocial(p.platform, e.target.value);
-                    if (normalized !== e.target.value) sc(p.key, normalized);
-                  }}
-                  className={inputClass}
-                  placeholder={getSmartPlaceholder(p.platform)}
-                  dir="ltr"
-                />
-              </div>
-            ))}
-          </div>
-          <SaveBtn onClick={handleSaveSettings} />
-        </div>
+        <ContactTab
+          s={s}
+          sc={sc}
+          saving={saving}
+          saved={saved}
+          onSave={handleSaveSettings}
+          inputClass={inputClass}
+        />
       )}
 
       {/* ════════════════════ TAB: الإشعارات ════════════════════ */}
-      {tab === "notifications" && (
-        <div className="max-w-2xl space-y-5">
-          <div className="rounded-xl border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] p-6">
-            <div className="mb-3 flex items-center gap-3">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{ background: "var(--gold-bg-hover)" }}
-              >
-                <Bell size={20} className="text-[var(--gold-2)]" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold" style={{ color: "var(--text-strong)" }}>
-                  الإشعارات والتنبيهات
-                </h3>
-                <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-                  استلام تنبيهات فورية على جوالك أو متصفحك
-                </p>
-              </div>
-            </div>
-            <p className="mb-4 text-sm" style={{ color: "var(--text-soft)", lineHeight: 1.8 }}>
-              تحكّم في إشعارات لوحة التحكم: عملاء جدد، صفقات قيد التفاوض، عقود تنتظر التوقيع،
-              ومتابعات AI. يمكنك تفعيلها على هاتفك (PWA) أو على متصفحك مباشرة.
-            </p>
-            <Link
-              href="/dashboard/settings/notifications"
-              className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold no-underline transition"
-              style={{
-                background: "linear-gradient(135deg, var(--gold-2), var(--gold-3))",
-                color: "var(--bg-page)",
-              }}
-            >
-              <Bell size={15} /> إعدادات الإشعارات الكاملة <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          <div
-            className="rounded-xl p-4"
-            style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}
-          >
-            <p className="text-xs" style={{ color: "var(--text-soft)", lineHeight: 1.7 }}>
-              💡 <strong>نصيحة:</strong> ثبّت تطبيق وسيط برو على جوالك (iOS / Android) لاستلام
-              الإشعارات في خلفية الجهاز، حتى عند إغلاق المتصفح. التثبيت يستغرق ٣٠ ثانية ولا يحتاج
-              App Store.
-            </p>
-          </div>
-        </div>
-      )}
+      {tab === "notifications" && <NotificationsTab />}
 
       {/* ════════════════════ TAB: الحساب ════════════════════ */}
       {tab === "account" && (
-        <div className="max-w-2xl space-y-6">
-          {/* رابطك الشخصي */}
-          <div className="rounded-xl border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] p-6">
-            <div className="mb-1 flex items-center gap-2">
-              <Link2 size={17} className="text-[var(--gold-2)]" />
-              <h3 className="text-lg font-bold">رابطك الشخصي</h3>
-            </div>
-            <p className="mb-5 text-sm text-[var(--text-faint)]">
-              هذا هو رابط صفحتك التي يراها عملاؤك — يجب أن يكون فريداً وباللغة الإنجليزية
-            </p>
-            {slug && (
-              <a
-                href={`/${slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mb-4 flex items-center gap-2 text-sm no-underline"
-                style={{ color: "var(--gold-2)" }}
-              >
-                <span className="text-[var(--text-faint)]">waseet-pro.com/</span>
-                <span className="font-bold">{slug}</span>
-                <span
-                  style={{
-                    fontSize: 11,
-                    background: "var(--gold-bg)",
-                    border: "1px solid var(--gold-bg-hover)",
-                    padding: "2px 8px",
-                    borderRadius: 6,
-                  }}
-                >
-                  فتح ↗
-                </span>
-              </a>
-            )}
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-sm text-[var(--text-faint)] select-none">
-                  waseet-pro.com/
-                </span>
-                <input
-                  value={slugInput}
-                  onChange={(e) => handleSlugChange(e.target.value)}
-                  placeholder="your-slug"
-                  dir="ltr"
-                  className={inputClass + " pr-32"}
-                  style={{ paddingRight: "8.5rem" }}
-                />
-              </div>
-              <button
-                onClick={handleSaveSlug}
-                disabled={savingSlug || slugStatus !== "available" || slugInput === slug}
-                className="rounded-lg px-4 py-3 text-sm font-medium transition disabled:opacity-40"
-                style={{
-                  background: "var(--gold-bg-hover)",
-                  border: "1px solid rgba(198,145,76,0.25)",
-                  color: "var(--gold-2)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {savingSlug ? <Loader2 size={15} className="animate-spin" /> : "حفظ"}
-              </button>
-            </div>
-            {slugStatus !== "idle" && slugInput !== slug && (
-              <div
-                className={`mt-2 flex items-center gap-2 text-sm ${slugStatus === "available" ? "text-emerald-400" : slugStatus === "checking" ? "text-[var(--text-soft)]" : "text-red-400"}`}
-              >
-                {slugStatus === "checking" && <Loader2 size={12} className="animate-spin" />}
-                {slugStatus === "available" && <CheckCircle2 size={12} />}
-                {(slugStatus === "taken" || slugStatus === "invalid") && <XCircle size={12} />}
-                <span>{slugStatus === "checking" ? "جاري الفحص..." : slugMsg}</span>
-              </div>
-            )}
-            <p className="mt-3 text-xs text-[var(--text-faint)]">
-              أحرف إنجليزية صغيرة وأرقام وشرطة (-) فقط — 3 إلى 40 حرفاً
-            </p>
-          </div>
-
-          {/* الشهادات والتراخيص */}
-          <div className="space-y-5 rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-6">
-            <h3 className="text-lg font-bold text-[var(--gold-2)]">الشهادات والتراخيص</h3>
-            <div>
-              <label className="mb-2 block text-sm text-[var(--text-soft)]">
-                رقم السجل التجاري / الرقم الموحد
-              </label>
-              <input
-                value={licenses.commercial_register}
-                onChange={(e) =>
-                  setLicenses((l) => ({ ...l, commercial_register: e.target.value }))
-                }
-                className={inputClass}
-                placeholder="مثال: 1010000000"
-                maxLength={10}
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm text-[var(--text-soft)]">
-                رقم وثيقة العمل الحر
-              </label>
-              <input
-                value={licenses.freelance_doc}
-                onChange={(e) => setLicenses((l) => ({ ...l, freelance_doc: e.target.value }))}
-                className={inputClass}
-                placeholder="أدخل رقم وثيقة العمل الحر"
-                dir="ltr"
-              />
-            </div>
-
-            {/* ── ZATCA Compliance ── */}
-            <div className="border-t border-[var(--gold-bg)] pt-4">
-              <div className="mb-3 flex items-center gap-2">
-                <h4 className="text-sm font-bold text-emerald-400">امتثال فاتورة ZATCA</h4>
-                <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-400">
-                  إلزامي للشركات المُسجّلة بضريبة القيمة المضافة
-                </span>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-2 block text-sm text-[var(--text-soft)]">
-                    الرقم الضريبي (15 رقم)
-                  </label>
-                  <input
-                    value={licenses.vat_number}
-                    onChange={(e) =>
-                      setLicenses((l) => ({
-                        ...l,
-                        vat_number: e.target.value.replace(/\D/g, "").slice(0, 15),
-                      }))
-                    }
-                    className={inputClass}
-                    placeholder="مثال: 310123456700003"
-                    maxLength={15}
-                    dir="ltr"
-                    inputMode="numeric"
-                  />
-                  <p className="mt-1 text-xs text-[var(--text-faint)]">
-                    {licenses.vat_number &&
-                      (/^3\d{13}3$/.test(licenses.vat_number)
-                        ? "✅ صيغة صحيحة"
-                        : "⚠️ يجب أن يبدأ وينتهي بـ 3 ويكون 15 رقم")}
-                    {!licenses.vat_number && "يظهر في رأس الفواتير + رمز QR ZATCA"}
-                  </p>
-                </div>
-                <label className="flex cursor-pointer items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={licenses.zatca_enabled}
-                    onChange={(e) =>
-                      setLicenses((l) => ({ ...l, zatca_enabled: e.target.checked }))
-                    }
-                    className="h-4 w-4 accent-emerald-500"
-                  />
-                  <span className="text-sm text-[var(--text-soft)]">
-                    تفعيل QR ZATCA وتصدير XML في الفواتير
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <SaveBtn onClick={handleSaveLicenses} />
-          </div>
-
-          {/* الفريق */}
-          <div className="rounded-xl border border-[var(--gold-bg)] bg-[var(--bg-surface-1)] p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <h3 className="text-lg font-bold">الفريق</h3>
-              <button className="rounded-lg bg-[var(--gold-2)] px-4 py-2 text-sm transition hover:bg-[var(--gold-3)]">
-                دعوة عضو جديد
-              </button>
-            </div>
-            <table className="w-full" style={{ minWidth: 320 }}>
-              <thead>
-                <tr className="border-b border-[var(--gold-bg)] text-sm text-[var(--text-soft)]">
-                  <th className="pb-3 text-right">الاسم</th>
-                  <th className="pb-3 text-right">الصلاحية</th>
-                  <th className="pb-3 text-right">تاريخ الانضمام</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="py-4">{profile.name || "—"}</td>
-                  <td className="py-4">
-                    <span className="rounded bg-[var(--gold-bg)] px-2 py-1 text-xs text-[var(--gold-2)]">
-                      مالك
-                    </span>
-                  </td>
-                  <td className="py-4 text-sm text-[var(--text-soft)]">المؤسس</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <AccountTab
+          profile={profile}
+          slug={slug}
+          slugInput={slugInput}
+          slugStatus={slugStatus}
+          slugMsg={slugMsg}
+          savingSlug={savingSlug}
+          onSlugChange={handleSlugChange}
+          onSlugSave={handleSaveSlug}
+          licenses={licenses}
+          setLicenses={setLicenses}
+          saving={saving}
+          saved={saved}
+          onLicensesSave={handleSaveLicenses}
+          inputClass={inputClass}
+        />
       )}
     </div>
   );
