@@ -161,7 +161,7 @@ Display Name:   Elyas Real Estate (Pending Review)
 
 ### Phase 5 — Brand Icons + Drag/Design Freedom (مكتمل)
 
-- ✅ **BrandIcons.tsx** موسَّع — BRAND*ICON_MAP بـ 17+ مفتاح يغطّي social*_ + contact\__ + aliases
+- ✅ **BrandIcons.tsx** موسَّع — BRAND*ICON_MAP بـ 17+ مفتاح يغطّي social*\_ + contact\_\_ + aliases
 - ✅ **BRAND_BG_MAP + BRAND_FG_MAP + helpers** — getBrandBg/getBrandFg/getBrandIcon
 - ✅ **ProfileCardClient.tsx** — Brand Icons في topSocials (40px) + ElementCardInner (36px)
 - ✅ **Dashboard editor** — Brand Icons في autoElements + ElementRow + library + edit modal

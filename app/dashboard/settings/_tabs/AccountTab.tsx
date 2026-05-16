@@ -141,9 +141,7 @@ export function AccountTab({
           />
         </div>
         <div>
-          <label className="mb-2 block text-sm text-[var(--text-soft)]">
-            رقم وثيقة العمل الحر
-          </label>
+          <label className="mb-2 block text-sm text-[var(--text-soft)]">رقم وثيقة العمل الحر</label>
           <input
             value={licenses.freelance_doc}
             onChange={(e) => setLicenses((l) => ({ ...l, freelance_doc: e.target.value }))}
@@ -192,9 +190,7 @@ export function AccountTab({
               <input
                 type="checkbox"
                 checked={licenses.zatca_enabled}
-                onChange={(e) =>
-                  setLicenses((l) => ({ ...l, zatca_enabled: e.target.checked }))
-                }
+                onChange={(e) => setLicenses((l) => ({ ...l, zatca_enabled: e.target.checked }))}
                 className="h-4 w-4 accent-emerald-500"
               />
               <span className="text-sm text-[var(--text-soft)]">

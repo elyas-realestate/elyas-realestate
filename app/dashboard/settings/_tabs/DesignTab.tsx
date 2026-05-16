@@ -366,8 +366,7 @@ export function DesignTab({
                 onClick={() => setDesignTab(t.id)}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition"
                 style={{
-                  background:
-                    designTab === t.id ? "var(--gold-bg-hover)" : "var(--bg-surface-1)",
+                  background: designTab === t.id ? "var(--gold-bg-hover)" : "var(--bg-surface-1)",
                   color: designTab === t.id ? "var(--gold-2)" : "var(--text-faint)",
                   border:
                     "1px solid " +
@@ -569,10 +568,7 @@ export function DesignTab({
                           >
                             {field.label}
                           </span>
-                          <span
-                            className="mr-2 text-xs"
-                            style={{ color: "var(--text-faint)" }}
-                          >
+                          <span className="mr-2 text-xs" style={{ color: "var(--text-faint)" }}>
                             {field.desc}
                           </span>
                         </div>
@@ -654,8 +650,7 @@ export function DesignTab({
                     </div>
                     <div className="flex gap-2">
                       {field.presets.map((p) => {
-                        const active =
-                          (s[field.key] || (COLOR_DEFAULTS as any)[field.key]) === p.v;
+                        const active = (s[field.key] || (COLOR_DEFAULTS as any)[field.key]) === p.v;
                         return (
                           <button
                             key={p.v}

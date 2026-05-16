@@ -595,16 +595,14 @@ function PnLTab({ deals }: { deals: Deal[] }) {
       return;
     }
     setSaving(true);
-    const { error } = await supabase
-      .from("expenses")
-      .insert([
-        {
-          category: form.category,
-          amount: Number(form.amount),
-          note: form.note,
-          expense_date: form.expense_date,
-        },
-      ]);
+    const { error } = await supabase.from("expenses").insert([
+      {
+        category: form.category,
+        amount: Number(form.amount),
+        note: form.note,
+        expense_date: form.expense_date,
+      },
+    ]);
     setSaving(false);
     if (error) {
       toast.error("فشل الحفظ: " + error.message);

@@ -7,6 +7,7 @@
 ## 🎯 رؤية المنصّة
 
 شركة عقارية رقمية كاملة تعمل بـ **Multi-Agent System (MAS)**:
+
 - أنت **CEO** (وسيط ومسوّق عقاري سعودي مرخّص).
 - ٥ مدراء AI تحتك، تحت كل مدير ٢-٥ موظفين.
 - ٨٠٪ من العمل يتم تلقائياً، ٢٠٪ تتدخّل أنت (إغلاقات، زيارات، نزاعات قانونية).
@@ -17,24 +18,29 @@
 ## ✅ المُنجَز (15 مرحلة، أبريل 2026)
 
 ### الأساسيات (A → B)
+
 - **A:** ZATCA QR + XML، Cron تذكيرات يومية، Work Orders، 2FA TOTP
 - **B:** CSV Import، Monthly Reports PDF، توزيع على ٨ بوّابات، RSS feed
 
 ### التشغيل (C → E)
+
 - **C — Super Admin** (migration 025): جدول `super_admins` + `is_super_admin()` + 4 صفحات إدارية للمالك (`/admin/tenants`, `/subscriptions`, `/audit`, `/ai-providers`)
 - **D — AI Employees الأصلي** (migration 026): جداول `ai_employee_settings`, `marketing_queue`, `followup_queue`, `weekly_insights`, `ai_conversations`
 - **E — Security Hardening** (migration 027): سدّ ٢٩/٣٠ ثغرة Supabase Advisor
 
 ### الميزات الرئيسية (F → I)
+
 - **F — E-Contracts** (migration 028): ٤ قوالب + توقيع canvas + ختم SHA-256 + رابط `/sign/[token]` + RLS عام محصَّن
 - **G — PWA** (migration 029): manifest + service worker + ٦ أيقونات + push subscriptions table
 - **H — WhatsApp Business** (migration 030): Meta Cloud API integration + بوت رد ذكي + inbox UI + إعدادات
 - **I — تجهيز الإطلاق التجاري:** صفحات مراجعة AI queues + insights + onboarding wizard + landing محدَّث
 
 ### تحسينات تشغيلية (J)
+
 - **J:** إصلاح TypeScript errors قديمة (cron/reminders, zatca, ai-content) + Push notifications (web-push + VAPID + triggers)
 
 ### نظام MAS الكامل (K-1 → K-7)
+
 - **K-1:** `/admin/ai-providers` — مركز صحة المزوّدين السبعة + balance + billing links
 - **K-2** (migration 031): ٧ جداول للهيكل التنظيمي (`ai_managers`, `ai_employees`, `tenant_ai_config`, `directives`, `knowledge_base`, `org_escalations`, `org_activity_log`) + ٥ مدراء + ١٢ موظف seeded
 - **K-3:** ٣ صفحات (`/dashboard/organization` + `manager/[id]` + `employee/[id]`) — تحرير توجيهات + KB + إدارة الفريق
@@ -50,7 +56,9 @@
   - النية: WhatsApp بوت يصبح **سكرتير CEO شخصي** بدلاً من قناة عملاء
 
 ### ⏸️ معلَّق — اختبار WhatsApp Webhook حقيقي
+
 **الحالة في ٣٠ أبريل ٢٠٢٦ ١١م الرياض:**
+
 - ✅ Webhook URL مسجَّل في Meta + verified
 - ✅ messages event subscribed على App
 - ✅ Wasit Pro مشترك على WABA (`/subscribed_apps`)
@@ -61,17 +69,20 @@
 - ❌ زر "نشر" غير مرئي في الواجهة الجديدة (Use Case mode + BSP classification)
 
 **اكتشافات مهمة:**
+
 - التطبيق مصنّف داخلياً كـ Business Solution Provider (BSP) — flow نشر مختلف
 - Test Webhook نجح (تم في 00:50 يوم ١ مايو): يثبت أن endpoint Vercel يعمل، Verify Token صحيح، DNS/SSL سليم
 - المشكلة مقصورة على **Meta لا يطلق webhook events للرسائل الحقيقية** في وضع Development
 
 **خطوات التشخيص التالية (لما نعود):**
+
 1. تجربة المستخدم نقر يدوي على وسم "غير منشور" في `/go_live/`
 2. فحص Display Name للرقم التجريبي في Business Suite — قد يحتاج تعيين قبل تفعيل inbound webhook
 3. التحقق من Admin role للمستخدم في `/roles/roles/`
 4. لو كل ما سبق فشل: استخدام Meta Business Suite > Account Settings كآخر مسار
 
 **معلومات حاسمة:**
+
 - Phone Number ID: 1088586447672844
 - WABA ID: 1394833282684191
 - App ID: 1469992254871548
@@ -79,6 +90,7 @@
 - قيم whatsapp_config مدخَلة في DB + is_active=true + auto_reply_enabled=true
 
 ### ✅ نظام الثيمات (T-1 → T-4) — مكتمل ٣٠ أبريل ٢٠٢٦
+
 - `app/globals.css` — CSS variables شامل (٤٠+ متغير) لـ dark + cream
 - Python script حوّل ٩٩ ملف من hex hardcoded → `var(--*)`
 - `app/components/ThemeSwitcher.tsx` — مكوّن تبديل بين الثيمين
@@ -89,6 +101,7 @@
 - الثيم الكريمي يستخدم: bg `#FAF7F2` + text `#1A1206` + cards `#FFFFFF` + borders `#E5DFD0`
 
 ### الخطط المعلَّقة الأخرى
+
 - **K-9 المراحل ٢ و٣** — tools/استعلامات + تنبيهات استباقية
 - Push Notifications تفعيل (Desktop)
 - شحن xAI ($5)
@@ -102,10 +115,12 @@
 ## 🏢 الهيكل التنظيمي الحالي (٥ مدراء + ١٢ موظف)
 
 ### قسم خدمة العملاء (Gemini Flash)
+
 - `whatsapp_qualifier` (DeepSeek) — رد ٢٤/٧
 - `lead_scorer` (DeepSeek) — تصنيف Hot/Warm/Cold
 
 ### قسم التسويق (Gemini Flash)
+
 - `content_creator` (Gemini Flash) — كتابة منشورات
 - `trend_scout` (Grok) — مراقبة X
 - `social_publisher` (DeepSeek) — نشر مجدوَل
@@ -113,16 +128,19 @@
 - `visual_director` (Gemini Pro) — صور + سكربتات Reels
 
 ### قسم إدارة الأملاك (Gemini Flash)
+
 - `leasing_agent` (DeepSeek) — متابعة + تذكيرات إيجار
 - `maintenance_coordinator` (GPT-4o-mini) — تذاكر صيانة
 - `vacancy_filler` (DeepSeek) — تسويق الوحدات الفارغة
 
 ### القسم المالي (Gemini Flash)
+
 - `bookkeeper` (DeepSeek) — قيود يومية
 - `financial_analyst` (Gemini Pro) — تقرير أسبوعي
 - `collections_specialist` (DeepSeek) — متابعة الفواتير المتأخرة
 
 ### قسم التطوير + BizDev (Gemini Flash)
+
 - `bizdev_scout` (Grok) — مشاريع جديدة
 - `dev_lead` (Claude Sonnet) — صيانة الكود
 
@@ -130,14 +148,15 @@
 
 ## 💰 سلّم ترقية النماذج
 
-| المرحلة | المدراء | الموظفون | تكلفة/وسيط/شهر | متى ترقّي |
-|---|---|---|---|---|
-| ✅ **التجربة (الآن)** | Gemini 2.5 Flash | DeepSeek + Gemini Flash | **~$1.40** | (الإعداد الحالي) |
-| 🚀 أول ٥-١٠ مشتركين | Claude Haiku 4.5 | كما هو | ~$5 | عند MRR > $500 |
-| 🏢 ٥٠-١٠٠ مشترك | Haiku + Sonnet لـ critical فقط + Caching | كما هو | ~$1-2 (cached) | عند MRR > $5K |
-| 🌍 توسّع كبير | Fine-tuning + RAG عبر pgvector | كما هو | حسب الاستخدام | عند MRR > $20K |
+| المرحلة               | المدراء                                  | الموظفون                | تكلفة/وسيط/شهر | متى ترقّي        |
+| --------------------- | ---------------------------------------- | ----------------------- | -------------- | ---------------- |
+| ✅ **التجربة (الآن)** | Gemini 2.5 Flash                         | DeepSeek + Gemini Flash | **~$1.40**     | (الإعداد الحالي) |
+| 🚀 أول ٥-١٠ مشتركين   | Claude Haiku 4.5                         | كما هو                  | ~$5            | عند MRR > $500   |
+| 🏢 ٥٠-١٠٠ مشترك       | Haiku + Sonnet لـ critical فقط + Caching | كما هو                  | ~$1-2 (cached) | عند MRR > $5K    |
+| 🌍 توسّع كبير         | Fine-tuning + RAG عبر pgvector           | كما هو                  | حسب الاستخدام  | عند MRR > $20K   |
 
 **Concepts:**
+
 - **Prompt Caching:** توفير تقني ٨٠-٩٠٪ على input متكرر (التوجيهات + KB).
 - **RAG (Self-Learning الحقيقي):** بحث دلالي في KB عبر embeddings + pgvector.
 - **Fine-tuning:** تدريب نموذج مخصّص — متقدم، تكلفة عالية.
@@ -147,19 +166,23 @@
 ## 🚧 المتبقي (Pending) — مرتَّب حسب القيمة
 
 ### ✅ المنظومة مُعبَّأة بمحتوى حقيقي (٢٩ أبريل ٢٠٢٦)
+
 - **١٧ توجيه استراتيجي** على ٥ مدراء + **٥٥ توجيه تشغيلي** على ١٢ موظف
 - اختبار شامل عبر Claude in Chrome مرتين، K-4 شغّال، الجودة 96%
 
 ### 🔥 أولوية عالية (يستحق التنفيذ قريباً)
 
 #### 1. خيار K-6: RAG + pgvector
+
 لما KB تكبر (50+ عنصر)، نضيف بحث دلالي:
+
 - تفعيل `pgvector` في Supabase
 - توليد embeddings عند إدخال KB
 - بدل تحميل كل الـ KB في system prompt، نختار أهم ٥-١٠ بناءً على الاستفسار
 - يقفز جودة الردود + يقلّل تكلفة input بنسبة ٧٠٪
 
 #### 2. مراجعة Manager Loop الليلية
+
 - cron يشتغل ٢٠:٠٠ UTC = ١١م الرياض
 - بعد ١-٢ يوم سيكون عندنا مراجعات يومية فعلية على ٥ مدراء
 - اقتراحات جديدة تتولّد آلياً بدون تدخل
@@ -167,45 +190,54 @@
 ### 🟡 أولوية متوسطة (تحتاج خطوات خارجية)
 
 #### 5. تفعيل Push Notifications الفعلي
+
 - VAPID keys مولَّدة ومحفوظة في الذاكرة
 - يحتاج إضافتها لـ Vercel env vars (٥ دقائق)
 - بعدها كل cron يطلق إشعاراً عند events مهمة
 
 #### 6. تفعيل WhatsApp Business API الكامل
+
 - اتباع `META_SETUP.md` (٩ خطوات، ١-٣ أيام موافقات Meta)
 - بعدها بوت الاستقبال يبدأ يرد فعلياً عبر API بدل wa.me
 
 #### 7. شحن xAI Grok ($5-10)
+
 - لتفعيل `trend_scout` و `bizdev_scout`
 - البحث في X/Twitter + الويب
 
 #### 8. ربط Social Media APIs
+
 - X API (1500 منشور مجاناً/شهر) — لـ `social_publisher`
 - Instagram + Facebook (Meta Business)
 - TikTok for Developers
 
 #### 9. ربط Nafath
+
 - تحقق هوية الطرف الثاني في العقود
 - يتطلب اتفاقية مع نفاذ الحكومي
 
 ### 🔵 ميزات تجارية (للنمو)
 
 #### 10. صفحة تسويقية متقدمة
+
 - Hero بفيديو إيضاحي لـ MAS
 - شهادات من أول وسطاء
 - Case studies
 - Live demo
 
 #### 11. نظام Referral
+
 - كل وسيط يدعو آخرين
 - خصم ٢٠٪ على الاشتراك لكل دعوة ناجحة
 
 #### 12. تحليل صور AI متقدم
+
 - visual_director يحلل صور كل عقار جديد
 - يقترح زوايا تصوير، إضاءة، crop
 - يكشف عيوب بصرية تضعف العرض
 
 #### 13. لوحة Analytics متقدمة
+
 - Funnel تحليل (من أول لمسة إلى توقيع)
 - A/B testing للمنشورات
 - ROI لكل قناة سوشل ميديا
@@ -215,17 +247,20 @@
 ## ⚠️ حالة البيئة (Environment State) — محدَّثة
 
 ### Supabase
+
 - **Project ID:** `apmdwautyqoqjlabxysz`
 - **Migrations مُطبَّقة:** 019 → 033 (٢٤ migration)
 - **Owner user_id (super_admin):** `d5162dae-e3bf-48fa-91a6-b0e0c2c5c43a` (`vip.elyas@gmail.com`)
 - **Plan:** Free (الترقية لـ Pro تفعّل Leaked Password Protection)
 
 ### Vercel
+
 - **Project ID:** `prj_OUZaoGOj0PJqCM1Z6hRJGP6ZZSa9`
 - **Org:** `team_ZsF4MPBHFOGtB2pSe4jZJFoJ`
 - **Crons (5):** reminders 8ص + ai-marketing 10ص + ai-followup 6م + ai-analyst أحد 9ص + manager-loop 11م
 
 ### مزوّدو AI (آخر فحص)
+
 - ✅ OpenAI ($10) — يعمل
 - ✅ Google Gemini (مجاني) — يعمل
 - ✅ Groq (مجاني تجريبي) — يعمل
@@ -235,6 +270,7 @@
 - ❌ Manus — تجاهله
 
 ### Env Vars المضبوطة
+
 - Supabase keys (URL + anon + service_role)
 - AI keys (OpenAI, Anthropic, Google, Groq, DeepSeek, xAI, Manus)
 - CRON_SECRET
@@ -243,6 +279,7 @@
 - Moyasar payment keys
 
 ### آخر commits
+
 - `f58409a` — K-5 wire crons + CEO dashboard ✅
 - `55f9afd` — K-4 auto-suggestion engine ✅
 - `b4f862f` — K-2+K-3 org tables + UI ✅
@@ -261,27 +298,32 @@
 ## 🛠️ قواعد التطوير (لا تخالفها)
 
 ### UI
+
 - Dark theme فقط
 - Raw divs + inline styles (لا shadcn/ui)
 - RTL دائماً، خط Tajawal
 - ألوان الأقسام في `lib/org-constants.ts`
 
 ### الكود
+
 - Next.js 16: `proxy.ts` (ليس middleware)
 - Supabase client: `lib/supabase-browser` للكلاينت، `createServerClient` للسيرفر
 - كل جدول جديد → `tenant_id` + RLS `USING (tenant_id = my_tenant_id())`
 - لا `any` — عرّف types
 
 ### الأمن
+
 - `/api/admin/*` → `requireSuperAdmin(req)`
 - API عادي: `auth.getUser()` ثم استخراج tenant_id
 - service_role فقط بعد auth + استخدم RPC SECURITY DEFINER عند الإمكان
 
 ### SQL
+
 - `IF NOT EXISTS` + `CREATE OR REPLACE` + `DROP POLICY IF EXISTS` (idempotent)
 - `SET search_path = public` في كل function
 
 ### Git
+
 - Commits صغيرة، رسائل English
 - Co-Authored-By: Claude
 - push بعد كل ميزة
@@ -291,6 +333,7 @@
 ## 📦 ملفات محورية (للرجوع)
 
 ### Core Infrastructure
+
 - `proxy.ts` — auth + 2FA + admin gate
 - `lib/supabase-browser.ts` — client
 - `lib/admin-auth.ts` — `requireSuperAdmin`
@@ -301,6 +344,7 @@
 - `lib/org-constants.ts` — ثوابت الأقسام
 
 ### Migrations الرئيسية
+
 - `025_super_admin.sql` — لوحة المالك
 - `026_ai_employees.sql` — الموظفين الأصلي (ai_employee_settings legacy)
 - `027_security_hardening.sql` — RLS تصلّب
@@ -310,6 +354,7 @@
 - `031_org_structure.sql` — **الهيكل التنظيمي الكامل**
 
 ### واجهات محورية
+
 - `/dashboard/ceo` — لوحة CEO الجديدة
 - `/dashboard/organization` — الهيكل التنظيمي
 - `/dashboard/contracts` — العقود
@@ -334,6 +379,7 @@
 ## 📌 ملاحظات للجلسة القادمة
 
 ### ما اكتمل في جلسة ٢٩ أبريل ٢٠٢٦
+
 - K-7 Approval Gates + K-8 Manager Loop
 - ١٤ bug fix بعد جولتين اختبار من Claude in Chrome
 - Provider Fallback (Gemini → DeepSeek آلياً عند quota)
@@ -344,6 +390,7 @@
 - SUPABASE_SERVICE_ROLE_KEY مضاف لـ Vercel
 
 ### Landing Page (Claude Design) ✅ مفعّلة على /
+
 - `wasit-pro-landing.html` (344K) — نسخة احتياطية في الجذر
 - `public/landing.html` — Landing احترافي يُقدَّم على `/landing.html` و `/`
 - `next.config.ts` rewrite: `/` → `/landing.html` (URL يبقى `/`)
@@ -352,12 +399,14 @@
 - ⚠️ ملاحظة: app/page.tsx القديمة لا تُعرض بعد الآن (الـ rewrite يطغى)
 
 ### الصفحات القانونية الجديدة (مفيدة لـ Meta + حماية قانونية)
+
 - `/privacy` — سياسة الخصوصية (متوافقة PDPL + REGA + ZATCA)
 - `/terms` — شروط الاستخدام
 - `/data-processing` — اتفاقية معالجة البيانات
 - `/license` — الترخيص الإعلاني (يقرأ تلقائياً من broker_identity)
 
 ### في الانتظار / لم يكتمل
+
 - **WhatsApp Cloud API:** Claude in Chrome توقف عند Webhook Verify (احتاج META_WEBHOOK_VERIFY_TOKEN في Vercel)
   - الكود يستخدم: `META_WEBHOOK_VERIFY_TOKEN` فقط في Vercel
   - باقي القيم (phone_number_id, business_account_id, access_token, display_phone, display_name) → DB عبر `/dashboard/whatsapp/settings`
@@ -366,6 +415,7 @@
 - **xAI Grok:** يحتاج $5 شحن (Provider Fallback يحلّ مكانه حالياً بنجاح)
 
 ### ما الذي يجب البدء به في الجلسة القادمة (مرتّب)
+
 1. مراجعة Manager Loop reviews من ليلة ٢٩→٣٠ أبريل (إذا اشتغل cron)
 2. دمج wasit-pro-landing.html كصفحة Next.js (~٣٠ دقيقة)
 3. إكمال WhatsApp API (إضافة META_WEBHOOK_VERIFY_TOKEN لـ Vercel + redeploy + إعادة Verify في Meta + إدخال القيم في /dashboard/whatsapp/settings)

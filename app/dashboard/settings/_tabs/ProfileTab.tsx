@@ -56,11 +56,7 @@ export function ProfileTab({
               style={{ background: "var(--bg-surface-2)" }}
             >
               {profile.photo_url ? (
-                <img
-                  src={profile.photo_url}
-                  alt="صورة"
-                  className="h-full w-full object-cover"
-                />
+                <img src={profile.photo_url} alt="صورة" className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
                   <User size={30} className="text-[var(--text-faint)]" />

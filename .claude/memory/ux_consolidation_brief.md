@@ -1,22 +1,23 @@
 # UX Consolidation Brief — وسيط برو
+
 ## المشكلة كما عبّر عنها المالك (إلياس)
 
 > "اشعر بالإرباك في كثرة الخيارات والإعدادات. نريد دمج بعض الخيارات مع بعضها لسهولة الاستخدام. مثلاً كل شي يخص الـ AI يكون في خيار واحد."
 
 ## الواقع الحالي — توزّع خيارات الذكاء الاصطناعي
 
-| الموقع | الوظيفة | المشكلة |
-|---|---|---|
-| `/dashboard/organization` | عرض المدراء + الموظفين + توجيهات | يكرّر بعض ما في `/ceo` |
-| `/dashboard/ceo` | KPIs + Manager Reviews + escalations | overlap مع `/organization` |
-| `/dashboard/ceo/operations` | مفتاح رئيسي + toggles + جدول | جديد |
-| `/dashboard/ceo/test-mas` | اختبار يدوي للموظفين | معزول |
-| `/dashboard/ceo/approvals` | بوابات الموافقة | معزول |
-| `/admin/ai-providers` | مفاتيح API + الأرصدة | في layout مختلف |
-| `/dashboard/settings/notifications` | Push notifications | لا علاقة بالـ AI أصلاً |
-| `/dashboard/marketing/queue` | منشورات AI للمراجعة | تابع للتسويق منطقياً |
-| `/dashboard/clients/followups` | رسائل متابعة AI | تابع للعملاء منطقياً |
-| `/dashboard/insights` | تقارير المحلل | لا يربط بالموظف |
+| الموقع                              | الوظيفة                              | المشكلة                    |
+| ----------------------------------- | ------------------------------------ | -------------------------- |
+| `/dashboard/organization`           | عرض المدراء + الموظفين + توجيهات     | يكرّر بعض ما في `/ceo`     |
+| `/dashboard/ceo`                    | KPIs + Manager Reviews + escalations | overlap مع `/organization` |
+| `/dashboard/ceo/operations`         | مفتاح رئيسي + toggles + جدول         | جديد                       |
+| `/dashboard/ceo/test-mas`           | اختبار يدوي للموظفين                 | معزول                      |
+| `/dashboard/ceo/approvals`          | بوابات الموافقة                      | معزول                      |
+| `/admin/ai-providers`               | مفاتيح API + الأرصدة                 | في layout مختلف            |
+| `/dashboard/settings/notifications` | Push notifications                   | لا علاقة بالـ AI أصلاً     |
+| `/dashboard/marketing/queue`        | منشورات AI للمراجعة                  | تابع للتسويق منطقياً       |
+| `/dashboard/clients/followups`      | رسائل متابعة AI                      | تابع للعملاء منطقياً       |
+| `/dashboard/insights`               | تقارير المحلل                        | لا يربط بالموظف            |
 
 ## الهدف المقترح — مركز AI موحَّد
 
@@ -32,6 +33,7 @@
 6. **📦 المخرجات** = جدول موحَّد لكل: منشورات pending + رسائل متابعة pending + تقارير + اقتراحات
 
 ### المخرجات الـ AI تبقى مرتبطة في موقعها الأصلي أيضاً:
+
 - منشورات → `/dashboard/marketing` (لا تُنقل، فقط تظهر مؤشّر في `/ai/المخرجات`)
 - متابعات → `/dashboard/clients`
 - تقارير → `/dashboard/insights`
@@ -83,6 +85,7 @@
 ## بعد إقرار الخطة
 
 سأطبّقها على مراحل:
+
 - M1: إنشاء `/dashboard/ai` مع الـ tabs (يُعيد توجيه القديمة)
 - M2: توحيد الـ Toggle component
 - M3: اختصار الـ sidebar + إعادة تسمية

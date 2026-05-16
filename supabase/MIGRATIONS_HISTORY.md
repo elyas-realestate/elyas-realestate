@@ -37,54 +37,54 @@
 
 ## 📅 الجدول الزمني الكامل
 
-| Migration   | الموضوع                                             |       الحالة        |
-| ----------- | --------------------------------------------------- | :-----------------: |
-| 001         | Multi-tenancy foundation                            |         ✅          |
-| 002         | Client activities                                   |         ✅          |
-| 003         | Commissions                                         |         ✅          |
-| 004         | Campaigns                                           |         ✅          |
-| 005         | Expenses                                            |         ✅          |
-| 006         | Projects                                            |         ✅          |
-| 007         | Upgrade plan                                        |         ✅          |
-| 008         | Security fixes                                      |         ✅          |
-| 009         | Quotations + Invoices                               |         ✅          |
-| 010         | Audit log                                           |         ✅          |
-| 011         | Owner availability                                  |         ✅          |
-| 012         | AI config                                           |         ✅          |
-| 013         | Final security                                      |         ✅          |
-| 014         | External subscriptions                              |         ✅          |
-| 015         | Client sentiment                                    |         ✅          |
-| 016         | Tenant portal                                       |         ✅          |
-| 017         | Monthly goals                                       |         ✅          |
-| 018         | Team members                                        |         ✅          |
-| 019         | Fix invite trigger                                  |         ✅          |
-| 020         | ZATCA compliance                                    |         ✅          |
-| 021         | Notifications + Cron                                |         ✅          |
-| 022         | Work orders                                         |         ✅          |
-| 023         | Two-factor auth                                     |         ✅          |
-| 024         | Portal listings                                     |         ✅          |
-| 025         | Super admin                                         |         ✅          |
-| 026         | AI employees                                        |         ✅          |
-| 027         | Security hardening                                  |         ✅          |
-| 028         | Contracts                                           |         ✅          |
-| 029         | Push subscriptions                                  |         ✅          |
-| 030         | WhatsApp                                            |         ✅          |
-| 031         | Org structure                                       |         ✅          |
-| 032         | Approval gates                                      |         ✅          |
-| 033         | Manager loop                                        |         ✅          |
-| 034         | CEO assistant                                       |         ✅          |
-| 035         | Site settings extras                                |         ✅          |
-| **036-041** | **فجوة مقصودة — لا تستخدم**                         |         ⛔          |
-| 042         | CEO identity                                        |         ✅          |
-| 043         | Subscription invoices                               |         ✅          |
-| 044         | Support requests                                    |         ✅          |
-| 045         | Storage buckets                                     |         ✅          |
-| 046         | Beta invites + Waitlist                             |         ✅          |
-| 047         | Phase 1 — Card features (lead capture, vCard, etc.) |         ✅          |
-| 048         | Phase 2 — Themes + Testimonials + Licenses          |         ✅          |
-| 049         | Phase 4 — AI Innovations (voice, matching, intel)   |         ✅          |
-| 050         | Property management (rent contracts + payments)     |         ✅          |
-| 051         | Beta feedback                                       |         ✅          |
+| Migration   | الموضوع                                             | الحالة |
+| ----------- | --------------------------------------------------- | :----: |
+| 001         | Multi-tenancy foundation                            |   ✅   |
+| 002         | Client activities                                   |   ✅   |
+| 003         | Commissions                                         |   ✅   |
+| 004         | Campaigns                                           |   ✅   |
+| 005         | Expenses                                            |   ✅   |
+| 006         | Projects                                            |   ✅   |
+| 007         | Upgrade plan                                        |   ✅   |
+| 008         | Security fixes                                      |   ✅   |
+| 009         | Quotations + Invoices                               |   ✅   |
+| 010         | Audit log                                           |   ✅   |
+| 011         | Owner availability                                  |   ✅   |
+| 012         | AI config                                           |   ✅   |
+| 013         | Final security                                      |   ✅   |
+| 014         | External subscriptions                              |   ✅   |
+| 015         | Client sentiment                                    |   ✅   |
+| 016         | Tenant portal                                       |   ✅   |
+| 017         | Monthly goals                                       |   ✅   |
+| 018         | Team members                                        |   ✅   |
+| 019         | Fix invite trigger                                  |   ✅   |
+| 020         | ZATCA compliance                                    |   ✅   |
+| 021         | Notifications + Cron                                |   ✅   |
+| 022         | Work orders                                         |   ✅   |
+| 023         | Two-factor auth                                     |   ✅   |
+| 024         | Portal listings                                     |   ✅   |
+| 025         | Super admin                                         |   ✅   |
+| 026         | AI employees                                        |   ✅   |
+| 027         | Security hardening                                  |   ✅   |
+| 028         | Contracts                                           |   ✅   |
+| 029         | Push subscriptions                                  |   ✅   |
+| 030         | WhatsApp                                            |   ✅   |
+| 031         | Org structure                                       |   ✅   |
+| 032         | Approval gates                                      |   ✅   |
+| 033         | Manager loop                                        |   ✅   |
+| 034         | CEO assistant                                       |   ✅   |
+| 035         | Site settings extras                                |   ✅   |
+| **036-041** | **فجوة مقصودة — لا تستخدم**                         |   ⛔   |
+| 042         | CEO identity                                        |   ✅   |
+| 043         | Subscription invoices                               |   ✅   |
+| 044         | Support requests                                    |   ✅   |
+| 045         | Storage buckets                                     |   ✅   |
+| 046         | Beta invites + Waitlist                             |   ✅   |
+| 047         | Phase 1 — Card features (lead capture, vCard, etc.) |   ✅   |
+| 048         | Phase 2 — Themes + Testimonials + Licenses          |   ✅   |
+| 049         | Phase 4 — AI Innovations (voice, matching, intel)   |   ✅   |
+| 050         | Property management (rent contracts + payments)     |   ✅   |
+| 051         | Beta feedback                                       |   ✅   |
 
 ---
 

@@ -42,10 +42,12 @@ app/dashboard/settings/
 ## 📊 Commits المرفوعة (مرتبة من الأقدم)
 
 ### الجلسة الأولى (١٣ مايو):
+
 - `b3d8ca7` chore(cleanup): wave 1 setup — gitignore + Prettier + docs
 - `dacd48f` style: apply Prettier formatting across codebase
 
 ### الجلسة الثانية (١٥ مايو):
+
 - `eec6c1d` refactor(settings): extract constants + fix typecheck errors
 - `bfbfab2` test(wave-2): add Vitest + 71 critical tests
 - `065da52` refactor(settings): extract SaveBtn + 3 tabs (-302 lines)
@@ -74,21 +76,25 @@ npm run format       # Prettier فورمات
 من خطة `docs/cleanup-plan-may-11.md`:
 
 ### أولوية ١ — توحيد Auth Wrapper (يوم ٦)
+
 - ١١٤ موضع يستدعي auth في APIs → wrapper واحد
 - إنشاء `lib/with-auth.ts`
 - هجرة ٥ APIs كمثال
 
 ### أولوية ٢ — Logger موحّد (يوم ٧)
+
 - إنشاء `lib/logger.ts`
 - استبدال ٧٧ console.log
 - إضافة ESLint rule: `no-console`
 
 ### أولوية ٣ — GitHub Actions CI (يوم ٨)
+
 - `.github/workflows/ci.yml` (typecheck + lint + build + test)
 - حماية branch `main`
 - Husky + lint-staged
 
 ### أولوية ٤ — توليد Database types (يوم ١١)
+
 - `npx supabase gen types typescript ... > types/database.ts`
 - استبدال `any` تدريجياً (الـ 205 الحالية → < 50)
 
@@ -108,6 +114,7 @@ Supabase:     apmdwautyqoqjlabxysz
 ```
 
 **ملاحظات بيئة:**
+
 - Git مربوط مع Personal Access Token في Keychain
 - `.env.local` موجود (سُحب من Vercel)
 - Vercel CLI: `npx vercel ...`

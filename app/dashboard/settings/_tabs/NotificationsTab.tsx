@@ -48,9 +48,8 @@ export function NotificationsTab() {
         style={{ background: "var(--gold-bg-soft)", border: "1px solid var(--gold-bg)" }}
       >
         <p className="text-xs" style={{ color: "var(--text-soft)", lineHeight: 1.7 }}>
-          💡 <strong>نصيحة:</strong> ثبّت تطبيق وسيط برو على جوالك (iOS / Android) لاستلام
-          الإشعارات في خلفية الجهاز، حتى عند إغلاق المتصفح. التثبيت يستغرق ٣٠ ثانية ولا يحتاج App
-          Store.
+          💡 <strong>نصيحة:</strong> ثبّت تطبيق وسيط برو على جوالك (iOS / Android) لاستلام الإشعارات
+          في خلفية الجهاز، حتى عند إغلاق المتصفح. التثبيت يستغرق ٣٠ ثانية ولا يحتاج App Store.
         </p>
       </div>
     </div>
