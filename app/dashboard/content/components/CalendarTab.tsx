@@ -627,7 +627,7 @@ export default function CalendarTab({
                   {selectedPost.main_channel}
                 </span>
                 <select
-                  value={selectedPost.status}
+                  value={selectedPost.status || ""}
                   onChange={(e) => {
                     updatePostStatus(selectedPost.id, e.target.value);
                     setSelectedPost({ ...selectedPost, status: e.target.value });
@@ -682,14 +682,14 @@ export default function CalendarTab({
                 <button
                   onClick={() => {
                     setEditingPost(selectedPost);
-                    setEditText(selectedPost.main_text);
+                    setEditText(selectedPost.main_text || "");
                   }}
                   className="flex items-center gap-1 rounded-lg bg-[var(--bg-surface-2)] px-3 py-2 text-xs transition hover:bg-[var(--bg-surface-3)]"
                 >
                   <Pencil size={12} /> تعديل
                 </button>
                 <button
-                  onClick={() => copyText(selectedPost.id, selectedPost.main_text)}
+                  onClick={() => copyText(selectedPost.id, selectedPost.main_text || "")}
                   className="flex items-center gap-1 rounded-lg bg-[var(--bg-surface-2)] px-3 py-2 text-xs transition hover:bg-[var(--bg-surface-3)]"
                 >
                   {copiedId === selectedPost.id ? (

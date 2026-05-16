@@ -61,10 +61,15 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
         setError("الرابط غير صالح أو منتهي الصلاحية");
       } else {
         setContract(data as PublicContract);
-        // pre-fill suggested name
-        if (data.party_second?.name) setSignerName(data.party_second.name);
-        if (data.party_second?.phone) setSignerPhone(data.party_second.phone);
-        if (data.party_second?.id_number) setSignerId(data.party_second.id_number);
+        // pre-fill suggested name — party_second هو Json column، نعمل cast إلى shape متوقّع
+        const ps = data.party_second as {
+          name?: string;
+          phone?: string;
+          id_number?: string;
+        } | null;
+        if (ps?.name) setSignerName(ps.name);
+        if (ps?.phone) setSignerPhone(ps.phone);
+        if (ps?.id_number) setSignerId(ps.id_number);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "خطأ في التحميل");

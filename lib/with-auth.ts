@@ -7,13 +7,17 @@
 
 import { NextRequest } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/types/database";
+
+/** Supabase client مربوط بـ Database schema — للاستخدام داخل هذا الملف وفي الـ APIs */
+export type DbClient = SupabaseClient<Database>;
 
 /**
  * يرجع Supabase admin client (service_role) — يتجاوز RLS.
  * استخدمه فقط في server routes للعمليات الموثوقة.
  */
-export function getSupabaseAdmin(): SupabaseClient {
-  return createClient(
+export function getSupabaseAdmin(): DbClient {
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
@@ -23,11 +27,11 @@ export function getSupabaseAdmin(): SupabaseClient {
  * يرجع Supabase auth client (anon key) مع Bearer token المُستخرج من الـ request.
  * يحترم RLS — مفيد لقراءة بيانات حسب صلاحيات المستخدم.
  */
-export function getSupabaseAuth(req: NextRequest): SupabaseClient | null {
+export function getSupabaseAuth(req: NextRequest): DbClient | null {
   const authHeader = req.headers.get("authorization");
   if (!authHeader?.startsWith("Bearer ")) return null;
 
-  return createClient(
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     { global: { headers: { Authorization: authHeader } } }
@@ -35,8 +39,8 @@ export function getSupabaseAuth(req: NextRequest): SupabaseClient | null {
 }
 
 export interface AuthContext {
-  /** Supabase admin client (يتجاوز RLS) */
-  admin: SupabaseClient;
+  /** Supabase admin client (يتجاوز RLS) — مربوط بـ Database schema */
+  admin: DbClient;
   /** المستخدم الحالي — null لو لم يكن مسجّل دخول */
   user: { id: string; email?: string } | null;
   /** tenant_id الخاص بالمستخدم — null لو لم يكن صاحب tenant */

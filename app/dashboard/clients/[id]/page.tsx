@@ -128,6 +128,8 @@ export default function ClientProfile() {
       return;
     }
     setClient(c);
+    // ملاحظة: budget قد يأتي عبر join مع property_requests، لذا cast آمن
+    const withBudget = c as typeof c & { budget?: string | number | null };
     setEditForm({
       full_name: c.full_name || "",
       phone: c.phone || "",
@@ -135,7 +137,7 @@ export default function ClientProfile() {
       city: c.city || "",
       district: c.district || "",
       notes: c.notes || "",
-      budget: c.budget || "",
+      budget: String(withBudget.budget ?? ""),
     });
 
     if (actRes.error?.message?.includes("does not exist") || actRes.error?.code === "42P01") {

@@ -630,7 +630,9 @@ function PnLTab({ deals }: { deals: Deal[] }) {
   const pnlRows = useMemo(() => {
     return months.map((m) => {
       const income = deals
-        .filter((d) => d.current_stage === "مكتملة" && toMonthKey(d.created_at) === m)
+        .filter(
+          (d) => d.current_stage === "مكتملة" && d.created_at && toMonthKey(d.created_at) === m
+        )
         .reduce((s, d) => s + (Number(d.expected_commission) || 0), 0);
       const exp = expenses
         .filter((e) => toMonthKey(e.expense_date) === m)

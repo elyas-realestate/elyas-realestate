@@ -17,7 +17,7 @@
     "test:coverage": "vitest run --coverage",
     "lint:strict": "eslint --max-warnings 0",
     "ci": "npm run typecheck && npm run lint && npm run format:check && npm run test",
-    "db:types": "echo 'استخدم: npx supabase gen types typescript --project-id apmdwautyqoqjlabxysz > types/database.ts'",
+    "db:types": "npx supabase gen types typescript --project-id apmdwautyqoqjlabxysz > types/database.generated.ts",
     "prepare": "husky"
   },
   "lint-staged": {

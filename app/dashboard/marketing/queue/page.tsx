@@ -32,7 +32,7 @@ type QueueItem = {
   generated_by_model: string | null;
   published_url: string | null;
   rejection_reason: string | null;
-  property?: { title: string; city?: string; district?: string };
+  property?: { title: string; city: string | null; district: string | null };
 };
 
 const CHANNEL_META: Record<
@@ -99,17 +99,18 @@ export default function MarketingQueuePage() {
       const propIds = Array.from(
         new Set(queueItems.map((i) => i.property_id).filter(Boolean) as string[])
       );
-      const propsMap = new Map<string, { title: string; city?: string; district?: string }>();
+      const propsMap = new Map<
+        string,
+        { title: string; city: string | null; district: string | null }
+      >();
       if (propIds.length > 0) {
         const { data: props } = await supabase
           .from("properties")
           .select("id, title, city, district")
           .in("id", propIds);
-        (props || []).forEach(
-          (p: { id: string; title: string; city?: string; district?: string }) => {
-            propsMap.set(p.id, { title: p.title, city: p.city, district: p.district });
-          }
-        );
+        (props || []).forEach((p) => {
+          propsMap.set(p.id, { title: p.title, city: p.city, district: p.district });
+        });
       }
 
       setItems(

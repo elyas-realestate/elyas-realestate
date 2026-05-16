@@ -41,7 +41,7 @@ function fmtPrice(n: number) {
 
 export default function PropertyDetails() {
   const params = useParams();
-  const id = params.id;
+  const id = typeof params.id === "string" ? params.id : "";
   const router = useRouter();
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);

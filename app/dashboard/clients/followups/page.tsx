@@ -30,7 +30,7 @@ type FollowupItem = {
   status: string;
   generated_at: string;
   generated_by_model: string | null;
-  client?: { full_name: string; phone?: string; sentiment?: string };
+  client?: { full_name: string; phone: string | null; sentiment: string | null };
 };
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string }> = {
@@ -70,18 +70,20 @@ export default function FollowupsPage() {
       );
       const clientMap = new Map<
         string,
-        { full_name: string; phone?: string; sentiment?: string }
+        { full_name: string; phone: string | null; sentiment: string | null }
       >();
       if (clientIds.length > 0) {
         const { data: clients } = await supabase
           .from("clients")
           .select("id, full_name, phone, sentiment")
           .in("id", clientIds);
-        (clients || []).forEach(
-          (c: { id: string; full_name: string; phone?: string; sentiment?: string }) => {
-            clientMap.set(c.id, { full_name: c.full_name, phone: c.phone, sentiment: c.sentiment });
-          }
-        );
+        (clients || []).forEach((c) => {
+          clientMap.set(c.id, {
+            full_name: c.full_name,
+            phone: c.phone,
+            sentiment: c.sentiment,
+          });
+        });
       }
 
       setItems(

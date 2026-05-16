@@ -392,7 +392,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "clients" },
         (payload) => {
-          const c = payload.new as Client;
+          // ملاحظة: realtime payload قد يحتوي حقولاً إضافية لم تظهر بعد في schema الحالي
+          const c = payload.new as Client & { source?: string | null };
           setNotifCount((n) => n + 1);
           toast("👤 عميل جديد", {
             description: `${c.full_name || "عميل"} · ${c.phone || ""} · من ${c.source || "غير محدد"}`,

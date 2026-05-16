@@ -71,7 +71,7 @@ export default function DashboardPage() {
   const [propertyStatusData, setPropertyStatusData] = useState<StatusSlice[]>([]);
   const [dealPipelineData, setDealPipelineData] = useState<PipelineRow[]>([]);
   const [subs, setSubs] = useState<any[]>([]);
-  const [hotClients, setHotClients] = useState<{ id: string; name: string | null }[]>([]);
+  const [hotClients, setHotClients] = useState<{ id: string; full_name: string }[]>([]);
   const [staleProps, setStaleProps] = useState(0);
   const [aiInsight, setAiInsight] = useState<string>("");
   const [heroData, setHeroData] = useState<{
@@ -126,7 +126,7 @@ export default function DashboardPage() {
           .eq("tenant_id", user.id)
           .order("end_date", { ascending: true })
           .limit(3),
-        supabase.from("clients").select("id, name").eq("sentiment", "hot").limit(5),
+        supabase.from("clients").select("id, full_name").eq("sentiment", "hot").limit(5),
         supabase
           .from("properties")
           .select("id", { count: "exact", head: true })
@@ -450,7 +450,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="mt-0.5 truncate text-xs text-red-200/70">
                   {hotClients
-                    .map((c) => c.name || "عميل")
+                    .map((c) => c.full_name || "عميل")
                     .slice(0, 3)
                     .join(" • ")}
                   {hotClients.length > 3 && " ..."}

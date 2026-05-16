@@ -144,8 +144,12 @@ export default function AssetsPage() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    if (!user?.id) {
+      toast.error("غير مصرّح — يحتاج تسجيل دخول");
+      return;
+    }
     const payload = {
-      tenant_id: user?.id,
+      tenant_id: user.id,
       name: form.name.trim(),
       category: form.category || null,
       serial_no: form.serial_no.trim() || null,
@@ -223,8 +227,12 @@ export default function AssetsPage() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    if (!user?.id) {
+      toast.error("غير مصرّح — يحتاج تسجيل دخول");
+      return;
+    }
     const { error } = await supabase.from("technicians").insert({
-      tenant_id: user?.id,
+      tenant_id: user.id,
       name: techForm.name.trim(),
       phone: techForm.phone.trim() || null,
       email: techForm.email.trim() || null,

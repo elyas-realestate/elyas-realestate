@@ -30,8 +30,8 @@ type Config = {
   display_name: string | null;
   is_active: boolean;
   auto_reply_enabled: boolean;
-  ai_provider: string;
-  ai_model: string;
+  ai_provider: string | null;
+  ai_model: string | null;
 };
 
 export default function WhatsAppSettings() {

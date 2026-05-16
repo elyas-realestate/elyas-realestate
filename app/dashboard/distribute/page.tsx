@@ -70,7 +70,7 @@ export default function DistributePage() {
         .select("id, property_id, portal, status, external_url, published_at"),
       supabase
         .from("broker_identity")
-        .select("broker_name, fal_license, phone")
+        .select("broker_name, fal_license, vcard_address, social_handles")
         .limit(1)
         .maybeSingle(),
     ]);
@@ -82,10 +82,11 @@ export default function DistributePage() {
     });
     setSummaries(summaryMap);
     setListings((lRes.data || []) as Listing[]);
+    // ملاحظة: broker_identity لا يحتوي phone مباشرة — يأتي من tenants/user profile
     setBrokerInfo({
-      name: iRes.data?.broker_name,
-      phone: iRes.data?.phone,
-      fal: iRes.data?.fal_license,
+      name: iRes.data?.broker_name ?? undefined,
+      phone: undefined,
+      fal: iRes.data?.fal_license ?? undefined,
     });
     setLoading(false);
   }

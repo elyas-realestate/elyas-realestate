@@ -23,7 +23,7 @@ const eslintConfig = defineConfig([
     "write.js",
     "public/sw.js",
     "wasit-pro-landing.html",
-    "types/database.ts",
+    "types/database.generated.ts",
     "coverage/**",
     "node_modules/**",
   ]),

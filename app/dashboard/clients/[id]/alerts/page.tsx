@@ -34,7 +34,7 @@ interface Client {
 
 interface Alert {
   id: string;
-  client_id: string;
+  client_id: string | null;
   city: string | null;
   district: string | null;
   main_category: string | null;
@@ -44,17 +44,17 @@ interface Alert {
   max_price: number | null;
   min_rooms: number | null;
   min_area: number | null;
-  is_active: boolean;
-  created_at: string;
+  is_active: boolean | null;
+  created_at: string | null;
 }
 
 interface Match {
   id: string;
   alert_id: string;
   property_id: string;
-  score: number;
+  match_score: number | null;
   notified_at: string | null;
-  created_at: string;
+  created_at: string | null;
   property?: {
     id: string;
     title: string;
@@ -98,7 +98,7 @@ export default function ClientAlertsPage() {
           .from("property_alert_matches")
           .select("*, property:properties(id, title, city, district, price, main_image)")
           .in("alert_id", alertIds)
-          .order("score", { ascending: false })
+          .order("match_score", { ascending: false })
           .limit(50);
         setMatches(matchesData || []);
       }
@@ -270,7 +270,7 @@ export default function ClientAlertsPage() {
               key={alert.id}
               alert={alert}
               onDelete={() => deleteAlert(alert.id)}
-              onToggle={() => toggleAlert(alert.id, alert.is_active)}
+              onToggle={() => toggleAlert(alert.id, !!alert.is_active)}
               matchCount={matches.filter((m) => m.alert_id === alert.id).length}
             />
           ))}
@@ -402,7 +402,7 @@ function AlertRow({
 
 // ─────────────────────────────────────────────────────────────
 function MatchRow({ match }: { match: Match }) {
-  const scorePercent = Math.round(match.score * 100);
+  const scorePercent = Math.round((match.match_score ?? 0) * 100);
   const isHigh = scorePercent >= 80;
   const isMedium = scorePercent >= 60 && scorePercent < 80;
 

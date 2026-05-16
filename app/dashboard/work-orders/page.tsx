@@ -178,9 +178,13 @@ export default function WorkOrdersPage() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    if (!user?.id) {
+      toast.error("غير مصرّح — يحتاج تسجيل دخول");
+      return;
+    }
     const payload = {
-      tenant_id: user?.id,
-      reported_by: user?.id,
+      tenant_id: user.id,
+      reported_by: user.id,
       title: form.title.trim(),
       description: form.description.trim() || null,
       category: form.category || null,

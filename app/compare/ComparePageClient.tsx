@@ -73,9 +73,11 @@ export default function ComparePageClient() {
       supabase.from("site_settings").select("*").limit(1).single(),
     ]).then(([{ data: props }, { data: s }]) => {
       // الحفاظ على ترتيب IDs كما طلبها المستخدم
+      // ملاحظة: نمرّ عبر unknown لأن row جدول properties أوسع من Property المحلي
+      // (مثل `features` الذي قد يأتي من join خارجي)
       const ordered = ids
         .map((id) => (props || []).find((p) => p.id === id))
-        .filter(Boolean) as Property[];
+        .filter(Boolean) as unknown as Property[];
       setProperties(ordered);
       setSettings(s);
       setLoading(false);

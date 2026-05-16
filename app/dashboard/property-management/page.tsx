@@ -34,8 +34,8 @@ interface Contract {
   monthly_rent: number;
   start_date: string;
   end_date: string;
-  payment_day: number;
-  status: string;
+  payment_day: number | null;
+  status: string | null;
 }
 
 interface Payment {
@@ -43,8 +43,8 @@ interface Payment {
   contract_id: string;
   due_date: string;
   amount: number;
-  paid_amount: number;
-  status: "pending" | "partial" | "paid" | "overdue";
+  paid_amount: number | null;
+  status: string | null;
   contract?: {
     tenant_name: string;
     tenant_phone: string | null;
@@ -52,13 +52,13 @@ interface Payment {
 }
 
 interface Stats {
-  paid_count: number;
-  pending_count: number;
-  overdue_count: number;
-  partial_count: number;
-  overdue_amount: number;
-  unpaid_total: number;
-  month_collected: number;
+  paid_count: number | null;
+  pending_count: number | null;
+  overdue_count: number | null;
+  partial_count: number | null;
+  overdue_amount: number | null;
+  unpaid_total: number | null;
+  month_collected: number | null;
 }
 
 export default function PropertyManagementPage() {
@@ -440,7 +440,7 @@ function PaymentRow({
     overdue: { bg: "rgba(239,68,68,0.08)", text: "#ef4444", label: "متأخّر" },
     partial: { bg: "rgba(150,150,150,0.08)", text: "var(--text-faint)", label: "جزئي" },
   };
-  const c = colors[payment.status];
+  const c = colors[(payment.status ?? "pending") as keyof typeof colors] ?? colors.pending;
 
   async function markPaid() {
     if (!editable) return;

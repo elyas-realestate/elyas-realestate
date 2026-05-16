@@ -115,7 +115,7 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                     </span>
                   )}
                   <select
-                    value={d.status}
+                    value={d.status || ""}
                     onChange={(e) => updateStatus(d.id, e.target.value)}
                     className="rounded border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-2 py-1 text-xs focus:border-[var(--gold-2)] focus:outline-none"
                   >
@@ -145,13 +145,13 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
                       <button
                         onClick={() => {
                           setEditingId(d.id);
-                          setEditText(d.main_text);
+                          setEditText(d.main_text || "");
                         }}
                         className="flex items-center gap-1 text-xs text-[var(--text-faint)] hover:text-[var(--gold-2)]"
                       >
                         <Pencil size={12} /> تعديل
                       </button>
-                      <button onClick={() => copyText(d.id, d.main_text)} className="text-xs">
+                      <button onClick={() => copyText(d.id, d.main_text || "")} className="text-xs">
                         {copiedId === d.id ? (
                           <span className="text-green-400">نُسخ ✓</span>
                         ) : (
