@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
+import { getSupabaseAdmin } from "@/lib/with-auth";
 
 // ══════════════════════════════════════════════════════════════
 // /api/waitlist — تسجيل في قائمة انتظار Beta
@@ -51,10 +51,7 @@ export async function POST(req: NextRequest) {
   const notes = body.notes ? String(body.notes).trim().slice(0, 1000) : null;
   const source = body.source ? String(body.source).trim().slice(0, 80) : null;
 
-  const admin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const admin = getSupabaseAdmin();
 
   // upsert: لو ضغط مرتين بنفس البريد، ما نطلع خطأ
   const { error } = await admin.from("beta_waitlist").upsert(

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
+import { getSupabaseAdmin } from "@/lib/with-auth";
 
 // ══════════════════════════════════════════════════════════════
 // /api/lead-capture — استقبال بيانات الزائر قبل عرض العقار/البطاقة
@@ -73,10 +73,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Service client (تجاوز RLS لكتابة Public) ──
-  const admin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const admin = getSupabaseAdmin();
 
   // ── جلب tenant_id ──
   const { data: tenant } = await admin
