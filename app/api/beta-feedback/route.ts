@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
+import { getAuthContext } from "@/lib/with-auth";
 
 // ══════════════════════════════════════════════════════════════════
 // /api/beta-feedback — استقبال feedback من الوسطاء
@@ -65,32 +65,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const admin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  // محاولة معرفة tenant_id إذا كان مسجّل دخول
-  let tenant_id: string | null = null;
-  const authHeader = req.headers.get("authorization");
-  if (authHeader?.startsWith("Bearer ")) {
-    try {
-      const supabaseAuth = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        { global: { headers: { Authorization: authHeader } } }
-      );
-      const { data: userData } = await supabaseAuth.auth.getUser();
-      if (userData.user) {
-        const { data: tenant } = await admin
-          .from("tenants")
-          .select("id")
-          .eq("owner_id", userData.user.id)
-          .maybeSingle();
-        tenant_id = tenant?.id || null;
-      }
-    } catch {}
-  }
+  // ← قبل: 22 سطر من Supabase clients setup + auth lookup
+  // ← بعد: سطر واحد عبر helper موحّد
+  const { admin, tenant_id } = await getAuthContext(req);
 
   const { error } = await admin.from("beta_feedback").insert([
     {
