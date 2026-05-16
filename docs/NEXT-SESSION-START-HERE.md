@@ -74,6 +74,8 @@ lib/logger.ts                — unified logger
 - `a3682d6` ci: add GitHub Actions workflow
 - `67c9201` style: apply Prettier formatting
 - `565b8e2` chore: add Husky + lint-staged
+- `9cf5e97` refactor(logger): 23 server-side migrations + variadic args
+- `(pending)` chore(eslint): pragmatic config (407 errors → 0)
 
 **Branch:** `master`
 

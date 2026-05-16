@@ -35,7 +35,7 @@ function detectDelimiter(firstLine: string): string {
 // ── قراءة CSV → مصفوفة من الأسطر ──
 export function parseCsv(input: string, opts: CsvParseOptions = {}): CsvRow[] {
   // أزل BOM إن وُجد
-  let text = input.replace(/^\uFEFF/, "");
+  const text = input.replace(/^\uFEFF/, "");
   const trim = opts.trim !== false;
 
   // اكتشف الفاصل من أول سطر

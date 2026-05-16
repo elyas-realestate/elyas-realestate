@@ -59,8 +59,8 @@ export async function POST(req: Request) {
     const startTime = Date.now();
     let reply = "";
     let error: string | null = null;
-    let provider = ctx.employee.ai_provider;
-    let model = ctx.employee.ai_model;
+    const provider = ctx.employee.ai_provider;
+    const model = ctx.employee.ai_model;
 
     try {
       reply = await generateText({

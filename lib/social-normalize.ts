@@ -151,7 +151,7 @@ export function extractUsername(platform: SocialPlatform, url: string): string {
 
   try {
     const u = new URL(url);
-    let path = u.pathname.replace(/^\/+/, "").replace(/^@/, "");
+    const path = u.pathname.replace(/^\/+/, "").replace(/^@/, "");
     if (cfg.needsAt && !path.startsWith("@")) {
       // do nothing, just clean
     }

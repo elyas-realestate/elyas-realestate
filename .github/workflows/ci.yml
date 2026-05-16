@@ -39,6 +39,9 @@ jobs:
       - name: TypeScript typecheck
         run: npm run typecheck
 
+      - name: ESLint (errors only — warnings مسموحة مؤقتاً)
+        run: npm run lint
+
       - name: Format check (Prettier)
         run: npm run format:check
 

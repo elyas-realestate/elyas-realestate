@@ -93,7 +93,6 @@ export default function AILayout({ children }: { children: React.ReactNode }) {
     const handler = () => fetchAll();
     window.addEventListener(REFRESH_EVENT, handler);
     return () => window.removeEventListener(REFRESH_EVENT, handler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const t = status?.tenant;
