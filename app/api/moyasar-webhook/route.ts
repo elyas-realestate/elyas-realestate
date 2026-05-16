@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { reverseVAT, calculateVAT } from "@/lib/vat";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/moyasar-webhook" });
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,7 +27,7 @@ function verifySignature(body: string, signature: string | null): boolean {
   if (!signature) return false;
   const secret = process.env.MOYASAR_WEBHOOK_SECRET;
   if (!secret) {
-    console.warn("[moyasar-webhook] MOYASAR_WEBHOOK_SECRET غير مضبوط — التحقق متجاوَز");
+    log.warn("MOYASAR_WEBHOOK_SECRET غير مضبوط — التحقق متجاوَز");
     return true; // في dev نسمح، في production يجب ضبطه
   }
   const expected = crypto.createHmac("sha256", secret).update(body).digest("hex");
@@ -41,7 +44,7 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("x-moyasar-signature");
 
     if (!verifySignature(rawBody, signature)) {
-      console.warn("[moyasar-webhook] تحقق التوقيع فشل");
+      log.warn("تحقق التوقيع فشل");
       return NextResponse.json({ error: "invalid signature" }, { status: 401 });
     }
 
@@ -113,7 +116,7 @@ export async function POST(req: NextRequest) {
             })
             .eq("tenant_id", tp.tenant_id);
 
-          console.log(`[moyasar-webhook] ✅ تفعيل ${tp.plan} للـ tenant ${tp.tenant_id}`);
+          log.info("✅ تفعيل plan", { plan: tp.plan, tenant_id: tp.tenant_id });
 
           // ── إنشاء فاتورة ZATCA-compliant ──
           await createSubscriptionInvoice(admin, {
@@ -149,7 +152,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (e: any) {
-    console.error("[moyasar-webhook] خطأ:", e);
+    log.error("Webhook handler error", e);
     return NextResponse.json({ error: e?.message || "internal error" }, { status: 500 });
   }
 }
@@ -214,11 +217,11 @@ async function createSubscriptionInvoice(
     });
 
     if (invErr) {
-      console.warn("[moyasar-webhook] إنشاء الفاتورة فشل:", invErr.message);
+      log.warn("إنشاء الفاتورة فشل", { error: invErr.message });
     } else {
-      console.log(`[moyasar-webhook] ✅ فاتورة ${invoiceNumber} تم إنشاؤها`);
+      log.info("✅ فاتورة تم إنشاؤها", { invoiceNumber });
     }
   } catch (e) {
-    console.error("[moyasar-webhook] خطأ في إنشاء الفاتورة:", e);
+    log.error("Invoice creation error", e);
   }
 }
