@@ -16,7 +16,11 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "ci": "npm run typecheck && npm run lint && npm run format:check && npm run test",
-    "db:types": "echo 'استخدم: npx supabase gen types typescript --project-id apmdwautyqoqjlabxysz > types/database.ts'"
+    "db:types": "echo 'استخدم: npx supabase gen types typescript --project-id apmdwautyqoqjlabxysz > types/database.ts'",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,md}": "prettier --write"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -52,7 +56,9 @@
     "@vitest/ui": "^4.1.6",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
+    "lint-staged": "^17.0.5",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
