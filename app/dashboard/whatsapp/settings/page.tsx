@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   Save,
@@ -80,7 +81,7 @@ export default function WhatsAppSettings() {
         .maybeSingle();
       if (cfg) setConfig(cfg);
     } catch (e) {
-      console.error(e);
+      logger.error("[whatsapp/settings] load failed", e);
     }
     setLoading(false);
   }

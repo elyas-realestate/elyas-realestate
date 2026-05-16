@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { generateText } from "@/lib/ai-call";
 import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
 import { assertSystemActive, incrementCallCount } from "@/lib/system-gate";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-analyst — محلّل البيانات
@@ -200,7 +201,10 @@ ${JSON.stringify(rawMetrics, null, 2)}`;
           maxTokens: 1500,
         });
       } catch (e) {
-        console.warn(`[ai-analyst] generate failed tenant=${t.tenant_id}:`, e);
+        logger.warn("[ai-analyst] generate failed", {
+          tenant_id: t.tenant_id,
+          error: String(e),
+        });
       }
 
       if (reportText) await incrementCallCount(t.tenant_id);

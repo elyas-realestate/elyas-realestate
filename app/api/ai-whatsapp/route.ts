@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { checkLimit } from "@/lib/plan-limits";
 import { checkRateLimit, AI_RATE_LIMIT, getClientKey } from "@/lib/rate-limit";
 import { safeDecrypt } from "@/lib/crypto";
+import { logger } from "@/lib/logger";
 
 const SYSTEM_PROMPT = `
 أنت محلل بيانات عقاري خبير.
@@ -214,7 +215,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ extracted: extractedData });
   } catch (error: any) {
-    console.error("[WhatsApp Parse Error]", error.message);
+    logger.error("[ai-whatsapp] parse failed", error, { route: "/api/ai-whatsapp" });
     return NextResponse.json({ error: "حدث خطأ أثناء معالجة المحادثة بـ AI" }, { status: 500 });
   }
 }

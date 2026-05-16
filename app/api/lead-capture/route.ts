@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/with-auth";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/lead-capture — استقبال بيانات الزائر قبل عرض العقار/البطاقة
@@ -112,7 +113,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) {
-    console.error("[lead-capture] insert error:", error);
+    logger.error("[lead-capture] insert failed", error, { route: "/api/lead-capture" });
     return NextResponse.json({ error: "تعذّر التسجيل" }, { status: 500 });
   }
 

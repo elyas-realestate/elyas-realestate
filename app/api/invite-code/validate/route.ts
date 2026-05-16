@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/invite-code/validate — التحقق من صلاحية كود دعوة
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
   const { data, error } = await admin.rpc("validate_invite_code", { p_code: code });
 
   if (error) {
-    console.error("[invite/validate] RPC error:", error);
+    logger.error("[invite/validate] RPC failed", error, { route: "/api/invite-code/validate" });
     return NextResponse.json({ valid: false, error: "خطأ في التحقق" }, { status: 500 });
   }
 

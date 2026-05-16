@@ -1,6 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useRef } from "react";
+import { logger } from "@/lib/logger";
 import {
   User,
   Globe,
@@ -351,7 +352,7 @@ export default function Settings() {
         } else {
           toast.error("فشل الرفع: " + msg);
         }
-        console.error("[photo upload] error:", upErr);
+        logger.error("[settings] photo upload failed", upErr);
         return;
       }
 
@@ -371,7 +372,7 @@ export default function Settings() {
 
       if (updErr) {
         toast.error("الصورة رُفعت لكن لم تُحفظ في الملف: " + updErr.message);
-        console.error("[photo update] error:", updErr);
+        logger.error("[settings] photo profile update failed", updErr);
         return;
       }
 
@@ -380,7 +381,7 @@ export default function Settings() {
     } catch (e) {
       const msg = e instanceof Error ? e.message : "خطأ غير متوقع";
       toast.error("فشل الرفع: " + msg);
-      console.error("[photo upload] exception:", e);
+      logger.error("[settings] photo upload exception", e);
     } finally {
       setUploadingPhoto(false);
     }

@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   MessageCircle,
@@ -110,7 +111,7 @@ export default function WhatsAppInboxPage() {
         .limit(200);
       setThread((data || []) as Message[]);
     } catch (e) {
-      console.error(e);
+      logger.error("[whatsapp/inbox] load thread failed", e);
     }
     setLoadingThread(false);
   }

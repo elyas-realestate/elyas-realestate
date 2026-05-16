@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { validateSlug } from "@/lib/slug-validation";
+import { logger } from "@/lib/logger";
 
 function toSlug(value: string) {
   return value
@@ -135,7 +136,7 @@ export default function Register() {
             p_user_id: data.user.id,
           });
         } catch (e) {
-          console.warn("[register] consume_invite_code failed:", e);
+          logger.warn("[register] consume_invite_code failed", { error: String(e) });
           // لا نعيق التسجيل لو فشل — التسجيل نجح بالفعل
         }
       }

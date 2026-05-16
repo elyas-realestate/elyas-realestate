@@ -10,6 +10,7 @@ import {
   TRIGGER_LABELS,
   DIRECTIVE_SOURCE_META,
 } from "@/lib/org-constants";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   Sparkles,
@@ -144,12 +145,18 @@ export default function EmployeeDetailPage({ params }: { params: Promise<{ id: s
           .eq("target_id", id)
           .order("created_at", { ascending: false }),
       ]);
-      if (mgrRes.error) console.warn("[employee-page] manager fetch error:", mgrRes.error);
+      if (mgrRes.error)
+        logger.warn("[employee-page] manager fetch failed", { error: mgrRes.error.message });
       if (mgrDirRes.error)
-        console.warn("[employee-page] manager directives fetch error:", mgrDirRes.error);
+        logger.warn("[employee-page] manager directives fetch failed", {
+          error: mgrDirRes.error.message,
+        });
       if (empDirRes.error)
-        console.warn("[employee-page] employee directives fetch error:", empDirRes.error);
-      if (kbRes.error) console.warn("[employee-page] kb fetch error:", kbRes.error);
+        logger.warn("[employee-page] employee directives fetch failed", {
+          error: empDirRes.error.message,
+        });
+      if (kbRes.error)
+        logger.warn("[employee-page] kb fetch failed", { error: kbRes.error.message });
       if (mgrRes.data) setManager(mgrRes.data as Manager);
       setManagerDirectives((mgrDirRes.data || []) as Directive[]);
       setEmpDirectives((empDirRes.data || []) as Directive[]);

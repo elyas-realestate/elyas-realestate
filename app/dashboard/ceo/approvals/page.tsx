@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import {
   Crown,
   ChevronLeft,
@@ -91,7 +92,7 @@ export default function CEOApprovalsPage() {
       }
       setItems((j.items || []) as Approval[]);
     } catch (e) {
-      console.warn("[ceo/approvals] load failed:", e);
+      logger.warn("[ceo/approvals] load failed", { error: String(e) });
       toast.error(e instanceof Error ? e.message : "خطأ في التحميل");
       setItems([]);
     } finally {

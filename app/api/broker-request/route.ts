@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 const ALLOWED_TYPES = ["شراء", "إيجار", "استثمار", "بيع", "أخرى"] as const;
 const ALLOWED_CATEGORIES = ["سكني", "تجاري", "أرض", ""] as const;
@@ -80,7 +81,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
-      console.error("broker-request insert error:", error.message);
+      logger.error("[broker-request] insert failed", error, { route: "/api/broker-request" });
       return NextResponse.json({ error: "حدث خطأ، حاول مرة أخرى" }, { status: 500 });
     }
 

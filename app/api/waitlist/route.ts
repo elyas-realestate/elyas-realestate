@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/with-auth";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/waitlist — تسجيل في قائمة انتظار Beta
@@ -67,7 +68,7 @@ export async function POST(req: NextRequest) {
   );
 
   if (error) {
-    console.error("[waitlist] insert error:", error);
+    logger.error("[waitlist] insert failed", error, { route: "/api/waitlist" });
     return NextResponse.json({ error: "تعذّر التسجيل، حاول لاحقاً" }, { status: 500 });
   }
 

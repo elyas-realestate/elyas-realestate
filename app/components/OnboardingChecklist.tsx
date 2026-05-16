@@ -13,6 +13,7 @@ import {
   Bot,
   Sparkles,
 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // OnboardingChecklist — يظهر للوسطاء الجدد على /dashboard
@@ -79,7 +80,7 @@ export default function OnboardingChecklist() {
       const data = await res.json();
       setState(data.state);
     } catch (e) {
-      console.error("[onboarding] load error:", e);
+      logger.error("[onboarding] load failed", e);
     } finally {
       setLoading(false);
     }
@@ -95,7 +96,7 @@ export default function OnboardingChecklist() {
       });
       setState((prev) => (prev ? { ...prev, dismissed: true } : prev));
     } catch (e) {
-      console.error(e);
+      logger.error("[onboarding] dismiss failed", e);
     } finally {
       setDismissing(false);
     }

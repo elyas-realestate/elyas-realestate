@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Check, X, Zap, Crown, Gift, Loader2, CreditCard, Lock } from "lucide-react";
 import { PLAN_PRICES } from "@/lib/moyasar";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 
 // ══ تعريف الخطط ══════════════════════════════════════════
 const PLANS = [
@@ -131,14 +132,18 @@ export default function SubscriptionPage() {
           setCurrentPlan("pro");
         } else {
           // عمود plan غير موجود في الجدول — أظهر pro مؤقتاً
-          console.warn("عمود plan غير موجود في site_settings — يجب إضافته:", updateErr.message);
+          logger.warn("[subscription] missing 'plan' column in site_settings", {
+            error: updateErr.message,
+          });
           setCurrentPlan("pro");
         }
       }
       setSettingsId(settingsRes.data.id);
     } else {
       // لا يوجد سجل site_settings أصلاً — المالك يحصل على pro
-      console.warn("لا يوجد سجل site_settings:", settingsRes.error?.message);
+      logger.warn("[subscription] no site_settings row", {
+        error: settingsRes.error?.message ?? null,
+      });
       setCurrentPlan("pro");
     }
 

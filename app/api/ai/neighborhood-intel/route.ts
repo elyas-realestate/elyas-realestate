@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/ai/neighborhood-intel — معلومات الحي
@@ -87,7 +88,11 @@ export async function GET(req: NextRequest) {
     const content = result.choices?.[0]?.message?.content || "{}";
     aiData = JSON.parse(content);
   } catch (e) {
-    console.error("[neighborhood-intel] AI error:", e);
+    logger.error("[neighborhood-intel] AI call failed", e, {
+      route: "/api/ai/neighborhood-intel",
+      city,
+      district,
+    });
     return NextResponse.json(
       {
         ok: false,

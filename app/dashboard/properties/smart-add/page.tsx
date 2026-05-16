@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   Upload,
@@ -130,7 +131,9 @@ export default function SmartAddProperty() {
           const watermarkText = idData?.broker_name || "وسيط برو";
           processedFile = await applyWatermark(file, watermarkText);
         } catch (we) {
-          console.warn("فشل ختم الصورة، سيتم رفع النسخة الأصلية", we);
+          logger.warn("[smart-add] watermark failed, uploading original", {
+            error: String(we),
+          });
         }
 
         const ext = processedFile.name.split(".").pop() || "jpg";

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/event — تتبّع أحداث خفيفة (vcard download / qr scan / إلخ)
@@ -47,7 +48,7 @@ async function logEvent(params: {
       },
     ]);
   } catch (err) {
-    console.error("[/api/event] logging failed:", err);
+    logger.error("[/api/event] logging failed", err, { route: "/api/event" });
   }
 }
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendPushToTenant } from "@/lib/push";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/reminders — يُشغّل يومياً (Vercel Cron أو خارجي)
@@ -86,7 +87,9 @@ async function processInvoiceReminders(admin: any) {
       body: bodyText,
       url: "/dashboard/invoices",
       tag: kind,
-    }).catch((e) => console.warn("[cron/reminders] push failed:", e));
+    }).catch((e) =>
+      logger.warn("[cron/reminders] push failed", { tenant_id: inv.tenant_id, error: String(e) })
+    );
     notificationsCreated++;
   }
   return { processed: invoices.length, notifications: notificationsCreated };

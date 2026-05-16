@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { logger } from "@/lib/logger";
 
 export default function DashboardError({
   error,
@@ -11,7 +12,7 @@ export default function DashboardError({
 }) {
   useEffect(() => {
     // تسجيل الخطأ بدون كشف التفاصيل للمستخدم
-    console.error("[Dashboard Error]", error.digest || "unknown");
+    logger.error("[Dashboard Error] boundary", error, { digest: error.digest });
   }, [error]);
 
   return (

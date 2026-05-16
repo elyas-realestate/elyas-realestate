@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/ai/voice-to-property — AI Voice-to-Property
@@ -117,7 +118,10 @@ export async function POST(req: NextRequest) {
     const content = aiData.choices?.[0]?.message?.content || "{}";
     extractedFields = JSON.parse(content);
   } catch (e) {
-    console.error("[voice-to-property] AI extraction failed:", e);
+    logger.error("[voice-to-property] extraction failed", e, {
+      route: "/api/ai/voice-to-property",
+      tenant_id: tenantId,
+    });
     return NextResponse.json(
       { error: "فشل استخراج البيانات من النص", detail: e instanceof Error ? e.message : "unknown" },
       { status: 500 }

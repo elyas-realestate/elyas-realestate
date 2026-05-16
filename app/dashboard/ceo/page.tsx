@@ -4,6 +4,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
 import { DEPARTMENT_META } from "@/lib/org-constants";
+import { logger } from "@/lib/logger";
 import {
   Crown,
   AlertTriangle,
@@ -118,7 +119,7 @@ export default function CEODashboardPage() {
       setActivity((a.data || []) as ActivityLog[]);
       setReviews((r.data || []) as ManagerReview[]);
     } catch (err) {
-      console.error(err);
+      logger.error("[ceo] load failed", err);
     }
     setLoading(false);
   }, []);

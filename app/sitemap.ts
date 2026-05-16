@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // sitemap.xml — Next.js App Router auto-generation
@@ -78,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }
   } catch (e) {
-    console.error("[sitemap] فشل جلب البيانات الديناميكية:", e);
+    logger.error("[sitemap] dynamic data fetch failed", e);
   }
 
   return [...staticPages, ...dynamicPages];

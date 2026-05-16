@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { checkLimit } from "@/lib/plan-limits";
 // safeDecrypt removed — kept for future migration when ai_config gains api_key_encrypted column
 import { checkRateLimit, AI_RATE_LIMIT, getClientKey } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 // ── الحد الأقصى لطول الرسالة (حرف) ──
 const MAX_MESSAGE_LENGTH = 8000;
@@ -386,7 +387,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "وضع غير معروف" }, { status: 400 });
   } catch (err: any) {
     // ── تنقية رسائل الخطأ — لا نكشف تفاصيل داخلية ──
-    console.error("[AI API Error]", err?.message);
+    logger.error("[ai-content] handler failed", err, { route: "/api/ai-content" });
     return NextResponse.json({ error: sanitizeError(err) }, { status: 500 });
   }
 }

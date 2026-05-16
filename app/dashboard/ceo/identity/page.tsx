@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   Save,
@@ -76,7 +77,7 @@ export default function CEOIdentityPage() {
         });
       }
     } catch (e) {
-      console.error(e);
+      logger.error("[ceo/identity] load failed", e);
       toast.error("فشل تحميل الهوية");
     } finally {
       setLoading(false);

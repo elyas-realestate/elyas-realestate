@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   Smartphone,
@@ -79,7 +80,7 @@ export default function NotificationsSettings() {
       const { data } = await supabase.rpc("my_push_subscriptions");
       setSubs((data || []) as Subscription[]);
     } catch (e) {
-      console.error(e);
+      logger.error("[settings/notifications] load failed", e);
     }
     setLoading(false);
   }

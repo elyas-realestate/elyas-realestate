@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase-browser";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   MessageCircle,
@@ -90,7 +91,7 @@ export default function FollowupsPage() {
         }))
       );
     } catch (e) {
-      console.error(e);
+      logger.error("[clients/followups] action failed", e);
       toast.error(e instanceof Error ? e.message : "خطأ");
     }
     setLoading(false);

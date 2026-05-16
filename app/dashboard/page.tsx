@@ -4,6 +4,7 @@ import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { logger } from "@/lib/logger";
 import {
   Building2,
   Users,
@@ -241,7 +242,7 @@ export default function DashboardPage() {
         subsExpiring: (subRes.data || []).length,
       });
     } catch (error) {
-      console.error(error);
+      logger.error("[dashboard] load failed", error);
     }
   }
 

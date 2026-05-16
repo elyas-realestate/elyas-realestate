@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { generateText } from "@/lib/ai-call";
 import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
 import { assertSystemActive, incrementCallCount } from "@/lib/system-gate";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-followup — موظف المتابعة
@@ -186,7 +187,11 @@ export async function GET(req: NextRequest) {
             maxTokens: 400,
           });
         } catch (e) {
-          console.warn(`[ai-followup] generate failed tenant=${t.tenant_id} client=${c.id}:`, e);
+          logger.warn("[ai-followup] generate failed", {
+            tenant_id: t.tenant_id,
+            client_id: c.id,
+            error: String(e),
+          });
           continue;
         }
 

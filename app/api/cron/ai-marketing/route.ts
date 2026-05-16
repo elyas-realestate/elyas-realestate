@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { generateText } from "@/lib/ai-call";
 import { buildEmployeeContext, logEmployeeActivity } from "@/lib/ai-org-context";
 import { assertSystemActive, incrementCallCount } from "@/lib/system-gate";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // /api/cron/ai-marketing — موظف التسويق
@@ -170,10 +171,12 @@ ${propertyBrief(p)}
               maxTokens: 600,
             });
           } catch (e) {
-            console.warn(
-              `[ai-marketing] generateText failed for tenant ${t.tenant_id} property ${p.id} channel ${channel}:`,
-              e
-            );
+            logger.warn("[ai-marketing] generateText failed", {
+              tenant_id: t.tenant_id,
+              property_id: p.id,
+              channel,
+              error: String(e),
+            });
             continue;
           }
 

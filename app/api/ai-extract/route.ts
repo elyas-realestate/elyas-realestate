@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { checkRateLimit, AI_RATE_LIMIT, getClientKey } from "@/lib/rate-limit";
 import { safeDecrypt } from "@/lib/crypto";
+import { logger } from "@/lib/logger";
 
 // ── Extraction System Prompt ──
 const EXTRACT_PROMPT = `أنت خبير عقاري سعودي محترف. مهمتك تحليل المحتوى المُرسل (نص أو وصف صورة أو بيانات PDF) واستخراج بيانات العقار منه بدقة.
@@ -255,7 +256,7 @@ export async function POST(request: NextRequest) {
       );
     return NextResponse.json({ success: true, data: extracted });
   } catch (err: any) {
-    console.error("AI Extract Error:", err);
+    logger.error("[ai-extract] handler failed", err, { route: "/api/ai-extract" });
     const msg = err?.message || "";
     if (msg.includes("API key"))
       return NextResponse.json({ error: "مفتاح API غير صالح" }, { status: 500 });

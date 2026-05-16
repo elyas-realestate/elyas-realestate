@@ -9,6 +9,7 @@ import {
   KB_CATEGORIES,
   TRIGGER_LABELS,
 } from "@/lib/org-constants";
+import { logger } from "@/lib/logger";
 import {
   ArrowRight,
   Sparkles,
@@ -168,8 +169,10 @@ export default function ManagerDetailPage({ params }: { params: Promise<{ id: st
           .maybeSingle(),
       ]);
       if (mgrRes.error) throw new Error(mgrRes.error.message);
-      if (dirRes.error) console.warn("[manager-page] directives fetch error:", dirRes.error);
-      if (kbRes.error) console.warn("[manager-page] kb fetch error:", kbRes.error);
+      if (dirRes.error)
+        logger.warn("[manager-page] directives fetch failed", { error: dirRes.error.message });
+      if (kbRes.error)
+        logger.warn("[manager-page] kb fetch failed", { error: kbRes.error.message });
       setManager(mgrRes.data as Manager);
       setEmployees((empRes.data || []) as Employee[]);
       setDirectives((dirRes.data || []) as Directive[]);

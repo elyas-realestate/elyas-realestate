@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { logger } from "@/lib/logger";
 
 // ══════════════════════════════════════════════════════════════
 // Root-level error boundary — يلتقط أي خطأ في الصفحات العامة
@@ -16,7 +17,7 @@ export default function RootError({
 }) {
   useEffect(() => {
     // تسجيل آمن (لا نكشف stack للمستخدم)
-    console.error("[Root Error]", error.digest || error.message || "unknown");
+    logger.error("[Root Error] boundary", error, { digest: error.digest });
   }, [error]);
 
   return (
