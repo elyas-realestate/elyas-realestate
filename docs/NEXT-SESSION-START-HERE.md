@@ -1,15 +1,16 @@
 # 🔖 ابدأ من هنا — الجلسة القادمة
 
-> **آخر تحديث:** ١٥ مايو ٢٠٢٦ (نهاية الجلسة الثالثة)
+> **آخر تحديث:** ١٦ مايو ٢٠٢٦ (نهاية الجلسة الرابعة)
 > **اقرأ هذا الملف أولاً** عند فتح أي محادثة جديدة مع Claude.
 
 ---
 
-## 🏆 الحالة الحالية — ٣ موجات تنظيف مكتملة
+## 🏆 الحالة الحالية — ٤ موجات تنظيف مكتملة
 
 ✅ **الأسبوع الأول** (يوم ١-٣)
 ✅ **الأسبوع الثاني — تقسيم settings/page.tsx** (يوم ٤-٥)
 ✅ **الأسبوع الثالث — Auth + Logger + CI + Husky** (يوم ٦-٨)
+✅ **الأسبوع الرابع — إكمال هجرة Logger (Client + API)** (يوم ٩)
 
 ---
 
@@ -25,26 +26,28 @@
 
 - ✅ `lib/with-auth.ts` — auth helpers موحّدة (٣ APIs مهاجرة)
 - ✅ `lib/logger.ts` — logger موحّد مع Sentry integration
-- ✅ **٢٥ console call** مهاجرة إلى logger (server-side كاملاً)
-- ✅ GitHub Actions CI (typecheck + format + test على كل push)
+- ✅ **٥٧ console call** مهاجرة إلى logger (server + client كاملاً)
+- ✅ GitHub Actions CI (typecheck + lint + format + test على كل push)
 - ✅ Husky pre-commit hooks (Prettier تلقائي)
 
 ### الجودة:
 
 - TypeScript: ٠ errors
+- ESLint: ٠ errors (~٦٢٢ warnings — مقصودة في Beta)
 - Tests: ٧١ passed
 - Build: ١٤٠ pages
 - CI: 🟢 أخضر
 
 ---
 
-## 📁 الملفات الجديدة في الموجة الثالثة
+## 📁 الملفات الجديدة في الموجات الأخيرة
 
 ```
 .github/workflows/ci.yml     — CI workflow
 .husky/pre-commit            — pre-commit hook
 lib/with-auth.ts             — auth helpers
 lib/logger.ts                — unified logger
+eslint.config.mjs            — pragmatic Beta config
 ```
 
 ---
@@ -75,7 +78,19 @@ lib/logger.ts                — unified logger
 - `67c9201` style: apply Prettier formatting
 - `565b8e2` chore: add Husky + lint-staged
 - `9cf5e97` refactor(logger): 23 server-side migrations + variadic args
-- `(pending)` chore(eslint): pragmatic config (407 errors → 0)
+- `fdf9169` chore(eslint): pragmatic config (407 errors → 0)
+
+### الجلسة الرابعة (١٦ مايو):
+
+- `e915760` refactor(logger): wave 4 — migrate 32 client+server console.\* to logger
+  - ١٤ API route (broker-request, lead-capture, waitlist, ai-extract,
+    ai-content, ai-whatsapp, ai/neighborhood-intel, ai/voice-to-property,
+    invite-code/validate, event, cron/reminders, cron/ai-analyst,
+    cron/ai-followup, cron/ai-marketing)
+  - ١٧ ملف client (dashboard pages، settings، ceo، organization،
+    whatsapp، subscription، clients، register، error boundaries،
+    OnboardingChecklist)
+  - sitemap.ts (build-time)
 
 **Branch:** `master`
 
@@ -86,6 +101,7 @@ lib/logger.ts                — unified logger
 ```bash
 npm run test         # 71 tests
 npm run typecheck    # 0 errors
+npm run lint         # 0 errors, ~622 warnings
 npm run build        # 140 pages
 npm run ci           # كل اللي فوق
 npm run format       # Prettier
@@ -95,25 +111,30 @@ npm run format       # Prettier
 
 ## 🎯 المتبقّي للجلسات القادمة
 
-### أولوية ١ — استبدال console.log المتبقّية (~45 موضع)
+### أولوية ١ — Database types من Supabase
 
-معظمها في **client components** (dashboard pages). يحتاج تعديل يدوي مع context.
-
-### أولوية ٢ — Database types من Supabase
-
-- يحتاج: `npx supabase login` (متصفح OAuth)
+- يحتاج: `npx supabase login` (متصفح OAuth — تفاعلي)
 - ثم: `npx supabase gen types typescript --project-id apmdwautyqoqjlabxysz > types/database.ts`
-- استبدال `any` types تدريجياً
+- استبدال `any` types تدريجياً (٣١٠ موضع)
 
-### أولوية ٣ — إصلاح ESLint errors (~402 قديمة)
+### أولوية ٢ — تقليل ESLint warnings (~٦٢٢ مؤقتاً)
 
-- معظمها في `write.js` و `public/sw.js`
-- يمكن إصلاحها بـ `npm run lint:fix` (تجربة آمنة في فرع منفصل)
+- `@typescript-eslint/no-explicit-any` — ٣١٠ موضع (يتقلّص مع Database types)
+- `@typescript-eslint/no-unused-vars` — حوالي ٤٠
+- `react-hooks/exhaustive-deps` — حوالي ٥٠
+- بقية القواعد warnings صغيرة
 
-### أولوية ٤ — توحيد Components folder
+### أولوية ٣ — توحيد Components folder
 
 - نقل `app/components/*` إلى `components/features/*`
 - تنظيم `/components/ui` كـ primitives
+- إنشاء barrel exports موحّدة
+
+### أولوية ٤ — تحسينات تجميلية
+
+- إزالة الـ `any` من API handlers الكبيرة (`ai-content`, `ai-extract`, `ai-whatsapp`)
+- توحيد patterns الـ Supabase client (`createServerClient` vs `getSupabaseAdmin`)
+- تشديد `lint:strict` تدريجياً
 
 ---
 
@@ -144,19 +165,20 @@ Supabase:     apmdwautyqoqjlabxysz
 أنا إلياس، نواصل خطة تنظيف Wasit Pro.
 اقرأ docs/NEXT-SESSION-START-HERE.md و docs/cleanup-plan-may-11.md.
 
-أنجزنا ٣ أسابيع كاملة:
+أنجزنا ٤ موجات كاملة:
 - ✅ settings/page.tsx من 2641 → 745 سطر
 - ✅ 71 اختبار آلي
-- ✅ Logger + Auth helpers
-- ✅ CI + Husky
+- ✅ Logger موحّد (57 موضع مهاجر — server + client)
+- ✅ Auth helpers + CI + Husky
+- ✅ ESLint pragmatic (0 errors)
 
-المتبقّي:
-- استبدال باقي console.log في client components
-- Database types من Supabase
-- إصلاح ESLint errors القديمة
+المتبقّي بأولوية:
+1. Database types من Supabase (يحتاج تفاعل: npx supabase login)
+2. تقليل 622 ESLint warning (معظمها any types)
+3. توحيد مجلد Components
 
 أنا على Mac، الـ branch اسمه master.
-أعطني أمر واحد كل مرة وانتظر النتيجة (أو batch مع شرح إذا طلبت).
+أعطني أمر واحد كل مرة عادةً، أو batch واضح عند الطلب.
 ```
 
 ---
@@ -169,7 +191,9 @@ Supabase:     apmdwautyqoqjlabxysz
 ٤) Husky يفعّل `lint-staged` تلقائياً عند `git commit`
 ٥) Logger يدعم Sentry تلقائياً في production
 ٦) `with-auth.ts` يحتوي `getSupabaseAdmin` + `getAuthContext` + `requireAuth`
+٧) `console.*` متبقّية مقصودة في ٣ ملفات فقط: `lib/logger.ts` (الموتور)،
+`next.config.ts` (مفتاح config)، `app/layout.tsx` (inline SW script)
 
 ---
 
-**ختام:** ٣ موجات تنظيف، ١٦ commits، تحويل كامل من god component إلى منظومة احترافية. الكود الآن **production-grade** بأدوات جودة كاملة. 🚀
+**ختام:** ٤ موجات تنظيف، ١٧ commits، تحويل كامل من god component إلى منظومة احترافية. الكود الآن **production-grade** بأدوات جودة كاملة + observability موحّد (Sentry + Logger). 🚀
