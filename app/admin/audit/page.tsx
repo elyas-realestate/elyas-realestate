@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { RefreshCw, AlertCircle, Shield, Activity } from "lucide-react";
+import { RefreshCw, AlertCircle, Shield } from "lucide-react";
 
 type AuditEvent = {
   id: string;

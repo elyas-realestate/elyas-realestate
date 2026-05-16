@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { RefreshCw, AlertCircle, TrendingUp, DollarSign, Crown, Zap, Gift } from "lucide-react";
+import { RefreshCw, AlertCircle, TrendingUp, DollarSign, Crown, Zap } from "lucide-react";
 
 type Subscription = {
   tenant_id: string;

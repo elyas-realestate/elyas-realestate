@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════════════════
 // rate-limit.test.ts — يحمي من DoS وتجاوز حدود API
 // ══════════════════════════════════════════════════════════════
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   checkRateLimit,
   getClientKey,

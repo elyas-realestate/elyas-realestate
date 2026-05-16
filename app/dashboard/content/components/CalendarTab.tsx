@@ -10,7 +10,7 @@ import {
   platformDots,
 } from "../constants";
 import type { ContentDraft } from "@/types/database";
-import { Calendar, Plus, X, Pencil, Copy, Check, Save, Trash2 } from "lucide-react";
+import { Calendar, Plus, X, Pencil, Copy, Check } from "lucide-react";
 import { SkeletonList } from "@/components/ui/Skeleton";
 
 export default function CalendarTab({

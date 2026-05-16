@@ -1,18 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import {
-  Search,
-  Filter,
-  RefreshCw,
-  AlertCircle,
-  ChevronLeft,
-  Building2,
-  Users,
-  Briefcase,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import { Search, RefreshCw, AlertCircle, ChevronLeft, CheckCircle2, XCircle } from "lucide-react";
 
 type Tenant = {
   id: string;

@@ -20,7 +20,6 @@ import {
   Edit3,
   XCircle,
   Link2,
-  RotateCw,
 } from "lucide-react";
 import SignaturePad from "@/components/SignaturePad";
 

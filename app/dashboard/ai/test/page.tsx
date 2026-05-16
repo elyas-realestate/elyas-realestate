@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Play, Loader2, CheckCircle2, AlertCircle, Bot, Clock, FlaskConical } from "lucide-react";
+import { Play, Loader2, CheckCircle2, AlertCircle, Bot, Clock } from "lucide-react";
 
 type Employee = {
   code: string;

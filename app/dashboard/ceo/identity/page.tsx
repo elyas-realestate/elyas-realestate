@@ -5,12 +5,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
 import {
-  ArrowRight,
   Save,
   Loader2,
   Crown,
   Phone,
-  Mail,
   User,
   Plus,
   Trash2,

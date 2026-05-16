@@ -10,7 +10,6 @@ import {
   Loader2,
   Sparkles,
   Building,
-  MapPin,
   Bot,
   Zap,
   Crown,

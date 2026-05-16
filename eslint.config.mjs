@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import unusedImports from "eslint-plugin-unused-imports";
 
 // ══════════════════════════════════════════════════════════════
 // ESLint config — Wasit Pro
@@ -28,20 +29,28 @@ const eslintConfig = defineConfig([
     "node_modules/**",
   ]),
   {
+    plugins: {
+      "unused-imports": unusedImports,
+    },
     // Override الـ rules القاسية إلى warnings بدل errors
     rules: {
       // any/unused مقبولة في Beta — تظهر warnings للتحسين التدريجي
       "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": [
+      // نعطّل القاعدة الأصلية لصالح plugin unused-imports (يدعم autofix)
+      "@typescript-eslint/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "warn",
+      "unused-imports/no-unused-vars": [
         "warn",
         {
-          argsIgnorePattern: "^_",
+          vars: "all",
           varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
           ignoreRestSiblings: true,
         },
       ],
-      // النصوص العربية تحتوي علامات تتعامل معها React بشكل آمن
-      "react/no-unescaped-entities": "warn",
+      // النصوص العربية تستخدم الفاصلة العليا (') بشكل طبيعي — لا تحتاج escaping
+      "react/no-unescaped-entities": "off",
       // مقبول للـ Beta — نحسّن لاحقاً
       "@next/next/no-img-element": "warn",
       "@next/next/no-html-link-for-pages": "warn",

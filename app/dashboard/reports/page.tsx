@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
-import { FileText, Download, TrendingUp, Calendar, Printer } from "lucide-react";
+import { FileText, TrendingUp, Calendar, Printer } from "lucide-react";
 
 const MONTHS_AR = [
   "يناير",

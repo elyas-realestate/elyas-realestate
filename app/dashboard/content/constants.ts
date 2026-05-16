@@ -1,5 +1,4 @@
 import {
-  Sparkles,
   Factory,
   MessageSquare,
   Calendar,

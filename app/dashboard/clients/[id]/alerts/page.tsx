@@ -13,7 +13,6 @@ import {
   Sparkles,
   MapPin,
   Home,
-  AlertCircle,
   CheckCircle2,
   ExternalLink,
 } from "lucide-react";

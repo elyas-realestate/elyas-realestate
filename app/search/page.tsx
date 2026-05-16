@@ -7,7 +7,6 @@ import {
   SlidersHorizontal,
   MapPin,
   X,
-  ChevronDown,
   Home,
   Bed,
   Maximize2,

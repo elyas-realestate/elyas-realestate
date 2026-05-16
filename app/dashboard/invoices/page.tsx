@@ -1,5 +1,4 @@
 "use client";
-import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -7,19 +6,16 @@ import {
   Plus,
   X,
   Check,
-  Edit3,
   Trash2,
   CreditCard,
   Printer,
   CheckCircle,
   Clock,
   AlertCircle,
-  DollarSign,
   MessageCircle,
   FileCode,
 } from "lucide-react";
 import { toast } from "sonner";
-import SARIcon from "../../components/SARIcon";
 
 const STATUS_CFG: Record<string, { color: string; bg: string; icon: any }> = {
   "غير مدفوعة": { color: "var(--danger)", bg: "rgba(248,113,113,0.1)", icon: AlertCircle },

@@ -12,7 +12,6 @@ import {
   X,
   Edit3,
   RefreshCw,
-  AlertCircle,
   Loader2,
   Phone,
   Sparkles,

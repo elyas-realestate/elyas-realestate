@@ -18,7 +18,6 @@ import { toast } from "sonner";
 import {
   parseCsv,
   stringifyCsv,
-  downloadCsv,
   PROPERTY_ALIASES,
   CLIENT_ALIASES,
   matchFieldAlias,

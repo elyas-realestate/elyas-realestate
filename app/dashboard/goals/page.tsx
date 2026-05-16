@@ -1,7 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import { Target, TrendingUp, Banknote, CheckCircle, Plus, Pencil, X, Save } from "lucide-react";
+import { Target, TrendingUp, Banknote, CheckCircle, Pencil, X, Save } from "lucide-react";
 import { toast } from "sonner";
 import { formatSAR } from "@/lib/format";
 import Breadcrumb from "../../components/Breadcrumb";

@@ -1,19 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import {
-  FileText,
-  Plus,
-  Search,
-  Trash2,
-  X,
-  ExternalLink,
-  Upload,
-  Tag,
-  Calendar,
-  Building2,
-  Users,
-} from "lucide-react";
+import { FileText, Plus, Search, Trash2, X, ExternalLink, Calendar, Users } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 

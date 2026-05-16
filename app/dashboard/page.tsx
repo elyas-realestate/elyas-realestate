@@ -10,7 +10,6 @@ import {
   Users,
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight,
   CheckCircle,
   Sparkles,
   Brain,

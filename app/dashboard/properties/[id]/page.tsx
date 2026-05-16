@@ -1,5 +1,4 @@
 "use client";
-import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -14,7 +13,6 @@ import {
   Building2,
   Edit3,
   Trash2,
-  Share2,
   Eye,
   EyeOff,
   Phone,

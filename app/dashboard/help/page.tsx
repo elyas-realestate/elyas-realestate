@@ -12,14 +12,10 @@ import {
   IdCard,
   Building2,
   Users,
-  FileSignature,
   Banknote,
   CheckSquare,
   ShieldCheck,
-  Sparkles,
-  BookOpen,
   Play,
-  Mail,
 } from "lucide-react";
 import SupportContact from "@/app/components/SupportContact";
 

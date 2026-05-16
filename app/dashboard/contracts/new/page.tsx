@@ -9,7 +9,6 @@ import {
   FileText,
   Building,
   Home,
-  Briefcase,
   Tag,
   Loader2,
   AlertCircle,

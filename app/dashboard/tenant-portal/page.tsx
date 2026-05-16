@@ -11,8 +11,6 @@ import {
   CheckCircle,
   Clock,
   AlertTriangle,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 import type {
   Contract,
@@ -424,11 +422,11 @@ export default function TenantPortalPage() {
       >
         {(
           [
-            ["contracts", "العقود", <FileText size={15} />],
-            ["payments", "الدفعات", <CreditCard size={15} />],
-            ["maintenance", "الصيانة", <Wrench size={15} />],
-          ] as [Tab, string, React.ReactNode][]
-        ).map(([id, lbl, icon]) => (
+            ["contracts", "العقود", FileText],
+            ["payments", "الدفعات", CreditCard],
+            ["maintenance", "الصيانة", Wrench],
+          ] as [Tab, string, React.ComponentType<{ size?: number }>][]
+        ).map(([id, lbl, Icon]) => (
           <button
             key={id}
             onClick={() => setTab(id)}
@@ -446,7 +444,7 @@ export default function TenantPortalPage() {
               color: tab === id ? "var(--bg-page)" : "var(--text-muted)",
             }}
           >
-            {icon}
+            <Icon size={15} />
             {lbl}
           </button>
         ))}

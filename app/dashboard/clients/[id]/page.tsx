@@ -19,8 +19,6 @@ import {
   Check,
   TrendingUp,
   Clock,
-  Building2,
-  ChevronLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../../components/Breadcrumb";

@@ -8,50 +8,24 @@ import {
   Palette,
   Phone,
   Building,
-  Camera,
   Loader2,
   Link2,
-  CheckCircle2,
-  XCircle,
   Save,
   Check,
-  RotateCcw,
-  Plus,
-  Trash2,
   Image,
-  Upload,
-  X,
   Eye,
   FileText,
   MessageSquare,
   Layout,
   Share2,
-  Monitor,
-  Smartphone,
-  ChevronDown,
-  ChevronUp,
-  Type,
   Bell,
-  ArrowRight,
   Award,
 } from "lucide-react";
-import Link from "next/link";
 import { toast } from "sonner";
-import ThemeSwitcher from "@/app/components/ThemeSwitcher";
-import ServiceIcon, { SERVICE_ICON_KEYS } from "@/app/components/ServiceIcon";
-import { normalizeSocial, getSmartPlaceholder } from "@/lib/social-normalize";
+import { normalizeSocial } from "@/lib/social-normalize";
 
 // ─── Constants (مُستخرَجة لـ _constants.ts) ─────────────────────
-import {
-  SOCIAL_PLATFORMS,
-  STATIC_PAGES,
-  COLOR_DEFAULTS,
-  COLOR_GROUPS,
-  QUICK_THEMES_DARK,
-  QUICK_THEMES_CREAM,
-  QUICK_THEMES,
-  type QuickTheme,
-} from "./_constants";
+import { SOCIAL_PLATFORMS, COLOR_DEFAULTS, QUICK_THEMES_DARK } from "./_constants";
 
 // ─── Tab Components (مُستخرَجة لـ _tabs/) ────────────────────────
 import { ProfileTab } from "./_tabs/ProfileTab";

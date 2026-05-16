@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Lock, User, Phone, Mail, Send, Loader2, CheckCircle2 } from "lucide-react";
+import { Lock, User, Phone, Mail, Loader2, CheckCircle2 } from "lucide-react";
 
 // ══════════════════════════════════════════════════════════════
 // LeadCaptureGate — الميزة القاتلة

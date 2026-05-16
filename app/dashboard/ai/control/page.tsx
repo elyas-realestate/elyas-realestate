@@ -12,7 +12,6 @@ import {
   Settings2,
   Pause,
   Play,
-  Zap,
   Calendar,
   Activity,
   FlaskConical,

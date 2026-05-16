@@ -3,22 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import {
-  MapPin,
-  Maximize2,
-  Bed,
-  Bath,
-  Layers,
-  Phone,
-  MessageCircle,
-  ArrowRight,
-  X,
-  Calendar,
-  Home,
-  Building2,
-  CheckCircle2,
-  Minus,
-} from "lucide-react";
+import { MapPin, MessageCircle, ArrowRight, Home, CheckCircle2, Minus } from "lucide-react";
 import { supabase } from "@/lib/supabase-browser";
 import SARIcon from "../components/SARIcon";
 

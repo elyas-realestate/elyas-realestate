@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from "react";
 import {
   Shield,
   Search,
-  Filter,
   User,
   Plus,
   Edit3,

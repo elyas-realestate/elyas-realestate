@@ -10,7 +10,7 @@ import {
   marketTopics,
 } from "../constants";
 import type { BrokerIdentity } from "@/types/database";
-import { Loader2, Sparkles, Check, Copy } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 
 export default function TrendsTab({
   onSendToFactory,

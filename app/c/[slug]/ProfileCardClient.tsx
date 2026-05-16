@@ -15,12 +15,9 @@ import {
   Copy,
   Download,
   Check,
-  Bell,
   ExternalLink,
-  Heading,
 } from "lucide-react";
 import {
-  ELEMENTS,
   getElement,
   buildElementUrl,
   buildElementLabel,

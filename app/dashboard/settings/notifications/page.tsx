@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Smartphone,
   Bell,
-  BellOff,
   Download,
   CheckCircle2,
   AlertCircle,

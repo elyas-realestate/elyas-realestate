@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { toast } from "sonner";
 import {
   Home,
@@ -11,10 +10,7 @@ import {
   CheckCircle2,
   Clock,
   Loader2,
-  ChevronRight,
-  Phone,
   Trash2,
-  Edit2,
   Send,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase-browser";

@@ -9,15 +9,12 @@ import {
   Clock,
   AlertTriangle,
   Target,
-  Trophy,
   Layers,
   Swords,
   ShieldAlert,
   TrendingUp,
   Calendar,
   Rocket,
-  Zap,
-  ArrowUp,
   Flame,
 } from "lucide-react";
 import {

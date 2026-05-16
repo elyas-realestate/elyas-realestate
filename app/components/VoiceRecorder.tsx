@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Mic, Square, Loader2, Sparkles, AlertCircle, Check } from "lucide-react";
+import { Mic, Square, Loader2, Sparkles, AlertCircle } from "lucide-react";
 
 // ══════════════════════════════════════════════════════════════════
 // VoiceRecorder — تسجيل صوتي + إرسال لـ /api/ai/voice-to-property

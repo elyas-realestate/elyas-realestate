@@ -9,7 +9,6 @@ import {
   List,
   LayoutGrid,
   Calendar,
-  Filter,
   Clock,
   AlertTriangle,
   CheckSquare,

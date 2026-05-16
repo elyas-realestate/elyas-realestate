@@ -13,8 +13,6 @@ import {
   Settings,
   Bot,
   User,
-  Clock,
-  CheckCircle2,
   AlertCircle,
   Phone,
   Loader2,

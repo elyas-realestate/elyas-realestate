@@ -4,7 +4,6 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
 import {
-  Crown,
   ChevronLeft,
   RefreshCw,
   ShieldCheck,

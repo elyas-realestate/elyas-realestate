@@ -5,8 +5,7 @@
 // navbar/sections/services/why/pages/cta).
 // ══════════════════════════════════════════════════════════════
 
-import Link from "next/link";
-import { Image, Upload, X, Loader2, Plus, Trash2, Eye } from "lucide-react";
+import { Image, Upload, X, Loader2, Plus, Trash2 } from "lucide-react";
 import ServiceIcon, { SERVICE_ICON_KEYS } from "@/app/components/ServiceIcon";
 import { STATIC_PAGES } from "../_constants";
 import { SaveBtn } from "../_components/SaveBtn";

@@ -2,7 +2,7 @@
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Eye, EyeOff, Sparkles, AlertTriangle, Download } from "lucide-react";
+import { Plus, Search, MapPin, Eye, Sparkles, AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
 import SARIcon from "../../components/SARIcon";

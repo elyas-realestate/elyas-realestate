@@ -1,5 +1,5 @@
 "use client";
-import { Settings, Key, Globe, Shield } from "lucide-react";
+import { Key, Globe, Shield } from "lucide-react";
 
 const ENV_VARS = [
   { name: "NEXT_PUBLIC_SUPABASE_URL", label: "Supabase URL", status: "set", icon: Globe },

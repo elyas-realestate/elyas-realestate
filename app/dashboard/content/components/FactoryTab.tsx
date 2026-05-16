@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase-browser";
 import { providers, modes } from "../constants";
 import ModelSelector from "./ModelSelector";
 import type { BrokerIdentity, Property } from "@/types/database";
-import { Plus, Trash2, Play, Loader2, Check, Factory, Copy } from "lucide-react";
+import { Plus, Trash2, Play, Loader2, Check, Factory } from "lucide-react";
 import { SkeletonList } from "@/components/ui/Skeleton";
 
 type QueueItem = {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Megaphone, MessageCircle, BarChart3, ChevronLeft, Inbox } from "lucide-react";
+import { Megaphone, MessageCircle, BarChart3, ChevronLeft } from "lucide-react";
 
 export default function OutputsTab() {
   return (

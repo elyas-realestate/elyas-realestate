@@ -13,7 +13,6 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { toast } from "sonner";
-import Breadcrumb from "../../components/Breadcrumb";
 
 // ── قوالب الرسائل ──
 const MESSAGE_TEMPLATES = [

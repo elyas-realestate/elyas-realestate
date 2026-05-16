@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Calculator,
@@ -13,7 +13,6 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
-import SARIcon from "../components/SARIcon";
 
 // ── الصيغة الرياضية للقسط الشهري ────────────────────────────────────────────
 function calcMonthly(loan: number, annualRate: number, years: number): number {

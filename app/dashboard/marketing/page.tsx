@@ -1,5 +1,4 @@
 "use client";
-import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import GrowthNav from "@/app/components/GrowthNav";
@@ -11,19 +10,12 @@ import {
   Edit3,
   Check,
   Trash2,
-  Instagram,
-  Twitter,
   Play,
   Pause,
   CheckCircle2,
   Clock,
-  AlertCircle,
-  TrendingUp,
   Users,
   DollarSign,
-  Printer,
-  ChevronDown,
-  ChevronUp,
   Copy,
 } from "lucide-react";
 import { toast } from "sonner";

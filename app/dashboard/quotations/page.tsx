@@ -1,5 +1,4 @@
 "use client";
-import { formatSAR } from "@/lib/format";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -14,8 +13,6 @@ import {
   Printer,
   CheckCircle,
   XCircle,
-  ArrowLeft,
-  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
