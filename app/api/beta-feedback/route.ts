@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getClientKey } from "@/lib/rate-limit";
 import { getAuthContext } from "@/lib/with-auth";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/beta-feedback" });
 
 // ══════════════════════════════════════════════════════════════════
 // /api/beta-feedback — استقبال feedback من الوسطاء
@@ -84,7 +87,7 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (error) {
-    console.error("[beta-feedback] insert error:", error);
+    log.error("Failed to insert beta_feedback", error, { tenant_id });
     return NextResponse.json({ ok: false, error: "فشل حفظ الملاحظة" }, { status: 500 });
   }
 
