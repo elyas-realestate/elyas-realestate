@@ -6,6 +6,9 @@
 import webpush from "web-push";
 import { createClient } from "@supabase/supabase-js";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/push" });
 // ── إعداد VAPID لمرة واحدة ──
 let vapidConfigured = false;
 function ensureVapid(): boolean {
@@ -14,7 +17,7 @@ function ensureVapid(): boolean {
   const priv = process.env.VAPID_PRIVATE_KEY;
   const subj = process.env.VAPID_SUBJECT || "mailto:noreply@example.com";
   if (!pub || !priv) {
-    console.warn("[push] VAPID keys not configured — push disabled");
+    log.warn("[push] VAPID keys not configured — push disabled");
     return false;
   }
   webpush.setVapidDetails(subj, pub, priv);
@@ -73,7 +76,7 @@ export async function sendPushToUser(
           if (err.statusCode === 410 || err.statusCode === 404) {
             expiredIds.push(s.id);
           } else {
-            console.warn(`[push] failed for ${s.id}:`, err.statusCode, err.body);
+            log.warn(`[push] failed for ${s.id}:`, err.statusCode, err.body);
           }
           failed++;
         }

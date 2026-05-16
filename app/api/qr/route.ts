@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import QRCode from "qrcode";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/qr" });
 // ══════════════════════════════════════════════════════════════
 // /api/qr — توليد QR Code للروابط
 // GET ?text=<text>&color=<hex>&bg=<hex>&size=<n>&format=png|svg
@@ -52,7 +55,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (e) {
-    console.error("[qr] error:", e);
+    log.error("[qr] error:", e);
     return new NextResponse("Failed to generate QR", { status: 500 });
   }
 }

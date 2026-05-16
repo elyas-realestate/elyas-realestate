@@ -1,3 +1,7 @@
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/ai-call" });
+
 // ══════════════════════════════════════════════════════════════
 // lib/ai-call.ts — مُوحِّد لطلبات AI من بيئة الخادم (Cron, Edge)
 // يستخدم متغيرات البيئة (لا جلسة مستخدم).
@@ -190,7 +194,7 @@ async function callGoogle(
     // Diagnostic: Gemini أحياناً يرجع candidate بدون نص عند MAX_TOKENS أو safety
     const finishReason = data.candidates?.[0]?.finishReason;
     const promptFeedback = data.promptFeedback;
-    console.warn(
+    log.warn(
       "[ai-call/google] empty text, finishReason:",
       finishReason,
       "promptFeedback:",
@@ -255,7 +259,7 @@ export async function generateJSONWithFallback<T = unknown>(
         : e instanceof Error
           ? e.message.slice(0, 100)
           : "unknown";
-      console.warn(`[ai-call] fallback to DeepSeek: ${reason}`);
+      log.warn(`[ai-call] fallback to DeepSeek: ${reason}`);
       try {
         const r2 = await generateJSON<T>({ ...opts, provider: "deepseek", model: "deepseek-chat" });
         return {

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/pdpl/export" });
 // ══════════════════════════════════════════════════════════════════
 // /api/pdpl/export — تصدير كل بيانات المستخدم (PDPL right)
 // GET → JSON بكل البيانات المرتبطة بالـ tenant
@@ -80,7 +83,7 @@ export async function GET(req: NextRequest) {
         exportData.data[table] = data;
       }
     } catch (err) {
-      console.warn(`[pdpl/export] failed to export ${table}:`, err);
+      log.warn(`[pdpl/export] failed to export ${table}:`, err);
     }
   }
 

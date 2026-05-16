@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/pdpl/delete" });
 // ══════════════════════════════════════════════════════════════════
 // /api/pdpl/delete — طلب حذف كل بيانات المستخدم (PDPL right)
 // POST { confirm: "DELETE_MY_ACCOUNT" }
@@ -54,7 +57,7 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (error) {
-    console.error("[pdpl/delete] insert error:", error);
+    log.error("[pdpl/delete] insert error:", error);
     // fallback: لو ما فيه جدول support_requests، نحفظ في beta_feedback
     await admin.from("beta_feedback").insert([
       {

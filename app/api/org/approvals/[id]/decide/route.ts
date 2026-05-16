@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { decideApproval } from "@/lib/approval-gates";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/org/approvals/decide" });
 // ══════════════════════════════════════════════════════════════
 // POST /api/org/approvals/[id]/decide
 // قرار CEO على escalation معلَّقة
@@ -13,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   try {
     return await handleDecide(req, params);
   } catch (e) {
-    console.error("[approvals/decide] uncaught:", e);
+    log.error("[approvals/decide] uncaught:", e);
     const msg = e instanceof Error ? e.message : "خطأ غير متوقع في معالجة القرار";
     return NextResponse.json({ error: msg }, { status: 500 });
   }

@@ -20,6 +20,9 @@
 
 import { createClient } from "@supabase/supabase-js";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/approval-gates" });
 // ───────── أنواع البيانات ─────────
 
 export interface ApprovalRules {
@@ -224,7 +227,7 @@ export async function checkAndMaybeSubmit(opts: {
   });
 
   if (error) {
-    console.warn("[approval-gates] submit_for_approval failed:", error.message);
+    log.warn("[approval-gates] submit_for_approval failed:", error.message);
     return { allowed: false, verdict, rulesApplied: rules };
   }
 

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { getAdminClient, MissingServerEnvError, checkServerEnv } from "@/lib/supabase-admin";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/org/approvals" });
 // ══════════════════════════════════════════════════════════════
 // GET /api/org/approvals
 // قائمة الـ escalations المُعلَّقة + المؤرشَفة، مع تفاصيل الموظف الذي رفعها
@@ -16,10 +19,10 @@ export async function GET(req: NextRequest) {
     return await handleGet(req);
   } catch (e) {
     if (e instanceof MissingServerEnvError) {
-      console.error("[approvals/route] env missing:", e.message);
+      log.error("[approvals/route] env missing:", e.message);
       return NextResponse.json({ error: e.message }, { status: 503 });
     }
-    console.error("[approvals/route] uncaught:", e);
+    log.error("[approvals/route] uncaught:", e);
     const msg = e instanceof Error ? e.message : "خطأ غير متوقع في تحميل الموافقات";
     return NextResponse.json({ error: msg }, { status: 500 });
   }

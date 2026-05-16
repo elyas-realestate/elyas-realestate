@@ -1,3 +1,7 @@
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/watermark" });
+
 /**
  * مكتبة إضافة العلامات المائية للصور برمجياً باستخدام Canvas
  * تستخدم لحفظ حقوق الوسيط العقاري
@@ -74,7 +78,7 @@ export async function applyWatermark(
 
       img.src = objUrl;
     } catch (err) {
-      console.error("Watermark failed", err);
+      log.error("Watermark failed", err);
       resolve(imageFile);
     }
   });

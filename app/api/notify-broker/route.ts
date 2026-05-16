@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/notify-broker" });
 /**
  * POST /api/notify-broker
  * يُستدعى عند إرسال طلب جديد من صفحة الوسيط العامة
@@ -118,7 +121,7 @@ export async function POST(req: NextRequest) {
 
   if (!res.ok) {
     const err = await res.text();
-    console.error("Resend error:", err);
+    log.error("Resend error:", err);
     return NextResponse.json({ error: "فشل إرسال البريد" }, { status: 500 });
   }
 

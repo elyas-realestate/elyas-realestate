@@ -78,20 +78,37 @@ class Logger {
     return new Logger({ ...this.context, ...extraCtx });
   }
 
-  debug(message: string, ctx?: LogContext): void {
-    logToConsole("debug", message, { ...this.context, ...ctx });
+  /**
+   * يحوّل الـ args الإضافية لـ context (للتوافق مع console.log المتعدد args).
+   */
+  private extrasToCtx(extras: unknown[]): LogContext | undefined {
+    if (extras.length === 0) return undefined;
+    const ctx: LogContext = {};
+    extras.forEach((ext, i) => {
+      if (ext && typeof ext === "object" && !Array.isArray(ext) && !(ext instanceof Error)) {
+        Object.assign(ctx, ext as Record<string, unknown>);
+      } else {
+        ctx[`arg${i}`] = ext instanceof Error ? ext.message : String(ext);
+      }
+    });
+    return ctx;
   }
 
-  info(message: string, ctx?: LogContext): void {
-    logToConsole("info", message, { ...this.context, ...ctx });
+  debug(message: string, ...extras: unknown[]): void {
+    logToConsole("debug", message, { ...this.context, ...this.extrasToCtx(extras) });
   }
 
-  warn(message: string, ctx?: LogContext): void {
-    logToConsole("warn", message, { ...this.context, ...ctx });
+  info(message: string, ...extras: unknown[]): void {
+    logToConsole("info", message, { ...this.context, ...this.extrasToCtx(extras) });
+  }
+
+  warn(message: string, ...extras: unknown[]): void {
+    logToConsole("warn", message, { ...this.context, ...this.extrasToCtx(extras) });
   }
 
   /**
    * تسجيل خطأ — يطبع للـ console + يرسل لـ Sentry في الإنتاج.
+   * يقبل: error("message"), error("message", err), error("message", err, ctx)
    */
   error(message: string, err?: Error | unknown, ctx?: LogContext): void {
     const fullCtx = { ...this.context, ...ctx };

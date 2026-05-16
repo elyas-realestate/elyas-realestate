@@ -6,6 +6,9 @@
 
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/system-gate" });
 export type GateResult =
   | { ok: true; count: number; limit: number }
   | {
@@ -33,7 +36,7 @@ function admin(): SupabaseClient {
 export async function assertSystemActive(tenantId: string): Promise<GateResult> {
   const { data, error } = await admin().rpc("assert_system_active", { p_tenant_id: tenantId });
   if (error) {
-    console.error("[system-gate] assert_system_active error:", error);
+    log.error("[system-gate] assert_system_active error:", error);
     return { ok: false, reason: "tenant_not_found" };
   }
   return data as GateResult;
@@ -46,7 +49,7 @@ export async function assertSystemActive(tenantId: string): Promise<GateResult> 
 export async function incrementCallCount(tenantId: string): Promise<number> {
   const { data, error } = await admin().rpc("increment_ai_call_count", { p_tenant_id: tenantId });
   if (error) {
-    console.error("[system-gate] increment_ai_call_count error:", error);
+    log.error("[system-gate] increment_ai_call_count error:", error);
     return -1;
   }
   return Number(data) || 0;
@@ -76,7 +79,7 @@ export async function gateAndLog(
           details: { reason: gate.reason, gated: true },
         });
     } catch (e) {
-      console.warn("[system-gate] failed to log skip:", e);
+      log.warn("[system-gate] failed to log skip:", e);
     }
   }
   return gate;

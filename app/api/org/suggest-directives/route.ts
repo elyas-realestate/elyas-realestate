@@ -3,6 +3,9 @@ import { createServerClient } from "@supabase/ssr";
 import { generateJSONWithFallback, type AIProvider } from "@/lib/ai-call";
 import { getAdminClient, MissingServerEnvError, checkServerEnv } from "@/lib/supabase-admin";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "/api/org/suggest-directives" });
 // لا نريد timeout قصير — هذا cold AI invocation × N employees
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
@@ -41,11 +44,11 @@ export async function POST(req: NextRequest) {
     return await handleSuggest(req);
   } catch (e) {
     if (e instanceof MissingServerEnvError) {
-      console.error("[suggest-directives] env missing:", e.message);
+      log.error("[suggest-directives] env missing:", e.message);
       return NextResponse.json({ error: e.message }, { status: 503 });
     }
     const msg = e instanceof Error ? e.message : "خطأ غير متوقع في توليد الاقتراحات";
-    console.error("[suggest-directives] uncaught:", e);
+    log.error("[suggest-directives] uncaught:", e);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
@@ -282,7 +285,7 @@ ${kbText}
         fallbackReason = r.fallbackReason;
       } catch (aiErr) {
         const msg = aiErr instanceof Error ? aiErr.message : "AI invocation failed";
-        console.warn(`[suggest-directives] AI failed for ${emp.code} (even after fallback):`, msg);
+        log.warn(`[suggest-directives] AI failed for ${emp.code} (even after fallback):`, msg);
         results.push({
           employee_id: emp.id,
           employee_name: emp.name,
@@ -292,7 +295,7 @@ ${kbText}
         continue;
       }
 
-      console.log(
+      log.info(
         `[suggest-directives] ${emp.code}: provider=${usedProvider}${fallbackReason ? ` (fallback: ${fallbackReason})` : ""}, suggestions =`,
         Array.isArray(result?.suggestions) ? result!.suggestions.length : "not-array"
       );
@@ -344,7 +347,7 @@ ${kbText}
         results.push({ employee_id: emp.id, employee_name: emp.name, inserted: rows.length });
       }
     } catch (e) {
-      console.error(`[suggest-directives] employee ${emp.code} failed:`, e);
+      log.error(`[suggest-directives] employee ${emp.code} failed:`, e);
       results.push({
         employee_id: emp.id,
         employee_name: emp.name,

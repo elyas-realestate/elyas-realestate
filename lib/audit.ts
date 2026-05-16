@@ -5,6 +5,9 @@
 
 import { supabase } from "@/lib/supabase-browser";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/audit" });
 export type AuditAction = "create" | "update" | "delete" | "login" | "logout" | "export" | "import";
 export type EntityType =
   | "property"
@@ -49,7 +52,7 @@ export async function logAudit(entry: AuditEntry): Promise<void> {
     ]);
   } catch {
     // صامت — لا نريد كسر العملية الأصلية
-    console.warn("Audit log failed silently");
+    log.warn("Audit log failed silently");
   }
 }
 

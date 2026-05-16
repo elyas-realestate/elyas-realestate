@@ -9,6 +9,9 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { safeDecrypt } from "@/lib/crypto";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger({ route: "lib/whatsapp" });
 export interface WhatsAppConfig {
   tenant_id: string;
   phone_number_id: string | null;
@@ -296,7 +299,7 @@ export async function logIncomingMessage(opts: {
     .select("id")
     .single();
   if (error) {
-    console.warn("logIncomingMessage error:", error);
+    log.warn("logIncomingMessage error:", error);
     return null;
   }
   return data.id;
