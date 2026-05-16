@@ -1,0 +1,46 @@
+# ══════════════════════════════════════════════════════════════
+# CI — يشتغل على كل push + كل PR للـ master
+# ══════════════════════════════════════════════════════════════
+# الفحوصات:
+#   1. typecheck  (TypeScript — صفر أخطاء)
+#   2. format     (Prettier — كل الملفات مُنسَّقة)
+#   3. test       (Vitest — 71 اختبار)
+#
+# Build verification يتم على Vercel تلقائياً (لا نحتاج تكراره).
+# Lint مُعطّل مؤقتاً — 402 خطأ قديم نعالجه في موجة منفصلة.
+# ══════════════════════════════════════════════════════════════
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Format check (Prettier)
+        run: npm run format:check
+
+      - name: Run tests (Vitest)
+        run: npm run test
