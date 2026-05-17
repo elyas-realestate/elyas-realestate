@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
 import {
@@ -38,6 +38,38 @@ interface ProfileLink {
   bg_color: string | null;
   text_color: string | null;
   display_order: number;
+}
+
+// ── أنواع props مختصرة للـ child components في هذا الملف ──
+interface ProfileCard {
+  display_name?: string | null;
+  bio?: string | null;
+  avatar_url?: string | null;
+  card_style?: string | null;
+  bg_color?: string | null;
+  text_color?: string | null;
+  accent_color?: string | null;
+  show_share_button?: boolean | null;
+  show_qr_button?: boolean | null;
+  show_powered_by?: boolean | null;
+  show_save_contact?: boolean | null;
+}
+
+interface ProfileIdentity {
+  broker_name?: string | null;
+  specialization?: string | null;
+  photo_url?: string | null;
+  bio_short?: string | null;
+  bio_long?: string | null;
+  fal_license?: string | null;
+}
+
+interface ProfileCardClientProps {
+  card: ProfileCard;
+  links: ProfileLink[];
+  identity: ProfileIdentity | null;
+  slug: string;
+  testimonials?: unknown[];
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -80,7 +112,13 @@ function InitialsAvatar({
 // ─────────────────────────────────────────────────────────────
 // المكوّن الرئيسي
 // ─────────────────────────────────────────────────────────────
-export default function ProfileCardClient({ card, links, identity, slug, testimonials }: any) {
+export default function ProfileCardClient({
+  card,
+  links,
+  identity,
+  slug,
+  testimonials,
+}: ProfileCardClientProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [contactFormOpen, setContactFormOpen] = useState<ProfileLink | null>(null);
@@ -139,14 +177,14 @@ export default function ProfileCardClient({ card, links, identity, slug, testimo
         <button
           onClick={() => setShareOpen(true)}
           aria-label="مشاركة"
-          style={iconBtnStyle(card.text_color)}
+          style={iconBtnStyle(card.text_color || "#1A1206")}
         >
           <Share2 size={16} />
         </button>
         <button
           onClick={() => setQrOpen(true)}
           aria-label="رمز QR"
-          style={iconBtnStyle(card.text_color)}
+          style={iconBtnStyle(card.text_color || "#1A1206")}
         >
           <QrCode size={16} />
         </button>
@@ -277,7 +315,8 @@ export default function ProfileCardClient({ card, links, identity, slug, testimo
         {/* ⭐ آراء العملاء */}
         {testimonials && testimonials.length > 0 && (
           <TestimonialsSection
-            testimonials={testimonials}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            testimonials={testimonials as any}
             accent={accent}
             bgColor={card.bg_color || "#FAF7F2"}
             textColor={card.text_color || "#1A1206"}
@@ -347,8 +386,8 @@ export default function ProfileCardClient({ card, links, identity, slug, testimo
           cardAccent={accent}
           cardBg={card.bg_color || "#FAF7F2"}
           onClose={() => setShareOpen(false)}
-          bgColor={card.bg_color}
-          textColor={card.text_color}
+          bgColor={card.bg_color || "#FAF7F2"}
+          textColor={card.text_color || "#1A1206"}
         />
       )}
       {qrOpen && (
@@ -359,8 +398,8 @@ export default function ProfileCardClient({ card, links, identity, slug, testimo
           cardAccent={accent}
           cardBg={card.bg_color || "#FAF7F2"}
           onClose={() => setQrOpen(false)}
-          bgColor={card.bg_color}
-          textColor={card.text_color}
+          bgColor={card.bg_color || "#FAF7F2"}
+          textColor={card.text_color || "#1A1206"}
         />
       )}
       {contactFormOpen && (
@@ -368,8 +407,8 @@ export default function ProfileCardClient({ card, links, identity, slug, testimo
           link={contactFormOpen}
           slug={slug}
           onClose={() => setContactFormOpen(null)}
-          bgColor={card.bg_color}
-          textColor={card.text_color}
+          bgColor={card.bg_color || "#FAF7F2"}
+          textColor={card.text_color || "#1A1206"}
           accent={accent}
         />
       )}
@@ -488,7 +527,17 @@ function ElementCard({
   );
 }
 
-function ElementCardInner({ el, link, meta, cardTextColor }: any) {
+function ElementCardInner({
+  el,
+  link,
+  meta,
+  cardTextColor,
+}: {
+  el: ProfileElement;
+  link: ProfileLink;
+  meta: Record<string, string>;
+  cardTextColor: string;
+}) {
   // Brand icon رسمي أولاً، fallback لـ lucide
   const BrandIcon = getBrandIcon(link.element_type);
   const Icon = BrandIcon || el.icon;
@@ -528,7 +577,7 @@ function ElementCardInner({ el, link, meta, cardTextColor }: any) {
 function elementCardStyle(
   el: ProfileElement,
   fallbackText: string,
-  meta?: Record<string, any>
+  meta?: Record<string, string>
 ): React.CSSProperties {
   // أولوية: meta المخصّص للعنصر (من الـ editor) > brand colors > افتراضي
   const customBg = meta?.bg_color;
@@ -576,7 +625,16 @@ function ShareModal({
   onClose,
   bgColor,
   textColor,
-}: any) {
+}: {
+  url: string;
+  name: string;
+  avatarUrl: string | null;
+  cardAccent: string;
+  cardBg: string;
+  onClose: () => void;
+  bgColor: string;
+  textColor: string;
+}) {
   const [copied, setCopied] = useState(false);
   const shareTo = (platform: string) => {
     const encoded = encodeURIComponent(url);
@@ -673,7 +731,25 @@ function ShareModal({
   );
 }
 
-function QRModal({ url, name, avatarUrl, cardAccent, cardBg, onClose, bgColor, textColor }: any) {
+function QRModal({
+  url,
+  name,
+  avatarUrl,
+  cardAccent,
+  cardBg,
+  onClose,
+  bgColor,
+  textColor,
+}: {
+  url: string;
+  name: string;
+  avatarUrl: string | null;
+  cardAccent: string;
+  cardBg: string;
+  onClose: () => void;
+  bgColor: string;
+  textColor: string;
+}) {
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   useEffect(() => {
     QRCode.toDataURL(url, { width: 400, margin: 1, errorCorrectionLevel: "H" })
@@ -767,13 +843,28 @@ function QRModal({ url, name, avatarUrl, cardAccent, cardBg, onClose, bgColor, t
   );
 }
 
-function ContactFormModal({ link, slug, onClose, bgColor, textColor, accent }: any) {
+function ContactFormModal({
+  link,
+  slug,
+  onClose,
+  bgColor,
+  textColor,
+  accent,
+}: {
+  link: ProfileLink;
+  slug: string;
+  onClose: () => void;
+  bgColor: string;
+  textColor: string;
+  accent: string;
+}) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
-  const meta = link.metadata || {};
+  // metadata في DB قد يكون أي شكل JSON — نتعامل معه كـ unknown values
+  const meta = (link.metadata || {}) as Record<string, unknown>;
   const askPhone = meta.ask_phone === true || meta.ask_phone === "true";
   const askEmail = meta.ask_email === true || meta.ask_email === "true";
   const askMessage = meta.ask_message !== false; // default true
@@ -809,10 +900,10 @@ function ContactFormModal({ link, slug, onClose, bgColor, textColor, accent }: a
       onClose={onClose}
       bgColor={bgColor}
       textColor={textColor}
-      title={meta.title || link.label}
+      title={(meta.title as string) || link.label}
     >
       <div style={{ padding: "0 8px" }}>
-        {meta.description && (
+        {typeof meta.description === "string" && meta.description && (
           <p style={{ fontSize: 13, opacity: 0.75, marginBottom: 14 }}>{meta.description}</p>
         )}
         <FormField label="الاسم *" value={name} onChange={setName} />
@@ -855,7 +946,21 @@ function ContactFormModal({ link, slug, onClose, bgColor, textColor, accent }: a
   );
 }
 
-function FormField({ label, value, onChange, type = "text", multiline, dir }: any) {
+function FormField({
+  label,
+  value,
+  onChange,
+  type = "text",
+  multiline,
+  dir,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  multiline?: boolean;
+  dir?: string;
+}) {
   return (
     <div style={{ marginBottom: 12 }}>
       <label style={{ fontSize: 12, opacity: 0.75, display: "block", marginBottom: 4 }}>
@@ -901,7 +1006,19 @@ function FormField({ label, value, onChange, type = "text", multiline, dir }: an
   );
 }
 
-function Modal({ children, onClose, bgColor, textColor, title }: any) {
+function Modal({
+  children,
+  onClose,
+  bgColor,
+  textColor,
+  title,
+}: {
+  children: ReactNode;
+  onClose: () => void;
+  bgColor: string;
+  textColor: string;
+  title: string;
+}) {
   return (
     <div
       style={{
@@ -954,7 +1071,19 @@ function Modal({ children, onClose, bgColor, textColor, title }: any) {
   );
 }
 
-function ShareBtn({ label, icon, bg, color, onClick }: any) {
+function ShareBtn({
+  label,
+  icon,
+  bg,
+  color,
+  onClick,
+}: {
+  label: string;
+  icon: ReactNode;
+  bg: string;
+  color?: string;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
