@@ -33,7 +33,10 @@ const CAT_CFG: Record<string, { color: string; bg: string }> = {
 };
 
 // ── Activity type config ─────────────────────────────────────────────────
-const ACT_CFG: Record<string, { label: string; color: string; icon: any }> = {
+const ACT_CFG: Record<
+  string,
+  { label: string; color: string; icon: import("lucide-react").LucideIcon }
+> = {
   واتساب: { label: "واتساب", color: "var(--success)", icon: MessageSquare },
   مكالمة: { label: "مكالمة", color: "var(--info-2)", icon: PhoneCall },
   زيارة: { label: "زيارة ميدانية", color: "var(--warning)", icon: MapPinned },
@@ -42,7 +45,22 @@ const ACT_CFG: Record<string, { label: string; color: string; icon: any }> = {
 };
 
 // ── Lead score ───────────────────────────────────────────────────────────
-function leadScore(c: any): number {
+interface ClientLite {
+  id?: string;
+  full_name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  category?: string | null;
+  city?: string | null;
+  district?: string | null;
+  notes?: string | null;
+  sentiment?: string | null;
+  budget?: string | number | null;
+  code?: string | null;
+  created_at?: string | null;
+}
+
+function leadScore(c: ClientLite): number {
   let s = 0;
   if (c.full_name) s += 10;
   if (c.phone) s += 25;
@@ -91,14 +109,14 @@ export default function ClientProfile() {
   const router = useRouter();
   const id = params?.id as string;
 
-  const [client, setClient] = useState<any>(null);
+  const [client, setClient] = useState<ClientLite | null>(null);
   const [activities, setActivities] = useState<any[]>([]);
   const [hasActTable, setHasActTable] = useState(true);
   const [loading, setLoading] = useState(true);
 
   // editing
   const [editMode, setEditMode] = useState(false);
-  const [editForm, setEditForm] = useState<any>({});
+  const [editForm, setEditForm] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
   // new activity
@@ -157,11 +175,11 @@ export default function ClientProfile() {
     toast.success("تم الحفظ");
     setSaving(false);
     setEditMode(false);
-    setClient((p: any) => ({ ...p, ...editForm }));
+    setClient((p) => (p ? { ...p, ...editForm } : p));
   }
 
   async function handleDelete() {
-    if (!confirm(`حذف عميل "${client.full_name}"؟`)) return;
+    if (!confirm(`حذف عميل "${client?.full_name || ""}"؟`)) return;
     await supabase.from("clients").delete().eq("id", id);
     toast.success("تم الحذف");
     router.push("/dashboard/clients");
@@ -216,7 +234,7 @@ export default function ClientProfile() {
   if (!client) return null;
 
   const score = leadScore(client);
-  const cfg = CAT_CFG[client.category];
+  const cfg = CAT_CFG[client.category || ""];
 
   return (
     <div dir="rtl" className="max-w-5xl">
@@ -224,7 +242,7 @@ export default function ClientProfile() {
         crumbs={[
           { label: "لوحة التحكم", href: "/dashboard" },
           { label: "العملاء", href: "/dashboard/clients" },
-          { label: client.full_name },
+          { label: client.full_name || "" },
         ]}
       />
 
@@ -417,9 +435,9 @@ export default function ClientProfile() {
                   <div key={f.key}>
                     <label className="mb-1 block text-xs text-[var(--text-soft)]">{f.label}</label>
                     <input
-                      value={editForm[f.key]}
-                      onChange={(e) => setEditForm((p: any) => ({ ...p, [f.key]: e.target.value }))}
-                      dir={(f as any).dir}
+                      value={(editForm as Record<string, string>)[f.key]}
+                      onChange={(e) => setEditForm((p) => ({ ...p, [f.key]: e.target.value }))}
+                      dir={(f as { dir?: string }).dir}
                       className={inp}
                       style={{ color: "var(--text-strong)", padding: "10px 14px" }}
                     />
@@ -429,7 +447,7 @@ export default function ClientProfile() {
                   <label className="mb-1 block text-xs text-[var(--text-soft)]">الفئة</label>
                   <select
                     value={editForm.category}
-                    onChange={(e) => setEditForm((p: any) => ({ ...p, category: e.target.value }))}
+                    onChange={(e) => setEditForm((p) => ({ ...p, category: e.target.value }))}
                     className={inp}
                     style={{ color: "var(--text-strong)", padding: "10px 14px" }}
                   >
@@ -443,7 +461,7 @@ export default function ClientProfile() {
                   <label className="mb-1 block text-xs text-[var(--text-soft)]">ملاحظات</label>
                   <textarea
                     value={editForm.notes}
-                    onChange={(e) => setEditForm((p: any) => ({ ...p, notes: e.target.value }))}
+                    onChange={(e) => setEditForm((p) => ({ ...p, notes: e.target.value }))}
                     rows={3}
                     className={inp}
                     style={{ color: "var(--text-strong)" }}

@@ -44,7 +44,22 @@ const CAT_CFG: Record<string, { color: string; bg: string; dot: string }> = {
 };
 
 // ── Lead score (0–100) ───────────────────────────────────────────────────
-function leadScore(c: any): number {
+interface ClientLite {
+  id?: string;
+  full_name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  category?: string | null;
+  city?: string | null;
+  district?: string | null;
+  notes?: string | null;
+  sentiment?: string | null;
+  preferred_channel?: string | null;
+  budget?: string | number | null;
+  created_at?: string | null;
+}
+
+function leadScore(c: ClientLite): number {
   let s = 0;
   if (c.full_name) s += 10;
   if (c.phone) s += 25;
@@ -85,7 +100,7 @@ function sentimentAuto(score: number): SentimentKey {
   return "cold";
 }
 
-function effectiveSentiment(c: any): SentimentKey {
+function effectiveSentiment(c: ClientLite): SentimentKey {
   if (c.sentiment === "hot" || c.sentiment === "warm" || c.sentiment === "cold") return c.sentiment;
   return sentimentAuto(leadScore(c));
 }
@@ -130,7 +145,7 @@ export default function Clients() {
     setLoading(false);
   }
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const { error } = await supabase.from("clients").insert([{ ...form }]);
     if (error) {
@@ -177,7 +192,7 @@ export default function Clients() {
     setSelected(null);
   }
 
-  function openDrawer(client: any) {
+  function openDrawer(client: ClientLite) {
     setSelected(client);
     setEditForm({
       full_name: client.full_name || "",
@@ -186,7 +201,7 @@ export default function Clients() {
       city: client.city || "",
       district: client.district || "",
       notes: client.notes || "",
-      budget: client.budget || "",
+      budget: String(client.budget ?? ""),
     });
     setEditMode(false);
   }
@@ -993,8 +1008,8 @@ export default function Clients() {
                       </label>
                       <input
                         type={f.type}
-                        dir={(f as any).dir}
-                        value={(editForm as any)[f.key]}
+                        dir={(f as { dir?: string }).dir}
+                        value={(editForm as Record<string, string>)[f.key]}
                         onChange={(e) => setEditForm((p) => ({ ...p, [f.key]: e.target.value }))}
                         className={inp}
                         style={{ color: "var(--text-strong)" }}
