@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
+import type { Database } from "@/types/database";
 
 // GET /api/report/monthly?year=2026&month=4
 // يُولّد تقرير شهري كامل HTML (يطبع نفسه تلقائياً — المتصفح يحوّله لـ PDF)
@@ -65,7 +66,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "التاريخ غير صالح" }, { status: 400 });
   }
 
-  const svc = createClient(
+  const svc = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
@@ -87,7 +88,7 @@ export async function GET(req: NextRequest) {
   // ── جلب الهوية ──
   const { data: identity } = await svc
     .from("broker_identity")
-    .select("broker_name, fal_license, phone, vat_number")
+    .select("broker_name, fal_license, vat_number")
     .eq("tenant_id", tenantId)
     .maybeSingle();
   const { data: settings } = await svc
@@ -206,8 +207,8 @@ export async function GET(req: NextRequest) {
     .eq("tenant_id", tenantId)
     .gte("created_at", startIso)
     .lt("created_at", endIso);
-  (weeklyData || []).forEach((p: any) => {
-    const d = new Date(p.created_at);
+  (weeklyData || []).forEach((p) => {
+    const d = new Date(p.created_at || 0);
     const day = d.getUTCDate();
     const w = Math.min(4, Math.floor((day - 1) / 7));
     weeklyBins[w]++;
@@ -385,7 +386,7 @@ export async function GET(req: NextRequest) {
     <tbody>
       ${topProps
         .map(
-          (p: any) => `
+          (p) => `
         <tr>
           <td style="font-weight:700;">${h(p.title)}</td>
           <td>${h(p.city || "—")} — ${h(p.district || "—")}</td>
