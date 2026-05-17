@@ -250,8 +250,8 @@ export default function AddProperty() {
       if (data.error) throw new Error(data.error);
       set("description", data.result);
       toast.success("تم توليد الوصف بنجاح");
-    } catch (err: any) {
-      toast.error("تعذّر توليد الوصف: " + err.message);
+    } catch (err) {
+      toast.error("تعذّر توليد الوصف: " + (err instanceof Error ? err.message : "خطأ"));
     } finally {
       setAiLoading(false);
     }

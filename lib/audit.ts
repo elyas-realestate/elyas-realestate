@@ -4,6 +4,7 @@
  */
 
 import { supabase } from "@/lib/supabase-browser";
+import type { Json } from "@/types/database";
 
 import { createLogger } from "@/lib/logger";
 
@@ -25,7 +26,7 @@ interface AuditEntry {
   entity_type: EntityType;
   entity_id?: string;
   entity_name?: string;
-  details?: Record<string, any>;
+  details?: Record<string, Json>;
 }
 
 /**
@@ -63,7 +64,7 @@ export function logCreate(
   type: EntityType,
   id: string,
   name: string,
-  details?: Record<string, any>
+  details?: Record<string, Json>
 ) {
   return logAudit({
     action: "create",
@@ -81,7 +82,7 @@ export function logUpdate(
   type: EntityType,
   id: string,
   name: string,
-  changes?: Record<string, any>
+  changes?: Record<string, Json>
 ) {
   return logAudit({
     action: "update",

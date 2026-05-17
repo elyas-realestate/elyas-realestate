@@ -411,7 +411,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                 واتساب
               </a>
             )}
-            <a
+            <Link
               href="/login"
               style={{
                 color: clrTextSec,
@@ -424,7 +424,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
               }}
             >
               تسجيل دخول
-            </a>
+            </Link>
           </div>
         </nav>
 

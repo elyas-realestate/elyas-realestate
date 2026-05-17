@@ -1,6 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Users,
   UserPlus,
@@ -248,9 +249,9 @@ export default function TeamPage() {
         {atLimit && canManage && (
           <div className="mb-6 rounded-xl border border-[var(--gold-bg-hover)] bg-amber-950/30 p-4 text-sm text-amber-200">
             وصلت للحد الأقصى لأعضاء خطتك ({maxMembers}).{" "}
-            <a href="/dashboard/subscription" className="font-medium underline">
+            <Link href="/dashboard/subscription" className="font-medium underline">
               رقّ الخطة
-            </a>{" "}
+            </Link>{" "}
             لإضافة المزيد.
           </div>
         )}

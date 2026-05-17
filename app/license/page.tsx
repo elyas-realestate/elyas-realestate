@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
 export const metadata: Metadata = {
@@ -57,7 +58,7 @@ export default async function LicensePage() {
       }}
     >
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        <a
+        <Link
           href="/"
           style={{
             color: "var(--gold-1)",
@@ -68,7 +69,7 @@ export default async function LicensePage() {
           }}
         >
           ← العودة للصفحة الرئيسية
-        </a>
+        </Link>
 
         <h1
           style={{ fontSize: 32, fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}

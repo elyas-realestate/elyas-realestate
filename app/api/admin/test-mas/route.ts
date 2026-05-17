@@ -71,8 +71,8 @@ export async function POST(req: Request) {
         maxTokens: 600,
         temperature: 0.6,
       });
-    } catch (e: any) {
-      error = e?.message || "فشل توليد الرد";
+    } catch (e) {
+      error = e instanceof Error ? e.message : "فشل توليد الرد";
     }
 
     const duration = Date.now() - startTime;
@@ -95,8 +95,11 @@ export async function POST(req: Request) {
       system_prompt_preview: ctx.systemPrompt.slice(0, 500) + "...",
       system_prompt_length: ctx.systemPrompt.length,
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ غير متوقّع" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "خطأ غير متوقّع" },
+      { status: 500 }
+    );
   }
 }
 

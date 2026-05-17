@@ -69,8 +69,8 @@ export default function FeedbackWidget() {
       } else {
         toast.error(j.error || "فشل الإرسال");
       }
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
     } finally {
       setSubmitting(false);
     }

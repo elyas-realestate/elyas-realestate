@@ -51,8 +51,8 @@ export async function GET() {
       links: linksRes.data || [],
       slug: ctx.tenant.slug,
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "خطأ" }, { status: 500 });
   }
 }
 
@@ -63,7 +63,7 @@ export async function PUT(req: Request) {
     if (!ctx) return NextResponse.json({ error: "غير مصرّح" }, { status: 401 });
 
     const body = await req.json();
-    const allowed: Record<string, any> = {};
+    const allowed: Record<string, unknown> = {};
     const fields = [
       "card_style",
       "bg_color",
@@ -92,7 +92,7 @@ export async function PUT(req: Request) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "خطأ" }, { status: 500 });
   }
 }

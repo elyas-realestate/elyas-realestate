@@ -89,8 +89,8 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
     try {
       recognition.start();
       setRecording(true);
-    } catch (e: any) {
-      setError(e?.message || "فشل بدء التسجيل");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "فشل بدء التسجيل");
     }
   }
 
@@ -125,8 +125,8 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
       } else {
         setError(j.error || "فشل الاستخراج");
       }
-    } catch (e: any) {
-      setError(e?.message || "خطأ");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "خطأ");
     } finally {
       setExtracting(false);
     }

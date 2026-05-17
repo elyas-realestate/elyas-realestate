@@ -51,8 +51,9 @@ const eslintConfig = defineConfig([
       ],
       // النصوص العربية تستخدم الفاصلة العليا (') بشكل طبيعي — لا تحتاج escaping
       "react/no-unescaped-entities": "off",
-      // مقبول للـ Beta — نحسّن لاحقاً
-      "@next/next/no-img-element": "warn",
+      // مقبول للـ Beta — نحوّل لـ <Image /> لاحقاً عند تحديد width/height لكل صورة
+      // (تحسين أداء يحتاج مراجعة بصرية لكل صفحة)
+      "@next/next/no-img-element": "off",
       "@next/next/no-html-link-for-pages": "warn",
       // react hooks rules — مهمة لكن نخليها warnings حتى نراجعها يدوياً
       "react-hooks/immutability": "warn",

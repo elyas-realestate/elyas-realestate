@@ -214,7 +214,7 @@ export async function POST(req: NextRequest) {
     const extractedData = JSON.parse(jsonText);
 
     return NextResponse.json({ extracted: extractedData });
-  } catch (error: any) {
+  } catch (error) {
     logger.error("[ai-whatsapp] parse failed", error, { route: "/api/ai-whatsapp" });
     return NextResponse.json({ error: "حدث خطأ أثناء معالجة المحادثة بـ AI" }, { status: 500 });
   }

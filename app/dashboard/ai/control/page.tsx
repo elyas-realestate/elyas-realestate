@@ -112,8 +112,8 @@ export default function ControlTab() {
         window.dispatchEvent(new Event(REFRESH_EVENT));
       }
       await load();
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ غير متوقع");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ غير متوقع");
     } finally {
       setBusy(null);
     }
@@ -136,8 +136,8 @@ export default function ControlTab() {
         window.dispatchEvent(new Event(REFRESH_EVENT));
       }
       await load();
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ غير متوقع");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ غير متوقع");
     } finally {
       setBusy(null);
     }
@@ -160,8 +160,8 @@ export default function ControlTab() {
         window.dispatchEvent(new Event(REFRESH_EVENT));
       }
       await load();
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ غير متوقع");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ غير متوقع");
     } finally {
       setBusy(null);
     }

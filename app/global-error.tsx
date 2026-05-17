@@ -64,6 +64,7 @@ export default function GlobalError({
             >
               إعادة المحاولة
             </button>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/dashboard"
               style={{

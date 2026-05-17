@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Users,
   TrendingUp,
@@ -302,7 +303,7 @@ export default function AdminPage() {
             <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--text-muted)" }}>
               آخر المسجّلين
             </h2>
-            <a
+            <Link
               href="/admin/users"
               style={{
                 display: "flex",
@@ -314,7 +315,7 @@ export default function AdminPage() {
               }}
             >
               عرض الكل <ArrowUpRight size={12} />
-            </a>
+            </Link>
           </div>
 
           {loading ? (

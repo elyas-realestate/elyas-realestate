@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ ok: true, daily_call_limit: limit });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "خطأ" }, { status: 500 });
   }
 }

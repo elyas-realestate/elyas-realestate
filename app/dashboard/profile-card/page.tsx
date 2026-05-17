@@ -925,8 +925,8 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
       }
       toast.success(link ? "✅ تم التحديث" : "✅ أُضيف العنصر");
       onSaved();
-    } catch (e: any) {
-      toast.error(e?.message || "فشل الحفظ");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "فشل الحفظ");
     } finally {
       setSaving(false);
     }

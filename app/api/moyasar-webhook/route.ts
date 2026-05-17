@@ -151,9 +151,12 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch (e: any) {
+  } catch (e) {
     log.error("Webhook handler error", e);
-    return NextResponse.json({ error: e?.message || "internal error" }, { status: 500 });
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "internal error" },
+      { status: 500 }
+    );
   }
 }
 

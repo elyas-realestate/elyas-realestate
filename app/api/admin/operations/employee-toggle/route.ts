@@ -88,7 +88,10 @@ export async function POST(req: Request) {
       target: { kind, code, name: target.name },
       is_enabled: enabled,
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ غير متوقّع" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "خطأ غير متوقّع" },
+      { status: 500 }
+    );
   }
 }

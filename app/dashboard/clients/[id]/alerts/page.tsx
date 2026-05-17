@@ -125,8 +125,8 @@ export default function ClientAlertsPage() {
       } else {
         toast.error(j.error || "فشل تشغيل المطابقة");
       }
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
     } finally {
       setRunning(false);
     }

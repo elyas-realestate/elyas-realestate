@@ -145,8 +145,8 @@ export default function WhatsAppPage() {
 
       setResults(data.extracted);
       toast.success("تم تحليل المحادثة بنجاح!");
-    } catch (error: any) {
-      toast.error(error.message || "حدث خطأ غير متوقع أثناء المعالجة");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "حدث خطأ غير متوقع أثناء المعالجة");
     } finally {
       setIsUploading(false);
     }

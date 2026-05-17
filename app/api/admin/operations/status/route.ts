@@ -163,7 +163,7 @@ export async function GET() {
         },
       ],
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "خطأ" }, { status: 500 });
   }
 }

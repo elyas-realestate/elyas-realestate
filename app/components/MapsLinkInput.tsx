@@ -70,8 +70,8 @@ export default function MapsLinkInput({ lat, lng, onChange, onClear, className }
         if (data.warning) setWarning(data.warning);
         setLink("");
         toast.success(`✓ استُخرجت الإحداثيات: ${data.lat.toFixed(4)}, ${data.lng.toFixed(4)}`);
-      } catch (e: any) {
-        setError(e?.message || "خطأ في الشبكة");
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "خطأ في الشبكة");
       } finally {
         setLoading(false);
       }

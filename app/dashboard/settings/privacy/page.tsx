@@ -55,8 +55,8 @@ export default function PrivacyPage() {
       a.remove();
       URL.revokeObjectURL(url);
       toast.success("✅ تم تنزيل بياناتك");
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
     } finally {
       setExporting(false);
     }
@@ -89,8 +89,8 @@ export default function PrivacyPage() {
       } else {
         toast.error(j.error || "فشل");
       }
-    } catch (e: any) {
-      toast.error(e?.message || "خطأ");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "خطأ");
     } finally {
       setDeleting(false);
     }

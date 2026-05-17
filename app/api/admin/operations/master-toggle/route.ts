@@ -83,7 +83,10 @@ export async function POST(req: Request) {
       system_master_active: active,
       message: active ? "تم تشغيل النظام" : "تم إيقاف النظام",
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ غير متوقّع" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "خطأ غير متوقّع" },
+      { status: 500 }
+    );
   }
 }

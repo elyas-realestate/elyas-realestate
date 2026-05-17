@@ -22,7 +22,11 @@ const ALLOWED_PROVIDERS = [
 ] as const;
 const ALLOWED_MODES = ["single", "chain", "compare"] as const;
 
+// ── نوع رسائل المحادثة المُمرّرة بين الـ providers ──
+type ChatMsg = { role: "user" | "assistant" | "system"; content: string };
+
 // ── التحقق من صحة المدخلات ──
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validateInput(body: any): { valid: true } | { valid: false; error: string } {
   // التحقق من المزود
   if (body.provider && !ALLOWED_PROVIDERS.includes(body.provider)) {
@@ -103,7 +107,12 @@ function sanitizeError(err: any): string {
   return "حدث خطأ أثناء المعالجة — حاول مجدداً";
 }
 
-async function callOpenAI(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+async function callOpenAI(
+  model: string,
+  systemPrompt: string,
+  messages: ChatMsg[],
+  apiKey: string
+) {
   if (!apiKey) throw new Error("مفتاح OpenAI منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -120,7 +129,12 @@ async function callOpenAI(model: string, systemPrompt: string, messages: any[], 
   return data.choices?.[0]?.message?.content || "";
 }
 
-async function callAnthropic(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+async function callAnthropic(
+  model: string,
+  systemPrompt: string,
+  messages: ChatMsg[],
+  apiKey: string
+) {
   if (!apiKey) throw new Error("مفتاح Anthropic منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -136,14 +150,17 @@ async function callAnthropic(model: string, systemPrompt: string, messages: any[
   return data.content?.[0]?.text || "";
 }
 
-async function callGoogle(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+async function callGoogle(
+  model: string,
+  systemPrompt: string,
+  messages: ChatMsg[],
+  apiKey: string
+) {
   if (!apiKey) throw new Error("مفتاح Google منسني أو غير متاح في الإعدادات");
   const fullPrompt =
     systemPrompt +
     "\n\n" +
-    messages
-      .map((m: any) => (m.role === "user" ? "المستخدم: " : "المساعد: ") + m.content)
-      .join("\n");
+    messages.map((m) => (m.role === "user" ? "المستخدم: " : "المساعد: ") + m.content).join("\n");
   const response = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models/" +
       model +
@@ -163,7 +180,7 @@ async function callGoogle(model: string, systemPrompt: string, messages: any[], 
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
 
-async function callManus(model: string, systemPrompt: string, messages: any[], apiKey: string) {
+async function callManus(model: string, systemPrompt: string, messages: ChatMsg[], apiKey: string) {
   if (!apiKey) throw new Error("مفتاح Manus منسني أو غير متاح في الإعدادات");
   const response = await fetch("https://api.manus.ai/v1/chat/completions", {
     method: "POST",
@@ -185,7 +202,7 @@ async function callOpenAICompat(
   baseUrl: string,
   model: string,
   systemPrompt: string,
-  messages: any[],
+  messages: ChatMsg[],
   apiKey: string,
   providerName: string
 ) {
@@ -209,7 +226,7 @@ async function callModel(
   provider: string,
   model: string,
   systemPrompt: string,
-  messages: any[],
+  messages: ChatMsg[],
   apiKey: string
 ) {
   if (provider === "openai") return callOpenAI(model, systemPrompt, messages, apiKey);
@@ -385,7 +402,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ error: "وضع غير معروف" }, { status: 400 });
-  } catch (err: any) {
+  } catch (err) {
     // ── تنقية رسائل الخطأ — لا نكشف تفاصيل داخلية ──
     logger.error("[ai-content] handler failed", err, { route: "/api/ai-content" });
     return NextResponse.json({ error: sanitizeError(err) }, { status: 500 });

@@ -69,8 +69,8 @@ export default function TestTab() {
       });
       const data = await res.json();
       setResult(data);
-    } catch (e: any) {
-      setResult({ ok: false, input, error: e?.message || "خطأ" });
+    } catch (e) {
+      setResult({ ok: false, input, error: e instanceof Error ? e.message : "خطأ" });
     } finally {
       setRunning(false);
     }

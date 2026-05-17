@@ -171,8 +171,8 @@ export default function SmartAddProperty() {
 
       toast.success("تم إضافة العقار بنجاح! 🎉");
       router.push("/dashboard/properties");
-    } catch (err: any) {
-      toast.error("فشل الحفظ: " + (err.message || "خطأ غير معروف"));
+    } catch (err) {
+      toast.error("فشل الحفظ: " + (err instanceof Error ? err.message : "خطأ غير معروف"));
       setStep("review");
     }
     setSaving(false);

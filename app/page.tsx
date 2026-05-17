@@ -965,12 +965,12 @@ export default function Home() {
                 >
                   الأسعار
                 </a>
-                <a
+                <Link
                   href="/login"
                   style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}
                 >
                   تسجيل الدخول
-                </a>
+                </Link>
               </div>
             </div>
             <div>
@@ -1008,30 +1008,30 @@ export default function Home() {
                 قانوني
               </h4>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <a
+                <Link
                   href="/privacy"
                   style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}
                 >
                   سياسة الخصوصية
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/terms"
                   style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}
                 >
                   الشروط والأحكام
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/data-processing"
                   style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}
                 >
                   اتفاقية معالجة البيانات
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/license"
                   style={{ color: "var(--text-faint)", textDecoration: "none", fontSize: 13 }}
                 >
                   الترخيص
-                </a>
+                </Link>
               </div>
             </div>
             <div>

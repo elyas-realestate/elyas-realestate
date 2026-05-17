@@ -68,7 +68,10 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ matches: [] });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "حدث خطأ غير متوقع" }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "حدث خطأ غير متوقع" },
+      { status: 500 }
+    );
   }
 }

@@ -78,7 +78,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     }
 
     return NextResponse.json({ ok: true, deal_id: deal.id });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "خطأ" }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "خطأ" }, { status: 500 });
   }
 }

@@ -374,8 +374,8 @@ export default function Settings() {
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("assets").getPublicUrl(path);
       sc("site_logo", data.publicUrl);
-    } catch (e: any) {
-      const msg = e?.message || "";
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
       if (msg.includes("not found") || msg.includes("Bucket"))
         setLogoError("الـ bucket غير موجود — أنشئ bucket اسمه 'assets' في Supabase Storage");
       else if (msg.includes("policy") || msg.includes("permission") || msg.includes("403"))
@@ -408,8 +408,8 @@ export default function Settings() {
       const { data } = supabase.storage.from("assets").getPublicUrl(path);
       sc("hero_image", data.publicUrl);
       toast.success("تم رفع صورة الخلفية");
-    } catch (e: any) {
-      const msg = e?.message || "";
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
       if (msg.includes("not found") || msg.includes("Bucket"))
         setHeroError("الـ bucket غير موجود — أنشئ bucket اسمه 'assets' في Supabase Storage");
       else if (msg.includes("policy") || msg.includes("permission") || msg.includes("403"))

@@ -255,9 +255,9 @@ export async function POST(request: NextRequest) {
         { status: 422 }
       );
     return NextResponse.json({ success: true, data: extracted });
-  } catch (err: any) {
+  } catch (err) {
     logger.error("[ai-extract] handler failed", err, { route: "/api/ai-extract" });
-    const msg = err?.message || "";
+    const msg = err instanceof Error ? err.message : "";
     if (msg.includes("API key"))
       return NextResponse.json({ error: "مفتاح API غير صالح" }, { status: 500 });
     if (msg.includes("rate limit") || msg.includes("429"))

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "اتفاقية معالجة البيانات — وسيط برو",
@@ -18,7 +19,7 @@ export default function DataProcessingPage() {
       }}
     >
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
-        <a
+        <Link
           href="/"
           style={{
             color: "var(--gold-1)",
@@ -29,7 +30,7 @@ export default function DataProcessingPage() {
           }}
         >
           ← العودة للصفحة الرئيسية
-        </a>
+        </Link>
 
         <h1
           style={{ fontSize: 32, fontWeight: 800, color: "var(--text-primary)", marginBottom: 8 }}
