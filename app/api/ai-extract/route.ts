@@ -33,9 +33,11 @@ const EXTRACT_PROMPT = `أنت خبير عقاري سعودي محترف. مهم
 - أعد JSON فقط بدون markdown أو backticks`;
 
 // ── بناء خريطة المفاتيح مع فك التشفير ──
-async function buildKeys(dbKeys: any[]): Promise<Record<string, string>> {
+type AiConfigKey = { provider: string | null; api_key_encrypted: string | null };
+
+async function buildKeys(dbKeys: AiConfigKey[]): Promise<Record<string, string>> {
   const resolve = async (prov: string): Promise<string> => {
-    const dbKey = (dbKeys || []).find((k: any) => k.provider === prov)?.api_key_encrypted;
+    const dbKey = (dbKeys || []).find((k) => k.provider === prov)?.api_key_encrypted;
     if (dbKey) return await safeDecrypt(dbKey);
     if (prov === "anthropic") return process.env.ANTHROPIC_API_KEY || "";
     if (prov === "google") return process.env.GOOGLE_API_KEY || "";
@@ -213,7 +215,7 @@ export async function POST(request: NextRequest) {
     if (!content && (!images || images.length === 0))
       return NextResponse.json({ error: "يجب إرسال محتوى نصي أو صور" }, { status: 400 });
 
-    let extracted: any = null;
+    let extracted: Record<string, unknown> | null = null;
 
     if (images && images.length > 0 && keys.anthropic) {
       const imageContent = images.map((img: string) => ({
@@ -267,7 +269,7 @@ export async function POST(request: NextRequest) {
 }
 
 // ── Parse JSON from AI response ──
-function parseJSON(raw: string): any | null {
+function parseJSON(raw: string): Record<string, unknown> | null {
   try {
     // Remove markdown code fences if present
     let cleaned = raw.trim();
