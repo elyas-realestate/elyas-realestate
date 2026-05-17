@@ -8,12 +8,13 @@
  */
 
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/types/database";
 import { formatSAR } from "./format";
 
-type Admin = SupabaseClient;
+type Admin = SupabaseClient<Database>;
 
 function makeAdmin(): Admin {
-  return createClient(
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
@@ -72,10 +73,10 @@ export async function toolDealsSummary(tenantId: string): Promise<string> {
 
   const byStage: Record<string, { count: number; value: number }> = {};
   for (const d of data) {
-    const s = (d as any).current_stage || "غير محدد";
+    const s = d.current_stage || "غير محدد";
     if (!byStage[s]) byStage[s] = { count: 0, value: 0 };
     byStage[s].count++;
-    byStage[s].value += Number((d as any).target_value || 0);
+    byStage[s].value += Number(d.target_value || 0);
   }
 
   const totalValue = Object.values(byStage).reduce((s, v) => s + v.value, 0);
@@ -106,7 +107,7 @@ export async function toolClientsSummary(tenantId: string): Promise<string> {
 
   const counts = { hot: 0, warm: 0, cold: 0, none: 0 };
   for (const c of data) {
-    const s = (c as any).sentiment;
+    const s = c.sentiment;
     if (s === "hot") counts.hot++;
     else if (s === "warm") counts.warm++;
     else if (s === "cold") counts.cold++;
@@ -114,9 +115,9 @@ export async function toolClientsSummary(tenantId: string): Promise<string> {
   }
 
   const recent = data
-    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
     .slice(0, 3)
-    .map((c: any) => c.full_name || "بدون اسم")
+    .map((c) => c.full_name || "بدون اسم")
     .join("، ");
 
   return [
@@ -141,11 +142,11 @@ export async function toolPropertiesSummary(tenantId: string): Promise<string> {
   if (error) return `تعذّر جلب العقارات: ${error.message}`;
   if (!data || data.length === 0) return "لا توجد عقارات في المخزون.";
 
-  const published = data.filter((p: any) => p.is_published).length;
+  const published = data.filter((p) => p.is_published).length;
   const drafts = data.length - published;
-  const forSale = data.filter((p: any) => p.offer_type === "بيع").length;
-  const forRent = data.filter((p: any) => p.offer_type === "إيجار").length;
-  const totalValue = data.reduce((s: number, p: any) => s + (Number(p.price) || 0), 0);
+  const forSale = data.filter((p) => p.offer_type === "بيع").length;
+  const forRent = data.filter((p) => p.offer_type === "إيجار").length;
+  const totalValue = data.reduce((s, p) => s + (Number(p.price) || 0), 0);
 
   return [
     `🏠 ${data.length} عقار: ${published} منشور، ${drafts} مسودة`,
@@ -177,7 +178,7 @@ export async function toolTodayTasks(tenantId: string): Promise<string> {
   if (!data || data.length === 0) return "لا توجد مهام مجدولة اليوم.";
 
   const lines = [`📅 ${data.length} مهمة اليوم:`];
-  data.slice(0, 5).forEach((t: any) => {
+  data.slice(0, 5).forEach((t) => {
     const status =
       t.status === "مكتمل" || t.status === "completed"
         ? "✅"
@@ -208,9 +209,9 @@ export async function toolPropertyRequests(tenantId: string): Promise<string> {
   if (!data || data.length === 0) return "لا توجد طلبات عقارية جديدة.";
 
   const lines = [`📩 ${data.length} طلب عقاري نشط:`];
-  data.slice(0, 4).forEach((r: any) => {
+  data.slice(0, 4).forEach((r) => {
     lines.push(
-      `• ${r.contact_name || "عميل"} — ${r.request_type || ""} ${r.main_category || ""}${r.district ? " في " + r.district : ""}`
+      `• ${"عميل"} — ${r.request_type || ""} ${r.main_category || ""}${r.district ? " في " + r.district : ""}`
     );
   });
 
@@ -242,10 +243,10 @@ export async function toolDailySummary(tenantId: string): Promise<string> {
   const props = propsRes.data || [];
   const requests = requestsRes.data || [];
 
-  const hotClients = clients.filter((c: any) => c.sentiment === "hot").length;
-  const publishedProps = props.filter((p: any) => p.is_published).length;
+  const hotClients = clients.filter((c) => c.sentiment === "hot").length;
+  const publishedProps = props.filter((p) => p.is_published).length;
   const activeDeals = deals.filter(
-    (d: any) => d.current_stage !== "ملغاة" && d.current_stage !== "مكتملة"
+    (d) => d.current_stage !== "ملغاة" && d.current_stage !== "مكتملة"
   ).length;
 
   const greeting = (() => {
@@ -284,7 +285,7 @@ export async function toolAddTask(
     priority: "متوسط",
     task_type: "أخرى",
     notes: "أُضيفت عبر السكرتير الذكي (واتساب)",
-  } as never);
+  });
 
   if (error) return `تعذّر إضافة المهمة: ${error.message}`;
   return `✅ سجّلت المهمة: "${title.slice(0, 60)}" — موعدها ${new Date(due).toLocaleDateString("en-US")}`;
