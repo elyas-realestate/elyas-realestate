@@ -126,19 +126,29 @@ export async function GET() {
 
   const { data: managers } = await admin.from("ai_managers").select("id, code, name, department");
 
-  const enriched = (employees || []).map((e: any) => ({
-    code: e.code,
-    name: e.name,
-    is_active: e.is_active,
-    manager_id: e.manager_id,
-    ai_provider: e.default_ai_provider,
-    ai_model: e.default_ai_model,
-    manager_name: managers?.find((m: any) => m.id === e.manager_id)?.name || null,
-  }));
+  const enriched = (employees || []).map(
+    (e: {
+      code: string;
+      name?: string;
+      is_active?: boolean;
+      manager_id?: string | null;
+      default_ai_provider?: string;
+      default_ai_model?: string;
+    }) => ({
+      code: e.code,
+      name: e.name,
+      is_active: e.is_active,
+      manager_id: e.manager_id,
+      ai_provider: e.default_ai_provider,
+      ai_model: e.default_ai_model,
+      manager_name:
+        managers?.find((m: { id: string; name?: string }) => m.id === e.manager_id)?.name || null,
+    })
+  );
 
   return NextResponse.json({
     employees: enriched,
     total: enriched.length,
-    active: enriched.filter((e: any) => e.is_active).length,
+    active: enriched.filter((e) => e.is_active).length,
   });
 }

@@ -17,7 +17,9 @@ interface SiteSection {
 }
 
 interface SiteTabProps {
-  s: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  s: any; // settings alias — heterogeneous shape across 100+ optional columns
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sc: (field: string, value: any) => void;
   siteSection: string;
   setSiteSection: (v: string) => void;
@@ -523,59 +525,65 @@ export function SiteTab({
                 </button>
               </div>
               <div className="space-y-3">
-                {(s.navbar_links || []).map((link: any, i: number) => (
-                  <div key={i} className="rounded-xl bg-[var(--bg-surface-2)] p-4">
-                    <div className="mb-3 flex items-center justify-between">
-                      <span className="text-sm text-[var(--text-faint)]">رابط {i + 1}</span>
-                      <button
-                        onClick={() =>
-                          sc(
-                            "navbar_links",
-                            s.navbar_links.filter((_: any, j: number) => j !== i)
-                          )
-                        }
-                        className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
-                      >
-                        <Trash2 size={11} /> حذف
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                      <div>
-                        <label className="mb-1 block text-xs text-[var(--text-faint)]">النص</label>
-                        <input
-                          value={link.label || ""}
-                          onChange={(e) => navChange(i, "label", e.target.value)}
-                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
-                          placeholder="الرئيسية"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1 block text-xs text-[var(--text-faint)]">
-                          الرابط
-                        </label>
-                        <input
-                          value={link.href || ""}
-                          onChange={(e) => navChange(i, "href", e.target.value)}
-                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
-                          dir="ltr"
-                          placeholder="/"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1 block text-xs text-[var(--text-faint)]">النوع</label>
-                        <select
-                          value={link.type || "link"}
-                          onChange={(e) => navChange(i, "type", e.target.value)}
-                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                {(s.navbar_links || []).map(
+                  (link: { type?: string; label?: string; href?: string }, i: number) => (
+                    <div key={i} className="rounded-xl bg-[var(--bg-surface-2)] p-4">
+                      <div className="mb-3 flex items-center justify-between">
+                        <span className="text-sm text-[var(--text-faint)]">رابط {i + 1}</span>
+                        <button
+                          onClick={() =>
+                            sc(
+                              "navbar_links",
+                              s.navbar_links.filter((_: unknown, j: number) => j !== i)
+                            )
+                          }
+                          className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
                         >
-                          <option value="link">رابط صفحة</option>
-                          <option value="anchor">رابط قسم (#)</option>
-                          <option value="cta">زر بارز (CTA)</option>
-                        </select>
+                          <Trash2 size={11} /> حذف
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                        <div>
+                          <label className="mb-1 block text-xs text-[var(--text-faint)]">
+                            النص
+                          </label>
+                          <input
+                            value={link.label || ""}
+                            onChange={(e) => navChange(i, "label", e.target.value)}
+                            className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                            placeholder="الرئيسية"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs text-[var(--text-faint)]">
+                            الرابط
+                          </label>
+                          <input
+                            value={link.href || ""}
+                            onChange={(e) => navChange(i, "href", e.target.value)}
+                            className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                            dir="ltr"
+                            placeholder="/"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs text-[var(--text-faint)]">
+                            النوع
+                          </label>
+                          <select
+                            value={link.type || "link"}
+                            onChange={(e) => navChange(i, "type", e.target.value)}
+                            className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                          >
+                            <option value="link">رابط صفحة</option>
+                            <option value="anchor">رابط قسم (#)</option>
+                            <option value="cta">زر بارز (CTA)</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
               <div className="mt-4">
                 <SaveBtn onClick={handleSaveSettings} saving={saving} saved={saved} />
@@ -663,83 +671,85 @@ export function SiteTab({
                 </button>
               </div>
               <div className="space-y-4">
-                {(s.services || []).map((svc: any, i: number) => (
-                  <div key={i} className="space-y-3 rounded-xl bg-[var(--bg-surface-2)] p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-[var(--text-faint)]">خدمة {i + 1}</span>
-                      <button
-                        onClick={() =>
-                          sc(
-                            "services",
-                            s.services.filter((_: any, j: number) => j !== i)
-                          )
-                        }
-                        className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
-                      >
-                        <Trash2 size={11} /> حذف
-                      </button>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-xs text-[var(--text-faint)]">
-                        الأيقونة
-                      </label>
-                      <div
-                        className="mb-3 flex flex-wrap gap-1.5 rounded-lg p-2"
-                        style={{
-                          background: "var(--bg-surface-1)",
-                          border: "1px solid var(--gold-bg-hover)",
-                        }}
-                      >
-                        {SERVICE_ICON_KEYS.map((key) => {
-                          const isActive = (svc.icon || "home") === key;
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              onClick={() => svcChange(i, "icon", key)}
-                              className="flex items-center justify-center transition"
-                              title={key}
-                              style={{
-                                width: 36,
-                                height: 36,
-                                borderRadius: 8,
-                                background: isActive ? "var(--gold-bg-hover)" : "transparent",
-                                border: isActive
-                                  ? "1px solid var(--gold-2)"
-                                  : "1px solid transparent",
-                                color: isActive ? "var(--gold-2)" : "var(--text-faint)",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <ServiceIcon name={key} size={18} />
-                            </button>
-                          );
-                        })}
+                {(s.services || []).map(
+                  (svc: { icon?: string; title?: string; desc?: string }, i: number) => (
+                    <div key={i} className="space-y-3 rounded-xl bg-[var(--bg-surface-2)] p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-[var(--text-faint)]">خدمة {i + 1}</span>
+                        <button
+                          onClick={() =>
+                            sc(
+                              "services",
+                              s.services.filter((_: unknown, j: number) => j !== i)
+                            )
+                          }
+                          className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
+                        >
+                          <Trash2 size={11} /> حذف
+                        </button>
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-xs text-[var(--text-faint)]">
+                          الأيقونة
+                        </label>
+                        <div
+                          className="mb-3 flex flex-wrap gap-1.5 rounded-lg p-2"
+                          style={{
+                            background: "var(--bg-surface-1)",
+                            border: "1px solid var(--gold-bg-hover)",
+                          }}
+                        >
+                          {SERVICE_ICON_KEYS.map((key) => {
+                            const isActive = (svc.icon || "home") === key;
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                onClick={() => svcChange(i, "icon", key)}
+                                className="flex items-center justify-center transition"
+                                title={key}
+                                style={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: 8,
+                                  background: isActive ? "var(--gold-bg-hover)" : "transparent",
+                                  border: isActive
+                                    ? "1px solid var(--gold-2)"
+                                    : "1px solid transparent",
+                                  color: isActive ? "var(--gold-2)" : "var(--text-faint)",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <ServiceIcon name={key} size={18} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs text-[var(--text-faint)]">
+                          اسم الخدمة
+                        </label>
+                        <input
+                          value={svc.title || ""}
+                          onChange={(e) => svcChange(i, "title", e.target.value)}
+                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs text-[var(--text-faint)]">
+                          وصف الخدمة
+                        </label>
+                        <textarea
+                          value={svc.desc || ""}
+                          onChange={(e) => svcChange(i, "desc", e.target.value)}
+                          rows={2}
+                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                        />
                       </div>
                     </div>
-                    <div>
-                      <label className="mb-1 block text-xs text-[var(--text-faint)]">
-                        اسم الخدمة
-                      </label>
-                      <input
-                        value={svc.title || ""}
-                        onChange={(e) => svcChange(i, "title", e.target.value)}
-                        className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs text-[var(--text-faint)]">
-                        وصف الخدمة
-                      </label>
-                      <textarea
-                        value={svc.desc || ""}
-                        onChange={(e) => svcChange(i, "desc", e.target.value)}
-                        rows={2}
-                        className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
               <div className="mt-4">
                 <SaveBtn onClick={handleSaveSettings} saving={saving} saved={saved} />
@@ -765,79 +775,83 @@ export function SiteTab({
                 </button>
               </div>
               <div className="space-y-4">
-                {(s.why_cards || []).map((card: any, i: number) => (
-                  <div key={i} className="space-y-3 rounded-xl bg-[var(--bg-surface-2)] p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-[var(--text-faint)]">بطاقة {i + 1}</span>
-                      <button
-                        onClick={() =>
-                          sc(
-                            "why_cards",
-                            s.why_cards.filter((_: any, j: number) => j !== i)
-                          )
-                        }
-                        className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
-                      >
-                        <Trash2 size={11} /> حذف
-                      </button>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-xs text-[var(--text-faint)]">
-                        الأيقونة
-                      </label>
-                      <div
-                        className="mb-3 flex flex-wrap gap-1.5 rounded-lg p-2"
-                        style={{
-                          background: "var(--bg-surface-1)",
-                          border: "1px solid var(--gold-bg-hover)",
-                        }}
-                      >
-                        {SERVICE_ICON_KEYS.map((key) => {
-                          const isActive = (card.icon || "award") === key;
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              onClick={() => whyChange(i, "icon", key)}
-                              className="flex items-center justify-center transition"
-                              title={key}
-                              style={{
-                                width: 36,
-                                height: 36,
-                                borderRadius: 8,
-                                background: isActive ? "var(--gold-bg-hover)" : "transparent",
-                                border: isActive
-                                  ? "1px solid var(--gold-2)"
-                                  : "1px solid transparent",
-                                color: isActive ? "var(--gold-2)" : "var(--text-faint)",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <ServiceIcon name={key} size={18} />
-                            </button>
-                          );
-                        })}
+                {(s.why_cards || []).map(
+                  (card: { icon?: string; title?: string; desc?: string }, i: number) => (
+                    <div key={i} className="space-y-3 rounded-xl bg-[var(--bg-surface-2)] p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-[var(--text-faint)]">بطاقة {i + 1}</span>
+                        <button
+                          onClick={() =>
+                            sc(
+                              "why_cards",
+                              s.why_cards.filter((_: unknown, j: number) => j !== i)
+                            )
+                          }
+                          className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
+                        >
+                          <Trash2 size={11} /> حذف
+                        </button>
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-xs text-[var(--text-faint)]">
+                          الأيقونة
+                        </label>
+                        <div
+                          className="mb-3 flex flex-wrap gap-1.5 rounded-lg p-2"
+                          style={{
+                            background: "var(--bg-surface-1)",
+                            border: "1px solid var(--gold-bg-hover)",
+                          }}
+                        >
+                          {SERVICE_ICON_KEYS.map((key) => {
+                            const isActive = (card.icon || "award") === key;
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                onClick={() => whyChange(i, "icon", key)}
+                                className="flex items-center justify-center transition"
+                                title={key}
+                                style={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: 8,
+                                  background: isActive ? "var(--gold-bg-hover)" : "transparent",
+                                  border: isActive
+                                    ? "1px solid var(--gold-2)"
+                                    : "1px solid transparent",
+                                  color: isActive ? "var(--gold-2)" : "var(--text-faint)",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <ServiceIcon name={key} size={18} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs text-[var(--text-faint)]">
+                          العنوان
+                        </label>
+                        <input
+                          value={card.title || ""}
+                          onChange={(e) => whyChange(i, "title", e.target.value)}
+                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs text-[var(--text-faint)]">الوصف</label>
+                        <textarea
+                          value={card.desc || ""}
+                          onChange={(e) => whyChange(i, "desc", e.target.value)}
+                          rows={2}
+                          className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
+                        />
                       </div>
                     </div>
-                    <div>
-                      <label className="mb-1 block text-xs text-[var(--text-faint)]">العنوان</label>
-                      <input
-                        value={card.title || ""}
-                        onChange={(e) => whyChange(i, "title", e.target.value)}
-                        className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs text-[var(--text-faint)]">الوصف</label>
-                      <textarea
-                        value={card.desc || ""}
-                        onChange={(e) => whyChange(i, "desc", e.target.value)}
-                        rows={2}
-                        className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-1)] px-3 py-2 text-sm focus:border-[var(--gold-2)] focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
               <div className="mt-4">
                 <SaveBtn onClick={handleSaveSettings} saving={saving} saved={saved} />

@@ -77,16 +77,20 @@ export async function GET() {
       overrideMap.set(`${c.target_kind}:${c.target_id}`, c.is_enabled);
     }
 
-    const managers = (managersRes.data || []).map((m: any) => ({
-      ...m,
-      tenant_enabled: overrideMap.get(`manager:${m.id}`) ?? false, // افتراضي OFF
-    }));
+    const managers = (managersRes.data || []).map(
+      (m: { id: string; name?: string; manager_id?: string | null }) => ({
+        ...m,
+        tenant_enabled: overrideMap.get(`manager:${m.id}`) ?? false, // افتراضي OFF
+      })
+    );
 
-    const employees = (employeesRes.data || []).map((e: any) => ({
-      ...e,
-      tenant_enabled: overrideMap.get(`employee:${e.id}`) ?? false, // افتراضي OFF
-      manager_name: managers.find((m: any) => m.id === e.manager_id)?.name || null,
-    }));
+    const employees = (employeesRes.data || []).map(
+      (e: { id: string; name?: string; manager_id?: string | null }) => ({
+        ...e,
+        tenant_enabled: overrideMap.get(`employee:${e.id}`) ?? false, // افتراضي OFF
+        manager_name: managers.find((m) => m.id === e.manager_id)?.name || null,
+      })
+    );
 
     // 3) آخر 50 نشاط
     const { data: activity } = await admin
