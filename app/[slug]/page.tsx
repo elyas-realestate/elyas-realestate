@@ -166,8 +166,12 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
   const heroImage = s?.hero_image || "";
   const siteName = s?.site_name || name;
   const siteLogo = s?.site_logo || "";
-  const services = (s?.services || []) as any[];
-  const whyCards = (s?.why_cards || []) as any[];
+  // ── أنواع محلية لمحتوى JSON المخزّن في site_settings ──
+  type Service = { icon?: string; title?: string; desc?: string };
+  type WhyCard = { icon?: string; title?: string; desc?: string };
+  type Stat = { value: string | number; label: string };
+  const services = (s?.services || []) as Service[];
+  const whyCards = (s?.why_cards || []) as WhyCard[];
   const socials: Record<string, string> = {
     x: s?.social_x || "",
     instagram: s?.social_instagram || "",
@@ -180,7 +184,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
   };
 
   // helper: ينظّف القيمة لتفادي var() على الصفحة العامة (لا تملك CSS vars الداكنة)
-  const clean = (v: any, fallback: string) => {
+  const clean = (v: unknown, fallback: string) => {
     if (!v || typeof v !== "string" || v.trim().startsWith("var(")) return fallback;
     return v;
   };
@@ -663,29 +667,32 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                   identity?.fal_license && { value: "✓", label: "مرخّص فال" },
                 ]
                   .filter(Boolean)
-                  .map((stat: any, i, arr) => (
-                    <div
-                      key={i}
-                      style={{
-                        textAlign: "center",
-                        padding: "16px 32px",
-                        borderRight:
-                          i < arr.length - 1
-                            ? `1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`
-                            : "none",
-                      }}
-                    >
+                  .map((stat, i, arr) => {
+                    const s = stat as Stat;
+                    return (
                       <div
-                        className="font-kufi accent"
-                        style={{ fontSize: 28, fontWeight: 900, lineHeight: 1 }}
+                        key={i}
+                        style={{
+                          textAlign: "center",
+                          padding: "16px 32px",
+                          borderRight:
+                            i < arr.length - 1
+                              ? `1px solid color-mix(in srgb, ${clrAccent} 12%, transparent)`
+                              : "none",
+                        }}
                       >
-                        {stat.value}
+                        <div
+                          className="font-kufi accent"
+                          style={{ fontSize: 28, fontWeight: 900, lineHeight: 1 }}
+                        >
+                          {s.value}
+                        </div>
+                        <div style={{ fontSize: 12, color: clrTextSec, marginTop: 5 }}>
+                          {s.label}
+                        </div>
                       </div>
-                      <div style={{ fontSize: 12, color: clrTextSec, marginTop: 5 }}>
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
               </div>
             )}
           </div>
@@ -779,7 +786,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                   gap: 20,
                 }}
               >
-                {whyCards.map((card: any, i: number) => (
+                {whyCards.map((card, i) => (
                   <div key={i} className="card" style={{ padding: "32px 28px" }}>
                     <div
                       style={{
@@ -849,13 +856,12 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                 const filtered =
                   type === "مشروع"
                     ? properties.filter(
-                        (p: any) =>
-                          p.offer_type === "مشروع" || (p.sub_category || "").includes("مشروع")
+                        (p) => p.offer_type === "مشروع" || (p.sub_category || "").includes("مشروع")
                       )
                     : type === "إيجار"
-                      ? properties.filter((p: any) => p.offer_type === "إيجار")
+                      ? properties.filter((p) => p.offer_type === "إيجار")
                       : properties.filter(
-                          (p: any) =>
+                          (p) =>
                             p.offer_type !== "إيجار" &&
                             p.offer_type !== "مشروع" &&
                             !(p.sub_category || "").includes("مشروع")
@@ -896,7 +902,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                         gap: 22,
                       }}
                     >
-                      {filtered.map((p: any) => (
+                      {filtered.map((p) => (
                         <div
                           key={p.id}
                           className="card"
@@ -1041,7 +1047,7 @@ export default async function BrokerPage({ params }: { params: Promise<{ slug: s
                   gap: 18,
                 }}
               >
-                {services.map((svc: any, i: number) => (
+                {services.map((svc, i) => (
                   <div
                     key={i}
                     className="card"
