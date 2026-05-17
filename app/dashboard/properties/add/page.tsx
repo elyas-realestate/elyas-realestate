@@ -202,12 +202,15 @@ export default function AddProperty() {
     }
   }, [form.main_category]);
 
-  function set(field: string, value: any) {
+  function set(field: string, value: unknown) {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
-  function handleChange(e: any) {
-    const { name, value, type, checked } = e.target;
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
+    const target = e.target as HTMLInputElement;
+    const { name, value, type, checked } = target;
     set(name, type === "checkbox" ? checked : value);
   }
 
@@ -303,7 +306,7 @@ export default function AddProperty() {
     }
   }
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
@@ -332,7 +335,7 @@ export default function AddProperty() {
       ...new Set([...uploadedImages, form.main_image, ...extraUrls].filter(Boolean)),
     ];
 
-    const payload: any = {
+    const payload: Record<string, unknown> = {
       title: form.title,
       main_category: form.main_category,
       sub_category: form.sub_category,
@@ -356,7 +359,10 @@ export default function AddProperty() {
     if (allImages.length) payload.images = allImages;
     if (lic) payload.ad_license_number = lic;
 
-    const { error: err } = await supabase.from("properties").insert([payload]);
+    const { error: err } = await supabase
+      .from("properties")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .insert([payload as any]);
 
     if (err) {
       setError("خطأ من قاعدة البيانات: " + err.message);

@@ -76,6 +76,7 @@ export default function EditProperty() {
   const [isDragging, setIsDragging] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [form, setForm] = useState<any>({
     title: "",
     main_category: "",
@@ -143,7 +144,8 @@ export default function EditProperty() {
     setLoading(false);
   }
 
-  function set(field: string, value: any) {
+  function set(field: string, value: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setForm((f: any) => ({ ...f, [field]: value }));
   }
 
@@ -218,12 +220,15 @@ export default function EditProperty() {
     }
   }
 
-  function handleChange(e: any) {
-    const { name, value, type, checked } = e.target;
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
+    const target = e.target as HTMLInputElement;
+    const { name, value, type, checked } = target;
     set(name, type === "checkbox" ? checked : value);
   }
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
 
@@ -235,7 +240,7 @@ export default function EditProperty() {
       ...new Set([...uploadedImages, form.main_image, ...extraUrls].filter(Boolean)),
     ];
 
-    const payload: any = {
+    const payload: Record<string, unknown> = {
       title: form.title,
       main_category: form.main_category,
       sub_category: form.sub_category,
@@ -259,7 +264,11 @@ export default function EditProperty() {
     };
     if (allImages.length) payload.images = allImages;
 
-    await supabase.from("properties").update(payload).eq("id", id);
+    await supabase
+      .from("properties")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(payload as any)
+      .eq("id", id);
 
     setSaving(false);
     setSaved(true);
@@ -432,6 +441,7 @@ export default function EditProperty() {
               lat={form.latitude}
               lng={form.longitude}
               onChange={(lat, lng) =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setForm((f: any) => ({
                   ...f,
                   latitude: lat,
@@ -440,6 +450,7 @@ export default function EditProperty() {
                 }))
               }
               onClear={() =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setForm((f: any) => ({ ...f, latitude: null, longitude: null, location_url: "" }))
               }
             />
