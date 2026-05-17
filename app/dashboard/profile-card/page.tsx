@@ -103,7 +103,7 @@ export default function ProfileCardPage() {
     load();
   }, []);
 
-  async function saveCard(updates: any) {
+  async function saveCard(updates: Record<string, unknown>) {
     const res = await fetch("/api/profile-card", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -138,7 +138,7 @@ export default function ProfileCardPage() {
     } else toast.error(j.error);
   }
 
-  async function persistOrder(reordered: any[]) {
+  async function persistOrder(reordered: { id: string; isAuto?: boolean }[]) {
     await Promise.all(
       reordered.map((l, i) =>
         fetch("/api/profile-card/links", {
@@ -573,7 +573,7 @@ export default function ProfileCardPage() {
         <IdentityEditModal
           card={card}
           onClose={() => setEditingIdentity(false)}
-          onSave={async (updates: any) => {
+          onSave={async (updates: Record<string, unknown>) => {
             await saveCard(updates);
             setEditingIdentity(false);
           }}
@@ -628,7 +628,24 @@ function ElementRow({
   onMoveDown,
   dragHandleProps,
   isDragging,
-}: any) {
+}: {
+  link: {
+    id: string;
+    element_type: string;
+    is_active: boolean;
+    metadata?: Record<string, unknown> | null;
+    isAuto?: boolean;
+  };
+  isFirst: boolean;
+  isLast: boolean;
+  onToggle: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
+  isDragging: boolean;
+}) {
   const el = getElement(link.element_type);
   if (!el) return null;
   const BrandIcon = getBrandIcon(link.element_type);
@@ -717,11 +734,11 @@ function ElementRow({
 
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-bold" style={{ color: "var(--text-strong)" }}>
-          {displayLabel}
+          {String(displayLabel ?? "")}
         </div>
         {subtitle && (
           <div className="truncate text-xs" style={{ color: "var(--text-faint)" }}>
-            {subtitle}
+            {String(subtitle)}
           </div>
         )}
       </div>
@@ -769,7 +786,7 @@ function ElementRow({
           style={{
             position: "absolute",
             top: 2,
-            [link.is_active ? "left" : "right"]: 2 as any,
+            [link.is_active ? "left" : "right"]: 2,
             width: 18,
             height: 18,
             borderRadius: "50%",
@@ -785,7 +802,13 @@ function ElementRow({
 // ─────────────────────────────────────────────────────────────
 // مودال مكتبة العناصر
 // ─────────────────────────────────────────────────────────────
-function ElementLibraryModal({ onClose, onSelect }: any) {
+function ElementLibraryModal({
+  onClose,
+  onSelect,
+}: {
+  onClose: () => void;
+  onSelect: (elementType: string) => void;
+}) {
   // اخفِ الفئات الفارغة (التي كل عناصرها autoFrom من الإعدادات)
   const visibleCategories = CATEGORIES.filter((c) => getCategoryElements(c.key).length > 0);
   const [activeCategory, setActiveCategory] = useState<ElementCategory>(
@@ -847,7 +870,7 @@ function ElementLibraryModal({ onClose, onSelect }: any) {
                   style={{
                     position: "absolute",
                     top: 6,
-                    [/* RTL */ "left" as any]: 6,
+                    left: 6,
                     fontSize: 10,
                     color: "var(--gold-2)",
                   }}
@@ -881,9 +904,23 @@ function ElementLibraryModal({ onClose, onSelect }: any) {
 // ─────────────────────────────────────────────────────────────
 // مودال تعديل/إضافة عنصر
 // ─────────────────────────────────────────────────────────────
-function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
+function ElementEditModal({
+  elementType,
+  link,
+  onClose,
+  onSaved,
+}: {
+  elementType: string;
+  link: {
+    id: string;
+    element_type: string;
+    metadata?: Record<string, unknown> | null;
+  } | null;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
   const el = getElement(elementType);
-  const [meta, setMeta] = useState<Record<string, any>>(link?.metadata || {});
+  const [meta, setMeta] = useState<Record<string, unknown>>(link?.metadata || {});
   const [saving, setSaving] = useState(false);
 
   if (!el) return null;
@@ -891,8 +928,10 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
   async function save() {
     setSaving(true);
     try {
-      const url = el?.buildUrl ? el.buildUrl(meta) : meta.url || "";
-      const label = meta.label || el?.defaultLabel || el?.label || "";
+      const url = el?.buildUrl
+        ? el.buildUrl(meta as Record<string, string>)
+        : (meta.url as string) || "";
+      const label = (meta.label as string) || el?.defaultLabel || el?.label || "";
 
       if (link) {
         // تحديث
@@ -966,7 +1005,7 @@ function ElementEditModal({ elementType, link, onClose, onSaved }: any) {
           <DynamicField
             key={field.key}
             field={field}
-            value={meta[field.key] ?? ""}
+            value={(meta[field.key] as string | boolean) ?? ""}
             onChange={(v) => setMeta({ ...meta, [field.key]: v })}
           />
         ))}
@@ -1201,8 +1240,8 @@ function DynamicField({
   onChange,
 }: {
   field: ElementField;
-  value: any;
-  onChange: (v: any) => void;
+  value: string | boolean;
+  onChange: (v: string | boolean) => void;
 }) {
   const inputClass = "w-full rounded-lg px-3 py-2.5 text-sm";
   const inputStyle = {
@@ -1235,7 +1274,7 @@ function DynamicField({
           {field.label} {field.required && <span style={{ color: "var(--danger)" }}>*</span>}
         </label>
         <textarea
-          value={value}
+          value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
           rows={3}
@@ -1279,7 +1318,7 @@ function DynamicField({
                   ? "url"
                   : "text"
           }
-          value={value}
+          value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
           dir={
@@ -1301,7 +1340,15 @@ function DynamicField({
 // ─────────────────────────────────────────────────────────────
 // تعديل الهوية
 // ─────────────────────────────────────────────────────────────
-function IdentityEditModal({ card, onClose, onSave }: any) {
+function IdentityEditModal({
+  card,
+  onClose,
+  onSave,
+}: {
+  card: { display_name?: string | null; bio?: string | null; avatar_url?: string | null };
+  onClose: () => void;
+  onSave: (updates: Record<string, unknown>) => void | Promise<void>;
+}) {
   const [name, setName] = useState(card.display_name || "");
   const [bio, setBio] = useState(card.bio || "");
   const [avatar, setAvatar] = useState(card.avatar_url || "");
@@ -1332,7 +1379,7 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
             placeholder: "اتركه فارغاً لاستخدام اسمك من الإعدادات",
           }}
           value={name}
-          onChange={setName}
+          onChange={(v) => setName(typeof v === "string" ? v : "")}
         />
         <DynamicField
           field={{
@@ -1343,7 +1390,7 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
             helpText: "حد أقصى 140 حرف، يظهر تحت اسمك",
           }}
           value={bio}
-          onChange={setBio}
+          onChange={(v) => setBio(typeof v === "string" ? v : "")}
         />
         <DynamicField
           field={{
@@ -1354,7 +1401,7 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
             helpText: "إذا تركته فارغاً، نستخدم صورتك في الإعدادات أو الحرف الأول من اسمك",
           }}
           value={avatar}
-          onChange={setAvatar}
+          onChange={(v) => setAvatar(typeof v === "string" ? v : "")}
         />
       </div>
       <button
@@ -1381,7 +1428,15 @@ function IdentityEditModal({ card, onClose, onSave }: any) {
 // ─────────────────────────────────────────────────────────────
 // إطار المودال المشترك
 // ─────────────────────────────────────────────────────────────
-function ModalShell({ children, onClose, title }: any) {
+function ModalShell({
+  children,
+  onClose,
+  title,
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+  title: string;
+}) {
   return (
     <div
       onClick={onClose}
