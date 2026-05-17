@@ -20,7 +20,8 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
 
   const siteName = s?.site_name || "إلياس الدخيل";
   const heroBadge = s?.hero_badge || "وسيط عقاري مرخّص";
-  const navbarLinks: any[] = s?.navbar_links || [];
+  type NavLink = { type?: string; label?: string; href?: string };
+  const navbarLinks: NavLink[] = (s?.navbar_links || []) as NavLink[];
   const loginText = s?.login_link_text || "دخول الفريق";
   const whatsapp = s?.whatsapp || "";
   const phone = s?.phone || "";
@@ -124,7 +125,7 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
 
         {/* Desktop links */}
         <div className="prop-nav-desktop">
-          {navbarLinks.map((link: any, i: number) =>
+          {navbarLinks.map((link, i) =>
             link.type === "cta" ? (
               <a
                 key={i}
@@ -139,7 +140,7 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
                 {link.label}
               </a>
             ) : (
-              <Link key={i} href={link.href} className="prop-nav-link">
+              <Link key={i} href={link.href || "#"} className="prop-nav-link">
                 {link.label}
               </Link>
             )
@@ -175,7 +176,7 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
 
       {/* Mobile drawer */}
       <div className={"prop-drawer" + (menuOpen ? " open" : "")}>
-        {navbarLinks.map((link: any, i: number) =>
+        {navbarLinks.map((link, i) =>
           link.type === "anchor" ? (
             <a key={i} href={"/" + link.href} onClick={() => setMenuOpen(false)}>
               {link.label}
@@ -183,7 +184,7 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
           ) : (
             <Link
               key={i}
-              href={link.href}
+              href={link.href || "#"}
               onClick={() => setMenuOpen(false)}
               style={{
                 padding: "14px 0",

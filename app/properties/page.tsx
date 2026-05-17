@@ -388,7 +388,7 @@ export default function PublicProperties() {
   );
 }
 
-function PropertyCard({ p }: { p: any }) {
+function PropertyCard({ p }: { p: import("@/types/database").Property }) {
   const img = p.images?.[0] || p.main_image || "";
   const price = p.price ? Number(p.price).toLocaleString("ar-SA") : null;
 

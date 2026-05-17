@@ -53,11 +53,29 @@ export async function GET(req: NextRequest) {
   const now = new Date().toUTCString();
 
   const items = (props || [])
-    .map((p: any) => {
-      const link = `${origin}/property/${p.code || p.id}`;
-      const pubDate = new Date(p.updated_at || p.created_at).toUTCString();
-      const imgUrl = p.main_image || p.images?.[0];
-      return `
+    .map(
+      (p: {
+        id: string;
+        code?: string | null;
+        title?: string | null;
+        description?: string | null;
+        city?: string | null;
+        district?: string | null;
+        price?: number | null;
+        land_area?: number | null;
+        rooms?: number | null;
+        main_category?: string | null;
+        sub_category?: string | null;
+        offer_type?: string | null;
+        main_image?: string | null;
+        images?: string[] | null;
+        updated_at?: string | null;
+        created_at?: string | null;
+      }) => {
+        const link = `${origin}/property/${p.code || p.id}`;
+        const pubDate = new Date(p.updated_at || p.created_at || 0).toUTCString();
+        const imgUrl = p.main_image || p.images?.[0];
+        return `
     <item>
       <title>${xmlEsc(p.title)}</title>
       <link>${xmlEsc(link)}</link>
@@ -74,7 +92,8 @@ export async function GET(req: NextRequest) {
       ${p.offer_type ? `<listing_type>${xmlEsc(p.offer_type)}</listing_type>` : ""}
       ${imgUrl ? `<enclosure url="${xmlEsc(imgUrl)}" type="image/jpeg"/>` : ""}
     </item>`;
-    })
+      }
+    )
     .join("\n");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

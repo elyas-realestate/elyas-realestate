@@ -45,7 +45,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     // أنشئ الصفقة
     const dealTitle =
       `${pr.contact_name || "طلب"} — ${pr.request_type || ""} ${pr.main_category || ""}${pr.district ? " في " + pr.district : ""}`.trim();
-    const dealPayload: any = {
+    const dealPayload: {
+      title: string;
+      deal_type: string | null;
+      current_stage: string;
+      target_value: number | null;
+      priority: string;
+      summary: string;
+      expected_close_date: string | null;
+    } = {
       title: dealTitle,
       deal_type: pr.request_type || null,
       current_stage: body.stage || "استفسار",

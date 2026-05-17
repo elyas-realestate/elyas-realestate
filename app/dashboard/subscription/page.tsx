@@ -672,7 +672,7 @@ export default function SubscriptionPage() {
                     {f.label}
                   </label>
                   <input
-                    value={(payForm as any)[f.key]}
+                    value={(payForm as Record<string, string>)[f.key]}
                     onChange={(e) => setPayForm((p) => ({ ...p, [f.key]: e.target.value }))}
                     placeholder={f.placeholder}
                     dir={f.dir}
@@ -704,7 +704,7 @@ export default function SubscriptionPage() {
                       {f.label}
                     </label>
                     <input
-                      value={(payForm as any)[f.key]}
+                      value={(payForm as Record<string, string>)[f.key]}
                       onChange={(e) => setPayForm((p) => ({ ...p, [f.key]: e.target.value }))}
                       placeholder={f.placeholder}
                       dir="ltr"

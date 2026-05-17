@@ -154,7 +154,7 @@ export default function ImportPage() {
       return;
     }
 
-    const records: any[] = [];
+    const records: Record<string, unknown>[] = [];
     let skipped = 0;
     rawRows.forEach((r) => {
       const rec = buildRecord(r);
@@ -178,7 +178,11 @@ export default function ImportPage() {
     const errors: string[] = [];
     for (let i = 0; i < records.length; i += BATCH) {
       const chunk = records.slice(i, i + BATCH);
-      const { error, data } = await supabase.from(entity).insert(chunk).select("id");
+      const { error, data } = await supabase
+        .from(entity)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .insert(chunk as any)
+        .select("id");
       if (error) {
         errors.push(`دفعة ${i}-${i + chunk.length}: ${error.message}`);
       } else {

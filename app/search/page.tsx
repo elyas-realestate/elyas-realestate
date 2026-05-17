@@ -42,9 +42,15 @@ const PRICE_RANGES = [
 ];
 
 // ── Property Card ─────────────────────────────────────────────────────────────
-function PropertyCard({ p, accent = "var(--gold-2)" }: { p: any; accent?: string }) {
+function PropertyCard({
+  p,
+  accent = "var(--gold-2)",
+}: {
+  p: import("@/types/database").Property;
+  accent?: string;
+}) {
   const img = p.images?.[0] || p.main_image || null;
-  const price = fmtPrice(p.price);
+  const price = fmtPrice(p.price ?? 0);
 
   return (
     <div

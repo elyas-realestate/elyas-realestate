@@ -202,7 +202,7 @@ export default function PropertyDetail() {
       value: property.bathrooms,
     },
     property.floors && { icon: <Layers size={18} />, label: "الأدوار", value: property.floors },
-  ].filter(Boolean) as any[];
+  ].filter(Boolean) as Array<{ icon: React.ReactNode; label: string; value: string | number }>;
 
   // ── JSON-LD لتحسين ظهور العقار في نتائج جوجل ──
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waseet-pro.com";
@@ -563,7 +563,7 @@ export default function PropertyDetail() {
                   marginBottom: 28,
                 }}
               >
-                {specs.map((spec: any, i: number) => (
+                {specs.map((spec, i) => (
                   <div
                     key={i}
                     style={{

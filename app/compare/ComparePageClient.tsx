@@ -503,7 +503,13 @@ export default function ComparePageClient() {
 // ─────────────────────────────────────────────────────────────
 // عمود عقار واحد (كرت في أعلى الصفحة)
 // ─────────────────────────────────────────────────────────────
-function PropertyColumn({ property, settings }: { property: Property; settings: any }) {
+function PropertyColumn({
+  property,
+  settings,
+}: {
+  property: Property;
+  settings: { site_name?: string | null; phone?: string | null; whatsapp?: string | null } | null;
+}) {
   const mainImage = property.main_image || property.images?.[0] || null;
   return (
     <div

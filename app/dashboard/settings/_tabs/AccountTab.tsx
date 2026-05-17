@@ -15,7 +15,7 @@ interface Licenses {
 }
 
 interface AccountTabProps {
-  profile: { name: string; [key: string]: any };
+  profile: { name: string; [key: string]: unknown };
   slug: string;
   slugInput: string;
   slugStatus: SlugStatus;
