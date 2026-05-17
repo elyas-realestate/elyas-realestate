@@ -27,7 +27,7 @@ interface FAQItem {
 interface HelpSection {
   id: string;
   title: string;
-  icon: any;
+  icon: import("lucide-react").LucideIcon;
   description: string;
   link?: string;
   items: FAQItem[];
@@ -385,7 +385,17 @@ export default function HelpPage() {
   );
 }
 
-function QuickLink({ href, icon, label, color }: any) {
+function QuickLink({
+  href,
+  icon,
+  label,
+  color,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  color: string;
+}) {
   return (
     <Link
       href={href}

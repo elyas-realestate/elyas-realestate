@@ -51,7 +51,10 @@ const PLATFORMS = [
 ];
 
 // ── Status config ─────────────────────────────────────────────────────────────
-const STATUS_CFG: Record<string, { color: string; bg: string; icon: any }> = {
+const STATUS_CFG: Record<
+  string,
+  { color: string; bg: string; icon: import("lucide-react").LucideIcon }
+> = {
   مسودة: { color: "var(--text-soft)", bg: "rgba(154,154,160,0.08)", icon: Clock },
   نشطة: { color: "var(--success)", bg: "rgba(74,222,128,0.1)", icon: Play },
   منتهية: { color: "var(--gold-2)", bg: "var(--gold-bg)", icon: CheckCircle2 },
@@ -124,7 +127,19 @@ function CampaignsTab() {
     setEditId(null);
   }
 
-  function startEdit(c: any) {
+  function startEdit(c: {
+    id: string;
+    title: string | null;
+    property_id: string | null;
+    platforms: string[] | null;
+    type: string | null;
+    budget: number | null;
+    start_date: string | null;
+    end_date: string | null;
+    status: string | null;
+    leads_count: number | null;
+    notes: string | null;
+  }) {
     setForm({
       title: c.title || "",
       property_id: c.property_id || "",
@@ -680,7 +695,7 @@ function CampaignsTab() {
 // ══════════════════════════════════════════════════════════════════════════════
 // COMPARISON TAB
 // ══════════════════════════════════════════════════════════════════════════════
-const COMPARE_FIELDS: { key: string; label: string; format?: (v: any) => string }[] = [
+const COMPARE_FIELDS: { key: string; label: string; format?: (v: unknown) => unknown }[] = [
   { key: "offer_type", label: "نوع العرض" },
   { key: "main_category", label: "التصنيف" },
   { key: "sub_category", label: "النوع" },

@@ -788,31 +788,39 @@ export default function DashboardPage() {
 
           <div className="flex-1 space-y-3">
             {subs && subs.length > 0 ? (
-              subs.map((sub: any) => (
-                <div
-                  key={sub.id}
-                  className="flex items-center justify-between rounded-xl border border-[#27272F] bg-[var(--bg-page)] p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--gold-bg)] text-[var(--gold-2)]">
-                      <CreditCard size={18} />
+              subs.map(
+                (sub: {
+                  id: string;
+                  service_name?: string;
+                  platform_name?: string;
+                  end_date?: string | null;
+                  cost?: number | null;
+                }) => (
+                  <div
+                    key={sub.id}
+                    className="flex items-center justify-between rounded-xl border border-[#27272F] bg-[var(--bg-page)] p-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--gold-bg)] text-[var(--gold-2)]">
+                        <CreditCard size={18} />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-[var(--text-strong)]">
+                          {sub.platform_name || "منصة إعلانية"}
+                        </h4>
+                        <p className="text-xs text-[var(--text-soft)]">
+                          انتهاء: {new Date(sub.end_date || 0).toLocaleDateString("ar-SA")}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-[var(--text-strong)]">
-                        {sub.platform_name || "منصة إعلانية"}
-                      </h4>
-                      <p className="text-xs text-[var(--text-soft)]">
-                        انتهاء: {new Date(sub.end_date).toLocaleDateString("ar-SA")}
-                      </p>
+                    <div className="text-left">
+                      <span className="rounded-lg bg-[rgba(248,113,113,0.1)] px-2 py-1 text-xs font-bold text-[var(--danger)]">
+                        يجب التجديد
+                      </span>
                     </div>
                   </div>
-                  <div className="text-left">
-                    <span className="rounded-lg bg-[rgba(248,113,113,0.1)] px-2 py-1 text-xs font-bold text-[var(--danger)]">
-                      يجب التجديد
-                    </span>
-                  </div>
-                </div>
-              ))
+                )
+              )
             ) : (
               <div className="flex flex-1 flex-col items-center justify-center py-6 text-[#6A6A72]">
                 <CheckCircle size={32} className="mb-2 opacity-50" />

@@ -68,8 +68,8 @@ export default function GoalsPage() {
       supabase.from("clients").select("created_at"),
     ]);
     const map: Record<string, Goal> = {};
-    (goalsData || []).forEach((g: any) => {
-      map[g.month] = g;
+    (goalsData || []).forEach((g) => {
+      if (g.month) map[g.month] = g as Goal;
     });
     setGoals(map);
     setDeals(dealsData || []);
@@ -115,7 +115,7 @@ export default function GoalsPage() {
       target_clients: Number(form.target_clients) || 0,
     };
     const existing = goals[monthKey];
-    let error: any;
+    let error: { message?: string; code?: string } | null = null;
     if (existing?.id) {
       ({ error } = await supabase.from("monthly_goals").update(payload).eq("id", existing.id));
     } else {

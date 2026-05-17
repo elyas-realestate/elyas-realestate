@@ -19,7 +19,7 @@ export default function BrandColorProvider() {
   useEffect(() => {
     let mounted = true;
 
-    function isCleanColor(v: any): v is string {
+    function isCleanColor(v: unknown): v is string {
       return typeof v === "string" && v.trim().length > 0 && !v.trim().startsWith("var(");
     }
 
@@ -46,7 +46,7 @@ export default function BrandColorProvider() {
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        let row: any = null;
+        let row: { color_accent?: string | null; color_accent_dark?: string | null } | null = null;
 
         if (user) {
           const { data: ownTenant } = await supabase
@@ -75,7 +75,7 @@ export default function BrandColorProvider() {
         }
 
         if (!mounted || !row) return;
-        applyOverrides(row.color_accent, row.color_accent_dark);
+        applyOverrides(row.color_accent || undefined, row.color_accent_dark || undefined);
 
         // كاش محلي للـ first-paint بعد reload
         try {

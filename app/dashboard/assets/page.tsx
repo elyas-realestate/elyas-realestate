@@ -42,7 +42,10 @@ type Technician = {
 };
 type Property = { id: string; title: string };
 
-const STATUS_CFG: Record<Asset["status"], { label: string; color: string; icon: any }> = {
+const STATUS_CFG: Record<
+  Asset["status"],
+  { label: string; color: string; icon: import("lucide-react").LucideIcon }
+> = {
   operational: {
     label: "يعمل",
     color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
@@ -501,7 +504,9 @@ export default function AssetsPage() {
                   <label className="mb-1 block text-sm">الحالة</label>
                   <select
                     value={form.status}
-                    onChange={(e) => setForm({ ...form, status: e.target.value as any })}
+                    onChange={(e) =>
+                      setForm({ ...form, status: e.target.value as Asset["status"] })
+                    }
                     className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2"
                   >
                     {Object.entries(STATUS_CFG).map(([k, v]) => (

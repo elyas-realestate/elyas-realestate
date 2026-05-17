@@ -739,7 +739,19 @@ function KanbanCard({
   onDragEnd,
   isDragging,
 }: {
-  deal: any;
+  deal: {
+    id: string;
+    title: string | null;
+    current_stage: string | null;
+    expected_commission: number | null;
+    target_value: number | null;
+    expected_close_date?: string | null;
+    deal_type?: string | null;
+    priority?: string | null;
+    next_action?: string | null;
+    client_id?: string | null;
+    property_id?: string | null;
+  };
   stages: typeof STAGES;
   onMove: (id: string, stage: string) => void;
   onDragStart: () => void;

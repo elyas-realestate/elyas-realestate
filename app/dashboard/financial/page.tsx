@@ -1115,7 +1115,7 @@ function VATTab({ deals }: { deals: Deal[] }) {
           ].map((m) => (
             <button
               key={m.id}
-              onClick={() => setMode(m.id as any)}
+              onClick={() => setMode(m.id as "excl" | "incl")}
               className="rounded-xl px-4 py-2 text-sm font-semibold transition"
               style={{
                 background: mode === m.id ? "var(--gold-bg)" : "var(--bg-surface-2)",

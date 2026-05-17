@@ -17,7 +17,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-const STATUS_CFG: Record<string, { color: string; bg: string; icon: any }> = {
+const STATUS_CFG: Record<
+  string,
+  { color: string; bg: string; icon: import("lucide-react").LucideIcon }
+> = {
   "غير مدفوعة": { color: "var(--danger)", bg: "rgba(248,113,113,0.1)", icon: AlertCircle },
   "مدفوعة جزئياً": { color: "var(--warning)", bg: "rgba(250,204,21,0.1)", icon: Clock },
   مدفوعة: { color: "var(--success)", bg: "rgba(74,222,128,0.1)", icon: CheckCircle },
@@ -69,7 +72,16 @@ export default function InvoicesPage() {
     setLoading(false);
   }
 
-  async function sendWhatsappReminder(inv: any) {
+  async function sendWhatsappReminder(inv: {
+    id: string;
+    client_id: string | null;
+    client_name?: string | null;
+    title?: string | null;
+    invoice_number: string | null;
+    amount: number;
+    vat_amount: number | null;
+    due_date: string | null;
+  }) {
     // حاول تجيب رقم العميل
     let phone: string | null = null;
     if (inv.client_id) {

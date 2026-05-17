@@ -24,13 +24,21 @@ import {
   parsePrice,
   parseIntSafe,
   type CsvRow,
+  type FieldAlias,
 } from "@/lib/csv";
+import type { LucideIcon } from "lucide-react";
 
 type EntityType = "properties" | "clients";
 
 const ENTITY_META: Record<
   EntityType,
-  { label: string; icon: any; color: string; aliases: any[]; requiredFields: string[] }
+  {
+    label: string;
+    icon: LucideIcon;
+    color: string;
+    aliases: FieldAlias[];
+    requiredFields: string[];
+  }
 > = {
   properties: {
     label: "العقارات",

@@ -675,7 +675,7 @@ export default function CEODashboardPage() {
                         paddingInlineStart: 18,
                       }}
                     >
-                      {r.concerns.slice(0, 3).map((c: any, i: number) => (
+                      {r.concerns.slice(0, 3).map((c: unknown, i: number) => (
                         <li key={i}>
                           {typeof c === "string" ? c : JSON.stringify(c).slice(0, 120)}
                         </li>

@@ -76,7 +76,18 @@ export default function DocumentsPage() {
     setEditingId("");
   }
 
-  function openEdit(doc: any) {
+  function openEdit(doc: {
+    title: string | null;
+    doc_type: string | null;
+    status: string | null;
+    related_party: string | null;
+    doc_number: string | null;
+    issue_date: string | null;
+    expiry_date: string | null;
+    notes: string | null;
+    doc_url: string | null;
+    id: string;
+  }) {
     setForm({
       title: doc.title || "",
       doc_type: doc.doc_type || "عقد بيع",
@@ -473,7 +484,7 @@ export default function DocumentsPage() {
                   </label>
                   <input
                     type={f.type}
-                    value={(form as any)[f.key]}
+                    value={(form as Record<string, string>)[f.key]}
                     onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
                     placeholder={f.placeholder}
                     className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none"

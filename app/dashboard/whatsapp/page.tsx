@@ -293,41 +293,52 @@ export default function WhatsAppPage() {
 
               {results.leads && results.leads.length > 0 ? (
                 <div className="space-y-3">
-                  {results.leads.map((lead: any, i: number) => (
-                    <div
-                      key={i}
-                      className="flex items-center justify-between rounded-xl border border-white/5 bg-[var(--bg-surface-2)] p-4"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-10 w-10 items-center justify-center rounded-full font-bold"
-                          style={{ background: "var(--whatsapp)/20", color: "var(--whatsapp)" }}
-                        >
-                          {lead.name ? lead.name.charAt(0) : "؟"}
+                  {results.leads.map(
+                    (
+                      lead: {
+                        name?: string;
+                        phone?: string;
+                        category?: string;
+                        budget?: string | number;
+                        notes?: string;
+                      },
+                      i: number
+                    ) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between rounded-xl border border-white/5 bg-[var(--bg-surface-2)] p-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="flex h-10 w-10 items-center justify-center rounded-full font-bold"
+                            style={{ background: "var(--whatsapp)/20", color: "var(--whatsapp)" }}
+                          >
+                            {lead.name ? lead.name.charAt(0) : "؟"}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-white">
+                              {lead.name || "عميل محتمل"}
+                            </p>
+                            <p className="mt-1 text-xs text-[var(--text-soft)]" dir="ltr">
+                              {lead.phone || "بدون رقم"}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-bold text-white">
-                            {lead.name || "عميل محتمل"}
-                          </p>
-                          <p className="mt-1 text-xs text-[var(--text-soft)]" dir="ltr">
-                            {lead.phone || "بدون رقم"}
-                          </p>
+                        <div className="text-left">
+                          {lead.category && (
+                            <span className="rounded bg-[var(--purple-ai)]/10 px-2 py-1 text-xs text-[var(--purple-ai)]">
+                              {lead.category}
+                            </span>
+                          )}
+                          {lead.budget && (
+                            <p className="mt-2 text-xs font-bold text-[var(--gold-2)]">
+                              {lead.budget}
+                            </p>
+                          )}
                         </div>
                       </div>
-                      <div className="text-left">
-                        {lead.category && (
-                          <span className="rounded bg-[var(--purple-ai)]/10 px-2 py-1 text-xs text-[var(--purple-ai)]">
-                            {lead.category}
-                          </span>
-                        )}
-                        {lead.budget && (
-                          <p className="mt-2 text-xs font-bold text-[var(--gold-2)]">
-                            {lead.budget}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               ) : (
                 <div className="rounded-xl bg-[var(--bg-surface-2)] p-6 text-center">

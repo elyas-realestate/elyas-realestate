@@ -17,7 +17,10 @@ import {
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
 
-const STATUS_CFG: Record<string, { color: string; bg: string; icon: any }> = {
+const STATUS_CFG: Record<
+  string,
+  { color: string; bg: string; icon: import("lucide-react").LucideIcon }
+> = {
   مسودة: { color: "var(--text-soft)", bg: "rgba(90,90,98,0.1)", icon: Edit3 },
   مُرسل: { color: "var(--info)", bg: "rgba(96,165,250,0.1)", icon: Send },
   مقبول: { color: "var(--success)", bg: "rgba(74,222,128,0.1)", icon: CheckCircle },
