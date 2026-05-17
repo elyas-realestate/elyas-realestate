@@ -2,6 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import ProfileCardClient from "./ProfileCardClient";
 import { buildAutoElements } from "@/lib/profile-elements";
+import type { Database } from "@/types/database";
+
+type SiteSettingsRow = Database["public"]["Tables"]["site_settings"]["Row"];
+type BrokerIdentityRow = Database["public"]["Tables"]["broker_identity"]["Row"];
 
 export const revalidate = 60;
 
@@ -67,7 +71,7 @@ interface Identity {
 }
 
 async function getCardData(slug: string) {
-  const admin = createClient(
+  const admin = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
@@ -107,8 +111,8 @@ async function getCardData(slug: string) {
   ]);
 
   // دمج الحقول من المصدرين — site_settings له الأولوية للحقول التواصلية
-  const s = settingsRes.data || ({} as any);
-  const bi = identityRes.data || ({} as any);
+  const s = (settingsRes.data || {}) as Partial<SiteSettingsRow>;
+  const bi = (identityRes.data || {}) as Partial<BrokerIdentityRow>;
 
   const identity: Identity = {
     broker_name: bi.broker_name || s.site_name || null,
@@ -136,7 +140,7 @@ async function getCardData(slug: string) {
   const autoElements = buildAutoElements(s, bi);
 
   // دمج auto + manual في قائمة موحَّدة (auto أولاً، ثم manual بترتيبها)
-  const manualLinks = (linksRes.data || []).map((l: any) => ({
+  const manualLinks = (linksRes.data || []).map((l) => ({
     ...l,
     isAuto: false,
   }));
@@ -158,12 +162,13 @@ async function getCardData(slug: string) {
   }));
 
   const allLinks = [...autoLinks, ...manualLinks].sort(
-    (a: any, b: any) => (a.display_order || 0) - (b.display_order || 0)
+    (a, b) => (a.display_order || 0) - (b.display_order || 0)
   );
 
   return {
     card: cardRes.data as ProfileCard | null,
-    links: allLinks,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    links: allLinks as any,
     identity,
     slug: tenant.slug,
     testimonials: testimonialsRes.data || [],

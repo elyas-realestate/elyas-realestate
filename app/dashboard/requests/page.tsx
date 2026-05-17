@@ -1,6 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
+import type { PropertyRequest, Property } from "@/types/database";
 import {
   FileText,
   Plus,
@@ -45,8 +46,10 @@ const urgencyColors: Record<string, string> = {
 };
 
 export default function RequestsPage() {
-  const [requests, setRequests] = useState<any[]>([]);
+  const [requests, setRequests] = useState<PropertyRequest[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [clients, setClients] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -93,7 +96,10 @@ export default function RequestsPage() {
   }
 
   // ── خوارزمية التطابق الذكي ──
-  function matchProperties(req: any): Array<{ property: any; score: number; reasons: string[] }> {
+  function matchProperties(
+    req: PropertyRequest
+  ): // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Array<{ property: any; score: number; reasons: string[] }> {
     return properties
       .map((prop) => {
         let score = 0;
@@ -171,7 +177,7 @@ export default function RequestsPage() {
     setEditingId("");
   }
 
-  function openEdit(req: any) {
+  function openEdit(req: PropertyRequest) {
     setForm({
       client_file_id: req.client_file_id || "",
       request_type: req.request_type || "",
@@ -192,7 +198,7 @@ export default function RequestsPage() {
   }
 
   async function handleSave() {
-    const data: any = { ...form };
+    const data: Record<string, unknown> = { ...form };
     if (data.area_min) data.area_min = Number(data.area_min);
     else data.area_min = null;
     if (data.area_max) data.area_max = Number(data.area_max);
@@ -233,7 +239,7 @@ export default function RequestsPage() {
     if (filterType !== "all" && r.request_type !== filterType) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      const clientName = getClientName(r.client_file_id).toLowerCase();
+      const clientName = getClientName(r.client_file_id || "").toLowerCase();
       return (
         clientName.includes(q) ||
         (r.district || "").toLowerCase().includes(q) ||
@@ -383,7 +389,7 @@ export default function RequestsPage() {
                       {req.code || "—"}
                     </td>
                     <td className="px-4 py-3 text-sm font-medium">
-                      {getClientName(req.client_file_id)}
+                      {getClientName(req.client_file_id || "")}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-300">{req.request_type || "—"}</td>
                     <td className="px-4 py-3 text-sm text-[var(--text-soft)]">
@@ -409,7 +415,7 @@ export default function RequestsPage() {
                         onChange={(e) => updateStatus(req.id, e.target.value)}
                         className={
                           "rounded-lg border-0 px-2 py-1 text-xs focus:outline-none " +
-                          (statusColors[req.status] ||
+                          (statusColors[req.status || "جديد"] ||
                             "bg-[var(--bg-surface-2)] text-[var(--text-soft)]")
                         }
                       >
@@ -423,7 +429,7 @@ export default function RequestsPage() {
                     <td
                       className={
                         "px-4 py-3 text-xs font-medium " +
-                        (urgencyColors[req.urgency_level] || "text-[var(--text-soft)]")
+                        (urgencyColors[req.urgency_level || "عادي"] || "text-[var(--text-soft)]")
                       }
                     >
                       {req.urgency_level || "عادي"}

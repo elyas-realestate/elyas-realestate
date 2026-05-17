@@ -292,7 +292,17 @@ function btnStyle(): React.CSSProperties {
   };
 }
 
-function Stat({ icon, label, value, color }: any) {
+function Stat({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+  color: string;
+}) {
   return (
     <div
       className="rounded-lg p-4"
@@ -308,7 +318,21 @@ function Stat({ icon, label, value, color }: any) {
   );
 }
 
-function Section({ title, icon, count, href, empty, children }: any) {
+function Section({
+  title,
+  icon,
+  count,
+  href,
+  empty,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  count: number;
+  href: string;
+  empty: string;
+  children: React.ReactNode;
+}) {
   const items = Array.isArray(children) ? children : [children];
   const hasItems = items.length > 0 && items[0];
   return (
@@ -354,7 +378,19 @@ function Section({ title, icon, count, href, empty, children }: any) {
   );
 }
 
-function RowItem({ title, subtitle, accent, href, icon }: any) {
+function RowItem({
+  title,
+  subtitle,
+  accent,
+  href,
+  icon,
+}: {
+  title: string;
+  subtitle: string;
+  accent: string;
+  href: string;
+  icon: React.ReactNode;
+}) {
   return (
     <Link
       href={href}
