@@ -8,7 +8,9 @@ import { SOCIAL_PLATFORMS } from "../_constants";
 import { SaveBtn } from "../_components/SaveBtn";
 
 interface ContactTabProps {
-  s: any; // settings alias
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  s: any; // settings alias — shape varies across hundreds of optional columns
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sc: (field: string, value: any) => void;
   saving: boolean;
   saved: boolean;

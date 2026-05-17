@@ -250,7 +250,9 @@ export default function Settings() {
   }
 
   // site_settings shorthand
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function sc(field: string, value: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSettings((p: any) => {
       const next = { ...p, [field]: value };
       // Live-apply accent overrides عند تعديل اللون يدوياً
@@ -505,11 +507,13 @@ export default function Settings() {
   }
 
   function applyTheme(theme: QuickTheme) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSettings((p: any) => ({ ...p, ...theme.colors }));
     applyAccentLive(theme.colors.color_accent, theme.colors.color_accent_dark);
     toast.success(`تم تطبيق ثيم ${theme.name} — اضغط حفظ لتأكيد التغيير`);
   }
   function resetDesign() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSettings((p: any) => ({ ...p, ...COLOR_DEFAULTS }));
   }
   function parsePx(val: string | undefined, def: number): number {

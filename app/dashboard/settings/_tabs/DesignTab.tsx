@@ -25,7 +25,9 @@ import {
 import { SaveBtn } from "../_components/SaveBtn";
 
 interface DesignTabProps {
-  s: any; // settings alias
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  s: any; // settings alias — shape varies across hundreds of optional columns
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sc: (field: string, value: any) => void;
   designTab: "colors" | "fonts";
   setDesignTab: (tab: "colors" | "fonts") => void;
@@ -464,7 +466,8 @@ export function DesignTab({
                   {!collapsed[group.id] && (
                     <div className="space-y-2 px-4 pb-4">
                       {group.fields.map((field) => {
-                        const val = s[field.key] || (COLOR_DEFAULTS as any)[field.key];
+                        const val =
+                          s[field.key] || (COLOR_DEFAULTS as Record<string, string>)[field.key];
                         return (
                           <div
                             key={field.key}
@@ -650,7 +653,9 @@ export function DesignTab({
                     </div>
                     <div className="flex gap-2">
                       {field.presets.map((p) => {
-                        const active = (s[field.key] || (COLOR_DEFAULTS as any)[field.key]) === p.v;
+                        const active =
+                          (s[field.key] ||
+                            (COLOR_DEFAULTS as Record<string, string>)[field.key]) === p.v;
                         return (
                           <button
                             key={p.v}

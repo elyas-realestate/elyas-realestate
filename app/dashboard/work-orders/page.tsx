@@ -47,7 +47,10 @@ type Technician = { id: string; name: string; specialty: string | null };
 type Property = { id: string; title: string };
 type Asset = { id: string; name: string };
 
-const STATUS_CFG: Record<WorkOrder["status"], { label: string; color: string; icon: any }> = {
+const STATUS_CFG: Record<
+  WorkOrder["status"],
+  { label: string; color: string; icon: import("lucide-react").LucideIcon }
+> = {
   open: {
     label: "مفتوح",
     color: "text-blue-400 bg-blue-500/10 border-blue-500/30",
@@ -225,7 +228,7 @@ export default function WorkOrdersPage() {
   }
 
   async function updateStatus(id: string, status: WorkOrder["status"], resolution?: string) {
-    const patch: any = { status };
+    const patch: { status: WorkOrder["status"]; resolution?: string } = { status };
     if (resolution) patch.resolution = resolution;
     const { error } = await supabase.from("work_orders").update(patch).eq("id", id);
     if (error) toast.error("فشل التحديث: " + error.message);
@@ -493,7 +496,9 @@ export default function WorkOrdersPage() {
                   <label className="mb-1 block text-sm text-[var(--text-soft)]">الأولوية</label>
                   <select
                     value={form.priority}
-                    onChange={(e) => setForm({ ...form, priority: e.target.value as any })}
+                    onChange={(e) =>
+                      setForm({ ...form, priority: e.target.value as WorkOrder["priority"] })
+                    }
                     className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2"
                   >
                     <option value="low">منخفض</option>
@@ -509,7 +514,9 @@ export default function WorkOrdersPage() {
                   <label className="mb-1 block text-sm text-[var(--text-soft)]">النوع</label>
                   <select
                     value={form.kind}
-                    onChange={(e) => setForm({ ...form, kind: e.target.value as any })}
+                    onChange={(e) =>
+                      setForm({ ...form, kind: e.target.value as WorkOrder["kind"] })
+                    }
                     className="w-full rounded-lg border border-[var(--gold-bg-hover)] bg-[var(--bg-surface-2)] px-3 py-2"
                   >
                     <option value="corrective">إصلاح</option>

@@ -108,7 +108,19 @@ export default function TasksPage() {
     setEditingId("");
   }
 
-  function openEdit(task: any) {
+  function openEdit(task: {
+    id: string;
+    title: string | null;
+    task_type: string | null;
+    description: string | null;
+    due_date: string | null;
+    due_time?: string | null;
+    priority: string | null;
+    status: string | null;
+    notes: string | null;
+    related_property_id?: string | null;
+    related_client_id?: string | null;
+  }) {
     setForm({
       title: task.title || "",
       task_type: task.task_type || "",
@@ -150,7 +162,7 @@ export default function TasksPage() {
     loadTasks();
   }
 
-  async function toggleDone(task: any) {
+  async function toggleDone(task: { id: string; status: string | null }) {
     const newStatus = task.status === "مكتملة" ? "جديد" : "مكتملة";
     await supabase
       .from("tasks")
@@ -177,7 +189,7 @@ export default function TasksPage() {
     ).length,
   };
 
-  function isOverdue(task: any) {
+  function isOverdue(task: { due_date: string | null; status: string | null }) {
     return task.due_date && new Date(task.due_date) < new Date() && task.status !== "مكتملة";
   }
 
@@ -353,11 +365,11 @@ export default function TasksPage() {
                 ["list", "قائمة", List],
                 ["kanban", "كانبان", LayoutGrid],
                 ["calendar", "تقويم", Calendar],
-              ] as [string, string, any][]
+              ] as [string, string, import("lucide-react").LucideIcon][]
             ).map(([id, label, Icon]) => (
               <button
                 key={id}
-                onClick={() => setView(id as any)}
+                onClick={() => setView(id as "list" | "calendar")}
                 className="flex items-center gap-1 px-2 py-2 text-xs transition sm:px-3"
                 style={{
                   background: view === id ? "var(--gold-bg-hover)" : "var(--bg-surface-1)",

@@ -51,12 +51,26 @@ const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-w
 // ══════════════════════════════════════════════════════════════════════════════
 // UNIT ROW
 // ══════════════════════════════════════════════════════════════════════════════
+interface ProjectUnit {
+  id: string;
+  unit_number?: string | null;
+  unit_type?: string | null;
+  floor?: number | null;
+  price?: number | null;
+  area?: number | null;
+  rooms?: number | null;
+  bathrooms?: number | null;
+  status?: string | null;
+  client_name?: string | null;
+  notes?: string | null;
+}
+
 function UnitRow({
   unit,
   onUpdated,
   onDeleted,
 }: {
-  unit: any;
+  unit: ProjectUnit;
   onUpdated: () => void;
   onDeleted: () => void;
 }) {
@@ -75,7 +89,7 @@ function UnitRow({
     notes: unit.notes || "",
   });
 
-  const cfg = UNIT_STATUS_CFG[unit.status] || UNIT_STATUS_CFG["متاح"];
+  const cfg = UNIT_STATUS_CFG[unit.status || "متاح"] || UNIT_STATUS_CFG["متاح"];
 
   async function save() {
     setSaving(true);
@@ -221,7 +235,7 @@ function UnitRow({
             <label className={lbl}>{f.label}</label>
             <input
               type={f.type}
-              value={(form as any)[f.key]}
+              value={(form as Record<string, string>)[f.key]}
               onChange={(e) => setForm((x) => ({ ...x, [f.key]: e.target.value }))}
               className={inp}
               dir="ltr"
@@ -316,9 +330,25 @@ function UnitRow({
 // ══════════════════════════════════════════════════════════════════════════════
 // PROJECT CARD
 // ══════════════════════════════════════════════════════════════════════════════
-function ProjectCard({ project, onRefresh }: { project: any; onRefresh: () => void }) {
+interface Project {
+  id: string;
+  name?: string | null;
+  developer?: string | null;
+  developer_name?: string | null;
+  city?: string | null;
+  district?: string | null;
+  total_units?: number | null;
+  delivery_date?: string | null;
+  description?: string | null;
+  cover_image?: string | null;
+  main_image?: string | null;
+  location_url?: string | null;
+  status?: string | null;
+}
+
+function ProjectCard({ project, onRefresh }: { project: Project; onRefresh: () => void }) {
   const [expanded, setExpanded] = useState(false);
-  const [units, setUnits] = useState<any[]>([]);
+  const [units, setUnits] = useState<ProjectUnit[]>([]);
   const [loadingUnits, setLoadingUnits] = useState(false);
   const [showAddUnit, setShowAddUnit] = useState(false);
   const [addSaving, setAddSaving] = useState(false);
@@ -335,7 +365,8 @@ function ProjectCard({ project, onRefresh }: { project: any; onRefresh: () => vo
     notes: "",
   });
 
-  const cfg = PROJECT_STATUS_CFG[project.status] || PROJECT_STATUS_CFG["قيد التطوير"];
+  const cfg =
+    PROJECT_STATUS_CFG[project.status || "قيد التطوير"] || PROJECT_STATUS_CFG["قيد التطوير"];
 
   // Stats from loaded units
   const stats = useMemo(
@@ -430,7 +461,7 @@ function ProjectCard({ project, onRefresh }: { project: any; onRefresh: () => vo
         {project.main_image && (
           <img
             src={project.main_image}
-            alt={project.name}
+            alt={project.name || ""}
             style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }}
           />
         )}
@@ -688,7 +719,7 @@ function ProjectCard({ project, onRefresh }: { project: any; onRefresh: () => vo
                     <label className={lbl}>{f.label}</label>
                     <input
                       type={f.type}
-                      value={(newUnit as any)[f.key]}
+                      value={(newUnit as Record<string, string>)[f.key]}
                       onChange={(e) => setNewUnit((x) => ({ ...x, [f.key]: e.target.value }))}
                       className={inp}
                       dir="ltr"

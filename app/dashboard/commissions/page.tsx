@@ -46,7 +46,10 @@ function toArabicMonth(iso: string) {
 }
 
 // ── Status config ─────────────────────────────────────────────────────────────
-const STATUS_CFG: Record<string, { color: string; bg: string; icon: any; label: string }> = {
+const STATUS_CFG: Record<
+  string,
+  { color: string; bg: string; icon: import("lucide-react").LucideIcon; label: string }
+> = {
   مدفوعة: {
     color: "var(--success)",
     bg: "rgba(74,222,128,0.1)",
@@ -58,7 +61,21 @@ const STATUS_CFG: Record<string, { color: string; bg: string; icon: any; label: 
 };
 
 // ── CSV Export ─────────────────────────────────────────────────────────────────
-function exportCSV(deals: any[]) {
+interface CommissionDeal {
+  id: string;
+  title: string | null;
+  current_stage: string | null;
+  expected_commission: number | null;
+  commission_paid: number | null;
+  commission_status: string | null;
+  created_at: string | null;
+  expected_close_date: string | null;
+  target_value: number | null;
+  property_id?: string | null;
+  client_id?: string | null;
+}
+
+function exportCSV(deals: CommissionDeal[]) {
   const header = [
     "الصفقة",
     "المرحلة",
@@ -88,7 +105,7 @@ function exportCSV(deals: any[]) {
 }
 
 // ── Inline editor ──────────────────────────────────────────────────────────────
-function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
+function CommissionRow({ deal, onSaved }: { deal: CommissionDeal; onSaved: () => void }) {
   const [editing, setEditing] = useState(false);
   const [paid, setPaid] = useState(String(deal.commission_paid || 0));
   const [status, setStatus] = useState(deal.commission_status || "معلقة");
@@ -232,7 +249,7 @@ function CommissionRow({ deal, onSaved }: { deal: any; onSaved: () => void }) {
           <div className="flex items-center gap-1">
             <SARIcon size={10} color="secondary" />
             <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-on-dark)" }}>
-              {fmtFull(deal.target_value)}
+              {fmtFull(deal.target_value ?? 0)}
             </span>
           </div>
         </div>
@@ -587,13 +604,13 @@ export default function CommissionsPage() {
                 kpis.totalPaid > 0
                   ? Math.max(
                       ...Object.values(
-                        deals.reduce((acc: any, d) => {
+                        deals.reduce((acc: Record<string, number>, d) => {
                           const k = d.created_at
                             ? new Date(d.created_at).toISOString().slice(0, 7)
                             : "x";
                           acc[k] = (acc[k] || 0) + (d.commission_paid || 0);
                           return acc;
-                        }, {}) as Record<string, number>
+                        }, {})
                       )
                     )
                   : 0

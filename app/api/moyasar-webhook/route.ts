@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "invalid signature" }, { status: 401 });
     }
 
-    let event: any;
+    let event: { type?: string; data?: Record<string, unknown> } = {};
     try {
       event = JSON.parse(rawBody);
     } catch {
@@ -121,11 +121,11 @@ export async function POST(req: NextRequest) {
           // ── إنشاء فاتورة ZATCA-compliant ──
           await createSubscriptionInvoice(admin, {
             tenantId: tp.tenant_id,
-            paymentId: payment.id,
+            paymentId: String(payment?.id || ""),
             plan: tp.plan,
             billing: tp.billing,
-            amountHalalas: payment.amount,
-            metadata: payment.metadata || {},
+            amountHalalas: Number(payment?.amount || 0),
+            metadata: (payment?.metadata as Record<string, string>) || {},
           });
         }
         break;
