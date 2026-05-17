@@ -9,15 +9,50 @@ import { Mic, Square, Loader2, Sparkles, AlertCircle } from "lucide-react";
 // ══════════════════════════════════════════════════════════════════
 
 interface Props {
+  // الحقول تأتي من AI extractor بأنواع مختلفة (string، number، null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onExtracted: (fields: Record<string, any>) => void;
   accentColor?: string;
 }
 
-// تصريحات Web Speech API
+// ── تصريحات Web Speech API (غير مدرجة في lib.dom افتراضياً) ──
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+interface SpeechRecognitionResult {
+  readonly length: number;
+  readonly isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternative;
+}
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  [index: number]: SpeechRecognitionResult;
+}
+interface SpeechRecognitionEvent extends Event {
+  readonly resultIndex: number;
+  readonly results: SpeechRecognitionResultList;
+}
+interface SpeechRecognitionErrorEvent extends Event {
+  readonly error: string;
+}
+interface SpeechRecognitionInstance {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognitionInstance;
+}
 declare global {
   interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
   }
 }
 
@@ -28,12 +63,11 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
   const [extracting, setExtracting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [supported, setSupported] = useState<boolean | null>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     setSupported(!!SpeechRecognition);
   }, []);
 
@@ -42,8 +76,7 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
     setTranscript("");
     setInterim("");
 
-    const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setError("متصفحك لا يدعم التسجيل الصوتي. استخدم Chrome أو Edge.");
       return;
@@ -54,7 +87,7 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event) => {
       let finalText = "";
       let interimText = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -66,7 +99,7 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
       setInterim(interimText);
     };
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event) => {
       if (event.error === "no-speech") return; // متجاهَل
       if (event.error === "not-allowed") {
         setError("لم يُسمح للمتصفح بالميكروفون. فعّله من الإعدادات.");
