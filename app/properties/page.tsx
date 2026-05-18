@@ -60,6 +60,7 @@ export default function PublicProperties() {
         setProperties(data || []);
         setLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filtered = properties.filter((p) => {

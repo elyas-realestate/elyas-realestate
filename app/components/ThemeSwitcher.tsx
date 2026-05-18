@@ -43,6 +43,7 @@ export default function ThemeSwitcher() {
       "cream") as ThemeMode;
     setActive(current);
     setMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function applyTheme(mode: ThemeMode) {

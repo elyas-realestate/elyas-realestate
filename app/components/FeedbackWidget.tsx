@@ -35,6 +35,7 @@ export default function FeedbackWidget() {
         path.startsWith("/c/") ||
         /^\/[a-z][a-z0-9-]*$/.test(path) // /[slug] للوسطاء العامة
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function submit() {

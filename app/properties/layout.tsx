@@ -16,6 +16,7 @@ export default function PropertiesLayout({ children }: { children: React.ReactNo
       .then(({ data }) => {
         if (data) setS(data);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const siteName = s?.site_name || "إلياس الدخيل";

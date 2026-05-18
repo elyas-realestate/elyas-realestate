@@ -35,6 +35,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     loadTenants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function loadTenants() {

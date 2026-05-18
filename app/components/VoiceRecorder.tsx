@@ -69,6 +69,7 @@ export default function VoiceRecorder({ onExtracted, accentColor = "#C6914C" }: 
     if (typeof window === "undefined") return;
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     setSupported(!!SpeechRecognition);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function startRecording() {
