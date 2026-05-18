@@ -48,6 +48,7 @@ export default function PropertyDetails() {
 
   useEffect(() => {
     loadProperty();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function loadProperty() {

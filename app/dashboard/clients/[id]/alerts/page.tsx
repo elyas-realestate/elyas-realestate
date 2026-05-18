@@ -108,6 +108,7 @@ export default function ClientAlertsPage() {
 
   useEffect(() => {
     if (clientId) load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
   async function runMatching() {

@@ -67,6 +67,7 @@ export default function ComparePageClient() {
       setSettings(s);
       setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idsParam]);
 
   // ── حالات الفراغ ──

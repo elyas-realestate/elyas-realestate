@@ -82,6 +82,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewType]);
 
   async function fetchData() {
