@@ -1056,12 +1056,6 @@ function VATTab({ deals }: { deals: Deal[] }) {
   const totalComm = dealsWithComm.reduce((s, d) => s + (Number(d.expected_commission) || 0), 0);
   const totalVAT = totalComm * VAT_RATE;
 
-  const completedDeals = deals.filter((d) => d.current_stage === "مكتملة" && d.expected_commission);
-  const completedComm = completedDeals.reduce(
-    (s, d) => s + (Number(d.expected_commission) || 0),
-    0
-  );
-
   return (
     <div className="space-y-5">
       {/* KPIs */}

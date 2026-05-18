@@ -12,9 +12,8 @@ interface IconProps {
   style?: React.CSSProperties;
 }
 
-const wrap =
-  (path: string, viewBox = "0 0 24 24") =>
-  ({ size = 18, color = "currentColor", className = "", style = {} }: IconProps) => (
+const wrap = (path: string, viewBox = "0 0 24 24") => {
+  const Icon = ({ size = 18, color = "currentColor", className = "", style = {} }: IconProps) => (
     <svg
       width={size}
       height={size}
@@ -28,6 +27,9 @@ const wrap =
       <path d={path} />
     </svg>
   );
+  Icon.displayName = "BrandIcon";
+  return Icon;
+};
 
 // ─── X (formerly Twitter) ────────────────────────────────────
 export const XIcon = wrap(
