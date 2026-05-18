@@ -57,7 +57,12 @@ export default function PropertyDetails() {
     if (data) loadComparables(data);
   }
 
-  async function loadComparables(prop: any) {
+  async function loadComparables(prop: {
+    id: string;
+    city?: string | null;
+    main_category?: string | null;
+  }) {
+    if (!prop.city || !prop.main_category) return;
     // جلب عقارات مشابهة (نفس المدينة + التصنيف) للمقارنة السوقية
     const { data } = await supabase
       .from("properties")

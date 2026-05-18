@@ -147,7 +147,7 @@ export default function SmartAddProperty() {
         }
       }
 
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         title: extracted.title || "عقار جديد",
         offer_type: extracted.offer_type || "بيع",
         main_category: extracted.main_category || "سكني",
@@ -166,7 +166,10 @@ export default function SmartAddProperty() {
         is_published: false,
       };
 
-      const { error } = await supabase.from("properties").insert([payload]);
+      const { error } = await supabase
+        .from("properties")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .insert([payload as any]);
       if (error) throw error;
 
       toast.success("تم إضافة العقار بنجاح! 🎉");
@@ -179,7 +182,7 @@ export default function SmartAddProperty() {
   }
 
   // ── Update extracted field ──
-  function updateField(key: keyof ExtractedData, value: any) {
+  function updateField(key: keyof ExtractedData, value: unknown) {
     if (!extracted) return;
     setExtracted({ ...extracted, [key]: value });
   }

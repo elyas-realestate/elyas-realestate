@@ -182,7 +182,7 @@ export default function PropertyManagementPage() {
         ].map((t) => (
           <button
             key={t.id}
-            onClick={() => setTab(t.id as any)}
+            onClick={() => setTab(t.id as "overview" | "contracts" | "payments")}
             className="rounded-lg px-4 py-2 text-sm font-bold"
             style={{
               background: tab === t.id ? "var(--gold-bg)" : "transparent",

@@ -45,7 +45,10 @@ export default function Properties() {
     setToggling(null);
   }
 
-  function needsAvailabilityCheck(p: any): boolean {
+  function needsAvailabilityCheck(p: {
+    owner_confirmed_available?: boolean | null;
+    owner_last_check?: string | null;
+  }): boolean {
     if (p.owner_confirmed_available === null || p.owner_confirmed_available === undefined)
       return true;
     if (!p.owner_last_check) return true;

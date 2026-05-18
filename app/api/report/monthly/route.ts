@@ -181,19 +181,22 @@ export async function GET(req: NextRequest) {
   const dealsCount = (dealsInMonthRes.data || []).length;
   const dealsClosed = dealsClosedRes.data || [];
   const closedRevenue = dealsClosed.reduce(
-    (s, d: any) => s + (Number(d.expected_commission) || 0),
+    (s, d: { expected_commission?: number | null }) => s + (Number(d.expected_commission) || 0),
     0
   );
   const paidRevenue = (invoicesPaidRes.data || []).reduce(
-    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
+    (s, i: { amount?: number | null; vat_amount?: number | null }) =>
+      s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
     0
   );
   const pendingAmount = (invoicesPendingRes.data || []).reduce(
-    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
+    (s, i: { amount?: number | null; vat_amount?: number | null }) =>
+      s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
     0
   );
   const overdueAmount = (invoicesOverdueRes.data || []).reduce(
-    (s, i: any) => s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
+    (s, i: { amount?: number | null; vat_amount?: number | null }) =>
+      s + (Number(i.amount) || 0) + (Number(i.vat_amount) || 0),
     0
   );
   const staleCount = staleCountRes.count || 0;

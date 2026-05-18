@@ -77,8 +77,8 @@ export default function DistributePage() {
 
     setProperties((pRes.data || []) as Property[]);
     const summaryMap: Record<string, Summary> = {};
-    (sRes.data || []).forEach((s: any) => {
-      summaryMap[s.property_id] = s;
+    (sRes.data || []).forEach((s) => {
+      if (s.property_id) summaryMap[s.property_id] = s as Summary;
     });
     setSummaries(summaryMap);
     setListings((lRes.data || []) as Listing[]);

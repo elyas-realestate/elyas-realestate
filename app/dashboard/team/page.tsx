@@ -32,7 +32,10 @@ type Member = {
   last_seen_at: string | null;
 };
 
-const ROLE_CONFIG: Record<Member["role"], { label: string; icon: any; color: string }> = {
+const ROLE_CONFIG: Record<
+  Member["role"],
+  { label: string; icon: import("lucide-react").LucideIcon; color: string }
+> = {
   owner: {
     label: "المالك",
     icon: Crown,
