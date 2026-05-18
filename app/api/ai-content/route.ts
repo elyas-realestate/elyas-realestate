@@ -85,8 +85,8 @@ function validateInput(body: any): { valid: true } | { valid: false; error: stri
 }
 
 // ── تنقية رسائل الخطأ — عدم كشف تفاصيل داخلية ──
-function sanitizeError(err: any): string {
-  const msg = err?.message || "";
+function sanitizeError(err: unknown): string {
+  const msg = err instanceof Error ? err.message : "";
 
   // رسائل معروفة وآمنة — أعدها كما هي
   if (msg.includes("API key")) return "مفتاح API غير صالح أو منتهي الصلاحية";
@@ -308,6 +308,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ── قراءة والتحقق من المدخلات ──
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let body: any;
     try {
       body = await req.json();
