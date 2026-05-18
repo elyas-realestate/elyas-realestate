@@ -56,7 +56,7 @@ type ActivityRow = {
   id: string;
   actor_kind: string;
   action: string;
-  details: any;
+  details: Record<string, unknown> | null;
   created_at: string;
 };
 

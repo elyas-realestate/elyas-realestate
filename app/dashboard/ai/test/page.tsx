@@ -15,7 +15,15 @@ type Employee = {
 
 type TestResult = {
   ok: boolean;
-  employee?: any;
+  employee?: {
+    name?: string;
+    manager?: string;
+    code?: string;
+    provider?: string;
+    model?: string;
+    directives_count?: number;
+    kb_count?: number;
+  };
   input: string;
   output?: string;
   duration_ms?: number;
