@@ -3,7 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 
 const ALLOWED_TYPES = ["شراء", "إيجار", "استثمار", "بيع", "أخرى"] as const;
-const ALLOWED_CATEGORIES = ["سكني", "تجاري", "أرض", ""] as const;
 
 function sanitize(val: unknown, maxLen = 200): string {
   if (typeof val !== "string") return "";

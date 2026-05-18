@@ -32,7 +32,7 @@ export default function SaveContactButton({
   brokerName,
   accent = "#C6914C",
   bgColor = "#FAF7F2",
-  textColor = "#1A1206",
+  textColor: _textColor = "#1A1206",
   variant = "hero",
   fullWidth = true,
   className,
@@ -40,7 +40,7 @@ export default function SaveContactButton({
   const [downloaded, setDownloaded] = useState(false);
   const [hover, setHover] = useState(false);
 
-  function handleClick(e: React.MouseEvent) {
+  function handleClick() {
     // نسمح بالسلوك الطبيعي للوسم <a> ولكن نعرض حالة "تم"
     setDownloaded(true);
     setTimeout(() => setDownloaded(false), 4000);

@@ -94,8 +94,8 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
-      // هوية الوسيط
-      const { data: identity } = await admin
+      // هوية الوسيط (لاحقاً: قد تُستخدم لتخصيص رسائل المتابعة)
+      await admin
         .from("broker_identity")
         .select("broker_name, writing_tone, specialization")
         .eq("tenant_id", t.tenant_id)

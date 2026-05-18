@@ -215,7 +215,6 @@ export default function AdminUsersPage() {
             <tbody>
               {tenants.map((t, i) => {
                 const meta = PLAN_META[t.plan] || PLAN_META.free;
-                const Icon = meta.Icon;
                 const isChanging = changing === t.id;
                 return (
                   <tr

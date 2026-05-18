@@ -91,8 +91,8 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
-      // هوية
-      const { data: identity } = await admin
+      // هوية (لاحقاً: قد تُستخدم لتخصيص التقرير)
+      await admin
         .from("broker_identity")
         .select("broker_name, specialization, coverage_areas")
         .eq("tenant_id", t.tenant_id)

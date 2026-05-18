@@ -380,7 +380,6 @@ export default function CommissionsPage() {
     const now = new Date();
     const month = now.getMonth();
     const year = now.getFullYear();
-    const qStart = Math.floor(month / 3) * 3;
 
     let totalPaid = 0,
       totalPending = 0,

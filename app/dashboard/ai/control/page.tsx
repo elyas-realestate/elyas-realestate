@@ -437,7 +437,7 @@ function Section({
 }
 
 function ToggleRow({
-  kind,
+  kind: _kind,
   code,
   name,
   subtitle,

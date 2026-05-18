@@ -1061,7 +1061,6 @@ function VATTab({ deals }: { deals: Deal[] }) {
     (s, d) => s + (Number(d.expected_commission) || 0),
     0
   );
-  const completedVAT = completedComm * VAT_RATE;
 
   return (
     <div className="space-y-5">

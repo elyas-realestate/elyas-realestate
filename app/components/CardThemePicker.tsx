@@ -33,7 +33,7 @@ interface Props {
 
 export default function CardThemePicker({
   currentBg,
-  currentText,
+  currentText: _currentText,
   currentAccent,
   onApply,
   onClose,

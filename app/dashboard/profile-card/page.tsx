@@ -35,15 +35,6 @@ import BrokerQRModal from "@/app/components/BrokerQRModal";
 import { getBrandIcon, getBrandBg, getBrandFg } from "@/app/components/BrandIcons";
 import HelpHint from "@/app/components/HelpHint";
 
-const PRESET_THEMES = [
-  { name: "كريمي ذهبي", bg: "#FAF7F2", text: "#1A1206", accent: "#C6914C" },
-  { name: "أسود فاخر", bg: "#0A0A0C", text: "#F5F5F5", accent: "#E8B86D" },
-  { name: "أبيض نقي", bg: "#FFFFFF", text: "#0F172A", accent: "#3B82F6" },
-  { name: "أخضر زمردي", bg: "#ECFDF5", text: "#064E3B", accent: "#10B981" },
-  { name: "أزرق ملكي", bg: "#EFF6FF", text: "#1E3A8A", accent: "#3B82F6" },
-  { name: "بنفسجي راقي", bg: "#F5F3FF", text: "#3B0764", accent: "#8B5CF6" },
-];
-
 export default function ProfileCardPage() {
   const [card, setCard] = useState<any>(null);
   const [links, setLinks] = useState<any[]>([]);

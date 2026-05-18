@@ -30,22 +30,6 @@ interface ProfileCard {
   is_published: boolean;
 }
 
-interface ProfileLink {
-  id: string;
-  link_type: string;
-  platform: string | null;
-  label: string;
-  value: string | null;
-  description: string | null;
-  icon: string | null;
-  bg_color: string | null;
-  text_color: string | null;
-  is_gradient: boolean;
-  gradient_to: string | null;
-  display_order: number;
-  is_active: boolean;
-}
-
 // كائن موحَّد يجمع الحقول من broker_identity + site_settings
 // لأن الحقول الاجتماعية والاتصال محفوظة في site_settings فعلياً.
 interface Identity {

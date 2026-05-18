@@ -149,7 +149,6 @@ async function processStaleProperties(admin: any) {
   // عقارات ما تم التحقق من توفرها خلال آخر 7 أيام
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 7);
-  const cutoffStr = cutoff.toISOString();
 
   const { data: props, error } = await admin
     .from("properties")

@@ -505,7 +505,7 @@ export default function ComparePageClient() {
 // ─────────────────────────────────────────────────────────────
 function PropertyColumn({
   property,
-  settings,
+  settings: _settings,
 }: {
   property: Property;
   settings: { site_name?: string | null; phone?: string | null; whatsapp?: string | null } | null;

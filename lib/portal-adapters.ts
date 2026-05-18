@@ -100,11 +100,6 @@ function money(n: number | null | undefined): string {
   return Number(n).toLocaleString("ar-SA");
 }
 
-function fmtLine(label: string, value: unknown): string {
-  if (!value || value === "—") return "";
-  return `${label}: ${value}\n`;
-}
-
 // ══════════════════════════════════════════════════════════════
 // الـ Adapters
 // ══════════════════════════════════════════════════════════════

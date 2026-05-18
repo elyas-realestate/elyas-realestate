@@ -529,34 +529,7 @@ export default function Settings() {
   const inputClass =
     "w-full bg-[var(--bg-surface-2)] border border-[var(--gold-bg-hover)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--gold-2)] transition";
 
-  function SaveBtn({ onClick }: { onClick: () => void }) {
-    return (
-      <button
-        onClick={onClick}
-        disabled={saving}
-        className={
-          "flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition " +
-          (saved
-            ? "bg-green-600 text-white"
-            : "bg-[var(--gold-2)] text-[var(--bg-page)] hover:bg-[var(--gold-3)]")
-        }
-      >
-        {saved ? (
-          <>
-            <Check size={15} /> تم الحفظ
-          </>
-        ) : saving ? (
-          <>
-            <Loader2 size={15} className="animate-spin" /> جاري...
-          </>
-        ) : (
-          <>
-            <Save size={15} /> حفظ التغييرات
-          </>
-        )}
-      </button>
-    );
-  }
+  // ملاحظة: SaveBtn القديمة موجودة في `_components/SaveBtn.tsx` ومستخدمة من tabs
 
   // ─── Loading ──────────────────────────────────────────────────────────────
   if (loading)
@@ -568,20 +541,8 @@ export default function Settings() {
       </div>
     );
 
-  // ─── Derived design values ─────────────────────────────────────────────────
+  // ملاحظة: قيم التصميم المُشتقّة (accent/bgPrimary/...) صارت داخل DesignTab مباشرة
   const s = settings || {};
-  const accent = s.color_accent || COLOR_DEFAULTS.color_accent;
-  const accentDark = s.color_accent_dark || COLOR_DEFAULTS.color_accent_dark;
-  const bgPrimary = s.color_bg_primary || COLOR_DEFAULTS.color_bg_primary;
-  const bgSecondary = s.color_bg_secondary || COLOR_DEFAULTS.color_bg_secondary;
-  const bgCard = s.color_bg_card || COLOR_DEFAULTS.color_bg_card;
-  const textPrimary = s.color_text_primary || COLOR_DEFAULTS.color_text_primary;
-  const textSec = s.color_text_secondary || COLOR_DEFAULTS.color_text_secondary;
-  const textMuted = s.color_text_muted || COLOR_DEFAULTS.color_text_muted;
-  const heroSize = s.font_size_hero || COLOR_DEFAULTS.font_size_hero;
-  const sectionSize = s.font_size_section_title || COLOR_DEFAULTS.font_size_section_title;
-  const bodySize = s.font_size_body || COLOR_DEFAULTS.font_size_body;
-  const smallSize = s.font_size_small || COLOR_DEFAULTS.font_size_small;
 
   const MAIN_TABS = [
     { id: "profile", label: "الملف الشخصي", icon: User },

@@ -100,7 +100,6 @@ interface PropertyData {
 
 export function buildRealEstateListingSchema(prop: PropertyData): Record<string, unknown> {
   const url = `${SITE_URL}/properties/${prop.id}`;
-  const offerType = prop.offerType === "إيجار" ? "RentAction" : "SellAction";
   const propertyType =
     prop.subCategory === "فيلا" || prop.subCategory === "شقة" || prop.subCategory === "بيت"
       ? "Residence"

@@ -36,7 +36,7 @@ export default function NotificationsSettings() {
   const [installed, setInstalled] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>("default");
   const [subs, setSubs] = useState<Subscription[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [vapidConfigured, setVapidConfigured] = useState(false);
 

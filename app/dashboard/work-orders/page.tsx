@@ -122,7 +122,7 @@ export default function WorkOrdersPage() {
   const [orders, setOrders] = useState<WorkOrder[]>([]);
   const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
-  const [assets, setAssets] = useState<Asset[]>([]);
+  const [, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showForm, setShowForm] = useState(false);

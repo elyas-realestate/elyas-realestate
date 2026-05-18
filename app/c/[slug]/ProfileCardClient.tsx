@@ -422,7 +422,7 @@ export default function ProfileCardClient({
 function ElementCard({
   link,
   cardTextColor,
-  cardBgColor,
+  cardBgColor: _cardBgColor,
   accent,
   onContactFormOpen,
 }: {

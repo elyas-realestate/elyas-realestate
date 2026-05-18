@@ -80,7 +80,7 @@ type UsageData = {
 
 export default function SubscriptionPage() {
   const [currentPlan, setCurrentPlan] = useState<string>("free");
-  const [settingsId, setSettingsId] = useState<string | null>(null);
+  const [, setSettingsId] = useState<string | null>(null);
   const [usage, setUsage] = useState<UsageData>({
     properties: 0,
     clients: 0,
