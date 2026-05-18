@@ -211,7 +211,6 @@ export default function ProfileCardClient({
                   border: `3px solid ${accent}`,
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={avatarUrl}
                   alt={displayName}
@@ -658,7 +657,6 @@ function ShareModal({
       <div style={{ textAlign: "center", padding: "0 8px" }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
           {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="" style={{ width: 70, height: 70, borderRadius: "50%" }} />
           ) : (
             <InitialsAvatar name={name} bg={cardAccent} color={cardBg} size={70} />
@@ -770,7 +768,6 @@ function QRModal({
       <div style={{ textAlign: "center", padding: "0 8px" }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
           {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="" style={{ width: 70, height: 70, borderRadius: "50%" }} />
           ) : (
             <InitialsAvatar name={name} bg={cardAccent} color={cardBg} size={70} />
@@ -788,7 +785,6 @@ function QRModal({
           }}
         >
           {qrDataUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={qrDataUrl}
               alt="QR Code"

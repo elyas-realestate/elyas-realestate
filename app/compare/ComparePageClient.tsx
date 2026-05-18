@@ -522,7 +522,6 @@ function PropertyColumn({
     >
       {mainImage ? (
         <div style={{ width: "100%", aspectRatio: "16/10", background: "var(--bg-deep)" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={mainImage}
             alt={property.title}

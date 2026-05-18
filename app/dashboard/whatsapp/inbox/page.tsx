@@ -54,7 +54,6 @@ export default function WhatsAppInboxPage() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (selected) loadThread(selected);

@@ -417,7 +417,6 @@ function MatchRow({ match }: { match: Match }) {
       }}
     >
       {match.property?.main_image ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={match.property.main_image}
           alt=""

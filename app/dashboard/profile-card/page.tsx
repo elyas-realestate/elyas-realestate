@@ -298,7 +298,6 @@ export default function ProfileCardPage() {
               style={{ border: `3px solid ${card.accent_color || "var(--gold-2)"}` }}
             >
               {card.avatar_url ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
                 <img src={card.avatar_url} alt="" className="h-full w-full object-cover" />
               ) : (
                 <div

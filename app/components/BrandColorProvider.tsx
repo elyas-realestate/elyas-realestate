@@ -111,7 +111,6 @@ export default function BrandColorProvider() {
       mounted = false;
       window.removeEventListener("wasit:brand-update", onUpdate);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;
