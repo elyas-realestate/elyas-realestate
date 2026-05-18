@@ -1,7 +1,7 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
 import { useState, useEffect } from "react";
-import type { PropertyRequest, Property } from "@/types/database";
+import type { PropertyRequest } from "@/types/database";
 import {
   FileText,
   Plus,
