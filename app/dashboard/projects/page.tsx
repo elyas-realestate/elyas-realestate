@@ -834,6 +834,7 @@ function ProjectCard({ project, onRefresh }: { project: Project; onRefresh: () =
 // PAGE
 // ══════════════════════════════════════════════════════════════════════════════
 export default function ProjectsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [missingTable, setMissingTable] = useState(false);

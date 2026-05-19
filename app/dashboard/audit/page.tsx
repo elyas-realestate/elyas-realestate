@@ -18,7 +18,18 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const ACTION_CFG: Record<string, { label: string; color: string; icon: any }> = {
+const ACTION_CFG: Record<
+  string,
+  {
+    label: string;
+    color: string;
+    icon: React.ComponentType<{
+      size?: number;
+      style?: React.CSSProperties;
+      className?: string;
+    }>;
+  }
+> = {
   create: { label: "إنشاء", color: "var(--success)", icon: Plus },
   update: { label: "تعديل", color: "var(--info)", icon: Edit3 },
   delete: { label: "حذف", color: "var(--danger)", icon: Trash2 },
@@ -41,6 +52,7 @@ const ENTITY_LABELS: Record<string, string> = {
 };
 
 export default function AuditPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [missingTable, setMissingTable] = useState(false);

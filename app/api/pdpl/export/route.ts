@@ -65,7 +65,12 @@ export async function GET(req: NextRequest) {
     "rent_payments",
   ];
 
-  const exportData: Record<string, any> = {
+  const exportData: {
+    exported_at: string;
+    user: { id: string; email?: string; created_at?: string };
+    tenant: unknown;
+    data: Record<string, unknown[]>;
+  } = {
     exported_at: new Date().toISOString(),
     user: {
       id: userData.user.id,

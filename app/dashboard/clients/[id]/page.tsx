@@ -110,6 +110,7 @@ export default function ClientProfile() {
   const id = params?.id as string;
 
   const [client, setClient] = useState<ClientLite | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [activities, setActivities] = useState<any[]>([]);
   const [hasActTable, setHasActTable] = useState(true);
   const [loading, setLoading] = useState(true);

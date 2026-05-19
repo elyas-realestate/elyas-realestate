@@ -105,8 +105,8 @@ export default function ImportPage() {
   }
 
   // بناء payload من صفّ CSV بناءً على الـ mapping
-  function buildRecord(row: CsvRow): Record<string, any> | null {
-    const obj: Record<string, any> = {};
+  function buildRecord(row: CsvRow): Record<string, unknown> | null {
+    const obj: Record<string, unknown> = {};
     for (const [csvHeader, targetField] of Object.entries(mapping)) {
       if (!targetField) continue;
       const raw = row[csvHeader] ?? "";

@@ -557,6 +557,7 @@ function OverviewTab({ deals }: { deals: Deal[] }) {
 // TAB 2 — الإيرادات والمصروفات (P&L)
 // ══════════════════════════════════════════════════════════════════════════════
 function PnLTab({ deals }: { deals: Deal[] }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [expenses, setExpenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);

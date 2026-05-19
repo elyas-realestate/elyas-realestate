@@ -13,7 +13,7 @@ interface LogContext {
   user_id?: string | null;
   tenant_id?: string | null;
   route?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const isProd = process.env.NODE_ENV === "production";

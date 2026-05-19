@@ -10,6 +10,7 @@ import HelpHint from "../../components/HelpHint";
 import { exportToCSV, PROPERTIES_EXPORT_HEADERS } from "@/lib/export";
 
 export default function Properties() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [properties, setProperties] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [offerFilter, setOfferFilter] = useState("الكل");

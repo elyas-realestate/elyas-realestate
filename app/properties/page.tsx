@@ -43,6 +43,7 @@ const categoryFilters = [
 ];
 
 export default function PublicProperties() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");

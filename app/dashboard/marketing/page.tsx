@@ -71,7 +71,9 @@ const lbl = "block text-xs font-semibold text-[var(--text-soft)] mb-2 tracking-w
 // CAMPAIGNS TAB
 // ══════════════════════════════════════════════════════════════════════════════
 function CampaignsTab() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [campaigns, setCampaigns] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -715,6 +717,7 @@ const COMPARE_FIELDS: { key: string; label: string; format?: (v: unknown) => unk
 ];
 
 function ComparisonTab() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [properties, setProperties] = useState<any[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);

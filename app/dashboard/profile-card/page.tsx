@@ -36,13 +36,16 @@ import { getBrandIcon, getBrandBg, getBrandFg } from "@/app/components/BrandIcon
 import HelpHint from "@/app/components/HelpHint";
 
 export default function ProfileCardPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [card, setCard] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [links, setLinks] = useState<any[]>([]);
   const [slug, setSlug] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Library + edit modals
   const [libraryOpen, setLibraryOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [editingLink, setEditingLink] = useState<any>(null);
   const [newElementType, setNewElementType] = useState<string | null>(null);
 
@@ -1029,7 +1032,9 @@ function ElementDesignSection({
   meta,
   setMeta,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   meta: Record<string, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setMeta: (m: Record<string, any>) => void;
 }) {
   const [open, setOpen] = useState(false);

@@ -57,7 +57,9 @@ export default function RequestsPage() {
   const [filterType, setFilterType] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [form, setForm] = useState<any>({
     client_file_id: "",
     request_type: "",

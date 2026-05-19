@@ -40,6 +40,7 @@ function fmtNum(n: number) {
 }
 
 export default function QuotationsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [quotations, setQuotations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [missingTable, setMissingTable] = useState(false);

@@ -69,6 +69,7 @@ export default function DashboardPage() {
   const [revenueData, setRevenueData] = useState<RevenuePoint[]>([]);
   const [propertyStatusData, setPropertyStatusData] = useState<StatusSlice[]>([]);
   const [dealPipelineData, setDealPipelineData] = useState<PipelineRow[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [subs, setSubs] = useState<any[]>([]);
   const [hotClients, setHotClients] = useState<{ id: string; full_name: string }[]>([]);
   const [staleProps, setStaleProps] = useState(0);

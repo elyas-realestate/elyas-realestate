@@ -587,7 +587,9 @@ export interface AutoElement {
 }
 
 export function buildAutoElements(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   siteSettings: Record<string, any> | null,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   brokerIdentity: Record<string, any> | null
 ): AutoElement[] {
   const result: AutoElement[] = [];

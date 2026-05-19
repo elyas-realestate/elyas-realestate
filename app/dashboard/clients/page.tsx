@@ -116,6 +116,7 @@ function WAIcon() {
 
 // ────────────────────────────────────────────────────────────────────────
 export default function Clients() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [clients, setClients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -126,6 +127,7 @@ export default function Clients() {
   const [sentimentFilter, setSentimentFilter] = useState<SentimentKey | "الكل">("الكل");
 
   // drawer
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selected, setSelected] = useState<any>(null);
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({ ...emptyForm });

@@ -6,8 +6,11 @@ import SARIcon from "../../../components/SARIcon";
 
 export default function PropertyPrintView() {
   const params = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [settings, setSettings] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [identity, setIdentity] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 

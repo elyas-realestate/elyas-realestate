@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
 
 export default function ExternalSubscriptionsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [subs, setSubs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);

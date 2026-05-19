@@ -349,6 +349,7 @@ function CommissionRow({ deal, onSaved }: { deal: CommissionDeal; onSaved: () =>
 
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export default function CommissionsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilter] = useState<string>("الكل");

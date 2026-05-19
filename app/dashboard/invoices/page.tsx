@@ -39,6 +39,7 @@ function fmtNum(n: number) {
 }
 
 export default function InvoicesPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [missingTable, setMissingTable] = useState(false);

@@ -27,7 +27,7 @@ type StatusResp = {
 };
 
 type ApprovalsResp = {
-  pending?: any[];
+  pending?: unknown[];
 };
 
 const REFRESH_EVENT = "ai-hub-refresh";

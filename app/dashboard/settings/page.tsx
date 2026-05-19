@@ -66,6 +66,7 @@ export default function Settings() {
     photo_url: "",
     gender: "male",
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [settings, setSettings] = useState<any>(null);
   const [licenses, setLicenses] = useState({
     commercial_register: "",

@@ -49,8 +49,15 @@ type Goal = {
 
 export default function GoalsPage() {
   const [goals, setGoals] = useState<Record<string, Goal>>({});
-  const [deals, setDeals] = useState<any[]>([]);
-  const [clients, setClients] = useState<any[]>([]);
+  const [deals, setDeals] = useState<
+    Array<{
+      current_stage?: string | null;
+      expected_close_date?: string | null;
+      created_at: string | null;
+      target_value?: number | null;
+    }>
+  >([]);
+  const [clients, setClients] = useState<Array<{ created_at: string | null }>>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState({ target_deals: "", target_revenue: "", target_clients: "" });
   const months = last6Months();
@@ -81,10 +88,13 @@ export default function GoalsPage() {
     const end = new Date(y, m, 1);
     const closedDeals = deals.filter((d) => {
       if (d.current_stage !== "مكتملة") return false;
-      const date = d.expected_close_date ? new Date(d.expected_close_date) : new Date(d.created_at);
+      const raw = d.expected_close_date ?? d.created_at;
+      if (!raw) return false;
+      const date = new Date(raw);
       return date >= start && date < end;
     });
     const newClients = clients.filter((c) => {
+      if (!c.created_at) return false;
       const date = new Date(c.created_at);
       return date >= start && date < end;
     });

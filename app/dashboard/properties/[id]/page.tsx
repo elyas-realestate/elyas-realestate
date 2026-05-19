@@ -41,8 +41,10 @@ export default function PropertyDetails() {
   const params = useParams();
   const id = typeof params.id === "string" ? params.id : "";
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [comparables, setComparables] = useState<any[]>([]);
   const [updating, setUpdating] = useState(false);
 

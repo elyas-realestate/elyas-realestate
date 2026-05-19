@@ -78,6 +78,7 @@ export default function WhatsAppPage() {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [results, setResults] = useState<any | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedCat, setExpandedCat] = useState<string | null>("متابعة العملاء");

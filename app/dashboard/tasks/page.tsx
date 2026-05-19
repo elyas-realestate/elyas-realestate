@@ -62,6 +62,7 @@ const arabicMonths = [
 ];
 
 export default function TasksPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"list" | "kanban" | "calendar">("kanban");

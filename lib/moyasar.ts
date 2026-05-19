@@ -48,7 +48,11 @@ export async function createPayment(payload: MoyasarPaymentRequest): Promise<Moy
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error((err as any).message || `Moyasar error ${res.status}`);
+    const msg =
+      typeof err === "object" && err !== null && "message" in err
+        ? String((err as { message?: unknown }).message ?? "")
+        : "";
+    throw new Error(msg || `Moyasar error ${res.status}`);
   }
   return res.json();
 }

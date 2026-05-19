@@ -48,6 +48,7 @@ const emptyForm = {
 };
 
 export default function DocumentsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [docs, setDocs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -55,6 +56,7 @@ export default function DocumentsPage() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selected, setSelected] = useState<any>(null);
   const [form, setForm] = useState({ ...emptyForm });
 

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { ExternalLink, Menu, X } from "lucide-react";
 
 export default function PropertiesLayout({ children }: { children: React.ReactNode }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [s, setS] = useState<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 

@@ -23,7 +23,9 @@ import NeighborhoodIntel from "../../components/NeighborhoodIntel";
 
 export default function PropertyDetail() {
   const params = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [settings, setSettings] = useState<any>(null);
   const [tenantSlug, setTenantSlug] = useState<string>("");
   const [loading, setLoading] = useState(true);
