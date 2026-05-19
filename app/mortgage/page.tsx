@@ -167,6 +167,7 @@ export default function MortgagePage() {
   }
   useEffect(() => {
     setDownAmt(Math.round((priceNum * downPct) / 100));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceNum]);
 
   const loan = Math.max(0, priceNum - downAmt);

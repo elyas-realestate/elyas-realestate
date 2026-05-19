@@ -51,7 +51,6 @@ export default function GoalsPage() {
   const [goals, setGoals] = useState<Record<string, Goal>>({});
   const [deals, setDeals] = useState<any[]>([]);
   const [clients, setClients] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState({ target_deals: "", target_revenue: "", target_clients: "" });
   const months = last6Months();
@@ -74,7 +73,6 @@ export default function GoalsPage() {
     setGoals(map);
     setDeals(dealsData || []);
     setClients(clientsData || []);
-    setLoading(false);
   }
 
   function getActuals(monthKey: string) {

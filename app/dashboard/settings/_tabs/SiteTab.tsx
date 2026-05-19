@@ -5,7 +5,7 @@
 // navbar/sections/services/why/pages/cta).
 // ══════════════════════════════════════════════════════════════
 
-import { Image, Upload, X, Loader2, Plus, Trash2 } from "lucide-react";
+import { Image as ImageIcon, Upload, X, Loader2, Plus, Trash2 } from "lucide-react";
 import ServiceIcon, { SERVICE_ICON_KEYS } from "@/app/components/ServiceIcon";
 import { STATIC_PAGES } from "../_constants";
 import { SaveBtn } from "../_components/SaveBtn";
@@ -171,7 +171,7 @@ export function SiteTab({
                         className="h-full w-full object-contain p-1"
                       />
                     ) : (
-                      <Image size={26} className="text-[var(--text-faint)]" />
+                      <ImageIcon size={26} className="text-[var(--text-faint)]" />
                     )}
                   </div>
                   <div className="flex-1">

@@ -42,6 +42,7 @@ export default function SignPage({ params }: { params: Promise<{ token: string }
 
   useEffect(() => {
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   async function load() {

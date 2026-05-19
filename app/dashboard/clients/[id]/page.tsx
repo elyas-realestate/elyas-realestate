@@ -126,6 +126,7 @@ export default function ClientProfile() {
 
   useEffect(() => {
     if (id) loadAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function loadAll() {
