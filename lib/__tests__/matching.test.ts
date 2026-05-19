@@ -61,8 +61,16 @@ describe("calculateMatch — price score (max 25)", () => {
     expect(m.breakdown.price).toBe(25);
   });
 
-  it("awards 12 points when neither min nor max is set", () => {
+  it("awards full 25 points when neither min nor max is set (unbounded range matches anything)", () => {
+    // When min_price/max_price are both undefined, the in-range check
+    // (price >= 0 && price <= Infinity) trivially passes — awards 25.
+    // The 12-point default only applies when the property itself has no price.
     const m = calculateMatch({}, property({ price: 1_000_000 }), "r1");
+    expect(m.breakdown.price).toBe(25);
+  });
+
+  it("awards 12 points when both request and property lack price info", () => {
+    const m = calculateMatch({}, property({ price: undefined }), "r1");
     expect(m.breakdown.price).toBe(12);
   });
 

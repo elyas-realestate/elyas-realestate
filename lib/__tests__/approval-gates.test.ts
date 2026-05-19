@@ -130,7 +130,8 @@ describe("evaluate — amount limit (warning)", () => {
     expect(verdict.decision).toBe("needs_approval");
     if (verdict.decision === "needs_approval") {
       expect(verdict.severity).toBe("warning");
-      expect(verdict.reason).toMatch(/5,?[\s٬]?000/);
+      // toLocaleString('ar-SA') uses Arabic-Indic digits (٥٬٠٠٠) by default
+      expect(verdict.reason).toMatch(/[5٥],?[\s٬]?[0٠]{3}/);
     }
   });
 
@@ -192,7 +193,8 @@ describe("rulesToPromptText", () => {
   it("includes amount limit when set", () => {
     const text = rulesToPromptText({ max_amount_sar: 1000 });
     expect(text).toMatch(/الحد المالي/);
-    expect(text).toMatch(/1,?[\s٬]?000/);
+    // toLocaleString('ar-SA') outputs Arabic-Indic digits (١٬٠٠٠)
+    expect(text).toMatch(/[1١],?[\s٬]?[0٠]{3}/);
   });
 
   it("includes block_actions section", () => {

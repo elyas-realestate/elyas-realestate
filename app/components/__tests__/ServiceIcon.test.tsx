@@ -1,7 +1,9 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, afterEach } from "vitest";
+import { render, cleanup } from "@testing-library/react";
 import ServiceIcon, { SERVICE_ICON_KEYS } from "../ServiceIcon";
+
+afterEach(cleanup);
 
 describe("ServiceIcon", () => {
   it("renders a single SVG element", () => {

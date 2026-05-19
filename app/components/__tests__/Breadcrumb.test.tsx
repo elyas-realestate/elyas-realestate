@@ -1,7 +1,9 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, screen, cleanup } from "@testing-library/react";
 import Breadcrumb from "../Breadcrumb";
+
+afterEach(cleanup);
 
 // Stub next/link for the jsdom environment — render as a plain anchor.
 vi.mock("next/link", () => ({
@@ -29,7 +31,7 @@ describe("Breadcrumb", () => {
   });
 
   it("renders all crumb labels", () => {
-    render(
+    const { container } = render(
       <Breadcrumb
         crumbs={[
           { label: "الرئيسية", href: "/" },
@@ -38,13 +40,15 @@ describe("Breadcrumb", () => {
         ]}
       />
     );
-    expect(screen.getByText("الرئيسية")).toBeDefined();
-    expect(screen.getByText("العقارات")).toBeDefined();
-    expect(screen.getByText("فيلا")).toBeDefined();
+    // labels appear nested (wrapper span + inner anchor/span) so we assert
+    // each text is found at least once in the container
+    expect(container.textContent).toContain("الرئيسية");
+    expect(container.textContent).toContain("العقارات");
+    expect(container.textContent).toContain("فيلا");
   });
 
   it("renders intermediate crumbs with href as anchor tags", () => {
-    render(
+    const { container } = render(
       <Breadcrumb
         crumbs={[
           { label: "الرئيسية", href: "/" },
@@ -53,15 +57,14 @@ describe("Breadcrumb", () => {
         ]}
       />
     );
-    const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(2);
-    expect(links[0]).toHaveProperty("href");
-    expect((links[0] as HTMLAnchorElement).getAttribute("href")).toBe("/");
-    expect((links[1] as HTMLAnchorElement).getAttribute("href")).toBe("/properties");
+    const anchors = Array.from(container.querySelectorAll("a"));
+    expect(anchors).toHaveLength(2);
+    expect(anchors[0].getAttribute("href")).toBe("/");
+    expect(anchors[1].getAttribute("href")).toBe("/properties");
   });
 
   it("never wraps the last crumb in an anchor (current page should not link)", () => {
-    render(
+    const { container } = render(
       <Breadcrumb
         crumbs={[
           { label: "الرئيسية", href: "/" },
@@ -69,10 +72,10 @@ describe("Breadcrumb", () => {
         ]}
       />
     );
-    const links = screen.getAllByRole("link");
-    // only 'الرئيسية' should be a link, not 'Last'
-    expect(links).toHaveLength(1);
-    expect((links[0] as HTMLAnchorElement).textContent).toBe("الرئيسية");
+    const anchors = Array.from(container.querySelectorAll("a"));
+    // only 'الرئيسية' should be wrapped in an anchor, not 'Last'
+    expect(anchors).toHaveLength(1);
+    expect(anchors[0].textContent).toBe("الرئيسية");
   });
 
   it("renders a crumb without href as a plain span", () => {
@@ -103,11 +106,13 @@ describe("Breadcrumb", () => {
     const { container } = render(
       <Breadcrumb crumbs={[{ label: "A", href: "/a" }, { label: "Final" }]} />
     );
-    const lastSpan = Array.from(container.querySelectorAll("span")).find(
-      (s) => s.textContent === "Final"
+    // The inner span holding the actual text — find the one with explicit
+    // fontWeight === '600' (the bold wrapper for the last crumb).
+    const boldSpan = Array.from(container.querySelectorAll("span")).find(
+      (s) => s.style.fontWeight === "600"
     );
-    expect(lastSpan).toBeDefined();
-    expect(lastSpan?.style.fontWeight).toBe("600");
+    expect(boldSpan).toBeDefined();
+    expect(boldSpan?.textContent).toBe("Final");
   });
 
   it("renders nothing meaningful for an empty crumbs array", () => {

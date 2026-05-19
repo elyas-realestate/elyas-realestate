@@ -1,7 +1,9 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, afterEach } from "vitest";
+import { render, cleanup } from "@testing-library/react";
 import SocialIcon from "../SocialIcon";
+
+afterEach(cleanup);
 
 describe("SocialIcon", () => {
   it("renders an SVG with default size of 18", () => {

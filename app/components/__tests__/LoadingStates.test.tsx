@@ -1,7 +1,9 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { Spinner, SkeletonRow, SkeletonCard, EmptyState, ErrorState } from "../LoadingStates";
+
+afterEach(cleanup);
 
 describe("Spinner", () => {
   it("renders a single Loader2 icon (svg)", () => {
@@ -45,20 +47,23 @@ describe("Spinner", () => {
 describe("SkeletonRow", () => {
   it("renders the default 3 skeleton rows", () => {
     const { container } = render(<SkeletonRow />);
-    // the component renders count divs + a style element
-    const rows = container.querySelectorAll("div > div");
-    expect(rows.length).toBeGreaterThanOrEqual(3);
+    // the outer wrapper holds N skeleton divs + a <style> child
+    const wrapper = container.firstChild as HTMLElement;
+    const rowDivs = wrapper.querySelectorAll(":scope > div");
+    expect(rowDivs.length).toBe(3);
   });
 
   it("renders the requested count", () => {
     const { container } = render(<SkeletonRow count={7} />);
-    const rows = container.querySelectorAll("div > div");
-    expect(rows.length).toBe(7);
+    const wrapper = container.firstChild as HTMLElement;
+    const rowDivs = wrapper.querySelectorAll(":scope > div");
+    expect(rowDivs.length).toBe(7);
   });
 
   it("applies the requested height in px", () => {
     const { container } = render(<SkeletonRow count={1} height={100} />);
-    const row = container.querySelector("div > div") as HTMLElement;
+    const wrapper = container.firstChild as HTMLElement;
+    const row = wrapper.querySelector(":scope > div") as HTMLElement;
     expect(row.style.height).toBe("100px");
   });
 

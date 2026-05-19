@@ -1,11 +1,9 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, afterEach } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import HelpHint from "../HelpHint";
 
-beforeEach(() => {
-  document.body.innerHTML = "";
-});
+afterEach(cleanup);
 
 describe("HelpHint — initial render", () => {
   it("renders the trigger button (closed by default)", () => {

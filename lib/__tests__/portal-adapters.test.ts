@@ -140,8 +140,11 @@ describe("formatForPortal — twitter adapter", () => {
   });
 
   it("truncates with an ellipsis when over the limit", () => {
-    const longTitle = "ع".repeat(500);
-    const out = formatForPortal("twitter", { ...baseProperty, title: longTitle });
+    // The twitter adapter doesn't include the title, only type/offer/city/
+    // rooms/area/price/url. Use a very long city to force overflow.
+    const longCity = "الرياض".repeat(100);
+    const out = formatForPortal("twitter", { ...baseProperty, city: longCity });
+    expect(out.length).toBeLessThanOrEqual(280);
     expect(out.endsWith("…")).toBe(true);
   });
 
@@ -171,7 +174,8 @@ describe("formatForPortal — whatsapp adapter", () => {
   it("uses WhatsApp bold markdown for title and price", () => {
     const out = formatForPortal("whatsapp", baseProperty);
     expect(out).toContain("*فيلا الياسمين*");
-    expect(out).toMatch(/\*[\d,٬٫\s]+ ريال\*/);
+    // money() uses toLocaleString('ar-SA') → Arabic-Indic digits ٠-٩ + ٬ separator
+    expect(out).toMatch(/\*[\d٠-٩,٬٫\s]+ ريال\*/);
   });
 
   it("includes emoji markers", () => {
