@@ -8,23 +8,23 @@
 
 ## 📊 خلاصة التنفيذي
 
-| المحور | المقياس | الحالة | الخطر |
-|---|---|---|---|
-| اختبارات الـ unit | 877 / 877 ✓ | جيدة جدًا | منخفض |
-| تغطية مكوّنات React | 24 / 24 (100%) | ممتازة | منخفض |
-| ESLint errors | 0 | محقّق | منخفض |
-| ESLint warnings | 39 (react-compiler structural فقط) | مقبول | منخفض |
-| TypeScript errors | 0 | محقّق | منخفض |
-| `as any` casts منتشرة | **93** in 48 ملف | **خطر** | متوسط |
-| `eslint-disable no-explicit-any` | **93** | متوسط | متوسط |
-| `as any` literal | 18 in 14 ملف | متوسط | منخفض |
-| TODO / FIXME / HACK | 28 (نصفها في docs) | مقبول | منخفض |
-| `console.*` في الكود | 1 (intentional في layout) | ممتاز | منخفض |
-| Empty catch blocks | 7 (كلها legit — fire-and-forget) | جيد | منخفض |
-| `process.env.X!` غير محمي | **84** in 30 ملف | **خطر** | عالٍ |
-| API routes بدون tenant_id ref | 25 / 64 (39%) | يحتاج مراجعة | عالٍ |
-| **Schema-related migrations مفقودة** | 1 معلّقة (052) | **خطر** | **حرج** |
-| اختبارات API routes (route.ts) | 1 / 64 (٢٪) | **خطر** | عالٍ |
+| المحور                               | المقياس                            | الحالة       | الخطر   |
+| ------------------------------------ | ---------------------------------- | ------------ | ------- |
+| اختبارات الـ unit                    | 877 / 877 ✓                        | جيدة جدًا    | منخفض   |
+| تغطية مكوّنات React                  | 24 / 24 (100%)                     | ممتازة       | منخفض   |
+| ESLint errors                        | 0                                  | محقّق        | منخفض   |
+| ESLint warnings                      | 39 (react-compiler structural فقط) | مقبول        | منخفض   |
+| TypeScript errors                    | 0                                  | محقّق        | منخفض   |
+| `as any` casts منتشرة                | **93** in 48 ملف                   | **خطر**      | متوسط   |
+| `eslint-disable no-explicit-any`     | **93**                             | متوسط        | متوسط   |
+| `as any` literal                     | 18 in 14 ملف                       | متوسط        | منخفض   |
+| TODO / FIXME / HACK                  | 28 (نصفها في docs)                 | مقبول        | منخفض   |
+| `console.*` في الكود                 | 1 (intentional في layout)          | ممتاز        | منخفض   |
+| Empty catch blocks                   | 7 (كلها legit — fire-and-forget)   | جيد          | منخفض   |
+| `process.env.X!` غير محمي            | **84** in 30 ملف                   | **خطر**      | عالٍ    |
+| API routes بدون tenant_id ref        | 25 / 64 (39%)                      | يحتاج مراجعة | عالٍ    |
+| **Schema-related migrations مفقودة** | 1 معلّقة (052)                     | **خطر**      | **حرج** |
+| اختبارات API routes (route.ts)       | 1 / 64 (٢٪)                        | **خطر**      | عالٍ    |
 
 ---
 
@@ -68,7 +68,7 @@
 
 ### H2. مراجعة isolation الـ tenant على API routes بدون tenant_id
 
-- **القائمة (25 route):** admin/*, 2fa/*, slug/*, qr, maps/resolve, ai-extract, ai-content, ai-whatsapp, ai/neighborhood-intel, waitlist, sentry-test, pdpl/delete, push/notify, whatsapp/encrypt-token, property-requests/[id]/convert.
+- **القائمة (25 route):** admin/_, 2fa/_, slug/\*, qr, maps/resolve, ai-extract, ai-content, ai-whatsapp, ai/neighborhood-intel, waitlist, sentry-test, pdpl/delete, push/notify, whatsapp/encrypt-token, property-requests/[id]/convert.
 - **معظمها مشروعة** (admin routes، public utilities، user-level 2FA).
 - **الحالات المشبوهة المؤكَّدة:**
   - `property-requests/[id]/convert/route.ts`: يعتمد على RLS فقط، لا يضع `tenant_id` على الـ deal الجديد → احتمال data leak لو RLS غير صارمة.
@@ -145,16 +145,16 @@
 
 ## 📋 خطة الإصلاح المقترحة (مرتّبة)
 
-| ترتيب | الموجة | المدى المتوقع | المخرج |
-|---|---|---|---|
-| 1 | **C1**: تطبيق migration 052 على Supabase prod | ٥ دقائق (يدوي) | عمود `clients.budget` فعلي |
-| 2 | **H1**: إنشاء `lib/env.ts` + استبدال 84 موضع | جلسة ١-٢ | runtime crash واضحة عند env missing |
-| 3 | **H2**: فحص 3 routes مشبوهة + إضافة tenant filter حيث لزم | جلسة ١ | منع IDOR محتمل |
-| 4 | **M1**: توحيد helpers الـ Supabase client + كتابة `getServerSupabase()` | جلسة ١ | API uniform عبر الـ codebase |
-| 5 | **C2**: integration tests لـ ٢٠ API route حرج | موجة كبيرة | منع schema regressions |
-| 6 | **H3**: تخفيض `as any` من 93 إلى ≤30 | موجة كبيرة | type safety حقيقي |
-| 7 | **M3**: تحديث docs + أرشفة القديمة | ٣٠ دقيقة | reflection of reality |
-| 8 | **M2**: مراجعة 28 TODO | جلسة ١ | تنظيف |
+| ترتيب | الموجة                                                                  | المدى المتوقع  | المخرج                              |
+| ----- | ----------------------------------------------------------------------- | -------------- | ----------------------------------- |
+| 1     | **C1**: تطبيق migration 052 على Supabase prod                           | ٥ دقائق (يدوي) | عمود `clients.budget` فعلي          |
+| 2     | **H1**: إنشاء `lib/env.ts` + استبدال 84 موضع                            | جلسة ١-٢       | runtime crash واضحة عند env missing |
+| 3     | **H2**: فحص 3 routes مشبوهة + إضافة tenant filter حيث لزم               | جلسة ١         | منع IDOR محتمل                      |
+| 4     | **M1**: توحيد helpers الـ Supabase client + كتابة `getServerSupabase()` | جلسة ١         | API uniform عبر الـ codebase        |
+| 5     | **C2**: integration tests لـ ٢٠ API route حرج                           | موجة كبيرة     | منع schema regressions              |
+| 6     | **H3**: تخفيض `as any` من 93 إلى ≤30                                    | موجة كبيرة     | type safety حقيقي                   |
+| 7     | **M3**: تحديث docs + أرشفة القديمة                                      | ٣٠ دقيقة       | reflection of reality               |
+| 8     | **M2**: مراجعة 28 TODO                                                  | جلسة ١         | تنظيف                               |
 
 ---
 
@@ -163,6 +163,7 @@
 البنية **لا تنهار** قريباً. القاعدة قوية: 0 errors, 0 lint, 877 tests, 100% component coverage.
 
 لكن في **٣ نقاط ترقيع** كانت تنتظر الانفجار:
+
 - ✅ `clients.budget` (أُصلح في Phase B لكن migration لم تُطبّق بعد على prod — **هذي نقطة خطر فعلية الآن**)
 - ⏳ `process.env.X!` بدون validation
 - ⏳ API routes بدون integration tests
