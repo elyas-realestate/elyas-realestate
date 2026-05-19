@@ -119,8 +119,8 @@ export default function Register() {
             tenant_id: tenant.id,
             broker_name: name,
             site_name: name,
-            plan: "free",
-          }),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any),
           supabase.from("broker_identity").insert({
             tenant_id: tenant.id,
             broker_name: name,

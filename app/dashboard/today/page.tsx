@@ -58,10 +58,10 @@ export default function TodayPage() {
           .limit(8),
         supabase
           .from("deals")
-          .select("id, title, stage, amount, client_name")
-          .neq("stage", "مغلقة - فوز")
-          .neq("stage", "مغلقة - خسارة")
-          .order("updated_at", { ascending: false })
+          .select("id, title, current_stage, target_value, summary")
+          .neq("current_stage", "مغلقة - فوز")
+          .neq("current_stage", "مغلقة - خسارة")
+          .order("created_at", { ascending: false })
           .limit(8),
         supabase
           .from("followup_queue")

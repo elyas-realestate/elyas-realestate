@@ -213,10 +213,15 @@ export default function RequestsPage() {
     if (!data.client_file_id) data.client_file_id = null;
 
     if (editingId) {
-      await supabase.from("property_requests").update(data).eq("id", editingId);
+      await supabase
+        .from("property_requests")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .update(data as any)
+        .eq("id", editingId);
       toast.success("تم تحديث الطلب");
     } else {
-      await supabase.from("property_requests").insert([data]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await supabase.from("property_requests").insert([data as any]);
       toast.success("تمت إضافة الطلب بنجاح");
     }
     setShowForm(false);

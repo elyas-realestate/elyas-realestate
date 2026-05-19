@@ -168,7 +168,11 @@ export default function ClientProfile() {
 
   async function handleSave() {
     setSaving(true);
-    const { error } = await supabase.from("clients").update(editForm).eq("id", id);
+    const { error } = await supabase
+      .from("clients")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(editForm as any)
+      .eq("id", id);
     if (error) {
       toast.error("حدث خطأ");
       setSaving(false);

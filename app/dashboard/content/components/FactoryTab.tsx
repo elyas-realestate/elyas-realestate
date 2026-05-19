@@ -213,7 +213,8 @@ export default function FactoryTab({ onDraftsCreated }: { onDraftsCreated: () =>
         });
     });
     if (drafts.length > 0) {
-      await supabase.from("content").insert(drafts);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await supabase.from("content").insert(drafts as any);
       setDraftsSaved(true);
       onDraftsCreated();
     }
