@@ -33,18 +33,18 @@
 - ✅ GitHub Actions CI (typecheck + lint + format + test على كل push)
 - ✅ Husky pre-commit hooks (Prettier تلقائي)
 
-### الجودة:
+### الجودة (بعد الموجة ٨):
 
 - TypeScript: ٠ errors
-- ESLint: **٠ errors, ٠ warnings** (من ٦٢٢ — تقلّص **١٠٠٪**) 🏆
+- ESLint: **٠ errors** (من ٦٢٢ — تقلّص **١٠٠٪**) 🏆
   - explicit-any: ٠ (كانت ٥٥)
   - unused-imports: ٠
   - jsx-a11y/alt-text: ٠
   - exhaustive-deps: ٠ (مع inline disables موثّقة)
-  - react-compiler structural: ٠ (٢٣ ملف أُعيد هيكلته بـuseCallback)
-- Tests: ٧١ passed
+  - warnings: ٣٩ react-compiler structural (نشأت بعد upgrade لـeslint-config-next 16.2.1، لا تكسر CI)
+- Tests: **٥٦١ passed (٢٨ test files)** — زيادة ٧٫٩× من ٧١ إلى ٥٦١
 - Build: ١٤٠ pages
-- CI: 🟢 أخضر
+- CI: 🟢 أخضر (مع vitest 3.2.4 — vitest 4 يُستخدم rolldown native bindings غير مستقرة في CI)
 
 ---
 
