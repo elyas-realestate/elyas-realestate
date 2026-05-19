@@ -169,16 +169,17 @@ npm run format       # Prettier
 - `@next/next` — **٨**
 - متفرّقات — **٤**
 
-### أولوية ٢ — bugs schema الباقية (موجة منفصلة)
+### أولوية ٢ — bugs schema الباقية (موجة منفصلة) ✅ مغلقة
 
-bugs مكتشفة في APIs لكن يحتاج تحقّق من schema:
+bugs مكتشفة في APIs، تمّت معالجتها في موجة ٩ (مايو ٢٠٢٦):
 
-- `contracts.tenant_name` (في cron/reminders) → غير موجود في schema
-- `clients.budget` (في clients/[id]) → قد يحتاج migration
-- `clients.source` (في layout) → قد يحتاج migration
-- `broker_identity.phone` (في distribute, report) → غير موجود
-
-كلها معلّقة بـ `eslint-disable` مؤقت في الكود.
+- ✅ `contracts.tenant_name` — إنذار كاذب، العمود موجود في الـ schema فعلاً
+  (انظر `database.generated.ts:4363`).
+- ✅ `clients.budget` — أُضيف عبر migration `052_add_clients_budget.sql`
+  وحُدّثت الـ types يدوياً.
+- ✅ `clients.source` — لم يعد له استخدام في الكود، فقط ذكر قديم في docs.
+- ✅ `broker_identity.phone` — حُذف من `app/api/pdf/route.ts` (المصدر
+  الفعلي للهاتف هو `site_settings.phone`).
 
 ### أولوية ٣ — توحيد Components folder
 

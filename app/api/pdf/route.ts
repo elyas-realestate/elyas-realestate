@@ -79,9 +79,11 @@ export async function GET(req: NextRequest) {
   if (error || !doc) return NextResponse.json({ error: "not found" }, { status: 404 });
 
   // ── جلب هوية الوسيط وإعدادات الموقع — مفلترة بـ tenant_id الصحيح (منع تسريب بيانات بين الحسابات) ──
+  // ملاحظة: رقم الهاتف لا يُحفظ على broker_identity — مصدره الوحيد site_settings.phone
+  // (أو ceo_identity.phones للسكرتير الذكي، خارج سياق الـ PDF).
   const { data: identity } = await supabase
     .from("broker_identity")
-    .select("broker_name, fal_license, phone, vat_number, zatca_enabled")
+    .select("broker_name, fal_license, vat_number, zatca_enabled")
     .eq("tenant_id", tenantId)
     .maybeSingle();
   const { data: settings } = await supabase
@@ -92,7 +94,7 @@ export async function GET(req: NextRequest) {
 
   const brokerName = identity?.broker_name || settings?.site_name || "وسيط برو";
   const falLicense = identity?.fal_license || "";
-  const phone = identity?.phone || settings?.phone || "";
+  const phone = settings?.phone || "";
   const email = settings?.email || "";
   const logo = settings?.site_logo || "";
 

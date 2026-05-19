@@ -982,7 +982,10 @@ export type Database = {
         ];
       };
       clients: {
+        // NOTE: `budget` added manually after migration 052_add_clients_budget.sql.
+        // Regenerate via `supabase gen types typescript` to reflect any further changes.
         Row: {
+          budget: string | null;
           category: string | null;
           city: string | null;
           code: string | null;
@@ -1003,6 +1006,7 @@ export type Database = {
           tenant_id: string | null;
         };
         Insert: {
+          budget?: string | null;
           category?: string | null;
           city?: string | null;
           code?: string | null;
@@ -1023,6 +1027,7 @@ export type Database = {
           tenant_id?: string | null;
         };
         Update: {
+          budget?: string | null;
           category?: string | null;
           city?: string | null;
           code?: string | null;
