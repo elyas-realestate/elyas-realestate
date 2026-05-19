@@ -50,6 +50,21 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         // (PP-FIX4) أزلنا rewrite إلى /landing.html — كان static dark.
         // الآن `/` يستخدم app/page.tsx الذي يستهلك CSS variables → كريمي تلقائياً.
+
+        // ── Custom domain routing (موجة 14b) ───────────────────────────────────
+        // الزائر يفتح elyas.com.sa → يحوَّل داخلياً إلى /elyas
+        // (صفحة الوسيط العامة، تُرسَم من app/[slug]/page.tsx)
+        // باقي المسارات على elyas.com.sa تعمل عادياً (مثلاً /properties, /login).
+        {
+          source: "/",
+          has: [{ type: "host", value: "elyas.com.sa" }],
+          destination: "/elyas",
+        },
+        {
+          source: "/",
+          has: [{ type: "host", value: "www.elyas.com.sa" }],
+          destination: "/elyas",
+        },
       ],
       afterFiles: [],
       fallback: [],
