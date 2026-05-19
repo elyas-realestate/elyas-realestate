@@ -47,11 +47,13 @@ describe("ThemeSwitcher — default active state", () => {
   it("marks the cream theme as active when nothing is set", () => {
     render(<ThemeSwitcher />);
     const buttons = screen.getAllByRole("button");
-    // cream is index 0 — it should have the active border (gold-1)
+    // cream is index 0 — it should have the active border (gold-1).
+    // jsdom does not split the `border` shorthand into `borderColor`, so we read
+    // the full `style.border` string instead.
     const creamButton = buttons.find((b) =>
       b.textContent?.includes("الثيم الكريمي")
     ) as HTMLButtonElement;
-    expect(creamButton.style.borderColor).toContain("var(--gold-1)");
+    expect(creamButton.style.border).toContain("var(--gold-1)");
   });
 
   it("reads the active theme from localStorage on mount", () => {
@@ -60,7 +62,7 @@ describe("ThemeSwitcher — default active state", () => {
     const darkButton = screen
       .getAllByRole("button")
       .find((b) => b.textContent?.includes("الثيم الداكن")) as HTMLButtonElement;
-    expect(darkButton.style.borderColor).toContain("var(--gold-1)");
+    expect(darkButton.style.border).toContain("var(--gold-1)");
   });
 
   it("prefers data-theme attribute over localStorage", () => {
@@ -70,7 +72,7 @@ describe("ThemeSwitcher — default active state", () => {
     const darkButton = screen
       .getAllByRole("button")
       .find((b) => b.textContent?.includes("الثيم الداكن")) as HTMLButtonElement;
-    expect(darkButton.style.borderColor).toContain("var(--gold-1)");
+    expect(darkButton.style.border).toContain("var(--gold-1)");
   });
 });
 
@@ -100,7 +102,7 @@ describe("ThemeSwitcher — theme switching", () => {
       .find((b) => b.textContent?.includes("الثيم الداكن")) as HTMLButtonElement;
     fireEvent.click(darkButton);
     // after switch, dark button should have the active border
-    expect(darkButton.style.borderColor).toContain("var(--gold-1)");
+    expect(darkButton.style.border).toContain("var(--gold-1)");
   });
 
   it("does not re-apply when clicking the already-active theme", () => {
