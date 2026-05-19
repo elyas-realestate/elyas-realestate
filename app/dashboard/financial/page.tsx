@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   TrendingUp,
@@ -570,11 +570,7 @@ function PnLTab({ deals }: { deals: Deal[] }) {
     expense_date: new Date().toISOString().slice(0, 10),
   });
 
-  useEffect(() => {
-    loadExpenses();
-  }, []);
-
-  async function loadExpenses() {
+  const loadExpenses = useCallback(async () => {
     const { data, error } = await supabase
       .from("expenses")
       .select("*")
@@ -586,7 +582,12 @@ function PnLTab({ deals }: { deals: Deal[] }) {
     }
     setExpenses(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadExpenses();
+  }, [loadExpenses]);
 
   async function addExpense() {
     if (!form.amount) {

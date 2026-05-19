@@ -1396,6 +1396,7 @@ function iconBtn(color: string): React.CSSProperties {
 // ─────────────────────────────────────────────────────────────
 function LatestReviewCard({ review }: { review: ManagerReview }) {
   const [expanded, setExpanded] = useState(false);
+  // eslint-disable-next-line react-hooks/purity
   const ageHours = Math.floor((Date.now() - new Date(review.created_at).getTime()) / 3600_000);
   const hasCritical = (review.concerns || []).some((c) => c.severity === "critical");
   const ageLabel = ageHours < 24 ? `قبل ${ageHours} ساعة` : `قبل ${Math.floor(ageHours / 24)} يوم`;

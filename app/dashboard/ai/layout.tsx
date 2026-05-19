@@ -88,6 +88,7 @@ export default function AILayout({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAll();
     // استمع لأحداث التحديث من control page
     const handler = () => fetchAll();

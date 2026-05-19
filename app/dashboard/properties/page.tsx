@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Plus, Search, MapPin, Eye, Sparkles, AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
@@ -19,11 +19,7 @@ export default function Properties() {
 
   const offerTabs = ["الكل", "بيع", "إيجار", "استثمار", "تحتاج متابعة"];
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
-  async function fetchProperties() {
+  const fetchProperties = useCallback(async () => {
     // اختيار الأعمدة الضرورية فقط للأداء (تحسين من ~6.6s إلى ~1s)
     const { data } = await supabase
       .from("properties")
@@ -34,7 +30,11 @@ export default function Properties() {
       .limit(50);
     setProperties(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchProperties();
+  }, [fetchProperties]);
 
   async function togglePublish(e: React.MouseEvent, id: string, current: boolean) {
     e.preventDefault();
@@ -53,6 +53,7 @@ export default function Properties() {
     if (p.owner_confirmed_available === null || p.owner_confirmed_available === undefined)
       return true;
     if (!p.owner_last_check) return true;
+    // eslint-disable-next-line react-hooks/purity
     const days = Math.floor((Date.now() - new Date(p.owner_last_check).getTime()) / 86400000);
     return days > 7;
   }

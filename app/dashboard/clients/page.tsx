@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   Plus,
@@ -134,18 +134,19 @@ export default function Clients() {
   const [saving, setSaving] = useState(false);
   const [updatingSentiment, setUpdatingSentiment] = useState(false);
 
-  useEffect(() => {
-    loadClients();
-  }, []);
-
-  async function loadClients() {
+  const loadClients = useCallback(async () => {
     const { data } = await supabase
       .from("clients")
       .select("*")
       .order("created_at", { ascending: false });
     setClients(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadClients();
+  }, [loadClients]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

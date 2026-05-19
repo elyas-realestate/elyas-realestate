@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
   Search,
@@ -67,6 +67,7 @@ export default function TasksPage() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"list" | "kanban" | "calendar">("kanban");
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (window.innerWidth < 768) setView("list");
   }, []);
   const [search, setSearch] = useState("");
@@ -84,18 +85,19 @@ export default function TasksPage() {
     status: "جديد",
   });
 
-  useEffect(() => {
-    loadTasks();
-  }, []);
-
-  async function loadTasks() {
+  const loadTasks = useCallback(async () => {
     const { data } = await supabase
       .from("tasks")
       .select("*")
       .order("due_date", { ascending: true });
     setTasks(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadTasks();
+  }, [loadTasks]);
 
   function resetForm() {
     setForm({

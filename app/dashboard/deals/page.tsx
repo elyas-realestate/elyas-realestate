@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
   Search,
@@ -78,11 +78,7 @@ export default function Deals() {
     expected_close_date: "",
   });
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
+  const loadAll = useCallback(async () => {
     const [d, p] = await Promise.all([
       supabase.from("deals").select("*").order("created_at", { ascending: false }),
       supabase.from("properties").select("id, title"),
@@ -90,7 +86,12 @@ export default function Deals() {
     setDeals(d.data || []);
     setProperties(p.data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAll();
+  }, [loadAll]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -764,7 +765,8 @@ function KanbanCard({
   const prevStage = currentIdx > 0 ? stages[currentIdx - 1] : null;
   const nextStage = currentIdx < stages.length - 1 ? stages[currentIdx + 1] : null;
   const daysLeft = deal.expected_close_date
-    ? Math.ceil((new Date(deal.expected_close_date).getTime() - Date.now()) / 86400000)
+    ? // eslint-disable-next-line react-hooks/purity
+      Math.ceil((new Date(deal.expected_close_date).getTime() - Date.now()) / 86400000)
     : null;
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import type { ContentDraft } from "@/types/database";
 import { Pencil, Save, X, Trash2 } from "lucide-react";
@@ -14,18 +14,19 @@ export default function DraftsTab({ refreshKey }: { refreshKey: number }) {
   const [editText, setEditText] = useState("");
   const [copiedId, setCopiedId] = useState("");
 
-  useEffect(() => {
-    loadDrafts();
-  }, [refreshKey]);
-
-  async function loadDrafts() {
+  const loadDrafts = useCallback(async () => {
     const { data } = await supabase
       .from("content")
       .select("*")
       .order("created_at", { ascending: false });
     setDrafts((data as ContentDraft[]) || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadDrafts();
+  }, [refreshKey, loadDrafts]);
 
   async function updateStatus(id: string, status: string) {
     await supabase.from("content").update({ status }).eq("id", id);

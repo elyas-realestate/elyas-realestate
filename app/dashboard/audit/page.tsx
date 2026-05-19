@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Shield,
   Search,
@@ -61,11 +61,7 @@ export default function AuditPage() {
   const [page, setPage] = useState(0);
   const PAGE_SIZE = 30;
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  async function load() {
+  const load = useCallback(async () => {
     const { data, error } = await supabase
       .from("audit_log")
       .select("*")
@@ -78,7 +74,11 @@ export default function AuditPage() {
     }
     setLogs(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const filtered = useMemo(() => {
     return logs.filter((log) => {
@@ -103,6 +103,7 @@ export default function AuditPage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayCount = logs.filter((l) => new Date(l.created_at) >= today).length;
+  // eslint-disable-next-line react-hooks/purity
   const weekStart = new Date(Date.now() - 7 * 86400000);
   const weekCount = logs.filter((l) => new Date(l.created_at) >= weekStart).length;
 

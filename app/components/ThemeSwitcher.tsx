@@ -41,6 +41,7 @@ export default function ThemeSwitcher() {
     const current = (html.getAttribute("data-theme") ||
       localStorage.getItem("wasit_theme") ||
       "cream") as ThemeMode;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActive(current);
     setMounted(true);
   }, []);

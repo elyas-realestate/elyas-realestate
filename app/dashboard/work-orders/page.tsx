@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import {
   Wrench,
@@ -144,11 +144,7 @@ export default function WorkOrdersPage() {
     estimated_cost: "",
   });
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
+  const loadAll = useCallback(async () => {
     setLoading(true);
     const [woRes, techRes, propRes, assetRes] = await Promise.all([
       supabase.from("work_orders").select("*").order("created_at", { ascending: false }),
@@ -168,7 +164,12 @@ export default function WorkOrdersPage() {
     setProperties((propRes.data || []) as Property[]);
     setAssets((assetRes.data || []) as Asset[]);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAll();
+  }, [loadAll]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();

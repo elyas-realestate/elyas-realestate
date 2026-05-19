@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Building2,
   Plus,
@@ -852,11 +852,7 @@ export default function ProjectsPage() {
     developer: "",
   });
 
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
-  async function loadProjects() {
+  const loadProjects = useCallback(async () => {
     const { data, error } = await supabase
       .from("projects")
       .select("*")
@@ -868,7 +864,12 @@ export default function ProjectsPage() {
     }
     setProjects(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadProjects();
+  }, [loadProjects]);
 
   async function addProject() {
     if (!form.name.trim()) {

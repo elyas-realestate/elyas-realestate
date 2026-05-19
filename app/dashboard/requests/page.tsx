@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { PropertyRequest } from "@/types/database";
 import {
   FileText,
@@ -76,11 +76,7 @@ export default function RequestsPage() {
     status: "جديد",
   });
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     const [reqRes, clientRes, propRes] = await Promise.all([
       supabase.from("property_requests").select("*").order("created_at", { ascending: false }),
       supabase.from("clients").select("id, full_name, phone"),
@@ -95,7 +91,12 @@ export default function RequestsPage() {
     setClients(clientRes.data || []);
     setProperties(propRes.data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadData();
+  }, [loadData]);
 
   // ── خوارزمية التطابق الذكي ──
   function matchProperties(

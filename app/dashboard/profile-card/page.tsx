@@ -722,6 +722,7 @@ function ElementRow({
           color: brandFg,
         }}
       >
+        {/* eslint-disable-next-line react-hooks/static-components */}
         <Icon size={17} />
       </div>
 

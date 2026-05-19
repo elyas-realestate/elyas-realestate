@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "./supabase-browser";
 
 export type Role = "owner" | "admin" | "member" | "viewer" | "none";
@@ -27,11 +27,7 @@ export function useMyRole(): { role: Role; loading: boolean } {
   const [role, setRole] = useState<Role>("none");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    resolve();
-  }, []);
-
-  async function resolve() {
+  const resolve = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -63,7 +59,12 @@ export function useMyRole(): { role: Role; loading: boolean } {
 
     setRole((member?.role as Role) || "none");
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    resolve();
+  }, [resolve]);
 
   return { role, loading };
 }

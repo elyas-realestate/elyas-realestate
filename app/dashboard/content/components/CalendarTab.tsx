@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import {
   arabicDays,
@@ -22,6 +22,7 @@ export default function CalendarTab({
 }) {
   const [view, setView] = useState<"month" | "week" | "agenda">("month");
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (typeof window !== "undefined" && window.innerWidth < 768) setView("agenda");
   }, []);
 
@@ -41,11 +42,7 @@ export default function CalendarTab({
   const [editingPost, setEditingPost] = useState<ContentDraft | null>(null);
   const [editText, setEditText] = useState("");
 
-  useEffect(() => {
-    loadPosts();
-  }, [refreshKey]);
-
-  async function loadPosts() {
+  const loadPosts = useCallback(async () => {
     const [postsRes, draftsRes] = await Promise.all([
       supabase
         .from("content")
@@ -61,7 +58,12 @@ export default function CalendarTab({
     setPosts((postsRes.data as ContentDraft[]) || []);
     setAllDrafts((draftsRes.data as ContentDraft[]) || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadPosts();
+  }, [refreshKey, loadPosts]);
 
   function getMonthDays() {
     const year = currentDate.getFullYear();

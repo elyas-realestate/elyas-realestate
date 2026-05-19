@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   FileText,
   Plus,
@@ -56,11 +56,7 @@ export default function QuotationsPage() {
     status: "مسودة",
   });
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  async function load() {
+  const load = useCallback(async () => {
     const { data, error } = await supabase
       .from("quotations")
       .select("*")
@@ -72,7 +68,12 @@ export default function QuotationsPage() {
     }
     setQuotations(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
 
   async function addQuotation() {
     if (!form.title.trim()) {

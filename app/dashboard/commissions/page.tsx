@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   TrendingUp,
   Download,
@@ -355,11 +355,7 @@ export default function CommissionsPage() {
   const [filterStatus, setFilter] = useState<string>("الكل");
   const [missingCol, setMissingCol] = useState(false);
 
-  useEffect(() => {
-    loadDeals();
-  }, []);
-
-  async function loadDeals() {
+  const loadDeals = useCallback(async () => {
     const { data, error } = await supabase
       .from("deals")
       .select(
@@ -374,7 +370,12 @@ export default function CommissionsPage() {
     }
     setDeals(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadDeals();
+  }, [loadDeals]);
 
   // ── Computed KPIs ──
   const kpis = useMemo(() => {

@@ -20,6 +20,7 @@ export default function ContentAI() {
 
   useEffect(() => {
     const saved = localStorage.getItem("contentTab");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved && tabs.find((t) => t.id === saved)) setActiveTab(saved);
   }, []);
 

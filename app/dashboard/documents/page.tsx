@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FileText, Plus, Search, Trash2, X, ExternalLink, Calendar, Users } from "lucide-react";
 import { toast } from "sonner";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -60,18 +60,19 @@ export default function DocumentsPage() {
   const [selected, setSelected] = useState<any>(null);
   const [form, setForm] = useState({ ...emptyForm });
 
-  useEffect(() => {
-    loadDocs();
-  }, []);
-
-  async function loadDocs() {
+  const loadDocs = useCallback(async () => {
     const { data } = await supabase
       .from("legal_documents")
       .select("*")
       .order("created_at", { ascending: false });
     setDocs(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadDocs();
+  }, [loadDocs]);
 
   function resetForm() {
     setForm({ ...emptyForm });

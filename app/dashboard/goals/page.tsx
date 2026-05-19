@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Target, TrendingUp, Banknote, CheckCircle, Pencil, X, Save } from "lucide-react";
 import { toast } from "sonner";
 import { formatSAR } from "@/lib/format";
@@ -63,11 +63,7 @@ export default function GoalsPage() {
   const months = last6Months();
   const thisMonth = currentMonthKey();
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
+  const loadAll = useCallback(async () => {
     const [{ data: goalsData }, { data: dealsData }, { data: clientsData }] = await Promise.all([
       supabase.from("monthly_goals").select("*"),
       supabase.from("deals").select("current_stage, target_value, created_at, expected_close_date"),
@@ -80,7 +76,12 @@ export default function GoalsPage() {
     setGoals(map);
     setDeals(dealsData || []);
     setClients(clientsData || []);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAll();
+  }, [loadAll]);
 
   function getActuals(monthKey: string) {
     const [y, m] = monthKey.split("-").map(Number);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import { providers, modes } from "../constants";
 import ModelSelector from "./ModelSelector";
@@ -58,11 +58,7 @@ export default function FactoryTab({ onDraftsCreated }: { onDraftsCreated: () =>
   const [aiProvider2, setAiProvider2] = useState("anthropic");
   const [aiModel2, setAiModel2] = useState("claude-sonnet-4-20250514");
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     const [propsRes, idRes] = await Promise.all([
       supabase
         .from("properties")
@@ -75,7 +71,12 @@ export default function FactoryTab({ onDraftsCreated }: { onDraftsCreated: () =>
     setProperties((propsRes.data as Property[]) || []);
     if (idRes.data) setIdentity(idRes.data as BrokerIdentity);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadData();
+  }, [loadData]);
 
   function addToQueue() {
     if (!contentGoal || !platform || !contentFormat || !writingTone || !contentLanguage) {

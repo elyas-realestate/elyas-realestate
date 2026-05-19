@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import GrowthNav from "@/app/components/GrowthNav";
 import {
   Megaphone,
@@ -92,11 +92,7 @@ function CampaignsTab() {
     notes: "",
   });
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
+  const loadAll = useCallback(async () => {
     const [c, p] = await Promise.all([
       supabase
         .from("campaigns")
@@ -112,7 +108,12 @@ function CampaignsTab() {
     setCampaigns(c.data || []);
     setProperties(p.data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAll();
+  }, [loadAll]);
 
   function resetForm() {
     setForm({

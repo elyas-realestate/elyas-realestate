@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -75,11 +75,7 @@ export default function TeamPage() {
   const PLAN_LIMITS: Record<string, number> = { free: 1, basic: 3, pro: 10 };
   const maxMembers = PLAN_LIMITS[plan] ?? 1;
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
+  const loadAll = useCallback(async () => {
     setLoading(true);
     const {
       data: { user },
@@ -141,7 +137,12 @@ export default function TeamPage() {
     else setMembers((data || []) as Member[]);
 
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAll();
+  }, [loadAll]);
 
   async function handleInvite(e: React.FormEvent) {
     e.preventDefault();

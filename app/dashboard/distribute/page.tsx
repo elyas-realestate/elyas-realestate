@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase-browser";
 import Breadcrumb from "../../components/Breadcrumb";
 import GrowthNav from "@/app/components/GrowthNav";
@@ -50,11 +50,7 @@ export default function DistributePage() {
   const [brokerInfo, setBrokerInfo] = useState<{ name?: string; phone?: string; fal?: string }>({});
   const [copiedPortal, setCopiedPortal] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
-  async function loadAll() {
+  const loadAll = useCallback(async () => {
     setLoading(true);
     const [pRes, sRes, lRes, iRes] = await Promise.all([
       supabase
@@ -89,7 +85,12 @@ export default function DistributePage() {
       fal: iRes.data?.fal_license ?? undefined,
     });
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAll();
+  }, [loadAll]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();

@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/lib/supabase-browser";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Plus, X, Trash2, BellRing, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 import SARIcon from "../../components/SARIcon";
@@ -24,11 +24,7 @@ export default function ExternalSubscriptionsPage() {
     status: "active",
   });
 
-  useEffect(() => {
-    loadSubs();
-  }, []);
-
-  async function loadSubs() {
+  const loadSubs = useCallback(async () => {
     const { data, error } = await supabase
       .from("external_subscriptions")
       .select("*")
@@ -43,7 +39,12 @@ export default function ExternalSubscriptionsPage() {
     }
     setSubs(data || []);
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadSubs();
+  }, [loadSubs]);
 
   async function addSub() {
     if (!form.app_name) {

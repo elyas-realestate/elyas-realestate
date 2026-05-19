@@ -561,6 +561,7 @@ function ElementCardInner({
             flexShrink: 0,
           }}
         >
+          {/* eslint-disable-next-line react-hooks/static-components */}
           <Icon size={18} />
         </div>
         <div style={{ minWidth: 0, flex: 1 }}>

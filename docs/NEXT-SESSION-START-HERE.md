@@ -36,12 +36,12 @@
 ### الجودة:
 
 - TypeScript: ٠ errors
-- ESLint: ٠ errors, **٣٥ warnings** (من ٦٢٢ — تقلّص **٩٤٪**)
+- ESLint: **٠ errors, ٠ warnings** (من ٦٢٢ — تقلّص **١٠٠٪**) 🏆
   - explicit-any: ٠ (كانت ٥٥)
   - unused-imports: ٠
   - jsx-a11y/alt-text: ٠
-  - exhaustive-deps: ٣ مع inline disable موثّق
-  - react-compiler structural: ٣٥ (مؤجّلة للموجة ٨ — refactor هيكلي)
+  - exhaustive-deps: ٠ (مع inline disables موثّقة)
+  - react-compiler structural: ٠ (٢٣ ملف أُعيد هيكلته بـuseCallback)
 - Tests: ٧١ passed
 - Build: ١٤٠ pages
 - CI: 🟢 أخضر

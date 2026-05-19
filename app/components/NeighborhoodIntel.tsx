@@ -33,6 +33,7 @@ export default function NeighborhoodIntel({ city, district, accentColor = "#C691
 
   useEffect(() => {
     if (!city || !district) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError(false);
     fetch(

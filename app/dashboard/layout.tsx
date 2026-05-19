@@ -216,6 +216,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { role } = useMyRole();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     checkAuth();
   }, []);
   useEffect(() => {
